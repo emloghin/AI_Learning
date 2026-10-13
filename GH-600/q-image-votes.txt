@@ -1,0 +1,81 @@
+Q421441 [t2 q1] images: image1.png, image2.png
+Q421442 [t2 q2] images: image1.png
+Q421443 [t2 q3] images: image4.png
+Q421444 [t2 q4] images: image6.png
+Q421445 [t2 q5] images: image8.png
+Q421446 [t2 q6] images: 
+Q421447 [t2 q7] images: 
+Q421448 [t2 q8] images: 
+Q421449 [t3 q1] images: image10.png
+   VOTE D > 
+Q421450 [t3 q2] images: image10.png
+Q421451 [t3 q3] images: image10.png, image11.png
+Q421452 [t3 q4] images: image1.png
+   VOTE C > 
+Q421453 [t3 q5] images: 
+   VOTE D > 
+Q421454 [t3 q6] images: 
+   VOTE C > 
+Q421455 [t3 q7] images: image13.png, image14.png
+Q421456 [t3 q8] images: image16.png
+Q421457 [t3 q9] images: 
+   VOTE D > 
+Q421458 [t3 q10] images: image18.png
+Q421459 [t3 q11] images: 
+   VOTE D > Auto Approve read search and human approve edit execute --deny will not be able to access the tools upvoted 1 time Submit Cancel ... nastolgia Most Recent 1 month, 0 days ago
+   VOTE E > 
+Q421460 [t3 q12] images: image20.png
+Q421461 [t3 q13] images: 
+   VOTE A > 
+Q421462 [t3 q14] images: image22.png
+Q421463 [t3 q15] images: 
+   VOTE D > 
+Q421464 [t3 q16] images: image24.png
+Q421465 [t4 q1] images: image26.png
+Q421466 [t4 q2] images: 
+Q421467 [t4 q3] images: image28.png
+Q421468 [t4 q4] images: image30.png
+Q421469 [t4 q5] images: image32.png
+Q421470 [t4 q6] images: 
+   VOTE B > 
+Q421471 [t5 q1] images: 
+   VOTE A > 
+Q421472 [t5 q2] images: image10.png
+   VOTE B > 
+Q421473 [t5 q3] images: image1.png, image34.png
+Q421474 [t5 q4] images: image36.png, image37.png
+Q421475 [t5 q5] images: 
+   VOTE D > 
+Q421476 [t5 q6] images: 
+Q421477 [t5 q7] images: 
+   VOTE D > 
+Q421478 [t5 q8] images: 
+   VOTE C > 
+Q421479 [t5 q9] images: 
+   VOTE D > 
+Q421480 [t5 q10] images: image39.png
+   VOTE C > 
+Q421481 [t5 q11] images: image40.png
+Q421482 [t5 q12] images: 
+   VOTE B > 
+Q421483 [t5 q13] images: 
+Q421484 [t5 q14] images: 
+   VOTE B > 
+Q421485 [t5 q15] images: 
+Q421486 [t6 q1] images: image10.png
+   VOTE B > 
+Q421487 [t6 q2] images: image41.png
+Q421488 [t6 q3] images: image43.png
+Q421489 [t6 q4] images: 
+   VOTE D > 
+Q421490 [t6 q5] images: 
+Q421491 [t6 q6] images: image45.png
+   VOTE B > 
+Q421492 [t6 q7] images: image46.png
+Q421493 [t7 q1] images: image48.png
+Q421494 [t7 q2] images: image10.png, image50.png
+Q421495 [t7 q3] images: image10.png
+   VOTE D > 
+Q421496 [t7 q4] images: image1.png
+Q421497 [t7 q5] images: image52.png
+Q421498 [t7 q6] images: 

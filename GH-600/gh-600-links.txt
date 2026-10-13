@@ -1,0 +1,72 @@
+# GH-600 - ExamTopics discussion links (58 questions)
+# Generated 2026-10-13 from examtopics.com/exams/microsoft/gh-600/
+
+# ===== Topic 2 (8 questions) =====
+https://www.examtopics.com/discussions/microsoft/view/421441-exam-gh-600-topic-2-question-1-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421442-exam-gh-600-topic-2-question-2-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421443-exam-gh-600-topic-2-question-3-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421444-exam-gh-600-topic-2-question-4-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421445-exam-gh-600-topic-2-question-5-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421446-exam-gh-600-topic-2-question-6-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421447-exam-gh-600-topic-2-question-7-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421448-exam-gh-600-topic-2-question-8-discussion/
+
+# ===== Topic 3 (16 questions) =====
+https://www.examtopics.com/discussions/microsoft/view/421449-exam-gh-600-topic-3-question-1-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421450-exam-gh-600-topic-3-question-2-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421451-exam-gh-600-topic-3-question-3-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421452-exam-gh-600-topic-3-question-4-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421453-exam-gh-600-topic-3-question-5-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421454-exam-gh-600-topic-3-question-6-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421455-exam-gh-600-topic-3-question-7-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421456-exam-gh-600-topic-3-question-8-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421457-exam-gh-600-topic-3-question-9-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421458-exam-gh-600-topic-3-question-10-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421459-exam-gh-600-topic-3-question-11-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421460-exam-gh-600-topic-3-question-12-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421461-exam-gh-600-topic-3-question-13-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421462-exam-gh-600-topic-3-question-14-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421463-exam-gh-600-topic-3-question-15-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421464-exam-gh-600-topic-3-question-16-discussion/
+
+# ===== Topic 4 (6 questions) =====
+https://www.examtopics.com/discussions/microsoft/view/421465-exam-gh-600-topic-4-question-1-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421466-exam-gh-600-topic-4-question-2-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421467-exam-gh-600-topic-4-question-3-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421468-exam-gh-600-topic-4-question-4-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421469-exam-gh-600-topic-4-question-5-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421470-exam-gh-600-topic-4-question-6-discussion/
+
+# ===== Topic 5 (15 questions) =====
+https://www.examtopics.com/discussions/microsoft/view/421471-exam-gh-600-topic-5-question-1-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421472-exam-gh-600-topic-5-question-2-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421473-exam-gh-600-topic-5-question-3-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421474-exam-gh-600-topic-5-question-4-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421475-exam-gh-600-topic-5-question-5-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421476-exam-gh-600-topic-5-question-6-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421477-exam-gh-600-topic-5-question-7-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421478-exam-gh-600-topic-5-question-8-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421479-exam-gh-600-topic-5-question-9-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421480-exam-gh-600-topic-5-question-10-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421481-exam-gh-600-topic-5-question-11-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421482-exam-gh-600-topic-5-question-12-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421483-exam-gh-600-topic-5-question-13-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421484-exam-gh-600-topic-5-question-14-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421485-exam-gh-600-topic-5-question-15-discussion/
+
+# ===== Topic 6 (7 questions) =====
+https://www.examtopics.com/discussions/microsoft/view/421486-exam-gh-600-topic-6-question-1-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421487-exam-gh-600-topic-6-question-2-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421488-exam-gh-600-topic-6-question-3-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421489-exam-gh-600-topic-6-question-4-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421490-exam-gh-600-topic-6-question-5-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421491-exam-gh-600-topic-6-question-6-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421492-exam-gh-600-topic-6-question-7-discussion/
+
+# ===== Topic 7 (6 questions) =====
+https://www.examtopics.com/discussions/microsoft/view/421493-exam-gh-600-topic-7-question-1-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421494-exam-gh-600-topic-7-question-2-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421495-exam-gh-600-topic-7-question-3-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421496-exam-gh-600-topic-7-question-4-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421497-exam-gh-600-topic-7-question-5-discussion/
+https://www.examtopics.com/discussions/microsoft/view/421498-exam-gh-600-topic-7-question-6-discussion/
