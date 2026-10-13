@@ -213,7 +213,7 @@
 <p>Triggers that keep coordination visible: <code>schedule</code> for periodic work, <code>pull_request</code> events for validation, and <code>workflow_run</code> when one step must follow another. Coordination that happens outside GitHub and leaves no trace in PRs or workflow runs makes failures impossible to diagnose.</p>
 <h3 id="subagents-handoffs-and-fleet-mode">Subagents, Handoffs, and Fleet Mode</h3>
 <ul>
-<li><strong>VS Code handoffs</strong> (<a href="https://learn.microsoft.com/en-us/training/modules/multi-agent-systems-orchestration/7-scale-failure-recovery" target="_blank" rel="noopener">Learn</a>): the parent profile lists allowed subagents in <code>agents: [...]</code>; each <code>handoffs</code> entry has a <code>label</code> and target <code>agent</code>, and can auto-submit a prompt (<code>send: true</code>) or set a <code>model</code>. Handoffs resolve to a subagent by its <code>name</code> attribute or by matching filename.</li>
+<li><strong>VS Code handoffs</strong> (<a href="https://learn.microsoft.com/en-us/training/modules/multi-agent-systems-orchestration/7-scale-failure-recovery" target="_blank" rel="noopener">Learn</a>): the parent profile lists allowed subagents in <code>agents: [...]</code>; each <code>handoffs</code> entry has a <code>label</code> and target <code>agent</code>, and can auto-submit a prompt (<code>send: true</code>) or set a <code>model</code>. Handoffs resolve to a subagent by its <code>name</code> attribute or by matching filename. <strong>Exam note:</strong> the practice exams treat the handoff <code>agent:</code> value as the <strong>file-name stem</strong> (<code>implementer.agent.md</code> → <code>implementer</code>); a frontmatter <code>name: code-review</code> inside <code>review.agent.md</code> does not make <code>agent: code-review</code> resolve. <code>send</code> defaults to <code>false</code> (a button a human clicks); <code>send: true</code> auto-submits the prompt.</li>
 <li><strong>Invocation flags</strong> (<a href="https://docs.github.com/en/copilot/reference/custom-agents-configuration" target="_blank" rel="noopener">GitHub Docs</a>): <code>disable-model-invocation: true</code> stops Copilot from picking the agent automatically (Learn: it then can&#39;t be invoked as a subagent, a common orchestration failure); <code>user-invocable: false</code> hides it from manual selection so it can only be reached programmatically. <code>infer</code> is retired.</li>
 <li><strong>Copilot CLI <code>/fleet</code></strong> (<a href="https://docs.github.com/en/copilot/concepts/agents/copilot-cli/fleet" target="_blank" rel="noopener">GitHub Docs</a>): the main agent splits a plan into independent subtasks and acts as orchestrator, running subagents in parallel where dependencies allow. Each subagent has <strong>its own context window</strong>, uses a low-cost model by default (unless the prompt or the custom agent profile names a model), and may pick a matching custom agent — or you force one with <code>@CUSTOM-AGENT-NAME</code>. Monitor subtasks with <code>/tasks</code> (Enter = details, <code>x</code> = kill). <code>--fleet</code> is the command-line equivalent (works with <code>-p</code>, <code>-i</code>, or piped input; not with <code>--acp</code>). <code>/fleet</code> and autopilot are separate features that are often combined.</li>
 </ul>
@@ -862,6 +862,100 @@ jobs:
 
 </div>
 <div class="section">
+<h2 id="from-the-practice-exams-facts-to-know">From the Practice Exams: Facts to Know</h2>
+<p>Facts the practice questions tested for this domain. Topics already covered above (fan-out/fan-in with <code>needs</code>, <code>action:artifact.destroy</code>, <code>gh agent-task view --log --follow</code>, <code>disable-model-invocation</code>) are not repeated except where the exam adds a twist.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Topic</th>
+<th>Fact / decision rule</th>
+<th>Trap / distractor</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Callable subagents vs handoffs</td>
+<td>To let an Orchestrator <strong>call</strong> a new subagent, add it to the <strong>Orchestrator&#39;s</strong> <code>agents: [...]</code> list. <code>handoffs</code> are human-clicked chat buttons.</td>
+<td>Editing the <em>Reviewer&#39;s</em> frontmatter, or putting an agent in <code>tools</code> (subagents are not tools). A missing <code>handoffs</code> entry never explains a failed programmatic call.</td>
+</tr>
+<tr>
+<td>Debugging a subagent that will not run</td>
+<td>If sibling subagents in the same <code>agents</code> list run, the registry works; diff the failing child&#39;s frontmatter. <code>disable-model-invocation: true</code> blocks model calls; <code>user-invocable: false</code> only blocks humans.</td>
+<td>Blaming a missing handoff or missing edit tools (a summarizer needs neither).</td>
+</tr>
+<tr>
+<td>Read-only planner</td>
+<td><code>tools: [search, read, fetch]</code> plus a handoff with <code>send: false</code> so a human approves the plan before the implementer starts.</td>
+<td>Any of <code>edit</code>, <code>execute</code>, <code>commit</code>, <code>push</code>, <code>merge</code>, <code>publish</code> in the list; <code>send: true</code> auto-submits before approval.</td>
+</tr>
+<tr>
+<td>Parallel agents on a shared file</td>
+<td>Need all three: <strong>isolated branches</strong>, <strong>concurrent</strong> runs, and a <strong>required status check</strong> that detects file-level overlap before merge.</td>
+<td>A concurrency group (serializes, loses concurrency), CODEOWNERS alone (no isolation), read-only tools (agents cannot do their job).</td>
+</tr>
+<tr>
+<td>Concurrency group design</td>
+<td>Declare it at <strong>workflow level</strong> with a per-branch key such as <code>${{ github.workflow }}-${{ github.ref }}</code>: rapid pushes to one PR serialize while different PRs run in parallel.</td>
+<td>Job-level concurrency (wrong scope); any key containing <code>run_id</code> (unique per run, so nothing is ever grouped); <code>strategy.matrix</code> (fan-out, not grouping).</td>
+</tr>
+<tr>
+<td>Passing files between jobs</td>
+<td>Runners are ephemeral: <code>upload-artifact</code> in the producer job, <code>download-artifact</code> in each consumer (<code>review</code>, <code>deploy</code>). Artifacts are also inspectable in the Actions UI.</td>
+<td>Dependency cache (best-effort), committing generated files, a network share.</td>
+</tr>
+<tr>
+<td>Human approval gate for a plan</td>
+<td>Order: <code>plan</code> job (uploads plan artifact) → environment (e.g. <code>plan-review</code>) with the approving team as <strong>required reviewers</strong> → <code>execute</code> job with <code>needs: [plan]</code> and <code>environment: plan-review</code>.</td>
+<td>Auto-advance on green checks; a main-branch approval ruleset (guards pushes, not plan outputs); adding the wrong team as reviewers.</td>
+</tr>
+<tr>
+<td>Limiting what an agent can reach</td>
+<td>Scope the <strong>credential</strong>: a fine-grained PAT limited to one repository makes other repos fail at authentication.</td>
+<td>A prose instruction (not enforced), a workflow <code>permissions</code> block (scopes <code>GITHUB_TOKEN</code>, not the agent session), a bot-push ruleset (blocks pushes only).</td>
+</tr>
+<tr>
+<td>Autonomy level</td>
+<td>Production secrets + compliance → <strong>human-in-the-loop with required manual approvals</strong> for production; the agent prepares, humans release.</td>
+<td>Read-only (cannot deploy), non-production only (misses the target), fully autonomous (violates compliance).</td>
+</tr>
+<tr>
+<td>Safe to delegate vs human-only</td>
+<td>Delegable: generating <code>assessment.md</code>, reviewing <code>plan.md</code> dependencies, checking <code>tasks.md</code> exists. Human-only: validating security-relevant findings and approving commits.</td>
+<td>Treating &quot;the agent produced it&quot; as validation.</td>
+</tr>
+<tr>
+<td>Long-term audit retention</td>
+<td>GitHub keeps audit history only for a limited period (about 180 days); for a multi-year requirement <strong>stream the audit log</strong> to your own sink (e.g. Azure Event Hubs).</td>
+<td>A &quot;retention setting&quot;, &quot;log forwarding&quot;, or the Git events toggle (selects event types, not retention).</td>
+</tr>
+<tr>
+<td>Stalled coding-agent session</td>
+<td><strong>Live but quiet</strong>: open <em>View session</em>, then comment <code>@copilot</code> on the PR (write access required) to continue the same session. <strong>Dead</strong> (e.g. silent 70 min, no new commits): <strong>unassign and reassign</strong> the issue for a fresh session from the issue context.</td>
+<td>Waiting, merging the draft, <em>Approve and run workflows</em> (gates CI, does not revive agents), closing/reopening, starting a new PR from Chat.</td>
+</tr>
+<tr>
+<td>Failure classification</td>
+<td>A tool call that fails at invocation with no result = <strong>tool misuse</strong>. Wrong logic with a working call = reasoning error; prompt/scope sizing = context issue; transport failure = network.</td>
+<td>Mid-stream failure at a tool call can also be a <code>preToolUse</code> hook denial (<code>postToolUse</code> cannot break a call).</td>
+</tr>
+<tr>
+<td>Reading agent logs</td>
+<td>Trust literal fields: <code>isolationEnabled: false</code> with no worktree path = isolation never engaged; <code>Passing 1 MCP server(s) [github]</code> = that server reached the session; count sessions by distinct <code>isNewSession: true</code> IDs. Lines like <code>message 0 returned</code> mean no output; a UI tag such as <code>[panel/editAgent]</code> is not a file edit.</td>
+<td>Counting request IDs as sessions; reading panel names as actions.</td>
+</tr>
+</tbody></table></div>
+<div class="code-block"># Workflow-level, per-branch queue; fan-in after parallel analyzers
+concurrency:
+  group: multiagent-${{ github.ref }}
+jobs:
+  spec_analyzer: { runs-on: ubuntu-latest, steps: [ ... ] }
+  risk_reviewer: { runs-on: ubuntu-latest, steps: [ ... ] }
+  plan_merger:
+    needs: [spec_analyzer, risk_reviewer]
+    runs-on: ubuntu-latest
+    steps: [ ... ]</div>
+<div class="callout warning"><p><strong>⚠️ Exam Trap:</strong> <code>needs</code> orders jobs <em>within</em> a run; <code>concurrency</code> orders <em>runs against each other</em>. A question asking for &quot;parallel and safe&quot; usually wants isolation plus detection, not serialization.</p></div>
+</div>
+<div class="section">
 <h2 id="recap-key-takeaways">Recap: Key Takeaways</h2>
 <ul>
 <li>Give each agent one narrow role, its own tools, and its own paths; agents propose, humans and policy accept.</li>
@@ -876,6 +970,9 @@ jobs:
 <li>Re-run failed jobs only; <code>needs</code> keeps a failed pipeline from opening a PR.</li>
 <li>Agent profiles are versioned by commit SHA; in-flight PRs keep their version.</li>
 <li>Retire agents by disabling invocation, removing references, deleting via reviewed PR, and revoking access.</li>
+<li>Callable subagents live in the caller&#39;s <code>agents</code> list; <code>handoffs</code> are human buttons whose <code>agent</code> value is the file-name stem.</li>
+<li>Enforce limits at the credential or gate (scoped PAT, environment required reviewers), not with prose instructions; multi-year audit retention means streaming the audit log out.</li>
+<li>Quiet live session → <code>@copilot</code> on the PR; dead session → unassign and reassign the issue.</li>
 </ul>
 
 </div>

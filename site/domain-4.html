@@ -852,6 +852,169 @@ applyTo: &quot;src/reports/**&quot;
 
 </div>
 <div class="section">
+<h2 id="from-the-practice-exams-facts-to-know">From the Practice Exams: Facts to Know</h2>
+<p>Facts the practice exams lean on for this domain: exact names, flags, and the distractors that usually accompany them.</p>
+
+<h3 id="pe-scanners-and-gates">Built-in scanners, CodeQL syntax, quality gates</h3>
+<ul>
+<li><strong>Built-in automated signals on a coding-agent PR:</strong> <strong>secret scanning</strong> (hard-coded keys/tokens) and <strong>CodeQL</strong> (vulnerabilities). Distractors: your own CI lint, Copilot code review comments (AI prose, not a scanner verdict), and the usage-metrics &quot;median time to merge&quot; (process metric, says nothing about this diff).</li>
+<li><strong>CodeQL in a workflow is an ordered pair:</strong> <code>github/codeql-action/init</code> (builds the code database) then <code>github/codeql-action/analyze</code> (runs the queries). <code>upload-sarif</code> is only for importing results from <em>third-party</em> scanners. Tests and CodeQL catch different things: a SQL injection can pass <code>npm test</code> and still be flagged.</li>
+<li><strong>&quot;Agent PRs succeed only when tests pass and CodeQL completes&quot;</strong> = a workflow with <code>on: pull_request</code>, a test step matching the repo&#39;s ecosystem (<code>npm test</code> for Node), and the CodeQL pair; make those checks <em>required</em>.</li>
+<li><strong>Trunk-based gate:</strong> branch protection <strong>enabled</strong> on <code>main</code> (PR + at least one approval) plus <code>on: pull_request</code> validation. <code>on: push</code> only fires on direct pushes; <code>schedule</code>/<code>workflow_dispatch</code> do not gate PRs. Protection constrains <code>main</code>, not the agent&#39;s ability to branch and open PRs.</li>
+<li><strong>Least-privilege token:</strong> top-level <code>permissions: contents: read</code>; grant <code>contents: write</code> only on the job that writes and <code>pull-requests: write</code> only where a PR is created/approved. Not <code>read-all</code>, and never <code>issues: write</code> unless issues are touched.</li>
+</ul>
+<div class="code-block">permissions:
+  contents: read            # default for every job
+
+jobs:
+  update_artifacts:
+    permissions:
+      contents: write       # only the writer job
+      pull-requests: write  # explicit PR create/approve
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm test
+      - uses: github/codeql-action/init@v3
+      - uses: github/codeql-action/analyze@v3</div>
+<div class="callout warning"><p><strong>⚠️ Exam Trap:</strong> To make branch protection require <em>designated</em> reviewers for <code>.github/workflows/*</code> and <code>/infra/*</code>, you need <strong>branch protection (or ruleset) + a <code>CODEOWNERS</code> file</strong>. <code>.copilotignore</code>, <code>agents.md</code>, and <code>copilot-instructions.md</code> cannot force human approval.</p></div>
+
+<h3 id="pe-failure-signals">Reading agent failures: classification, logs, who deleted what</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr><th>Evidence</th><th>Classification / artifact</th></tr>
+</thead>
+<tbody><tr>
+<td>MCP/tool call fails at invocation with no result (e.g., docs-search tool)</td>
+<td><strong>Tool misuse</strong> (not reasoning, context, or network: transport worked, the call itself failed)</td>
+</tr>
+<tr>
+<td>Live stream breaks <em>mid-task exactly at a tool call</em>, with a denial message</td>
+<td>A <strong><code>preToolUse</code> hook</strong> denied it (<code>postToolUse</code> runs after success and cannot break a call; app-install policies fail at install time; a firewall gives network-shaped errors)</td>
+</tr>
+<tr>
+<td>Session &quot;succeeded&quot; but the PR has no file changes</td>
+<td>Read the <strong>agent session log</strong> (Agents panel / View session): it is the only artifact holding agent intent and decisions. Runner logs show infrastructure, <code>GITHUB_TOKEN</code> permissions show scope, usage metrics aggregate</td>
+</tr>
+<tr>
+<td>Agent keeps editing <code>.github/workflows/*.yml</code> to silence failing checks</td>
+<td>Update <code>.github/copilot-instructions.md</code> with the real goal (never edit CI to turn it green; fix the underlying code). A ruleset only blocks the move and stalls the agent; disabling Actions removes the signal; <code>--allow-all</code> adds autonomy</td>
+</tr>
+<tr>
+<td>PR is thin or mis-scoped after assigning a one-line issue</td>
+<td>Rewrite the issue (problem, context, desired outcome, how to verify). Memory, MCP limits, and setup-step resources do not fix missing scope</td>
+</tr>
+<tr>
+<td>Agent reaches repos outside its intended scope</td>
+<td>Enforce at the <strong>credential</strong>: a fine-grained PAT limited to that repo. Prose instructions are guidance, a <code>permissions</code> block scopes <code>GITHUB_TOKEN</code> (a different credential), and a push-blocking ruleset leaves reads open</td>
+</tr>
+<tr>
+<td>Parallel agents overwrite a shared file</td>
+<td><strong>Separate branches + a required status check that detects file-level overlap</strong>. A <code>concurrency</code> group would serialize (violates &quot;run concurrently&quot;), CODEOWNERS adds review only, read-only tools disable the agents</td>
+</tr>
+</tbody></table></div>
+<p><strong>Reading raw logs literally:</strong> trust exact fields and verbs. <code>Passing 1 MCP server(s) to SDK: [github]</code> proves that server reached the session (a nearby <code>CLIMCPServerEnabled=false</code> only gates extra CLI-side servers). <code>isolationEnabled: false</code> with no worktree path means isolation never engaged. Sessions are counted by distinct <code>isNewSession: true</code> IDs, not by request lines. <code>message 0 returned</code> means the model call produced <strong>zero messages</strong>; <code>[panel/editAgent]</code> is a UI panel tag, not a file edit; only verbs with paths (read, edit, search) prove repository work.</p>
+<p><strong>Audit trail:</strong> to learn <em>who</em> deleted a workflow artifact and <em>when</em>, filter the audit log with <code>action:artifact.destroy</code> (<code>repo:</code> filters by repository, <code>action:workflows.run</code> matches runs, <code>operation:remove</code> is not valid; <code>checks.delete_logs</code> concerns check-run logs). GitHub keeps audit history only briefly and has no multi-year retention setting, so <strong>retention of two years = audit log streaming</strong> to your own sink such as Azure Event Hubs.</p>
+
+<h3 id="pe-monitoring-sessions">Monitoring and steering agent sessions</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr><th>Signal / need</th><th>Meaning and action</th></tr>
+</thead>
+<tbody><tr>
+<td>Eyes reaction on the issue</td>
+<td>Copilot accepted the task. No reaction and no branch after ~10 minutes: check assignment/permissions</td>
+</tr>
+<tr>
+<td>PR timeline updates / status in PR body</td>
+<td>Agent is actively working</td>
+</tr>
+<tr>
+<td>Draft PR with <strong>idle checks</strong></td>
+<td>Not a failure: workflows await a human to click <strong>Approve and run workflows</strong></td>
+</tr>
+<tr>
+<td>Status silent for ~55 minutes, session maybe stuck</td>
+<td>Open <strong>View session</strong> to confirm, then comment <code>@copilot</code> on the PR (commenter needs <strong>write access</strong>): same session, completed steps and approach kept</td>
+</tr>
+<tr>
+<td>Session dead (no log updates for ~70 minutes) and must restart from the issue</td>
+<td><strong>Unassign, then reassign</strong> the issue to Copilot (fresh session, same issue context). Not waiting, not merging the draft, not Approve-and-run</td>
+</tr>
+<tr>
+<td>Reviewer feedback ignored or applied to stale requirements</td>
+<td>Comment <code>@copilot</code> in the <strong>PR</strong> (not <code>@github</code>, not in a new Chat task, not reassigning)</td>
+</tr>
+<tr>
+<td>Live-stream one task&#39;s log from a terminal</td>
+<td><code>gh agent-task view &lt;id&gt; --log --follow</code> (like <code>tail -f</code>). <code>--jq</code> is a static JSON snapshot; <code>list</code> only enumerates; <code>--web</code> opens a browser</td>
+</tr>
+<tr>
+<td>Durable evidence reviewers can inspect later</td>
+<td><code>actions/upload-artifact</code> (with <code>retention-days</code>) + PR body/timeline for decisions + View session for the live log</td>
+</tr>
+</tbody></table></div>
+<ul>
+<li><strong>Passing files between jobs</strong> (e.g., <code>trace.json</code> and <code>plan.md</code> from <code>agent-run</code> to <code>review</code> and <code>deploy</code>): upload them as artifacts in the producer and <code>download-artifact</code> in each consumer, which also makes them inspectable in the Actions UI. Runners are ephemeral; dependency caches are best-effort; committing generated files pollutes history; a network share is unreliable infrastructure.</li>
+<li><strong>Human-approval gate for plan outputs:</strong> job order is <em>plan</em> (uploads the plan artifact) &rarr; environment (e.g., <code>plan-review</code>) with the reviewer team as <strong>required reviewers</strong> &rarr; <em>execute</em> job with <code>needs: [plan]</code> and <code>environment: plan-review</code>. Only that team may approve; do not add the developers as reviewers.</li>
+<li><strong>Concurrency for agent PR validation:</strong> declare <code>concurrency</code> at <strong>workflow level</strong> with <code>group: ${{ github.workflow }}-${{ github.ref }}</code>. Pushes to one PR branch queue, different PRs run in parallel. A key containing <code>run_id</code> is unique per run, so it groups nothing; job-level concurrency and <code>strategy.matrix</code> do not solve cross-push overlap. For fan-out/fan-in use <code>needs: [spec_analyzer, risk_reviewer]</code> on the merging job.</li>
+<li><strong>Autonomy level for compliance-sensitive production deploys with secrets:</strong> human-in-the-loop with required manual approvals for production. Read-only cannot deploy, non-prod-only misses the target, fully autonomous breaks compliance.</li>
+<li><strong>Safe to delegate vs not:</strong> generating reports (<code>assessment.md</code>), analyzing plan dependencies, and checking that a file exists are delegable. <strong>Validating security-relevant findings for accuracy</strong> and <strong>approving commits</strong> need an accountable human.</li>
+</ul>
+
+<h3 id="pe-copilot-cli-and-hooks">Copilot CLI and hooks as evaluation controls</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr><th>Need</th><th>Answer</th></tr>
+</thead>
+<tbody><tr>
+<td>Run a script only when an agent execution fails</td>
+<td><code>errorOccurred</code> hook (not <code>postToolUse</code>, <code>sessionEnd</code>, <code>agentStop</code>)</td>
+</tr>
+<tr>
+<td>Auto-allow safe Bash, block <code>sudo</code>, <code>rm -rf /</code>, <code>curl ... | bash</code></td>
+<td><code>preToolUse</code> hook in <code>.github/hooks/*.json</code> returning <code>permissionDecision: &quot;deny&quot;</code> (<code>userPromptSubmitted</code> only sees prompts, <code>sessionStart</code> is a one-time banner)</td>
+</tr>
+<tr>
+<td>Validate each generated command <em>before</em> it runs</td>
+<td>Event <code>pre-exec</code> in the harness file <code>.copilot/hooks.yaml</code>; <code>post-exec</code> is too late and a file under <code>.github/workflows/</code> is never read by the CLI</td>
+</tr>
+<tr>
+<td>Review the approach before any change</td>
+<td>Switch to <strong>plan mode</strong>; it writes the plan to <code>plan.md</code> and stops (does not branch, open a PR, or implement). <code>--allow-all</code> removes approvals; <code>/compact</code> only shrinks context</td>
+</tr>
+<tr>
+<td>Context window nearly full, keep progress</td>
+<td><code>/compact</code> (summarizes). <code>/clear</code> discards history, <code>/context</code> only shows what is loaded</td>
+</tr>
+<tr>
+<td>Check token usage</td>
+<td><code>/usage</code> (<code>/context</code> shows scope, <code>/diff</code> shows changes)</td>
+</tr>
+<tr>
+<td>Pre-approve read-only tools, keep edit/execute available but prompting</td>
+<td><code>--allow-tool 'read,search'</code>. <code>--deny-tool</code> removes tools entirely; <code>--allow-all-tools</code> removes every gate</td>
+</tr>
+<tr>
+<td>Unattended script flags</td>
+<td><code>--autopilot --yolo --max-autopilot-continues 10</code>: the cap prevents runaway loops, <code>--yolo</code> allows all tools, but there is <strong>no</strong> targeted human intervention point</td>
+</tr>
+</tbody></table></div>
+
+<h3 id="pe-tuning-levers-details">Tuning-lever details the exams test</h3>
+<ul>
+<li><strong>Instruction scope:</strong> repo-wide review/agent guidance = <code>.github/copilot-instructions.md</code>; <code>.github/instructions/*.instructions.md</code> applies only to <code>applyTo</code> matches; <code>.agent.md</code> shapes one agent; <code>pull_request_template.md</code> coaches human authors. Prose in instructions or a profile never grants tool access and cannot hard-enforce compliance, so it steers but does not guarantee.</li>
+<li><strong>Tools:</strong> <code>tools</code> in a profile is an enforced allow-list. Omitting it (deleting the line) restores all tools; <code>tools: []</code> disables everything; a read-only planner uses <code>[search, read, fetch]</code> (add <code>edit</code>, <code>execute</code>, commit/push/publish and it can write).</li>
+<li><strong>Subagent registries:</strong> the orchestrator&#39;s <code>agents:</code> list is the machine call graph (a subagent must be listed there to be invoked); <code>handoffs</code> only create chat buttons; <code>tools</code> holds tools, not agents. If siblings run but one subagent does not, diff its frontmatter: <code>disable-model-invocation: true</code> blocks model calls, <code>user-invocable: false</code> only blocks humans.</li>
+<li><strong>Handoffs:</strong> <code>agent:</code> is the target&#39;s <strong>file-name stem</strong> (<code>implementer.agent.md</code> resolves as <code>implementer</code>), not its frontmatter <code>name</code>. <code>send: false</code> (default) leaves a button a human fires after approving the plan; <code>send: true</code> auto-submits immediately.</li>
+<li><strong>Environment secrets:</strong> an agent&#39;s credential lives in the <strong>Copilot environment</strong> (secrets prefixed <code>COPILOT_MCP_</code> for MCP), referenced by variable name from the MCP config. Actions secrets, Codespaces secrets, and anything committed (instructions file, agent config, plaintext <code>apiKey</code>) are wrong or leak.</li>
+<li><strong>MCP:</strong> a committed <code>.vscode/mcp.json</code> configures every developer centrally (not <code>settings.json</code>, <code>.agent.md</code>, or per-user config). Hosted servers use <code>type: http</code> with <code>Authorization: Bearer ${env:...}</code> style PAT headers (<code>stdio</code> spawns a local process). A configured server&#39;s <strong>tools</strong> are callable autonomously and new server-side tools appear automatically; its <em>resources</em> and <em>prompts</em> are separate surfaces that are not usable just because tools were configured. GitHub-hosted MCP plus the org Copilot MCP policy gives the same tools in VS Code and on github.com without local setup (local/Docker servers and <code>/mcp add</code> do not travel).</li>
+<li><strong>Memory:</strong> two deletion paths only: <strong>manual deletion</strong> and <strong>auto-expiry after 28 days unused</strong> (archiving, deleting code, and merging PRs do not delete). Before use, citations are re-validated against the current branch and stale entries are ignored, not deleted. Repo facts are shared, closed-unmerged PRs can create memories.</li>
+<li><strong>Chat context pollution:</strong> start a <strong>new chat</strong> and keep only relevant files open. Do not delete memories or switch modes to fix a history problem.</li>
+<li><strong>Modernization artifacts</strong> under <code>.github/upgrades/{scenario}</code>: <code>assessment.md</code> (analysis, written before execution), <code>plan.md</code> (strategy), <code>tasks.md</code> (live per-step status including build/test validation). To verify each step and test result, read <code>tasks.md</code>. Note the official quiz key lists <code>assessment.md</code> for this question; the upgrade docs describe <code>tasks.md</code> as the live tracker.</li>
+</ul>
+</div>
+
+<div class="section">
 <h2 id="recap-key-takeaways">Recap: Key Takeaways</h2>
 <ul>
 <li>Write acceptance criteria in the <strong>issue before</strong> the agent starts; reference them in the PR.</li>
@@ -865,6 +1028,8 @@ applyTo: &quot;src/reports/**&quot;
 <li>Root causes: <strong>reasoning error</strong>, <strong>tool misuse</strong>, or <strong>context issue</strong>.</li>
 <li>Tune with the smallest effective lever: <strong>instructions</strong>, <strong>memory/state</strong>, or <strong>tools</strong> (incl. environment and MCP).</li>
 <li>Rules that must always apply belong in custom instructions; Copilot Memory entries expire after 28 days unused.</li>
+<li>Stalled agent: <strong>View session</strong> then <code>@copilot</code> PR comment to steer a live session; <strong>unassign/reassign</strong> the issue to restart a dead one.</li>
+<li>Enforce, don&#39;t just ask: scope credentials (fine-grained PAT, Copilot environment secrets), gate with required checks, CODEOWNERS and environment reviewers; instructions only steer.</li>
 <li>Close the loop: re-run, and keep every change traceable in the PR.</li>
 </ul>
 
