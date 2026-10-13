@@ -9,6 +9,7 @@ Copy-Item 'C:\GIT\GIT-Personal\AI_Learning\ai-models\site\style.css' "$out/style
 
 . "$PSScriptRoot\gh-600-answers.ps1"
 foreach ($f in 'gh-600-learn1.ps1','gh-600-learn2.ps1','gh-600-learn3.ps1','gh-600-learn4.ps1') { . (Join-Path $PSScriptRoot $f) }
+. "$PSScriptRoot\gh-600-plain.ps1"
 
 $data = Get-Content (Join-Path $root 'questions-extract.json') -Raw | ConvertFrom-Json
 $qs = foreach ($q in $data) {
@@ -25,6 +26,9 @@ $qs = foreach ($q in $data) {
 }
 foreach ($q in $qs) {
   if ($LEARN[[int]$q.n]) { $q.ans = $q.ans -replace '(<span class="whead">Learn more:)', ($LEARN[[int]$q.n] + '$1') }
+}
+foreach ($q in $qs) {
+  if ($PLAIN[[int]$q.n]) { $q.ans = "<div class=`"plain`"><b>In plain words:</b> " + $PLAIN[[int]$q.n] + "</div>" + $q.ans }
 }
 $js = 'const QUESTIONS = ' + ($qs | ConvertTo-Json -Depth 4 -Compress) + ';'
 Set-Content "$out/quiz.js" $js -Encoding UTF8
