@@ -8,6 +8,7 @@ Copy-Item (Join-Path $root 'gh-600-images\*.png') "$out/images/" -Force
 Copy-Item 'C:\GIT\GIT-Personal\AI_Learning\ai-models\site\style.css' "$out/style.css" -Force
 
 . "$PSScriptRoot\gh-600-answers.ps1"
+foreach ($f in 'gh-600-learn1.ps1','gh-600-learn2.ps1','gh-600-learn3.ps1','gh-600-learn4.ps1') { . (Join-Path $PSScriptRoot $f) }
 
 $data = Get-Content (Join-Path $root 'questions-extract.json') -Raw | ConvertFrom-Json
 $qs = foreach ($q in $data) {
@@ -21,6 +22,9 @@ $qs = foreach ($q in $data) {
   $h = [regex]::Replace($h, '</a>', '')
   $h = [regex]::Replace($h, '(<br\s*/?>\s*){3,}', '<br><br>')
   [ordered]@{ n = $q.n; topic = $q.topic; q = $q.qnum; html = $h.Trim(); ans = $A[[int]$q.n] }
+}
+foreach ($q in $qs) {
+  if ($LEARN[[int]$q.n]) { $q.ans = $q.ans -replace '(<span class="whead">Learn more:)', ($LEARN[[int]$q.n] + '$1') }
 }
 $js = 'const QUESTIONS = ' + ($qs | ConvertTo-Json -Depth 4 -Compress) + ';'
 Set-Content "$out/quiz.js" $js -Encoding UTF8
