@@ -10,6 +10,9 @@
 <style>
 .quiz-bar{position:sticky;top:57px;z-index:50;background:var(--bg);padding:12px 20px;border-bottom:1px solid var(--border)}
 .quiz-bar-inner{max-width:var(--max-w);margin:0 auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.jump-wrap{display:flex;gap:6px;align-items:center;font-size:13px;font-weight:600;color:var(--text-secondary)}
+#jump{font-family:var(--font);font-size:13px;font-weight:600;color:var(--text);border:1px solid var(--border);border-radius:20px;padding:5px 10px;background:var(--surface);max-width:170px;cursor:pointer}
+.qcard{scroll-margin-top:130px}
 .chip{border:1px solid var(--border);background:var(--surface);color:var(--text-secondary);border-radius:20px;padding:5px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font)}
 .chip:hover{border-color:var(--primary);color:var(--primary)}
 .chip.active{background:var(--primary);border-color:var(--primary);color:#fff}
@@ -64,7 +67,8 @@ table.yn td{padding:6px 8px;border-bottom:1px solid var(--border);vertical-align
   <p>GitHub Copilot &amp; agentic AI exam prep. Read each question, then reveal the verified answer.</p>
 </section>
 
-<div class="quiz-bar"><div class="quiz-bar-inner" id="chips"></div></div>
+<div class="quiz-bar"><div class="quiz-bar-inner" id="chips"></div>
+<div class="quiz-bar-inner"><span class="jump-wrap">Jump to: <select id="jump"></select></span></div></div>
 
 <main class="main">
   <div style="display:flex;gap:4px;align-items:center;margin-bottom:16px">
@@ -87,26 +91,44 @@ const topics = [...new Set(QUESTIONS.map(q => q.topic))].sort((a,b) => a-b);
 function revealedCount(){ return document.querySelectorAll('.ans.open').length; }
 function updateCount(){ count.textContent = `Revealed ${revealedCount()} of ${document.querySelectorAll('.qcard').length}`; }
 
-function card(q){
+function go(id){ const el = document.getElementById('qcard-' + id); if (el) el.scrollIntoView({behavior:'smooth', block:'start'}); }
+
+function card(q, idx, list){
   const d = document.createElement('div');
   d.className = 'qcard';
+  d.id = 'qcard-' + q.n;
+  const prev = list[idx-1], next = list[idx+1];
   d.innerHTML = `<div class="qcard-head"><span class="qnum">Q${q.n}</span><span class="qtopic">Topic ${q.topic} · Question ${q.q}</span></div>
     <div class="q-body">${q.html}</div>
-    <div class="q-actions"><button class="btn-reveal">Reveal answer</button></div>
+    <div class="q-actions"><button class="btn-reveal">Reveal answer</button>${prev ? `<button class="link-btn" data-go="${prev.n}">← Q${prev.n}</button>` : ''}${next ? `<button class="link-btn" data-go="${next.n}">Q${next.n} →</button>` : ''}</div>
     <div class="ans">${q.ans}</div>`;
-  const btn = d.querySelector('button'), ans = d.querySelector('.ans');
+  const btn = d.querySelector('.btn-reveal'), ans = d.querySelector('.ans');
   btn.onclick = () => {
     const open = ans.classList.toggle('open');
     btn.textContent = open ? 'Hide answer' : 'Reveal answer';
     btn.classList.toggle('hide', open);
     updateCount();
   };
+  d.querySelectorAll('[data-go]').forEach(b => b.onclick = () => go(b.dataset.go));
   return d;
+}
+
+function fillJump(list){
+  const j = document.getElementById('jump');
+  j.innerHTML = '';
+  list.forEach(q => {
+    const o = document.createElement('option');
+    o.value = q.n; o.textContent = `Q${q.n} (T${q.topic})`;
+    j.appendChild(o);
+  });
+  j.onchange = () => go(j.value);
 }
 
 function render(){
   cards.innerHTML = '';
-  QUESTIONS.filter(q => !topic || q.topic === topic).forEach(q => cards.appendChild(card(q)));
+  const list = QUESTIONS.filter(q => !topic || q.topic === topic);
+  list.forEach((q, i) => cards.appendChild(card(q, i, list)));
+  fillJump(list);
   updateCount();
 }
 
