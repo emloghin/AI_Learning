@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Domain 4: Evaluation, Error Analysis, & Tuning — GH-600 Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>.section td code,.callout code,.diagram-caption code{background:var(--primary-light);color:var(--primary);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:13px}.callout p+p{margin-top:8px}.callout ul{margin:8px 0 0 20px}</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-logo"><span>GH-</span>600</div>
+    <nav class="header-nav">
+      <a href="index.html">Home</a>
+      <a href="basics.html">Start Here</a>
+      <a href="domain-1.html">D1: Architecture</a>
+      <a href="domain-2.html">D2: Tooling &amp; MCP</a>
+      <a href="domain-3.html">D3: Memory &amp; State</a>
+      <a href="domain-4.html" class="active">D4: Evaluation</a>
+      <a href="domain-5.html">D5: Multi-Agent</a>
+      <a href="domain-6.html">D6: Guardrails</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="resources.html">Resources</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-badge">Domain 4 · Weight: 15–20%</div>
+  <h1>Domain 4: Evaluation, Error Analysis, &amp; Tuning</h1>
+  <p>You&#39;ve built your agent. Now how do you know if it&#39;s working? Domain 4 is about the <strong>feedback cycle</strong> — defining success criteria, detecting failures, diagnosing root causes, and iteratively tuning agent behavior. This is where theory meets practice on the exam.</p>
+</section>
+
+<main class="main">
+<div class="section">
+<h2 id="what-youll-learn-why-it-matters">What You&#39;ll Learn &amp; Why It Matters</h2>
+<p>Put simply, this domain answers: <em>did the agent actually do the job — and if not, why not, and what do we change?</em></p>
+<ul>
+<li><strong>How to write a &quot;definition of done&quot; for an agent task</strong> — expected outcomes plus the limits it must work within. <em>Why it matters:</em> an agent can&#39;t hit a target nobody wrote down, and you can&#39;t grade it either.</li>
+<li><strong>Which evaluation signals to collect</strong> — numbers (tests, coverage, alert counts) and human judgment (reviews). <em>Why:</em> each catches problems the other misses.</li>
+<li><strong>What GitHub&#39;s automated scanners catch</strong> — CodeQL, Dependabot / dependency review, and secret scanning — and how to make them block a merge.</li>
+<li><strong>How to read the evidence</strong> (session logs, workflow logs, artifacts, the PR) to find <em>why</em> an agent failed, and sort it into reasoning error, tool misuse, or context issue.</li>
+<li><strong>Which lever to adjust</strong> — instructions, memory/state, or tools — and how to re-run to prove the fix worked.</li>
+</ul>
+<p><strong>Prerequisites:</strong> basic Git, pull request (PR), and GitHub Actions/YAML knowledge, plus what an LLM and a prompt are — see <a href="basics.html">Fundamentals</a>. It also helps to have read <a href="domain-3.html">Domain 3</a>, because the evidence you evaluate lives in issues, PRs, and workflow runs.</p>
+
+</div>
+<div class="section">
+<h2 id="official-skills-measured">Official Skills Measured</h2>
+<p>From the <a href="https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/gh-600" target="_blank" rel="noopener">GH-600 study guide</a> — <em>Perform evaluation, error analysis, and tuning (15–20%)</em>:</p>
+<p><strong>Define success criteria and evaluation signals for agent tasks</strong></p>
+<ul>
+<li>Specify expected outcomes and operational constraints for agent tasks → see <a href="#3-defining-success-criteria-and-evaluation-signals">3. Defining Success Criteria and Evaluation Signals</a></li>
+<li>Identify qualitative and quantitative evaluation signals to evaluate agents → see <a href="#3-defining-success-criteria-and-evaluation-signals">3. Defining Success Criteria and Evaluation Signals</a></li>
+<li>Align evaluation criteria with development intent → see <a href="#3-defining-success-criteria-and-evaluation-signals">3. Defining Success Criteria and Evaluation Signals</a></li>
+<li>Generate evaluation signals by using automated scanning tools → see <a href="#4-automated-scanning-tools-for-evaluation">4. Automated Scanning Tools for Evaluation</a></li>
+</ul>
+<p><strong>Analyze agent failures and identify root causes</strong></p>
+<ul>
+<li>Identify failures by using logs, plans, traces, outputs, and workflow artifacts → see <a href="#7-evaluation-methods-session-logs-workflow-artifacts-pr-reviews">7. Evaluation Methods: Session Logs, Workflow Artifacts, PR Reviews</a></li>
+<li>Classify root causes, including reasoning errors, tool misuse, and context or environment issues → see <a href="#5-root-cause-analysis-symptom-root-cause-fix">5. Root Cause Analysis: Symptom → Root Cause → Fix</a></li>
+</ul>
+<p><strong>Tune agent behavior based on evaluation results</strong></p>
+<ul>
+<li>Revise instructions, workflows, or constraints → see <a href="#6-the-tuning-levers-instructions-memory-tools-incl-environment-mcp">6. The Tuning Levers: Instructions, Memory, Tools (incl. Environment &amp; MCP)</a></li>
+<li>Refine memory usage → see <a href="#6-the-tuning-levers-instructions-memory-tools-incl-environment-mcp">6. The Tuning Levers: Instructions, Memory, Tools (incl. Environment &amp; MCP)</a></li>
+<li>Refine tool usage and tool access → see <a href="#6-the-tuning-levers-instructions-memory-tools-incl-environment-mcp">6. The Tuning Levers: Instructions, Memory, Tools (incl. Environment &amp; MCP)</a></li>
+</ul>
+
+</div>
+<div class="section">
+<h2 id="1-the-evaluation-mindset">1. The Evaluation Mindset</h2>
+<p>Welcome to Domain 4. If Domain 3 was about how agents <em>remember</em>, Domain 4 is about how agents <em>improve</em>. The core loop is simple: <strong>Define criteria → Execute → Measure → Analyze → Tune → Repeat</strong>. This site calls it the <strong>Plan-Act-Evaluate (PAE)</strong> cycle <em>(term not used in official sources — unverified community info)</em>. Microsoft Learn describes the same feedback loop as: run the agent on a task → observe failures through logs and artifacts → identify the root cause → apply fixes to prompts, memory, or tools → re-run the workflow. The exam expects you to understand every step.</p>
+<p>In this lesson, I&#39;ll teach you:</p>
+<ul>
+<li>How to define meaningful success criteria that an agent or CI pipeline can verify</li>
+<li>Which automated scanning tools are available and what each one detects</li>
+<li>How to do root cause analysis when an agent fails — with a structured decision framework</li>
+<li>The tuning levers: instructions, memory/state, and tools (including environment and MCP)</li>
+<li>How session logs, workflow artifacts, and PR reviews serve as evaluation methods</li>
+</ul>
+<div class="callout tip"><p><strong>📘 Teaching Tip — Evaluation Is Not Optional:</strong> The exam treats evaluation as a <strong>first-class concern</strong>, not an afterthought. Every agent workflow should have explicit evaluation checkpoints. If a question presents an agent workflow without any evaluation step, the implied correct answer is usually: <em>&quot;add an evaluation gate.&quot;</em> This is similar to how you&#39;d never deploy code without tests — you should never deploy an agent configuration without evaluation.</p></div>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Evaluating an agent is like a driving test. The examiner has a checklist written <em>before</em> the drive (success criteria), watches specific things (signals), and if you fail, tells you exactly why (root cause) so you can practise that skill (tuning) and retake the test (re-run).</p></div>
+<h3 id="key-terms-for-this-domain">Key Terms for This Domain</h3>
+<ul>
+<li><strong>Evaluation:</strong> checking an agent&#39;s output against what was intended.</li>
+<li><strong>Success criteria / acceptance criteria:</strong> the written, checkable conditions that mean &quot;done&quot; — usually in the issue.</li>
+<li><strong>Operational constraints:</strong> limits the agent must respect (files in scope, tools allowed, time, approvals).</li>
+<li><strong>Signal:</strong> any piece of evidence that tells you whether a criterion was met — a test result, an alert count, a review comment.</li>
+<li><strong>Quantitative vs qualitative signal:</strong> a number or pass/fail result vs a human judgment.</li>
+<li><strong>Gate / quality gate:</strong> a checkpoint that must pass before work moves on (for example, a required status check before merge).</li>
+<li><strong>Status check / required status check / branch protection:</strong> pass/fail results shown on a PR; branch protection rules can make specific checks <em>required</em> for merging.</li>
+<li><strong>Root cause vs symptom:</strong> the symptom is what you observe (&quot;wrong code&quot;); the root cause is the underlying reason (&quot;the issue never mentioned the auth rule&quot;).</li>
+<li><strong>Tuning / lever:</strong> a deliberate change to instructions, memory/state, or tools to improve the next run.</li>
+<li><strong>Session log / trace:</strong> the step-by-step record of what an agent did and why — prompts, reasoning, tool calls, results.</li>
+<li><strong>Workflow artifact:</strong> a file a GitHub Actions run uploads, such as a test or coverage report (kept 90 days by default).</li>
+</ul>
+
+</div>
+<div class="section">
+<h2 id="2-the-evaluation-feedback-loop">2. The Evaluation Feedback Loop</h2>
+<p>Here&#39;s the core mental model for Domain 4. The evaluation feedback loop shows how agent output flows through measurement, analysis, and tuning back into the agent:</p>
+<div class="diagram-wrap"><svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Evaluation feedback loop diagram">
+        <defs>
+          <linearGradient id="bgD4" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f5f3ff" />
+            <stop offset="100%" stop-color="#ede9fe" />
+          </linearGradient>
+          <linearGradient id="defineGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#2563eb" />
+            <stop offset="100%" stop-color="#3b82f6" />
+          </linearGradient>
+          <linearGradient id="executeGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#f59e0b" />
+            <stop offset="100%" stop-color="#fbbf24" />
+          </linearGradient>
+          <linearGradient id="measureGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#7c3aed" />
+            <stop offset="100%" stop-color="#8b5cf6" />
+          </linearGradient>
+          <linearGradient id="analyzeGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#dc2626" />
+            <stop offset="100%" stop-color="#ef4444" />
+          </linearGradient>
+          <linearGradient id="tuneGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#059669" />
+            <stop offset="100%" stop-color="#10b981" />
+          </linearGradient>
+          <filter id="shadowD4">
+            <feDropShadow dx="0" dy="3" stdDeviation="4" flood-opacity=".15" />
+          </filter>
+          <marker id="arrowD4" markerWidth="12" markerHeight="8" refX="12" refY="4" orient="auto">
+            <polygon points="0 0, 12 4, 0 8" fill="#7c3aed"/>
+          </marker>
+          <marker id="arrowD4green" markerWidth="12" markerHeight="8" refX="12" refY="4" orient="auto">
+            <polygon points="0 0, 12 4, 0 8" fill="#059669"/>
+          </marker>
+        </defs>
+        <rect x="0" y="0" width="760" height="400" rx="10" fill="url(#bgD4)" />
+
+        <!-- Title -->
+        <text x="380" y="30" text-anchor="middle" fill="#4c1d95" font-size="15" font-weight="800" font-family="Inter,sans-serif">Plan → Act → Evaluate Feedback Loop</text>
+
+        <!-- Center: Agent -->
+        <ellipse cx="380" cy="200" rx="80" ry="40" fill="url(#defineGrad)" filter="url(#shadowD4)" />
+        <text x="380" y="198" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="Inter,sans-serif">🤖 Agent</text>
+        <text x="380" y="215" text-anchor="middle" fill="#dbeafe" font-size="10" font-family="Inter,sans-serif">(instructions + memory + tools)</text>
+
+        <!-- Top: Define Success Criteria -->
+        <rect x="290" y="55" width="180" height="50" rx="10" fill="url(#defineGrad)" filter="url(#shadowD4)" />
+        <text x="380" y="78" text-anchor="middle" fill="#fff" font-size="12" font-weight="700" font-family="Inter,sans-serif">🎯 Define Success Criteria</text>
+        <text x="380" y="95" text-anchor="middle" fill="#dbeafe" font-size="9" font-family="Inter,sans-serif">What does "good" look like?</text>
+
+        <!-- Arrow: Define -> Agent -->
+        <line x1="380" y1="105" x2="380" y2="155" stroke="#7c3aed" stroke-width="2.5" marker-end="url(#arrowD4)" />
+
+        <!-- Right: Execute -->
+        <rect x="530" y="165" width="180" height="50" rx="10" fill="url(#executeGrad)" filter="url(#shadowD4)" />
+        <text x="620" y="188" text-anchor="middle" fill="#fff" font-size="12" font-weight="700" font-family="Inter,sans-serif">⚡ Execute Action</text>
+        <text x="620" y="205" text-anchor="middle" fill="#fef3c7" font-size="9" font-family="Inter,sans-serif">Agent performs the task</text>
+
+        <!-- Arrow: Agent -> Execute -->
+        <line x1="460" y1="190" x2="525" y2="190" stroke="#7c3aed" stroke-width="2.5" marker-end="url(#arrowD4)" />
+
+        <!-- Bottom: Measure -->
+        <rect x="530" y="280" width="180" height="50" rx="10" fill="url(#measureGrad)" filter="url(#shadowD4)" />
+        <text x="620" y="303" text-anchor="middle" fill="#fff" font-size="12" font-weight="700" font-family="Inter,sans-serif">📊 Measure Results</text>
+        <text x="620" y="320" text-anchor="middle" fill="#e9d5ff" font-size="9" font-family="Inter,sans-serif">Checks · Scans · Tests · Reviews</text>
+
+        <!-- Arrow: Execute -> Measure -->
+        <line x1="620" y1="215" x2="620" y2="275" stroke="#7c3aed" stroke-width="2.5" marker-end="url(#arrowD4)" />
+
+        <!-- Left: Analyze -->
+        <rect x="50" y="280" width="180" height="50" rx="10" fill="url(#analyzeGrad)" filter="url(#shadowD4)" />
+        <text x="140" y="303" text-anchor="middle" fill="#fff" font-size="12" font-weight="700" font-family="Inter,sans-serif">🔍 Analyze &amp; Diagnose</text>
+        <text x="140" y="320" text-anchor="middle" fill="#fecaca" font-size="9" font-family="Inter,sans-serif">Reasoning · Tool misuse · Context/env</text>
+
+        <!-- Arrow: Measure -> Analyze (bottom loop) -->
+        <line x1="530" y1="305" x2="235" y2="305" stroke="#7c3aed" stroke-width="2.5" marker-end="url(#arrowD4)" />
+
+        <!-- Arrow: Analyze -> Tune (up left) -->
+        <line x1="140" y1="280" x2="140" y2="120" stroke="#059669" stroke-width="3" marker-end="url(#arrowD4green)" />
+
+        <!-- Left top: Tune -->
+        <rect x="50" y="70" width="180" height="50" rx="10" fill="url(#tuneGrad)" filter="url(#shadowD4)" />
+        <text x="140" y="93" text-anchor="middle" fill="#fff" font-size="12" font-weight="700" font-family="Inter,sans-serif">🔧 Tune Agent</text>
+        <text x="140" y="110" text-anchor="middle" fill="#d1fae5" font-size="9" font-family="Inter,sans-serif">Instructions · Memory · Tools/MCP</text>
+
+        <!-- Arrow: Tune -> Agent -->
+        <line x1="230" y1="95" x2="295" y2="160" stroke="#059669" stroke-width="3" marker-end="url(#arrowD4green)" />
+
+        <!-- Labels for loop direction -->
+        <text x="380" y="270" text-anchor="middle" fill="#7c3aed" font-size="10" font-weight="700" font-family="Inter,sans-serif">Output (PR, logs) flows to measurement</text>
+        <text x="380" y="340" text-anchor="middle" fill="#7c3aed" font-size="10" font-weight="700" font-family="Inter,sans-serif">← Results feed analysis →</text>
+
+        <!-- Small check/diagnosis markers -->
+        <text x="380" y="370" text-anchor="middle" fill="#64748b" font-size="10" font-family="Inter,sans-serif">The loop repeats — each iteration improves agent quality</text>
+      </svg>
+<div class="diagram-caption">Figure 4.1 — The Evaluation Feedback Loop: Define criteria → Execute → Measure results → Analyze root causes → Tune the agent (instructions, memory, tools/MCP) → Repeat.</div></div>
+<p>The exam frames evaluation questions within this loop. If you&#39;re asked about a failure, trace backward: was the <strong>criteria</strong> poorly defined? Was the <strong>measurement</strong> incomplete? Was the <strong>analysis</strong> wrong? The answer will point to one of these stages.</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> It&#39;s a taste-and-adjust loop in cooking: decide what &quot;good&quot; tastes like, cook, taste, figure out what&#39;s off (too salty? undercooked?), change one thing, and cook again. Changing five things at once means you never learn which one helped.</p></div>
+<div class="callout tip"><p><strong>🎯 Exam angle:</strong> When a question describes a broken agent workflow, ask which stage of the loop is missing or weak. No written criteria → fix <strong>Define</strong>. No checks or reviews → fix <strong>Measure</strong>. Guessing at fixes without reading logs → fix <strong>Analyze</strong>. Fix applied but never re-run → the loop isn&#39;t closed.</p></div>
+
+</div>
+<div class="section">
+<h2 id="3-defining-success-criteria-and-evaluation-signals">3. Defining Success Criteria and Evaluation Signals</h2>
+<p>Every agent task needs explicit success criteria <strong>before</strong> the agent starts. In GitHub workflows, write acceptance criteria directly in the <strong>issue</strong>, reference them in the <strong>pull request</strong>, and use them as the basis for validation. The exam skills include &quot;Specify expected outcomes and operational constraints&quot;, &quot;Identify qualitative and quantitative evaluation signals&quot;, and &quot;Align evaluation criteria with development intent&quot;. It helps to distinguish <strong>weak</strong> and <strong>strong</strong> evaluation signals.</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> A recipe that says &quot;bake until it looks done&quot; is a weak criterion; &quot;bake until golden and 75 °C in the centre&quot; is a strong one. Success criteria for agents work the same way: specific, measurable, and written before anyone starts cooking.</p></div>
+<h3 id="expected-outcomes-and-operational-constraints">Expected Outcomes and Operational Constraints</h3>
+<p>An agent task spec needs two halves:</p>
+<ul>
+<li><strong>Expected outcomes</strong> — what must be true when the task is done. Learn&#39;s examples: the feature behaves as expected, tests pass, and no new security issues are introduced (<a href="https://learn.microsoft.com/en-us/training/modules/memory-state-evaluation/5-evaluation-signals-quality-gates" target="_blank" rel="noopener">Learn: evaluation signals</a>).</li>
+<li><strong>Operational constraints</strong> — the limits the agent must work within: files/paths in scope, tools allowed, time, approvals, and what is explicitly out of scope.</li>
+</ul>
+<p>GitHub&#39;s <a href="https://docs.github.com/copilot/tutorials/customization-library/custom-agents/implementation-planner" target="_blank" rel="noopener">implementation planner</a> custom agent is a good template for this. Its profile (<code>tools: [&quot;read&quot;, &quot;search&quot;, &quot;edit&quot;]</code> — no <code>execute</code>) instructs it to write markdown plans with:</p>
+<ul>
+<li><strong>Overview</strong> — the problem, <strong>success criteria (&quot;what does &#39;done&#39; look like?&quot;)</strong>, and who will use it</li>
+<li><strong>Technical Approach</strong> — architecture, key APIs/data structures, major decisions and trade-offs</li>
+<li><strong>Implementation Plan</strong> — phases with tasks, Small/Medium/Large complexity estimates, and dependencies</li>
+<li><strong>Considerations</strong> — <strong>Assumptions</strong>, <strong>Constraints</strong>, <strong>Risks</strong></li>
+<li><strong>Not Included</strong> — items deferred to later versions</li>
+</ul>
+<p>Platform constraints are also operational constraints: a Copilot cloud agent session can only change the repository it was started in, works on one branch and opens one PR per task, and stops after <strong>59 minutes</strong> (<a href="https://docs.github.com/en/copilot/concepts/agents/cloud-agent/about-cloud-agent" target="_blank" rel="noopener">GitHub Docs</a>).</p>
+<h3 id="qualitative-vs-quantitative-signals">Qualitative vs Quantitative Signals</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Kind</th>
+<th>Examples on GitHub</th>
+<th>Strength</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Quantitative</strong> (pass/fail or numeric)</td>
+<td>Status checks, test results, coverage %, lint errors, number of code scanning/Dependabot/secret scanning alerts</td>
+<td>Automatable; can be enforced as <strong>required</strong> checks</td>
+</tr>
+<tr>
+<td><strong>Qualitative</strong> (judgment)</td>
+<td>PR review comments and approvals, Copilot code review feedback, adherence to design intent, readability</td>
+<td>Catches business-logic and design issues tools can&#39;t</td>
+</tr>
+</tbody></table></div>
+<p>Use both: quantitative signals gate the merge automatically; qualitative signals come from the required human review.</p>
+<h3 id="aligning-evaluation-criteria-with-development-intent">Aligning Evaluation Criteria with Development Intent</h3>
+<p><em>Intent</em> lives in the <strong>issue</strong> (requirements, acceptance criteria) and the <strong>PR description</strong> (plan, decisions); <em>results</em> live in commits, code changes, and workflow outputs (<a href="https://learn.microsoft.com/en-us/training/modules/memory-state-evaluation/6-agent-failures-behavior-improvement" target="_blank" rel="noopener">Learn: failures</a>). Alignment means:</p>
+<ol>
+<li>Write acceptance criteria directly in the issue</li>
+<li>Reference those criteria in the PR</li>
+<li>Use them as the basis for validation — each criterion should map to a check, a test, or an explicit review item</li>
+<li>When intent changes, update the issue/PR first, then the checks</li>
+</ol>
+<div class="callout warning"><p><strong>⚠️ Exam Trap:</strong> All-green checks don&#39;t prove the agent met intent. If an option says &quot;the workflows passed, so the task is complete&quot; while the PR doesn&#39;t satisfy the issue&#39;s acceptance criteria, it&#39;s wrong — evaluation is against intent, and checks are only as good as their mapping to it.</p></div>
+<h3 id="weak-vs-strong-signals">Weak vs Strong Signals</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Example</th>
+<th>Problem</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>❌ Weak</td>
+<td>&quot;The PR looks good&quot;</td>
+<td>Subjective, unmeasurable, depends on reviewer opinion</td>
+</tr>
+<tr>
+<td>❌ Weak</td>
+<td>&quot;Tests pass&quot;</td>
+<td>Tests could be incomplete or not cover the agent&#39;s changes</td>
+</tr>
+<tr>
+<td>✅ Strong</td>
+<td>&quot;All existing + new tests pass; coverage ≥ 80%; no lint warnings&quot;</td>
+<td>Quantitative, verifiable, multi-dimensional</td>
+</tr>
+<tr>
+<td>✅ Strong</td>
+<td>&quot;PR has exactly 3 files changed (2 source + 1 test); all status checks green&quot;</td>
+<td>Scope-bound, automated, specific</td>
+</tr>
+</tbody></table></div>
+<h3 id="evaluation-signal-types">Evaluation Signal Types</h3>
+<p>Useful categories of evaluation signals:</p>
+<ul>
+<li><strong>Functional signals:</strong> Does the output do what it&#39;s supposed to? (Tests pass, code compiles, API returns expected status)</li>
+<li><strong>Quality signals:</strong> Is the output well-made? (Code coverage, lint score, performance benchmarks, accessibility checks)</li>
+<li><strong>Compliance signals:</strong> Does the output follow governance rules? (No secrets committed, follows team conventions, meets security policies)</li>
+<li><strong>Process signals:</strong> Was the workflow followed correctly? (Plan was reviewed, approvals obtained, audit trail complete)</li>
+</ul>
+<p>On GitHub these surface as <strong>status checks</strong>, <strong>workflow runs</strong>, and results in the PR&#39;s <strong>Checks</strong> tab, and are enforced with <strong>required status checks</strong> in branch protection rules (optionally requiring branches to be up to date before merging).</p>
+<div class="callout"><p><strong>🎓 Teaching Tip — The &quot;So What?&quot; Test:</strong> For every success criterion you define, ask: <em>&quot;If this criterion passes, does that actually mean the agent succeeded?&quot;</em> If &quot;tests pass&quot; is your only criterion, the agent could delete all tests (making them pass vacuously) or write trivial tests that assert nothing. Strong criteria are <strong>specific, quantitative, and hard to game</strong>.</p></div>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Writing criteria <em>after</em> the agent finishes, based on what it produced. That grades the agent against its own output. Criteria belong in the issue before the work starts, so they reflect intent.</p></div>
+<div class="callout tip"><p><strong>🎯 Exam angle:</strong> You&#39;ll often get four candidate success criteria and must pick the best. Choose the one that is <strong>measurable, tied to the issue&#39;s intent, and hard to game</strong> (for example, &quot;new tests cover the empty-input case and all required checks pass&quot;) over vague ones (&quot;code looks clean&quot;) or single-dimension ones (&quot;tests pass&quot;).</p></div>
+
+</div>
+<div class="section">
+<h2 id="4-automated-scanning-tools-for-evaluation">4. Automated Scanning Tools for Evaluation</h2>
+<p>GitHub provides several automated scanning tools that serve as evaluation signals for agent outputs (&quot;Generate evaluation signals by using automated scanning tools&quot;). The exam expects you to know what each tool does and when to use it.</p>
+<p>First, the vocabulary:</p>
+<ul>
+<li><strong>Code scanning:</strong> GitHub&#39;s feature that analyzes source code for security problems and shows the results as alerts.</li>
+<li><strong>CodeQL:</strong> GitHub&#39;s code analysis engine that powers code scanning; it searches code for known vulnerability patterns (such as SQL injection).</li>
+<li><strong>SARIF (Static Analysis Results Interchange Format):</strong> a standard JSON format (an OASIS standard; GitHub supports version 2.1.0) for reporting analysis results. Any tool that outputs SARIF can feed code scanning (<a href="https://docs.github.com/en/code-security/code-scanning/integrating-with-code-scanning/sarif-support-for-code-scanning" target="_blank" rel="noopener">GitHub Docs: SARIF support</a>).</li>
+<li><strong>Dependency / advisory / CVE:</strong> a dependency is a third-party package your project uses; an advisory is a published notice that a package version is vulnerable, often with a CVE ID (a public identifier for a known vulnerability).</li>
+<li><strong>Secret:</strong> a credential such as an API key, token, or password that must never be committed.</li>
+</ul>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> These are three different alarms in a house. CodeQL is the inspector checking <em>your own</em> wiring for faults. Dependabot and dependency review are the recall notices for appliances you <em>bought</em> from someone else. Secret scanning is the alarm that goes off when someone leaves the front-door key under the mat.</p></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>What It Scans</th>
+<th>What It Detects</th>
+<th>Trigger</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>CodeQL (code scanning)</strong></td>
+<td>Source code — default setup analyzes the default branch, protected branches, and PRs; advanced setup scans whatever the workflow triggers on</td>
+<td>Security vulnerabilities and coding errors: injection flaws, XSS, SQLi, path traversal, etc.</td>
+<td><strong>Default setup</strong> (no workflow file needed) or <strong>advanced setup</strong> via a workflow such as <code>.github/workflows/codeql.yml</code> (push/PR/schedule)</td>
+</tr>
+<tr>
+<td><strong>Dependabot</strong></td>
+<td>Dependency manifests and lock files (<code>package.json</code>, <code>requirements.txt</code>, <code>Gemfile</code>, etc.) on the default branch</td>
+<td>Known vulnerabilities in dependencies (advisories/CVEs); version updates for outdated packages</td>
+<td>Alerts when a new advisory is added to the GitHub Advisory Database or the dependency graph changes; security-update PRs if enabled; version updates on a schedule via <code>.github/dependabot.yml</code>. For PR gating use <strong>dependency review</strong></td>
+</tr>
+<tr>
+<td><strong>Secret Scanning</strong></td>
+<td>Repository content (full Git history on all branches, plus issues, PR titles/descriptions/comments, etc.)</td>
+<td>Hard-coded secrets: API keys, tokens, passwords, certificates, private keys, connection strings</td>
+<td>Detects on push and generates alerts; <strong>push protection</strong> can block the push before the secret lands</td>
+</tr>
+</tbody></table></div>
+<h3 id="how-these-fit-into-evaluation">How These Fit Into Evaluation</h3>
+<p>Each tool produces <strong>evaluation signals</strong> that answer specific questions about agent output:</p>
+<ul>
+<li><strong>CodeQL</strong> answers: &quot;Did the agent introduce any security vulnerabilities?&quot;</li>
+<li><strong>Dependabot / dependency review</strong> answers: &quot;Did the agent introduce any vulnerable dependencies?&quot;</li>
+<li><strong>Secret Scanning</strong> answers: &quot;Did the agent accidentally expose any credentials?&quot;</li>
+</ul>
+<p>These tools should be part of every agent workflow as <strong>automated evaluation gates</strong>. Microsoft Learn: enable available security features, <strong>treat security alerts or failed checks as blockers</strong>, and review security results in the pull request. If a PR from an agent triggers a CodeQL alert (and code scanning is a required check), the evaluation fails — the agent must fix the issue before the PR can merge.</p>
+<h3 id="built-in-validation-in-copilot-cloud-agent">Built-In Validation in Copilot Cloud Agent</h3>
+<p>By default, <strong>Copilot cloud agent checks the code it generates for security issues and gets a second opinion from Copilot code review</strong>, then tries to resolve what they find <em>before</em> completing the PR — reducing hardcoded secrets, insecure dependencies, and other vulnerabilities. Repository administrators can toggle these under <strong>Settings → Copilot → Cloud agent → Validation tools</strong> (e.g., to speed up work or avoid conflicts with other security products) (<a href="https://docs.github.com/en/copilot/how-tos/use-copilot-agents/cloud-agent/configuring-agent-settings" target="_blank" rel="noopener">GitHub Docs: Configuring cloud agent settings</a>).</p>
+<div class="callout warning"><p><strong>⚠️ Exam Trap:</strong> By default, <strong>GitHub Actions workflows do not run automatically when Copilot pushes</strong> to its PR. Someone must click <strong>Approve and run workflows</strong> in the merge box (review <code>.github/workflows/</code> changes first). Admins can disable <strong>Require approval for workflow runs</strong>, but GitHub warns this may let unreviewed Copilot code gain write access or reach Actions secrets. So &quot;why are no checks showing on the agent&#39;s PR?&quot; → workflows are awaiting approval.</p></div>
+<h3 id="tool-details-worth-knowing">Tool Details Worth Knowing</h3>
+<ul>
+<li><strong>Code scanning</strong> can use <strong>CodeQL</strong> or any <strong>third-party tool that outputs SARIF</strong>; it runs on GitHub Actions (consumes Actions minutes; private repos need GitHub Code Security). Alerts close automatically once the triggering code is fixed, and <strong>Copilot Autofix</strong> suggests fixes for alerts (<a href="https://docs.github.com/en/code-security/code-scanning/introduction-to-code-scanning/about-code-scanning" target="_blank" rel="noopener">GitHub Docs: Code scanning</a>).</li>
+<li><strong>Dependency review</strong> shows added/removed/updated dependencies and their vulnerabilities in the PR&#39;s <strong>Files changed</strong> tab. The <strong>dependency review action</strong> fails its check <strong>by default if any vulnerable package is introduced</strong>; make it a required check to block the merge. It&#39;s configurable (failure severity level, license allow/deny lists), and org owners can enforce it across repos as a <strong>required workflow via repository rulesets</strong>. Dependabot alerts find vulnerabilities already present; dependency review stops new ones (<a href="https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/about-dependency-review" target="_blank" rel="noopener">GitHub Docs: Dependency review</a>).</li>
+<li><strong>Push protection</strong> blocks secrets in command-line pushes, GitHub UI commits, file uploads, REST API requests, and <strong>GitHub MCP server interactions (public repos only)</strong>. Repository-level push protection is off by default and requires GitHub Secret Protection; push protection for users is on by default for public repos. Bypasses with &quot;I&#39;ll fix it later&quot; create an <strong>open</strong> alert and are written to the audit log; <strong>delegated bypass</strong> restricts who may bypass (<a href="https://docs.github.com/en/code-security/secret-scanning/introduction/about-push-protection" target="_blank" rel="noopener">GitHub Docs: Push protection</a>).</li>
+</ul>
+<h3 id="end-to-end-quality-gate-flow">End-to-End Quality Gate Flow</h3>
+<p>Learn&#39;s reference flow (<a href="https://learn.microsoft.com/en-us/training/modules/memory-state-evaluation/5-evaluation-signals-quality-gates" target="_blank" rel="noopener">evaluation signals</a>):</p>
+<ol>
+<li>An issue defines the task and success criteria</li>
+<li>An agent creates a branch and opens a PR</li>
+<li>Workflows run automatically (on <code>pull_request</code>/<code>push</code>)</li>
+<li>Status checks appear in the PR</li>
+<li><strong>Required</strong> checks must pass</li>
+<li>A reviewer approves</li>
+<li>The PR is merged</li>
+</ol>
+<p>Enforce it with branch protection: <strong>Require status checks to pass before merging</strong> (select the specific checks), require at least one approving review, and prevent direct pushes to protected branches.</p>
+<div class="callout warning"><p><strong>⚠️ Exam Trap:</strong> The exam will test whether you know which scanning tool to use for a given scenario. If the scenario mentions a <strong>vulnerable library</strong> → that&#39;s <strong>Dependabot</strong> (or dependency review on the PR). If it mentions <strong>hard-coded API keys</strong> → that&#39;s <strong>Secret Scanning</strong>. If it mentions <strong>SQL injection in custom code</strong> → that&#39;s <strong>CodeQL</strong>. Don&#39;t confuse them — each tool has a distinct purpose.</p></div>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Assuming Dependabot scans <em>your</em> code for bugs. It only knows about published vulnerabilities in packages you depend on. A SQL injection you wrote yourself is invisible to Dependabot — that&#39;s CodeQL&#39;s job.</p></div>
+<div class="callout tip"><p><strong>🎯 Exam angle:</strong> Tool-matching questions describe the <em>thing found</em> and ask which feature finds or blocks it. Decision rule: flaw in your own code → CodeQL / code scanning; vulnerable package already in the repo → Dependabot alerts; stopping a vulnerable package <em>on a PR</em> → dependency review action as a required check; credential in code → secret scanning, and <em>blocking it before it lands</em> → push protection. &quot;No checks appear on Copilot&#39;s PR&quot; → workflows are awaiting approval.</p></div>
+
+</div>
+<div class="section">
+<h2 id="5-root-cause-analysis-symptom-root-cause-fix">5. Root Cause Analysis: Symptom → Root Cause → Fix</h2>
+<p>When an agent fails, the exam expects you to identify failures using <strong>logs, plans, traces, outputs, and workflow artifacts</strong>, compare <strong>intent</strong> (issue/PR description) with <strong>results</strong> (commits, workflow output), and classify the root cause. Microsoft Learn&#39;s categories are:</p>
+<ul>
+<li><strong>Reasoning errors</strong> — misinterpreting requirements, incorrect logic, ignoring acceptance criteria</li>
+<li><strong>Tool misuse</strong> — misconfigured workflows, incorrect commands or scripts, failing to trigger/use workflows properly</li>
+<li><strong>Context (or environment) issues</strong> — outdated PR state, missing prior decisions, conflicting information across artifacts</li>
+</ul>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> A fever is a symptom; the infection is the root cause. Giving paracetamol makes the fever go away for a while, but only treating the infection stops it coming back. In agent terms: &quot;the PR was rejected&quot; is the symptom; &quot;the issue never stated the auth rule&quot; is the root cause.</p></div>
+<p>A quick way to classify: if the agent <em>had</em> the right information and still chose wrongly, it&#39;s a <strong>reasoning error</strong>; if its plan was right but a command, workflow, or tool configuration broke it, it&#39;s <strong>tool misuse</strong>; if the information it used was missing, stale, or contradictory, it&#39;s a <strong>context issue</strong>.</p>
+<p>Here&#39;s a structured decision framework:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely Root Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Agent produces incorrect code (wrong logic, wrong API calls)</td>
+<td><strong>Reasoning error / instructions too vague</strong> — agent lacks specific behavioral guidelines or acceptance criteria</td>
+<td>Clarify acceptance criteria in the issue; add task-specific instructions in <code>.github/instructions/*.instructions.md</code> (with <code>applyTo</code>) or improve the prompt</td>
+</tr>
+<tr>
+<td>Agent can&#39;t find the right files or functions</td>
+<td><strong>Context issue — missing context</strong> — agent doesn&#39;t know the codebase structure</td>
+<td>Provide file path hints in the task; document structure in <code>.github/copilot-instructions.md</code>/<code>AGENTS.md</code> (Copilot Memory can also learn repo facts over time, but isn&#39;t manually edited)</td>
+</tr>
+<tr>
+<td>Agent tries to use a tool it doesn&#39;t have access to</td>
+<td><strong>Tool misconfiguration in agent profile</strong> — the <code>tools</code> list in <code>.github/agents/*.agent.md</code> doesn&#39;t include the required tool</td>
+<td>Add the missing tool (or alias) to the profile&#39;s <code>tools</code> list (omitting <code>tools</code> enables all tools), or reassign the task to an agent with the right tools</td>
+</tr>
+<tr>
+<td>Agent&#39;s MCP calls fail</td>
+<td><strong>MCP server misconfiguration</strong> — server not defined, wrong command/URL, missing <code>tools</code> allowlist, or authentication issues</td>
+<td>Verify MCP config where the agent reads it: cloud agent → repository <strong>Settings → Copilot → MCP servers</strong> (secrets as <code>COPILOT_MCP_*</code> Agents secrets) or the profile&#39;s <code>mcp-servers</code>; Copilot CLI → <code>.mcp.json</code> / <code>.github/mcp.json</code> / <code>~/.copilot/mcp-config.json</code>; VS Code → <code>.vscode/mcp.json</code>. Check the &quot;Start MCP Servers&quot; step in the session logs</td>
+</tr>
+<tr>
+<td>Agent makes changes to wrong files or scope</td>
+<td><strong>Context drift or insufficient scoping</strong> — agent&#39;s mental model of which files are in scope is wrong</td>
+<td>Re-read files before editing; add explicit scope constraints to task instructions; use <code>applyTo</code> patterns for path-specific instructions</td>
+</tr>
+<tr>
+<td>Agent&#39;s PR gets rejected in review</td>
+<td><strong>Poor output quality</strong> — agent didn&#39;t follow team conventions, missing tests, no documentation</td>
+<td>Add PR template requirements; include quality checks in the evaluation criteria; tune agent instructions for the expected output format</td>
+</tr>
+<tr>
+<td>Agent silently fails (no output, no error)</td>
+<td><strong>No error handling or logging</strong> — agent encounters an error but doesn&#39;t surface it</td>
+<td>Implement error handling in the agent workflow; configure hooks in <code>.github/hooks/*.json</code> (e.g., <code>errorOccurred</code>, <code>postToolUse</code>, <code>sessionEnd</code>) for lifecycle monitoring; add logging and alerting</td>
+</tr>
+<tr>
+<td>Agent keeps repeating the same mistake</td>
+<td><strong>Insufficient feedback loop</strong> — evaluation signals are too weak or don&#39;t reach the agent&#39;s tuning mechanism</td>
+<td>Strengthen evaluation criteria; add automated scanning gates; implement a formal iterative tuning loop</td>
+</tr>
+<tr>
+<td>Agent&#39;s output violates security policies</td>
+<td><strong>Lack of guardrails or too much autonomy</strong> — agent has too much freedom without governance</td>
+<td>Reduce autonomy level; add CodeQL/Secret Scanning gates; enforce branch protection rules; add human review requirement; use a <code>preToolUse</code> hook to deny dangerous commands</td>
+</tr>
+<tr>
+<td>Agent uses the wrong tool for the task</td>
+<td><strong>Tool misuse / misconfigured least privilege</strong> — agent tool set doesn&#39;t match the task requirements</td>
+<td>Audit the agent&#39;s <code>tools</code> list; apply least-privilege principle; add tool-use instructions in the agent profile or prompt</td>
+</tr>
+</tbody></table></div>
+<div class="callout tip"><p><strong>📘 Teaching Tip — The Diagnosis Tree:</strong> When the exam presents a failure scenario, always start by asking: <em>&quot;Is the agent&#39;s configuration correct?&quot;</em> If yes, ask: <em>&quot;Are the instructions complete enough?&quot;</em> If yes, ask: <em>&quot;Is the evaluation catching the right signals?&quot;</em> Work through this tree — the exam&#39;s wrong answers typically skip a level and go directly to a complicated fix when the real fix is simple configuration.</p></div>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Labelling every failure &quot;the model got it wrong&quot; (reasoning error). Many failures are tool misuse (a broken script) or context issues (an outdated PR). Check the session logs and workflow logs before blaming the model.</p></div>
+<div class="callout tip"><p><strong>🎯 Exam angle:</strong> Classification questions describe evidence and ask for the category. Look for the tell: &quot;plan and reasoning were correct, but the command/workflow failed&quot; → <strong>tool misuse</strong>; &quot;used an old decision&quot; or &quot;two artifacts disagree&quot; → <strong>context issue</strong>; &quot;ignored an acceptance criterion that was clearly stated&quot; → <strong>reasoning error</strong>.</p></div>
+
+</div>
+<div class="section">
+<h2 id="6-the-tuning-levers-instructions-memory-tools-incl-environment-mcp">6. The Tuning Levers: Instructions, Memory, Tools (incl. Environment &amp; MCP)</h2>
+<p>When evaluation reveals that an agent isn&#39;t performing as expected, you have <strong>tuning levers</strong> to adjust. The exam skills are: <em>revise instructions, workflows, or constraints</em>; <em>refine memory usage</em>; <em>refine tool usage and tool access</em>. Microsoft Learn groups improvements into three areas — <strong>prompts and instructions</strong>, <strong>memory and state</strong>, and <strong>tool configuration</strong>. This site splits tool configuration further into Tools, Environment, and MCP; the exam expects you to know which lever to use for each type of problem.</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> The levers are the knobs on a sound mixing desk. If the vocals are too quiet, you turn up the vocal knob — you don&#39;t rewire the speakers. Match the knob to the problem and turn the smallest one that fixes it.</p></div>
+<h3 id="lever-1-instructions">Lever 1: Instructions</h3>
+<p><strong>What it controls:</strong> The agent&#39;s understanding of what to do and how to behave.</p>
+<p><strong>When to adjust:</strong> When the agent produces incorrect or low-quality output because it doesn&#39;t have enough context, doesn&#39;t understand the expected output format, or follows wrong conventions.</p>
+<p><strong>How to adjust:</strong></p>
+<ul>
+<li>Clarify acceptance criteria and constraints in the issue</li>
+<li>Update <code>.github/copilot-instructions.md</code> for repo-wide behavior (or <code>AGENTS.md</code>)</li>
+<li>Create or modify <code>.github/instructions/*.instructions.md</code> (scoped with <code>applyTo</code> globs) for path/task-specific guidance</li>
+<li>Improve prompt files in <code>.github/prompts/*.prompt.md</code> (IDE feature)</li>
+<li>Add explicit examples of desired output (few-shot prompting)</li>
+</ul>
+<h3 id="lever-1b-memory-and-state">Lever 1b: Memory and State</h3>
+<p><strong>What it controls:</strong> What information the agent relies on across sessions.</p>
+<p><strong>When to adjust:</strong> When failures stem from stale, missing, or conflicting context.</p>
+<p><strong>How to adjust:</strong></p>
+<ul>
+<li>Update issues or pull requests with clearer decisions</li>
+<li>Remove outdated or conflicting context</li>
+<li>Ensure a single source of truth is maintained</li>
+<li>Review/delete incorrect Copilot Memory entries (repository owners and users can delete stored facts/preferences)</li>
+</ul>
+<p>Refining memory usage in practice:</p>
+<ul>
+<li><strong>Summarize instead of hoarding:</strong> put final decisions in the PR description and link to commits/workflow runs rather than copying full logs (<a href="https://learn.microsoft.com/en-us/training/modules/memory-state-evaluation/3-agent-state-context-drift" target="_blank" rel="noopener">Learn: state &amp; drift</a>)</li>
+<li><strong>Reset when assumptions change:</strong> rewrite the PR description, or close and recreate the PR, and document the new direction before continuing</li>
+<li><strong>Move durable rules out of learned memory:</strong> Copilot Memory entries expire after 28 days unused and are applied only after validation, so a rule that must <em>always</em> apply belongs in custom instructions (<a href="https://docs.github.com/copilot/concepts/agents/copilot-memory" target="_blank" rel="noopener">GitHub Docs: Copilot Memory</a>)</li>
+<li><strong>Know where memory applies:</strong> Copilot code review uses repository facts only (no user preferences); Copilot CLI uses repository facts plus the initiating user&#39;s preferences</li>
+</ul>
+<h3 id="lever-2-tools">Lever 2: Tools</h3>
+<p><strong>What it controls:</strong> Which actions the agent is allowed to take.</p>
+<p><strong>When to adjust:</strong> When the agent tries to use tools it doesn&#39;t have, or when it has tools it shouldn&#39;t use (privilege creep). Also when the agent&#39;s tool permissions don&#39;t match the task&#39;s requirements.</p>
+<p><strong>How to adjust:</strong></p>
+<ul>
+<li>Update the <code>tools</code> list in <code>.github/agents/*.agent.md</code> (aliases: <code>execute</code>, <code>read</code>, <code>edit</code>, <code>search</code>, <code>agent</code>, <code>web</code>, <code>todo</code>; <code>server/tool</code> or <code>server/*</code> for MCP tools; <code>[]</code> disables all)</li>
+<li>Add tool-specific constraints (restricted commands, allowed directories), e.g., via <code>preToolUse</code> hooks</li>
+<li>Enable or disable the <code>web</code> tool for fetching URLs/web search (currently not applicable to cloud agent)</li>
+<li>Add or remove the <code>agent</code> tool for invoking other custom agents</li>
+<li>Update workflow files in <code>.github/workflows/</code>; ensure they trigger on the correct events and verify permissions and required checks</li>
+</ul>
+<h3 id="lever-3-environment">Lever 3: Environment</h3>
+<p><strong>What it controls:</strong> The execution context where the agent runs — including secrets, environment variables, runtime versions, and workspace layout.</p>
+<p><strong>When to adjust:</strong> When the agent fails due to missing dependencies, wrong runtime versions, missing authentication tokens, or incorrect workspace setup.</p>
+<p><strong>How to adjust:</strong></p>
+<ul>
+<li>Configure <code>.github/workflows/copilot-setup-steps.yml</code> (job named <code>copilot-setup-steps</code>) to preinstall tools/dependencies for <strong>Copilot cloud agent&#39;s</strong> environment</li>
+<li>Set Agents secrets and variables for Copilot cloud agent (repository or organization level), or Actions/Codespaces secrets for those environments</li>
+<li>Use <code>target</code> in the agent profile to limit where a custom agent is available — valid values are <code>vscode</code> or <code>github-copilot</code> (unset = both)</li>
+<li>Configure environment protection rules for deployment gates</li>
+</ul>
+<h3 id="lever-4-mcp">Lever 4: MCP</h3>
+<p><strong>What it controls:</strong> Which external services the agent can access via the Model Context Protocol.</p>
+<p><strong>When to adjust:</strong> When the agent needs access to external data sources, APIs, or specialized services that aren&#39;t available through its built-in tools.</p>
+<p><strong>How to adjust:</strong></p>
+<ul>
+<li>Add or modify MCP server definitions: repository <strong>Settings → Copilot → MCP servers</strong> (cloud agent and code review), <code>.mcp.json</code> / <code>.github/mcp.json</code> / <code>~/.copilot/mcp-config.json</code> (Copilot CLI), or <code>.vscode/mcp.json</code> (VS Code)</li>
+<li>Define servers in the agent profile&#39;s <code>mcp-servers</code> <strong>object</strong> (not used by IDE custom agents) and allowlist specific tools via <code>tools</code></li>
+<li>Configure the <strong>MCP allow list</strong> policy for security control</li>
+<li>Point to an organization <strong>MCP registry</strong> URL for server discovery</li>
+</ul>
+<div class="callout"><p><strong>🎓 Teaching Tip — The Lever Priority:</strong> Start with instructions (cheapest, lowest risk), then memory/state cleanup, then tools (still low risk), then environment (medium risk), then MCP (highest risk, widest blast radius). The exam will test whether you choose the <strong>minimal effective change</strong>. Don&#39;t reconfigure MCP servers when a better instruction file would fix the problem. <em>(Ordering is this site&#39;s heuristic — unverified community info.)</em></p></div>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Giving the agent <em>more</em> tools or MCP servers when it misbehaves. More access rarely fixes a misunderstanding and widens the blast radius (how much damage a mistake can do). Usually the fix is clearer instructions or removing an unneeded tool.</p></div>
+<div class="callout tip"><p><strong>🎯 Exam angle:</strong> Lever questions describe a root cause and ask for the best fix. Decision rule: vague or missing guidance → <strong>instructions</strong>; stale, missing, or conflicting decisions → <strong>memory/state</strong> (update the issue/PR, single source of truth); wrong commands, missing permissions, or bad workflow triggers → <strong>tools/workflows</strong>; missing runtime or secrets → <strong>environment</strong> (<code>copilot-setup-steps.yml</code>, Agents secrets); missing external data → <strong>MCP</strong>. Prefer the minimal effective change.</p></div>
+
+</div>
+<div class="section">
+<h2 id="7-evaluation-methods-session-logs-workflow-artifacts-pr-reviews">7. Evaluation Methods: Session Logs, Workflow Artifacts, PR Reviews</h2>
+<p>Beyond automated scanning tools, three primary methods provide evidence for evaluating agent performance. Each provides different signals at different stages of the agent workflow.</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Session logs are the aeroplane&#39;s flight recorder (what happened, step by step). Workflow artifacts are the receipts (proof that tests and scans actually ran). PR review is the human inspector who signs off. You need all three: the recorder explains, the receipts prove, the inspector judges.</p></div>
+<h3 id="session-logs">Session Logs</h3>
+<p>Session logs capture the record of an agent&#39;s interaction: prompts, tool calls, outputs, and errors. They are the <strong>ground truth</strong> for understanding what the agent did and why.</p>
+<ul>
+<li><strong>Use for:</strong> Post-mortem analysis, debugging failures, auditing agent decisions</li>
+<li><strong>Contains:</strong> Timestamped sequence of events, tool inputs and outputs, model responses, error messages</li>
+<li><strong>Storage:</strong> Copilot cloud agent session logs (open via <strong>View session</strong> on the PR), GitHub Actions workflow logs (90-day default retention, configurable), local log files, or external log aggregation</li>
+<li><strong>Exam tip:</strong> If an agent produces unexpected output, a first diagnostic step is: <em>check the session/workflow logs</em> (and the PR&#39;s Checks tab)</li>
+</ul>
+<h3 id="using-cloud-agent-session-logs-plans-and-traces">Using Cloud Agent Session Logs, Plans, and Traces</h3>
+<p>Per <a href="https://docs.github.com/en/copilot/how-tos/use-copilot-agents/cloud-agent/track-copilot-sessions" target="_blank" rel="noopener">GitHub Docs: Managing agent sessions</a>:</p>
+<ul>
+<li>Session logs show Copilot&#39;s <strong>internal reasoning and the tools it used</strong> to understand the repo, make changes, and validate them (it runs tests and linters in its own ephemeral environment before pushing); the session overview also shows progress, token usage, and session length.</li>
+<li><strong>Trace commits to logs:</strong> every cloud agent commit message links to its session logs — the trace from a line of code back to the reasoning behind it.</li>
+<li><strong>Ask Chat about a session:</strong> on a Copilot-created PR, Copilot Chat can explain what changed, what was validated, and why, using the session logs.</li>
+<li><strong>Query past sessions</strong> in natural language (e.g., &quot;sessions where the agent struggled or I had to correct it multiple times&quot;) across synced CLI, cloud agent, and code review sessions — only sessions you started, and only if session syncing is enabled/allowed by policy.</li>
+<li><strong>Plans</strong> are evidence too: compare the plan (PR description or a planner agent&#39;s markdown plan) with what the commits actually did to spot reasoning errors.</li>
+</ul>
+<p>GitHub notes that logs <strong>do not replace your own review and testing</strong> (<a href="https://docs.github.com/en/copilot/concepts/agents/cloud-agent/about-cloud-agent" target="_blank" rel="noopener">GitHub Docs</a>).</p>
+<p>Learn&#39;s failure-analysis routine: open the PR and review recent changes → check the <strong>Checks</strong> tab for failed workflows → inspect workflow logs → compare the expected outcome with the actual result (<a href="https://learn.microsoft.com/en-us/training/modules/memory-state-evaluation/6-agent-failures-behavior-improvement" target="_blank" rel="noopener">Learn: failures</a>).</p>
+<h3 id="workflow-artifacts">Workflow Artifacts</h3>
+<p>Workflow artifacts are outputs generated during agent execution — test reports, coverage summaries, build outputs, scanned file lists, generated documentation.</p>
+<ul>
+<li><strong>Use for:</strong> Verifying that the agent&#39;s output meets quality and completeness criteria</li>
+<li><strong>Contains:</strong> Build artifacts, test results, coverage reports, lint output, security scan results</li>
+<li><strong>Storage:</strong> GitHub Actions artifact storage (90-day default retention, configurable), committed files in the repository, or external blob storage</li>
+<li><strong>Exam tip:</strong> Workflow artifacts serve as <strong>evidence</strong> that evaluation happened — they can be inspected by humans or other agents later (within the retention period; link runs from the PR for visibility)</li>
+</ul>
+<h3 id="pr-review">PR Review</h3>
+<p>PR review is the <strong>human evaluation gate</strong>. It&#39;s the final check before an agent&#39;s changes enter the main codebase.</p>
+<ul>
+<li><strong>Use for:</strong> Catching issues that automated tools miss (design concerns, code clarity, business logic correctness)</li>
+<li><strong>Mechanism:</strong> Required reviewers (CODEOWNERS), required approving reviews via branch protection, PR templates, change request workflows</li>
+<li><strong>Integration:</strong> PR review is the bridge between automated evaluation and human judgment</li>
+<li><strong>Exam tip:</strong> PR review is not a substitute for automated evaluation — it&#39;s a <strong>complement</strong>. Automated checks run first; humans review the results and make the final call</li>
+</ul>
+<p>The workflow below shows how the three methods fit together on every PR. It&#39;s a sketch: <code>./.github/workflows/security-scan.yml</code> stands for a reusable workflow you would write yourself.</p>
+<div class="code-block"># Evaluation workflow: Combining all three methods
+
+name: Agent Evaluation
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  # 1. Automated scanning (e.g., CodeQL advanced setup, dependency review).
+  #    Dependabot alerts and secret scanning run as repository features, not in this workflow.
+  security-scan:
+    uses: ./.github/workflows/security-scan.yml
+
+  # 2. Build and test (produces workflow artifacts)
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci
+      - run: npm test -- --coverage
+      - run: npm run lint
+      - uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: coverage/
+
+  # 3. Workflow logs are automatically captured by GitHub Actions
+
+  # 4. Human PR review is required by branch protection rules</div>
+<p>The <code>on: pull_request</code> trigger runs this on every new or updated PR. The <code>security-scan</code> job calls a reusable workflow for scanning; <code>build-test</code> installs dependencies, runs tests with coverage and the linter, then uploads the <code>coverage/</code> folder as a workflow artifact (your &quot;receipt&quot;). Logs are captured automatically. The human review is not in the YAML at all — it&#39;s enforced by branch protection, which is why both pieces are needed.</p>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Treating the agent&#39;s own session log as proof the work is correct. GitHub notes logs don&#39;t replace your own review and testing — the log shows what the agent <em>believed</em> it did; checks and review show what is actually true.</p></div>
+<div class="callout warning"><p><strong>⚠️ Exam Trap:</strong> A question might ask: &quot;What&#39;s the best evaluation method for catching business logic errors?&quot; The answer is <strong>PR review</strong>, not CodeQL or Dependabot. Automated tools catch <em>technical</em> errors (vulnerabilities, CVEs, secrets). Only a human reviewer can reliably catch <em>business logic</em> errors — an agent might produce perfectly valid code that does the wrong thing. Know the boundary between automated and human evaluation.</p></div>
+
+</div>
+<div class="section">
+<h2 id="8-putting-it-all-together-a-tuning-workflow">8. Putting It All Together: A Tuning Workflow</h2>
+<p>Here&#39;s a complete example of how the feedback loop works in practice. The agent fails evaluation, we analyze the root cause, apply a tuning change, and re-evaluate:</p>
+<div class="code-block"># Scenario: Agent generates test files without assertions
+
+# Step 1: Define success criteria
+# Criteria: Every generated test file must have at least one assertion
+# Measurement: Count assertions per test file via AST analysis
+
+# Step 2: Agent executes → generates empty test files → FAIL
+
+# Step 3: Analyze root cause
+# Symptom: Tests missing assertions
+# Root cause: Instructions don&#39;t specify assertion requirements
+# Correction: Add assertion requirement to instructions
+
+# Step 4: Apply tuning change
+# File: .github/instructions/test-generation.instructions.md
+#   (frontmatter: applyTo: &quot;**/*.test.ts&quot;)
+# Before:
+#   &quot;Generate unit tests for the given functions.&quot;
+# After:
+#   &quot;Generate unit tests for the given functions.
+#    Each test file MUST include assertions using assert() or expect().
+#    Every test function must have at least one assertion.
+#    Include edge case tests (empty input, null, boundary values).&quot;
+
+# Step 5: Re-run evaluation
+# Agent regenerates tests → assertions present → PASS
+
+# Step 6: Document the lesson learned
+# Add to .github/copilot-instructions.md:
+#   &quot;All agent-generated test files must contain assertions.
+#    Validation: Automated assertion-count check runs after test generation.&quot;</div>
+<p>The scenario walks one full loop. &quot;AST analysis&quot; means inspecting the code&#39;s <em>abstract syntax tree</em> — its parsed structure — so a script can count real <code>assert</code>/<code>expect</code> calls instead of searching text. The root cause here was missing guidance, so the cheapest lever (instructions) was enough, and the path-specific file (<code>applyTo</code>) applies the rule only to test files. Step 6 makes the lesson durable so the next agent doesn&#39;t relearn it.</p>
+<h3 id="worked-example-end-to-end-evaluation-of-an-agent-pr">Worked Example: End-to-End Evaluation of an Agent PR</h3>
+<p>This longer example runs the whole loop on one agent PR — criteria, signals, failures, classification, lever, re-run. <em>(Illustrative scenario.)</em></p>
+<p><strong>Step 1 — Success criteria.</strong> Issue <strong>#88 &quot;Add CSV export to reports&quot;</strong> is written <em>before</em> assigning Copilot cloud agent. Each criterion is mapped to the signal that will prove it:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Acceptance criterion</th>
+<th>Signal that proves it</th>
+<th>Kind</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AC1</td>
+<td><code>GET /reports/:id/export</code> returns <code>text/csv</code> with a header row</td>
+<td>Test in the <code>build-test</code> job</td>
+<td>Quantitative</td>
+</tr>
+<tr>
+<td>AC2</td>
+<td>Only admins can export; non-admins get HTTP 403</td>
+<td>Test + reviewer checks the auth middleware</td>
+<td>Both</td>
+</tr>
+<tr>
+<td>AC3</td>
+<td>No new dependency with a known vulnerability</td>
+<td>Dependency review action (required check)</td>
+<td>Quantitative</td>
+</tr>
+<tr>
+<td>AC4</td>
+<td>No new code scanning alerts</td>
+<td>CodeQL (required check)</td>
+<td>Quantitative</td>
+</tr>
+<tr>
+<td>AC5</td>
+<td>Large reports are streamed, not built fully in memory</td>
+<td>PR review</td>
+<td>Qualitative</td>
+</tr>
+</tbody></table></div>
+<p>Constraints: change only <code>src/reports/</code> and <code>test/reports/</code>.</p>
+<p><strong>Step 2 — Run 1 signals.</strong> After approving the workflow run on Copilot&#39;s PR, you see:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>build-test</code></td>
+<td>✅ green — but the log shows the same test count as <code>main</code></td>
+</tr>
+<tr>
+<td>Dependency review</td>
+<td>❌ fails — the PR adds a CSV package with a known high-severity advisory</td>
+</tr>
+<tr>
+<td>CodeQL</td>
+<td>✅ no new alerts</td>
+</tr>
+<tr>
+<td>PR review</td>
+<td>❌ AC2 not implemented; no 403 test</td>
+</tr>
+</tbody></table></div>
+<p><strong>Step 3 — Root-cause classification.</strong> Compare intent (issue, PR plan) with results (commits, logs):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Failure</th>
+<th>Evidence</th>
+<th>Root cause</th>
+<th>Why this class</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>F1: AC2 missing</td>
+<td>Session log: the plan lists &quot;add route, add CSV serializer&quot; — auth never mentioned, though AC2 is in the issue</td>
+<td><strong>Reasoning error</strong></td>
+<td>The information was there; the agent ignored a criterion</td>
+</tr>
+<tr>
+<td>F2: new tests never ran</td>
+<td>Workflow log test count unchanged; the <code>test</code> script only matches <code>test/unit/**</code></td>
+<td><strong>Tool misuse</strong></td>
+<td>Correct plan, misconfigured script/workflow</td>
+</tr>
+<tr>
+<td>F3: vulnerable package added</td>
+<td>The team&#39;s &quot;no new runtime dependencies&quot; decision lived only in an old chat thread — not in the issue or instructions</td>
+<td><strong>Context issue</strong></td>
+<td>A prior decision was missing from every source the agent reads</td>
+</tr>
+</tbody></table></div>
+<p>Notice F2: the check was green, yet it proved nothing — &quot;green checks only prove what they test.&quot;</p>
+<p><strong>Step 4 — Pick the lever</strong> (smallest effective change for each):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Failure</th>
+<th>Lever</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>F1</td>
+<td>Instructions</td>
+<td>Add path-specific instructions for <code>src/reports/**</code> (see before/after below)</td>
+</tr>
+<tr>
+<td>F2</td>
+<td>Tools (workflow)</td>
+<td>Fix the <code>test</code> script to include <code>test/reports/**</code>; keep <code>build-test</code> required</td>
+</tr>
+<tr>
+<td>F3</td>
+<td>Memory &amp; state</td>
+<td>Record the decision in the issue and in <code>.github/copilot-instructions.md</code> — one durable source of truth</td>
+</tr>
+</tbody></table></div>
+<p><strong>Step 5 — Re-run.</strong> Ask the agent to iterate (steer the session if it&#39;s still running, or comment on the PR mentioning <code>@copilot</code>): &quot;Re-read issue #88 and the updated instructions; implement AC2 with a 403 test and remove the new CSV package.&quot; Approve the new workflow run:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>Run 2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>build-test</code></td>
+<td>✅ test count rose; AC1 and AC2 tests pass</td>
+</tr>
+<tr>
+<td>Dependency review</td>
+<td>✅ no new dependencies</td>
+</tr>
+<tr>
+<td>CodeQL</td>
+<td>✅ no new alerts</td>
+</tr>
+<tr>
+<td>PR review</td>
+<td>✅ approved (streaming confirmed for AC5)</td>
+</tr>
+</tbody></table></div>
+<p><strong>Step 6 — Keep it traceable.</strong> Update the PR description with what changed and why, linking the two workflow runs — Learn&#39;s &quot;document changes in PR updates, reference related commits and workflow runs&quot; (<a href="https://learn.microsoft.com/en-us/training/modules/memory-state-evaluation/6-agent-failures-behavior-improvement" target="_blank" rel="noopener">Learn: failures</a>).</p>
+<h3 id="sample-custom-instructions-change-before-and-after">Sample Custom-Instructions Change: Before and After</h3>
+<p>Here is the F1 fix from the example. This is the path-specific instructions file <em>before</em> tuning:</p>
+<div class="code-block">---
+applyTo: &quot;src/reports/**&quot;
+---
+Write clean, well-tested code for the reports module.</div>
+<p>It sounds reasonable but gives the agent nothing it can check: &quot;clean&quot; and &quot;well-tested&quot; mean different things to everyone. This is the same file <em>after</em> tuning:</p>
+<div class="code-block">---
+applyTo: &quot;src/reports/**&quot;
+---
+# Reports module rules
+- Every new route under src/reports/ must use the requireAdmin middleware from src/auth/middleware.ts.
+- For every route, add a test in test/reports/ asserting that a non-admin request returns HTTP 403.
+- Do not add runtime dependencies. Build CSV output with the existing src/lib/csv.ts helper.
+- Stream large exports; never load a full report into memory.
+- In the PR description, list each acceptance criterion from the linked issue and how it was verified.</div>
+<p>Each line is now specific and verifiable, and most map directly to a signal (a test, dependency review, or a review checklist item). The <code>applyTo</code> glob keeps these rules out of unrelated parts of the codebase. The last line also strengthens evaluation: the agent has to show its own mapping from criteria to evidence, which makes a missed criterion obvious in review.</p>
+<div class="callout tip"><p><strong>📘 Teaching Tip — The Iteration Mindset:</strong> The exam wants to see that you understand evaluation as a <strong>continuous process</strong>, not a one-time check. Each evaluation cycle produces insights that feed into the next cycle. Over time, your instructions get better, your tool configurations get tighter, and your evaluation signals get stronger. Keep improvements <strong>traceable</strong>: document changes in PR updates, reference related commits and workflow runs, and keep changes scoped and reviewable.</p></div>
+<div class="callout tip"><p><strong>🎯 Exam angle:</strong> Multi-step scenarios often hide the answer in the <em>order</em> of steps. The correct sequence is always criteria first, then run, then read evidence, then classify, then apply <strong>one</strong> targeted fix, then re-run. Options that tune before reading logs, or that change several levers at once, are distractors.</p></div>
+
+</div>
+<div class="section">
+<h2 id="9-domain-4-quick-reference">9. Domain 4 Quick Reference</h2>
+<p>Use this table for a final review: you should be able to explain each row in one sentence, in your own words.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Key Detail</th>
+<th>Exam Tip</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Feedback loop (&quot;PAE&quot;)</td>
+<td>Run → observe → root cause → fix prompts/memory/tools → re-run</td>
+<td>Every question traces back to one stage of this loop</td>
+</tr>
+<tr>
+<td>Strong vs Weak Signals</td>
+<td>Strong = quantitative, verifiable, hard to game</td>
+<td>Always choose the most specific, measurable criterion</td>
+</tr>
+<tr>
+<td>CodeQL</td>
+<td>Detects security vulns and coding errors in custom code</td>
+<td>SQL injection, XSS, path traversal → CodeQL</td>
+</tr>
+<tr>
+<td>Dependabot</td>
+<td>Detects known vulnerabilities in dependencies</td>
+<td>Vulnerable package/library → Dependabot (dependency review on PRs)</td>
+</tr>
+<tr>
+<td>Secret Scanning</td>
+<td>Detects hard-coded secrets; push protection blocks pushes</td>
+<td>API key, token, password in code → Secret Scanning</td>
+</tr>
+<tr>
+<td>Tuning Levers</td>
+<td>Instructions, memory/state, tools (incl. environment &amp; MCP)</td>
+<td>Start with the cheapest, least risky lever first</td>
+</tr>
+<tr>
+<td>Root Cause Analysis</td>
+<td>Reasoning errors, tool misuse, context/environment issues</td>
+<td>Trace symptom back to config, instructions, context, or tools</td>
+</tr>
+<tr>
+<td>Evaluation Methods</td>
+<td>Session logs (debugging), Artifacts (evidence), PR Review (human gate)</td>
+<td>Business logic errors → PR Review (not automated tools)</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p><strong>🎓 Video Insight — Planning documents as feedback loops:</strong> Ari recommends creating a planning document (markdown file) and updating it as the agent iterates. &quot;I have my agent constantly do those checkpoints where it understands I got to update the plan because we&#39;re changing direction or maybe we have more information.&quot; Evaluation feeds back into the plan — it&#39;s a cycle, not a one-time check. <em>(unverified community info — video source not checked; compare GitHub&#39;s implementation-planner custom agent example, which writes structured markdown plans with success criteria)</em></p></div>
+
+</div>
+<div class="section">
+<h2 id="recap-key-takeaways">Recap: Key Takeaways</h2>
+<ul>
+<li>Write acceptance criteria in the <strong>issue before</strong> the agent starts; reference them in the PR.</li>
+<li>A task spec has two halves: <strong>expected outcomes</strong> and <strong>operational constraints</strong>.</li>
+<li>Use <strong>quantitative</strong> signals (checks, tests, alerts) to gate merges and <strong>qualitative</strong> signals (reviews) for judgment.</li>
+<li>Strong criteria are specific, measurable, and hard to game; &quot;tests pass&quot; alone is weak.</li>
+<li>Green checks prove only what they test — map every criterion to a check, test, or review item.</li>
+<li><strong>CodeQL</strong> → flaws in your code; <strong>Dependabot / dependency review</strong> → vulnerable packages; <strong>secret scanning / push protection</strong> → credentials.</li>
+<li>Workflows on Copilot&#39;s pushes need <strong>Approve and run workflows</strong> by default.</li>
+<li>Find failures with session logs, workflow logs, artifacts, and the PR; compare <strong>intent</strong> with <strong>results</strong>.</li>
+<li>Root causes: <strong>reasoning error</strong>, <strong>tool misuse</strong>, or <strong>context issue</strong>.</li>
+<li>Tune with the smallest effective lever: <strong>instructions</strong>, <strong>memory/state</strong>, or <strong>tools</strong> (incl. environment and MCP).</li>
+<li>Rules that must always apply belong in custom instructions; Copilot Memory entries expire after 28 days unused.</li>
+<li>Close the loop: re-run, and keep every change traceable in the PR.</li>
+</ul>
+
+</div>
+<div class="section">
+<h2 id="hands-on-practice">Hands-On Practice</h2>
+<p>Use a <strong>public</strong> personal repository with a small JavaScript or Python project, so code scanning and dependency review are free.</p>
+<p><strong>Exercise 1 — Wire up automated quality gates</strong></p>
+<ol>
+<li>In the repository settings, enable <strong>code scanning with CodeQL default setup</strong>.</li>
+<li>Add the dependency review workflow below as <code>.github/workflows/dependency-review.yml</code>.</li>
+<li>Add a branch protection rule (or ruleset) on <code>main</code> that requires the dependency review and CodeQL checks to pass before merging.</li>
+<li>Open a PR that adds an old package version with known advisories (for example <code>lodash@4.17.15</code> in <code>package.json</code>).</li>
+</ol>
+<p>This is the minimal dependency review workflow from GitHub&#39;s docs (<a href="https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/configuring-the-dependency-review-action" target="_blank" rel="noopener">GitHub Docs: Configuring the dependency review action</a>):</p>
+<div class="code-block">name: &#39;Dependency Review&#39;
+on: [pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  dependency-review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: &#39;Checkout Repository&#39;
+        uses: actions/checkout@v4
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4</div>
+<p>It runs on every PR with read-only repository permissions and compares the dependency changes against the GitHub Advisory Database. You can add <code>with: fail-on-severity: high</code> to fail only on high and critical issues.</p>
+<p><em>Expected result:</em> the dependency review check fails on your PR and the merge button is blocked; removing the vulnerable version turns it green.</p>
+<p><strong>Exercise 2 — Run one tuning loop on custom instructions</strong></p>
+<ol>
+<li>Write three success criteria for &quot;generate unit tests for <code>utils.js</code>&quot; (for example: every test has an assertion; covers empty input; runs with <code>npm test</code>).</li>
+<li>Ask Copilot Chat (agent mode) to generate the tests with <em>no</em> custom instructions. Score the output against your criteria.</li>
+<li>Create <code>.github/copilot-instructions.md</code> (or a path-specific <code>.github/instructions/tests.instructions.md</code> with <code>applyTo</code>) that states the criteria explicitly.</li>
+<li>Start a fresh chat, repeat the same request, and score again.</li>
+</ol>
+<p><em>Expected result:</em> the second run meets more criteria. Record what changed in a commit message — that&#39;s your traceable tuning change.</p>
+<p><strong>Exercise 3 — Root-cause drill on a broken workflow</strong></p>
+<ol>
+<li>In a test workflow, deliberately misspell the test command (for example <code>npm run tset</code>).</li>
+<li>Open a PR, go to the <strong>Checks</strong> tab, open the failed job, and find the error in the log.</li>
+<li>Classify the root cause (tool misuse), fix the command, and re-run the job.</li>
+</ol>
+<p><em>Expected result:</em> you can point to the exact log line that proved the cause, and the re-run passes.</p>
+<p><strong>Related Microsoft Learn units:</strong> <a href="https://learn.microsoft.com/en-us/training/modules/memory-state-evaluation/5-evaluation-signals-quality-gates" target="_blank" rel="noopener">Evaluation signals and quality gates</a> · <a href="https://learn.microsoft.com/en-us/training/modules/memory-state-evaluation/6-agent-failures-behavior-improvement" target="_blank" rel="noopener">Analyze agent failures and improve behavior</a> · <a href="https://learn.microsoft.com/en-us/training/modules/memory-state-evaluation/" target="_blank" rel="noopener">Full module: Memory, state, and evaluation</a></p>
+
+</div>
+<div class="section">
+<h2 id="practice-questions">Practice Questions</h2>
+<p><strong>1.</strong> An agent&#39;s PR has all checks green, but the reviewer notices it didn&#39;t implement one acceptance criterion from the issue. What should the team change so this is caught earlier next time?</p>
+<ul>
+<li>A. Add more required approvers</li>
+<li>B. Map each acceptance criterion in the issue to a test or check referenced in the PR</li>
+<li>C. Disable Copilot code review to avoid noise</li>
+<li>D. Increase workflow log retention</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> B — Aligning evaluation with intent means every criterion becomes a verifiable signal; green checks only prove what they test.</p></div>
+<p><strong>2.</strong> Copilot cloud agent opened a PR, but no workflow checks appear on it. Nothing is misconfigured in the workflow files. What is the most likely reason?</p>
+<ul>
+<li>A. Code scanning default setup is disabled</li>
+<li>B. The 28-day Copilot Memory timer expired</li>
+<li>C. Workflows on Copilot&#39;s pushes require someone to click <strong>Approve and run workflows</strong> by default</li>
+<li>D. Agent PRs never run GitHub Actions</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> C — By default, Actions workflows don&#39;t run automatically on Copilot pushes until approved (an admin setting can change this).</p></div>
+<p><strong>3.</strong> An organization wants every PR in every repository to fail if it introduces a dependency with a known high-severity vulnerability. What is the best approach?</p>
+<ul>
+<li>A. Enforce the dependency review action as a required workflow via repository rulesets, configured with a failure severity</li>
+<li>B. Enable Dependabot version updates</li>
+<li>C. Enable secret scanning push protection</li>
+<li>D. Add a CodeQL query for package versions</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> A — The dependency review action blocks vulnerable dependency changes on PRs and can be enforced org-wide through rulesets.</p></div>
+<p><strong>4.</strong> An agent repeatedly runs the wrong test command; its plan and reasoning in the session logs are correct, but the workflow it triggers calls a script that no longer exists. How should this root cause be classified?</p>
+<ul>
+<li>A. Reasoning error</li>
+<li>B. Context issue</li>
+<li>C. Tool misuse</li>
+<li>D. Model capacity issue</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> C — Incorrect commands/scripts and misconfigured workflows are tool misuse; fix the workflow or tool configuration.</p></div>
+<p><strong>5.</strong> Copilot keeps forgetting a mandatory license-header rule after a few quiet weeks in a repository. What is the best fix?</p>
+<ul>
+<li>A. Ask Copilot to remember the rule again each month</li>
+<li>B. Put the rule in the repository&#39;s custom instructions</li>
+<li>C. Extend workflow artifact retention to 400 days</li>
+<li>D. Enable user-level preferences for every developer</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> B — Copilot Memory entries unused for 28 days are deleted; rules that must always apply belong in authored instructions.</p></div>
+<div class="nav-links"><a href="domain-3.html">← D3: Memory &amp; State</a><a href="index.html">Home</a><a href="glossary.html">Glossary</a><a href="domain-5.html">D5: Multi-Agent →</a></div>
+</div>
+</main>
+
+<footer class="site-footer">GH-600 Study Guide (corrected) · Based on official Microsoft Learn modules and GitHub Docs · Not affiliated with GitHub or Microsoft</footer>
+</body>
+</html>

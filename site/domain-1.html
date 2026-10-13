@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Domain 1: Agent Architecture & SDLC (Software Development Lifecycle) Processes — GH-600 Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>.section td code,.callout code,.diagram-caption code{background:var(--primary-light);color:var(--primary);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:13px}.callout p+p{margin-top:8px}.callout ul{margin:8px 0 0 20px}</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-logo"><span>GH-</span>600</div>
+    <nav class="header-nav">
+      <a href="index.html">Home</a>
+      <a href="basics.html">Start Here</a>
+      <a href="domain-1.html" class="active">D1: Architecture</a>
+      <a href="domain-2.html">D2: Tooling &amp; MCP</a>
+      <a href="domain-3.html">D3: Memory &amp; State</a>
+      <a href="domain-4.html">D4: Evaluation</a>
+      <a href="domain-5.html">D5: Multi-Agent</a>
+      <a href="domain-6.html">D6: Guardrails</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="resources.html">Resources</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-badge">Domain 1 · Weight: 15–20%</div>
+  <h1>Domain 1: Agent Architecture &amp; SDLC (Software Development Lifecycle) Processes</h1>
+  <p>Learn how to design agent workflows that integrate safely into software delivery — defining planning vs execution boundaries, configuring governance, and building reliable, observable agent systems that your team can trust.</p>
+</section>
+
+<main class="main">
+<div class="section">
+<p>Official module: <a href="https://learn.microsoft.com/en-us/training/modules/design-agent-architecture-integration/" target="_blank" rel="noopener">Designing Agent Architecture and SDLC Integration</a></p>
+
+</div>
+<div class="section">
+<h2 id="what-youll-learn-why-it-matters">What You&#39;ll Learn &amp; Why It Matters</h2>
+<ul>
+<li><strong>Where an AI agent fits in day-to-day software work</strong> — which steps it can safely do (fix, test, document) and which stay with people (roadmap, production go/no-go).</li>
+<li><strong>How to write a task an agent can actually finish</strong> — clear inputs, a concrete deliverable, and success criteria a machine can check.</li>
+<li><strong>Why the plan and the action must be separate</strong> — so a person can say &quot;yes, do that&quot; before anything in the repository changes.</li>
+<li><strong>How GitHub itself keeps agents in check</strong> — pull requests, required checks, CODEOWNERS, rulesets, and environments act as the guard rails.</li>
+<li><strong>How much freedom to give an agent</strong> — matching tool access and approvals to the risk of the files it touches.</li>
+<li><strong>How to see what an agent did afterwards</strong> — logs, artifacts, and commit history that let anyone reconstruct the work.</li>
+</ul>
+<p>Why it matters: this domain is 15–20% of the exam, and the same ideas (least privilege, reviewable plans, evidence over confidence) come back in every other domain.</p>
+<p><strong>Prerequisites:</strong> you should know what a repository, branch, commit, pull request, and GitHub Actions workflow are. If any of those are new, read <a href="basics.html">Fundamentals</a> first.</p>
+
+</div>
+<div class="section">
+<h2 id="official-skills-measured">Official Skills Measured</h2>
+<p>From the <a href="https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/gh-600" target="_blank" rel="noopener">GH-600 study guide</a> — <em>Prepare agent architecture and SDLC processes (15–20%)</em>:</p>
+<p><strong>Integrate agents into the software development lifecycle (SDLC)</strong></p>
+<ul>
+<li>Identify steps for agents to perform → see <a href="#1-agent-responsibilities-in-the-sdlc">1. Agent Responsibilities in the SDLC</a></li>
+<li>Identify and mitigate common anti-patterns in agents → see <a href="#2-anti-patterns-to-recognize">2. Anti-Patterns to Recognize</a></li>
+<li>Define inputs, outputs, and success criteria for agents → see <a href="#3-input-output-success-criteria">3. Input, Output &amp; Success Criteria</a></li>
+</ul>
+<p><strong>Define boundaries between planning, reasoning, and action</strong></p>
+<ul>
+<li>Configure agent planning to be distinct from agent execution → see <a href="#4-planning-vs-execution-separation">4. Planning vs Execution Separation</a></li>
+<li>Configure an agent to output a structured plan → see <a href="#configuring-an-agent-to-output-a-structured-plan">Configuring an Agent to Output a Structured Plan</a></li>
+<li>Validate agent plans → see <a href="#validating-agent-plans">Validating Agent Plans</a></li>
+<li>Prevent agent action until the agent checked and approved → see <a href="#enforcing-planning-boundaries">Enforcing planning boundaries</a> and <a href="#built-in-approval-gates-for-copilot-cloud-agent">Built-in Approval Gates for Copilot Cloud Agent</a></li>
+</ul>
+<p><strong>Configure observability and control for autonomous agents</strong></p>
+<ul>
+<li>Plan and implement the degree of agent autonomy, including guardrails → see <a href="#5-autonomy-levels">5. Autonomy Levels</a></li>
+<li>Configure agent to produce inspectable artifacts within standard development tooling → see <a href="#inspectable-artifacts-and-the-audit-trail">Inspectable Artifacts and the Audit Trail</a></li>
+<li>Configure human intervention for autonomous agents without slowing delivery → see <a href="#human-intervention-without-slowing-delivery">Human Intervention Without Slowing Delivery</a></li>
+</ul>
+
+</div>
+<div class="section">
+<h2 id="1-agent-responsibilities-in-the-sdlc">1. Agent Responsibilities in the SDLC</h2>
+<p>Let&#39;s start with the big picture. An <strong>agentic AI system</strong> is not a chatbot that answers questions — it&#39;s a system that plans, takes actions against real repositories and infrastructure, and evaluates the results.</p>
+<p>A few terms you&#39;ll see everywhere in this domain:</p>
+<ul>
+<li><strong>SDLC (Software Development Lifecycle):</strong> the stages work goes through from idea to running software — plan, build, test, release, operate.</li>
+<li><strong>PR (pull request):</strong> a proposal to merge the changes on one branch into another (usually <code>main</code>). People review it and automated checks run on it before it can be merged.</li>
+<li><strong>CI (continuous integration):</strong> automated builds and tests that run on every change. On GitHub, CI runs as <strong>GitHub Actions workflows</strong>.</li>
+<li><strong>Branch:</strong> a separate line of commits, so work in progress doesn&#39;t affect <code>main</code> until a PR merges it.</li>
+</ul>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Think of an agent as a capable new contractor on your team. You give them a work order (the task), they write down how they&#39;ll do it (the plan), do the work in their own workspace (a branch), and hand it in for inspection (a PR with test results). They never get the keys to production on day one, and their work is inspected exactly like everyone else&#39;s.</p></div>
+<h3 id="assistant-vs-agent-and-the-plan-act-evaluate-loop">Assistant vs Agent and the Plan → Act → Evaluate Loop</h3>
+<p>The <a href="https://learn.microsoft.com/en-us/training/modules/foundations-agentic-ai/2-define-agentic-ai" target="_blank" rel="noopener">Foundations module</a> draws the line like this:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>Assistant</th>
+<th>Agent</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Control</td>
+<td>Reactive: the user decides each next step</td>
+<td>Goal-driven: keeps a goal across multiple steps and decides intermediate actions</td>
+</tr>
+<tr>
+<td>Output</td>
+<td>Suggestions, explanations, summaries</td>
+<td>Durable artifacts: branches, commits, pull requests</td>
+</tr>
+<tr>
+<td>Tools</td>
+<td>Doesn&#39;t take repository actions</td>
+<td>Uses tools (GitHub API, CI workflows, repo writes)</td>
+</tr>
+<tr>
+<td>Feedback</td>
+<td>User applies each step manually</td>
+<td>Iterates on checks, reviews, and scans</td>
+</tr>
+</tbody></table></div>
+<p>An agent doesn&#39;t replace the workflow — it <strong>enters the workflow as a participant</strong>, visible through branches/commits, pull requests, workflow checks, and review comments.</p>
+<p>The steps an agent performs follow the <a href="https://learn.microsoft.com/en-us/training/modules/foundations-agentic-ai/3-explain-agent-lifecycle-plan-act-evaluate" target="_blank" rel="noopener">plan → act → evaluate lifecycle</a>, which is a <strong>loop</strong>, not a one-time sequence:</p>
+<ul>
+<li><strong>Plan:</strong> interpret the goal and produce a structured, reviewable plan (PR description, linked issue/checklist) with scope, success criteria, and a rollback or escalation path.</li>
+<li><strong>Act:</strong> create a branch, change files, push commits, open/update a PR, respond to review feedback — bounded to one repository, a branch, and PR workflows.</li>
+<li><strong>Evaluate:</strong> use system signals — workflow runs and status checks, review feedback, and security signals (code scanning, secret scanning, dependency alerts). Evaluation must be grounded in <strong>system signals, not the agent&#39;s confidence</strong>.</li>
+</ul>
+<p>If checks fail or requirements aren&#39;t met, the loop continues: revise the plan, adjust the change, re-evaluate — or hand off to a human.</p>
+<div class="callout tip"><p><strong>📘 Teaching Tip:</strong> In a well-designed system every phase is visible: the plan is inspectable, action is bounded to repository workflows, and evaluation uses objective signals. If any one is missing, trust degrades.</p></div>
+<p>The official module simplifies the SDLC into four stages and maps each to a GitHub surface where work and evidence are recorded:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>SDLC stage</th>
+<th>Typical agent responsibility in GitHub</th>
+<th>Primary artifact</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Planning</td>
+<td>Draft scope, plan steps, define success criteria</td>
+<td>GitHub Issues, PR descriptions/comments, Agents tab</td>
+</tr>
+<tr>
+<td>Implementation</td>
+<td>Create branch, make changes, open/update PR</td>
+<td>Branch, commits, pull request</td>
+</tr>
+<tr>
+<td>Validation</td>
+<td>Run checks, attach artifacts, iterate on failures</td>
+<td>Workflow runs, checks, artifacts</td>
+</tr>
+<tr>
+<td>Deployment</td>
+<td>Usually restricted; require approvals for sensitive actions</td>
+<td>Environments and deployment approvals</td>
+</tr>
+</tbody></table></div>
+<p>Most teams start by scoping agents to the <strong>implementation and validation</strong> stages, where pull requests and workflows provide natural control points. The design boundary is: <strong>agents propose; humans and policy accept.</strong></p>
+<p>The exam wants you to understand which stages are <em>good</em> for agents and which ones need human oversight. Here&#39;s the breakdown:</p>
+<h3 id="stages-where-agents-excel">Stages Where Agents Excel</h3>
+<ul>
+<li><strong>Planning &amp; Triage:</strong> Agents can scan issue queues, classify bugs, suggest labels, and draft a scoped plan with success criteria. They can also research relevant code before a human picks up a ticket.</li>
+<li><strong>Implementation (Controlled):</strong> Agents generate code, write tests, and refactor — but always inside a branch with guardrails, delivered through a pull request. They never commit directly to <code>main</code>.</li>
+<li><strong>Validation:</strong> Agents can run CI workflows, parse build logs, detect regressions, and revise the PR branch when checks fail.</li>
+<li><strong>Release &amp; Deploy:</strong> Usually restricted. Agents can <em>prepare</em> releases and deployment changes, but production-impacting execution is gated behind environment approvals (&quot;agent prepares but can&#39;t execute&quot; for critical actions).</li>
+<li><strong>Monitoring:</strong> Agents can watch signals, correlate alerts, and file new issues when anomaly patterns emerge.</li>
+</ul>
+<h3 id="stages-where-agents-are-less-suitable">Stages Where Agents Are Less Suitable</h3>
+<ul>
+<li><strong>Strategic Planning:</strong> Agents don&#39;t decide the product roadmap. That requires human context, business judgment, and stakeholder alignment.</li>
+<li><strong>Code Review:</strong> Agents can <em>assist</em> with review (linting, security scanning, diff analysis), but acceptance comes from humans and policy (required reviews, CODEOWNERS).</li>
+<li><strong>Incident Response (Severe):</strong> While agents can triage, the actual decision to roll back, hotfix, or page an on-call engineer requires human judgment.</li>
+<li><strong>Production Deployments (Unsupervised):</strong> Pushing to production without any human gate is an anti-pattern. Treat workflow and infra changes as higher risk than application code changes.</li>
+</ul>
+<div class="callout tip"><p><strong>📘 Teaching Tip:</strong> The exam will give you a scenario and ask: &quot;Is this a good task for an agent?&quot; The decision rule is: <em>Does the task have a clear input, a defined process, and a checkable output?</em> If yes, an agent can probably do it. If the success criteria are fuzzy or require human empathy, keep the human in the loop.</p></div>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Treating an agent as &quot;a smarter chatbot&quot;. The difference that matters for the exam is that an agent <strong>acts</strong> — it creates branches, commits, and PRs — so it needs the same controls as any contributor with write access.</p></div>
+<div class="callout tip"><p><strong>🎯 Exam angle:</strong> Scenario questions describe a task and ask whether, or how, to hand it to an agent. Reason in two steps: (1) is the task well-bounded with a checkable output? (2) which SDLC stage is it in? Implementation and validation → agent works through a PR. Deployment or severe incidents → the agent may prepare, but a human or an environment approval decides.</p></div>
+
+</div>
+<div class="section">
+<h2 id="2-anti-patterns-to-recognize">2. Anti-Patterns to Recognize</h2>
+<p>Domain 1 specifically tests your ability to <strong>identify and mitigate common agent anti-patterns</strong>.</p>
+<p>An <strong>anti-pattern</strong> is a habit that looks reasonable at first but reliably causes problems. With agents, most anti-patterns boil down to one of two things: the agent can do <em>more</em> than it should, or people can see <em>less</em> than they need to.</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Handing a new contractor a master key, no work order, and then never checking their work isn&#39;t &quot;trusting them&quot; — it&#39;s skipping your own job. Each anti-pattern below is a version of that.</p></div>
+<p>Terms used in the table:</p>
+<ul>
+<li><strong><code>GITHUB_TOKEN</code>:</strong> the short-lived credential GitHub automatically creates for each workflow run. What it can do is set by the workflow&#39;s <code>permissions:</code> block.</li>
+<li><strong>Environment:</strong> a named deployment target (for example <code>production</code>) in repository settings that can require a person to approve before a job using it runs.</li>
+<li><strong>CODEOWNERS:</strong> a file (<code>.github/CODEOWNERS</code>) that says which people or teams own which paths, so they&#39;re automatically asked to review changes there.</li>
+<li><strong>Rulesets / branch protection:</strong> repository rules such as &quot;no direct pushes to <code>main</code>&quot; or &quot;a PR needs one approval and passing checks before merge&quot;.</li>
+<li><strong>Required status check:</strong> a CI check that must pass before a PR can merge.</li>
+</ul>
+<h3 id="official-anti-patterns-microsoft-learn">Official anti-patterns (Microsoft Learn)</h3>
+<p>The <a href="https://learn.microsoft.com/en-us/training/modules/foundations-agentic-ai/5-identify-risks-traceability" target="_blank" rel="noopener">Foundations module</a> names four common failure modes and their GitHub mitigations:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Risk / anti-pattern</th>
+<th>What it looks like in GitHub</th>
+<th>Mitigation using GitHub controls</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Planless execution</strong></td>
+<td>PR has a diff but no plan or rationale</td>
+<td>Require a plan section via PR template; require review before merge</td>
+</tr>
+<tr>
+<td><strong>Over-permissioned agents</strong></td>
+<td>Workflows can write to repo, access secrets broadly</td>
+<td>Least-privilege <code>GITHUB_TOKEN</code>; environments with required reviewers; restrict who can trigger workflows</td>
+</tr>
+<tr>
+<td><strong>Hidden reasoning</strong></td>
+<td>No assumptions/scope/decision trail</td>
+<td>Require a plan, link workflow runs, record decisions in PR comments</td>
+</tr>
+<tr>
+<td><strong>Blind trust in automation</strong></td>
+<td>&quot;CI passed, ship it&quot; mindset</td>
+<td>Combine checks with CODEOWNERS, required reviews, and risk-based approvals</td>
+</tr>
+</tbody></table></div>
+<p>The Designing module adds <strong>execution without validation</strong>: &quot;If an agent can bypass required checks or merge without reviews, the architecture loses its primary safety mechanisms.&quot;</p>
+<h3 id="responsibility-doesnt-move-with-execution">Responsibility doesn&#39;t move with execution</h3>
+<p>When an agent opens or revises a PR, it participates in the workflow but <strong>doesn&#39;t own the outcome</strong>. Accountability stays with the people who defined the task, set permissions, chose and configured the controls, and approved the change (<a href="https://learn.microsoft.com/en-us/training/modules/foundations-agentic-ai/5-identify-risks-traceability" target="_blank" rel="noopener">Learn</a>). When an agent&#39;s fix passes CI but later causes a regression, the useful question is whether the <em>system</em> made the mistake understandable and preventable: was there a visible plan and scope, were the right reviewers requested, did the checks match the risk, and can the audit trail reconstruct what happened?</p>
+<h3 id="the-contributor-model">The contributor model</h3>
+<p>The <a href="https://learn.microsoft.com/en-us/training/modules/foundations-agentic-ai/6-apply-contributor-model-agent-generated-work" target="_blank" rel="noopener">contributor model</a> mitigates two opposite errors: <strong>excessive suspicion</strong> (rejecting work because AI wrote it) and <strong>excessive trust</strong> (accepting it because automation produced it). Review an agent PR exactly like a human PR, using this rubric:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Question</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Intent</td>
+<td>Clear goal and a visible plan?</td>
+</tr>
+<tr>
+<td>Scope</td>
+<td>Do the changed files match the plan?</td>
+</tr>
+<tr>
+<td>Evidence</td>
+<td>Required checks pass; logs/artifacts available?</td>
+</tr>
+<tr>
+<td>Ownership</td>
+<td>Did CODEOWNERS review sensitive areas?</td>
+</tr>
+<tr>
+<td>Policy</td>
+<td>Rulesets, branch rules, environments respected?</td>
+</tr>
+<tr>
+<td>Fallback</td>
+<td>Rollback or escalation clear for high-risk changes?</td>
+</tr>
+</tbody></table></div>
+<p>A well-supervised agent contribution is <strong>understandable, bounded, reviewable, policy-compliant, and reconstructable</strong>.</p>
+<h3 id="additional-anti-patterns-sites-own-framing-not-from-learn">Additional anti-patterns (site&#39;s own framing, not from Learn)</h3>
+<p>These are useful mental models but are not named in the official modules.</p>
+<h4>🔄 Autonomy Mismatch</h4>
+<p>Giving an agent <em>more</em> autonomy than a task requires — or <em>less</em> than it needs to be useful. For example, giving a code-generation agent full shell access when it only needs file-edit permissions. The result: unnecessary risk (this is the official &quot;over-permissioned agents&quot; anti-pattern). On the flip side, giving a monitoring agent <em>read-only</em> access when it needs to <em>remediate</em> means it can alert but never fix.</p>
+<p><strong>Fix:</strong> Match the minimum autonomy level to the task&#39;s actual risk. We&#39;ll cover autonomy levels in depth later.</p>
+<h4>📋 Plan-as-Checklist</h4>
+<p>An agent generates a plan, the human approves it, and then the agent executes <em>exactly</em> what it said — even if conditions change during execution. This treats the plan as a rigid checklist instead of a set of intended outcomes.</p>
+<p><strong>Fix:</strong> The plan is a <em>reviewable intent</em>, not a fixed contract. Agents should re-evaluate against current state and flag deviations (the plan → act → evaluate loop).</p>
+<h4>📈 Scope Creep</h4>
+<p>The agent starts with one task (&quot;fix the bug in auth&quot;), then widens into refactoring the entire auth module, adding tests, changing the database schema, and deploying a new version — all in one session without checkpointing or human approval.</p>
+<p><strong>Fix:</strong> Break large tasks into small, discrete steps. Check that &quot;scope matches intent (no unexpected files changed)&quot;. Require human approval before crossing scope boundaries.</p>
+<h4>🔇 Silent Failure</h4>
+<p>An agent encounters an error and quietly retries, gives up, or produces a degraded result without notifying anyone. This is dangerous because downstream processes depend on the agent&#39;s output.</p>
+<p><strong>Fix:</strong> Always log failures, surface them, and escalate to a human if retries are exhausted. The official safe iteration policy: if the same required check fails twice, escalate with what failed, what was attempted, what evidence exists, and the suggested next step.</p>
+<div class="callout warning"><p><strong>⚠️ Exam Warning:</strong> On the case study sections, expect scenarios involving missing plans, over-permissioned agents, or agents that skip validation. The wrong answer will sound reasonable but skip the governance step. Always pick the answer that includes <strong>observability, required checks/reviews, or human escalation</strong>.</p></div>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Swinging between the two extremes the contributor model warns about — rejecting a PR <em>because</em> an agent wrote it, or approving it <em>because</em> &quot;CI is green&quot;. Use the same rubric (intent, scope, evidence, ownership, policy, fallback) you would for a human.</p></div>
+
+</div>
+<div class="section">
+<h2 id="3-input-output-success-criteria">3. Input, Output &amp; Success Criteria</h2>
+<p>Every agent task must have <strong>well-defined inputs, expected outputs, and measurable success criteria</strong>. The official module defines them as:</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> It&#39;s a recipe. <em>Inputs</em> are the ingredients and constraints (&quot;no nuts&quot;), the <em>output</em> is the dish you expect on the plate, and the <em>success criteria</em> are the taste test someone else can run. Without the taste test, &quot;done&quot; just means &quot;the cook stopped&quot;.</p></div>
+<ul>
+<li><strong>Inputs:</strong> what the agent needs (issue context, constraints, boundaries).</li>
+<li><strong>Outputs:</strong> what the agent produces (plan + PR + evidence).</li>
+<li><strong>Success criteria:</strong> how results are evaluated (checks, scans, review outcomes).</li>
+</ul>
+<p>If any of these three is vague, the agent will produce unpredictable results. Here&#39;s a reference table (example thresholds are illustrative):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Input</th>
+<th>Expected Output</th>
+<th>Success Criteria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Classify incoming issues</td>
+<td>Issue title + body</td>
+<td>Label assignment, priority score</td>
+<td>Accuracy &gt; 90% vs human baseline</td>
+</tr>
+<tr>
+<td>Generate unit tests</td>
+<td>Source file, function signatures</td>
+<td>Test file with assertions</td>
+<td>Tests pass, coverage gain &gt; 5%</td>
+</tr>
+<tr>
+<td>Write PR description</td>
+<td>Diff, commit messages</td>
+<td>Summary, change log, testing notes</td>
+<td>Follows team template, human approves</td>
+</tr>
+<tr>
+<td>Remediate a vulnerable dependency</td>
+<td>Security alert/issue link, allowed scope (<code>src/</code> + dependency files), constraints (no workflow changes, no secrets, no direct-to-main)</td>
+<td>PR with structured plan, bounded changeset on an agent branch, links to workflow runs</td>
+<td>Required checks pass, vulnerability actually resolved (incl. transitive), no unexpected files changed, rollback/escalation path recorded</td>
+</tr>
+<tr>
+<td>Cut release + deploy to staging</td>
+<td>Release tag, environment config</td>
+<td>Deployment URL, health check pass</td>
+<td>All smoke tests green, no rollback</td>
+</tr>
+</tbody></table></div>
+<p>Notice the pattern: <strong>success criteria are verifiable</strong>. Not &quot;make the code better&quot; — that&#39;s not measurable. And &quot;CI passed&quot; is necessary but not always sufficient: make the criteria reflect the real intent (&quot;vulnerability resolved&quot; rather than &quot;tests passed&quot;). Enforce them as <strong>required status checks</strong> via rulesets or branch protection so success is enforced by the system, not assumed by the agent.</p>
+<h3 id="worked-example-turning-a-flaky-test-into-an-agent-ready-issue">Worked Example: Turning a Flaky Test Into an Agent-Ready Issue</h3>
+<p><strong>Scenario:</strong> your team wants an agent to fix a <strong>flaky test</strong> — a test that sometimes passes and sometimes fails without any code change, usually because it depends on time, randomness, or ordering. Here&#39;s how the task moves through plan → act → evaluate.</p>
+<p><strong>Step 1 — A human writes the issue.</strong> This is the issue body you&#39;d paste into GitHub. Each heading maps to inputs, output, or success criteria:</p>
+<div class="code-block">## Goal
+Make `tests/test_checkout.py::test_applies_discount` pass reliably.
+It fails roughly 1 in 10 CI runs.
+
+## Context (inputs)
+- Failing runs: &lt;links to 2–3 failed workflow runs&gt;
+- Suspected cause: the test depends on the current time (`datetime.now()`)
+- Relevant code: `src/checkout/discount.py`, `tests/test_checkout.py`
+
+## Constraints
+- Change only files under `src/checkout/` and `tests/`
+- Do not delete, skip, or add automatic retries to the test
+- No new dependencies; no changes to `.github/workflows/`
+
+## Expected output
+- One PR with a filled-in Plan section, the fix, and a link to the passing workflow run
+
+## Success criteria (verifiable)
+- [ ] The test passes 20 times in a row in CI
+- [ ] All other required checks pass
+- [ ] Only files under `src/checkout/` and `tests/` changed</div>
+<p>What each part does:</p>
+<ul>
+<li><strong>Goal</strong> names one test, not &quot;fix the tests&quot; — the scope is obvious.</li>
+<li><strong>Context</strong> gives the agent evidence (failing run links) and a hypothesis, so it doesn&#39;t start from zero.</li>
+<li><strong>Constraints</strong> close the cheap loopholes: skipping or retrying the test would turn CI green without fixing anything.</li>
+<li><strong>Expected output</strong> says exactly what the reviewer will receive.</li>
+<li><strong>Success criteria</strong> are checkboxes a reviewer (or a workflow) can verify — &quot;passes 20 times in a row&quot; targets the real problem (flakiness), not just &quot;passes once&quot;.</li>
+</ul>
+<p><strong>Step 2 — Delegate.</strong> Assign the issue to Copilot cloud agent. Cloud agent work can be started from an issue, a pull request, the agents panel, or a Copilot Chat conversation (<a href="https://docs.github.com/en/copilot/concepts/agents/cloud-agent/about-cloud-agent" target="_blank" rel="noopener">Docs</a>).</p>
+<p><strong>Step 3 — Plan.</strong> The agent writes its plan into the PR description (see the structured plan example in section 4).</p>
+<p><strong>Step 4 — Act.</strong> It works on its own <code>copilot/</code> branch, edits <code>src/checkout/discount.py</code> to accept an injectable clock, and updates the test to pass a fixed time.</p>
+<p><strong>Step 5 — Evaluate.</strong> Workflows wait until someone with write access clicks <strong>Approve and run workflows</strong>; then the required checks run. If the same required check fails twice, the agent stops and hands off with a summary instead of looping.</p>
+<p><strong>Step 6 — Human review.</strong> A reviewer compares changed files with the issue&#39;s constraints, checks the linked run, and merges — or requests changes.</p>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Writing success criteria the agent can satisfy without solving the problem (&quot;CI is green&quot;). If deleting the test would meet your criteria, your criteria are wrong — add a constraint or a sharper check.</p></div>
+<div class="callout tip"><p><strong>🎯 Exam angle:</strong> When asked which success criterion is best, pick the one that is <strong>verifiable by the system</strong> and <strong>matches the real intent</strong> (&quot;vulnerability resolved, including transitive dependencies&quot;). Eliminate answers that rely on the agent&#39;s own judgment (&quot;the agent confirms it&#39;s fixed&quot;) or on vague goals (&quot;code quality improves&quot;).</p></div>
+
+</div>
+<div class="section">
+<h2 id="4-planning-vs-execution-separation">4. Planning vs Execution Separation</h2>
+<p>This is one of the most important concepts in Domain 1. Reliable agent systems separate:</p>
+<ul>
+<li><strong>Planning:</strong> what will be done and why.</li>
+<li><strong>Execution:</strong> the concrete changes made to the repository.</li>
+<li><strong>Validation:</strong> evidence that the outcome meets success criteria.</li>
+</ul>
+<div class="callout success"><p><strong>✅ Core Principle:</strong> A <strong>plan</strong> is a <strong>reviewable intent</strong> — it describes what the agent proposes to do. <strong>Execution</strong> is the act of <strong>changing state</strong> — writing files, running commands, making API calls. Separation creates an opportunity to review intent before accepting impact.</p></div>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> An architect draws a blueprint and the client signs it <em>before</em> the builders pour concrete. Changing a drawing is cheap; tearing down a wall is not. &quot;State&quot; here simply means what&#39;s actually in the repository (files, branches, settings) — execution is anything that changes it.</p></div>
+<p>In GitHub, planning appears in a PR description, an issue comment, or a plan artifact; execution appears as commits on a branch; validation appears as checks, scans, artifacts, and review outcomes.</p>
+<h3 id="plan-first-vs-plan-execution">Plan-first vs plan + execution</h3>
+<p>The official module describes two valid options. Both use the same GitHub controls — the difference is <em>when</em> human validation happens relative to code generation:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>Option A: Plan-first PR</th>
+<th>Option B: Plan + execution in the same PR</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>How</td>
+<td>Agent opens a PR containing only the plan; reviewers approve; agent then implements</td>
+<td>Agent opens a PR with a structured plan <em>and</em> initial commits</td>
+</tr>
+<tr>
+<td>Human validation</td>
+<td><strong>Before</strong> any code is written</td>
+<td>Code generated immediately; validation still required <strong>before merge</strong></td>
+</tr>
+<tr>
+<td>Use when</td>
+<td>High-risk or hard-to-reverse changes (workflows, infra, auth, production)</td>
+<td>Low/medium-risk, easily reversible changes where speed matters</td>
+</tr>
+</tbody></table></div>
+<p>The choice is not <em>whether</em> work is reviewed — it always is.</p>
+<h3 id="enforcing-planning-boundaries">Enforcing planning boundaries</h3>
+<ol>
+<li><strong>Capability boundary:</strong> planning agents are limited to read-only tools.</li>
+<li><strong>Explicit handoff</strong> to an implementation agent after plan approval.</li>
+<li><strong>Tool gating</strong> in orchestrators: run planning without tool execution, enable tools only after the plan is accepted.</li>
+<li><strong>&quot;Plan mode&quot;</strong> experiences that generate a plan artifact and pause before applying changes.</li>
+</ol>
+<p>Treat &quot;instructions not to edit&quot; as guidance; treat tool allowlists and gates as enforcement.</p>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Believing that writing &quot;do not change any files until approved&quot; in the agent&#39;s instructions creates a boundary. The model will <em>usually</em> follow it, but nothing stops it. A real boundary is something the platform enforces: a <code>tools</code> list without <code>edit</code>, a required reviewer on an environment, a required status check.</p></div>
+<div class="callout tip"><p><strong>🎯 Exam angle:</strong> &quot;Prevent the agent from acting until the plan is approved&quot; questions have one answer built on enforcement (read-only tools for the planner, an approval gate, required checks/reviews) and distractors built on wording (stronger instructions, bold text in a template). Choose enforcement.</p></div>
+<h3 id="configuring-an-agent-to-output-a-structured-plan">Configuring an Agent to Output a Structured Plan</h3>
+<p>A structured plan is a fixed set of sections the agent must fill in, so reviewers can compare plans and spot gaps. Two GitHub-native ways to get one:</p>
+<ol>
+<li><strong>A planning custom agent whose instructions define the plan structure.</strong> GitHub Docs&#39; <a href="https://docs.github.com/copilot/tutorials/customization-library/custom-agents/implementation-planner" target="_blank" rel="noopener">implementation-planner</a> example tells the agent to always produce Markdown with <em>Overview</em> (problem, success criteria), <em>Technical Approach</em>, <em>Implementation Plan</em> (phases with tasks, complexity, dependencies), <em>Considerations</em> (assumptions, constraints, risks), and <em>Not Included</em>. You select it from the Agents tab after merging the profile to the default branch.</li>
+<li><strong>A PR template</strong> (section 7) with required <em>Plan</em>, <em>Evidence</em>, and <em>Review checklist</em> sections that the agent fills in.</li>
+</ol>
+<p>Below is a minimal planning custom agent profile. A <strong>custom agent profile</strong> is a Markdown file in <code>.github/agents/</code> whose top part, between the <code>---</code> lines, is <strong>YAML frontmatter</strong> (YAML is a simple <code>key: value</code> text format for settings):</p>
+<div class="code-block">&lt;!-- .github/agents/planner.agent.md --&gt;
+---
+name: planner
+description: Produces a structured implementation plan; never changes code
+tools: [&quot;read&quot;, &quot;search&quot;]
+---
+
+Output a plan using exactly these headings:
+## Goal
+## Scope (paths/files)
+## Steps
+## Success criteria (verifiable)
+## Risks and mitigations
+## Rollback / escalation plan
+## Out of scope</div>
+<ul>
+<li><code>name</code> — how the agent appears in the agent picker.</li>
+<li><code>description</code> — the only <strong>required</strong> field; tells people (and Copilot) what the agent is for.</li>
+<li><code>tools: [&quot;read&quot;, &quot;search&quot;]</code> — the agent can look at and search the code but has no <code>edit</code> or <code>execute</code> tool, so it physically can&#39;t change the repository.</li>
+<li>The body below the second <code>---</code> is the agent&#39;s instructions: here, a fixed list of headings every plan must use.</li>
+</ul>
+<p>Here&#39;s what a filled-in plan from that agent could look like for the flaky-test issue in section 3:</p>
+<div class="code-block">## Goal
+Make test_applies_discount deterministic so it passes on every CI run.
+
+## Scope (paths/files)
+- src/checkout/discount.py
+- tests/test_checkout.py
+
+## Steps
+1. Add an optional `now` parameter to `apply_discount()` (defaults to the current time).
+2. Update the test to pass a fixed datetime instead of relying on the clock.
+3. Run the checkout test 20 times in CI to confirm it no longer flakes.
+
+## Success criteria (verifiable)
+- test_applies_discount passes 20/20 runs; all required checks pass
+- No files outside the scope above are changed
+
+## Risks and mitigations
+- Other callers of apply_discount() break → parameter is optional, existing calls unchanged
+
+## Rollback / escalation plan
+- Revert the PR; if the same check fails twice, stop and hand off with run links
+
+## Out of scope
+- Refactoring other checkout tests</div>
+<ul>
+<li>Every heading from the profile is present, so a reviewer can scan for gaps in seconds.</li>
+<li><em>Scope</em> lists exact files — later, the reviewer compares this list with the PR&#39;s changed files.</li>
+<li><em>Success criteria</em> repeat the issue&#39;s checks, tying the plan back to the task.</li>
+<li><em>Rollback / escalation</em> shows the agent knows when to stop.</li>
+</ul>
+<div class="callout warning"><p><strong>⚠️ Exam Trap:</strong> The Docs implementation-planner example grants <code>edit</code> so it can write plan files. If the requirement is a planner that <strong>can&#39;t</strong> modify the repository, keep it to <code>read</code> + <code>search</code> and deliver the plan in the PR description or chat. Learn&#39;s tip: plans are most reviewable when they include <strong>scope, success criteria, and a rollback or escalation path</strong>.</p></div>
+<h3 id="validating-agent-plans">Validating Agent Plans</h3>
+<p>A plan is validated when a reviewer can confirm it before its impact is accepted. Turn that into enforcement, not a convention:</p>
+<ul>
+<li><strong>Plan gate as a required status check.</strong> The <a href="https://learn.microsoft.com/en-us/training/modules/design-agent-architecture-integration/5-pull-request-governance-controls" target="_blank" rel="noopener">PR governance unit</a> shows a <em>Plan Gate</em> workflow that fails when the plan is missing; an admin marks it as a required check in a ruleset or branch protection so the PR can&#39;t merge without a plan.</li>
+<li><strong>Required PR reviews</strong> so a human confirms the plan&#39;s intent and scope. A template alone isn&#39;t enough — it can be left blank. The most reliable combination is a <strong>plan check as a required status check <em>plus</em> required reviews</strong>.</li>
+<li><strong>Scope check during review:</strong> compare the changed files against the plan&#39;s <em>Scope</em> (contributor-model rubric).</li>
+</ul>
+<p>A plan gate that inspects the PR body (an illustrative variant of the Learn sample):</p>
+<div class="code-block"># .github/workflows/plan-gate.yml
+name: Plan Gate
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  require-plan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require a Plan section in the PR description
+        env:
+          BODY: ${{ github.event.pull_request.body }}
+        run: |
+          if ! grep -q &#39;^## Plan&#39; &lt;&lt;&lt; &quot;$BODY&quot;; then
+            echo &quot;PR description must contain a &#39;## Plan&#39; section.&quot;
+            exit 1
+          fi</div>
+<p><em>(Passing the body through <code>env</code> instead of inlining <code>${{ }}</code> in the script avoids script injection from PR text.)</em></p>
+<p>Reading the workflow line by line:</p>
+<ul>
+<li><code>on: pull_request</code> with <code>types: [opened, edited, synchronize]</code> — runs when a PR is opened, its description is edited, or new commits are pushed; <code>branches: [main]</code> limits it to PRs <strong>into</strong> <code>main</code>.</li>
+<li><code>permissions: contents: read</code> — the job&#39;s <code>GITHUB_TOKEN</code> can only read; a gate never needs write access.</li>
+<li><code>runs-on: ubuntu-latest</code> — the job runs on a fresh GitHub-hosted Linux <strong>runner</strong> (the temporary machine that executes a job).</li>
+<li><code>env: BODY: ...</code> — copies the PR description into an environment variable.</li>
+<li><code>grep -q &#39;^## Plan&#39;</code> — looks for a line starting with <code>## Plan</code>; if it&#39;s missing, <code>exit 1</code> fails the job, which fails the check. Mark this job as a <strong>required status check</strong> and the PR can&#39;t merge without a plan.</li>
+</ul>
+<h3 id="how-it-works-in-practice">How It Works in Practice</h3>
+<p>A separated workflow in GitHub Actions looks like this. The plan workflow publishes the plan as an artifact:</p>
+<div class="code-block">name: Agent Planning Session
+on:
+  workflow_dispatch:
+    inputs:
+      task_description:
+        description: &#39;Describe the task for the agent&#39;
+        required: true
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Generate plan from task
+        run: |
+          echo &quot;## Agent Plan&quot; &gt; plan.md
+          echo &quot;### Proposed Changes&quot; &gt;&gt; plan.md
+          echo &quot;1. Create src/utils/validator.py&quot; &gt;&gt; plan.md
+          echo &quot;2. Add unit tests in tests/test_validator.py&quot; &gt;&gt; plan.md
+          echo &quot;3. Update requirements.txt&quot; &gt;&gt; plan.md
+          echo &quot;&quot; &gt;&gt; plan.md
+          echo &quot;### Risk Assessment&quot; &gt;&gt; plan.md
+          echo &quot;- No breaking changes expected&quot; &gt;&gt; plan.md
+          echo &quot;- All new code covered by tests&quot; &gt;&gt; plan.md
+      - name: Upload plan as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent-plan
+          path: plan.md</div>
+<ul>
+<li><code>workflow_dispatch</code> with <code>inputs</code> — a person starts the run manually from the <strong>Actions</strong> tab and types a task description.</li>
+<li><code>permissions: contents: read</code> — the planning job can&#39;t change the repository.</li>
+<li>The <code>echo ... &gt;&gt; plan.md</code> lines stand in for the agent writing its plan (in real use, an agent call would produce this file).</li>
+<li><code>actions/upload-artifact</code> — saves <code>plan.md</code> as an <strong>artifact</strong>: a file attached to the workflow run that reviewers can download later.</li>
+</ul>
+<p>A <em>separate</em> execution workflow is chained with <code>workflow_run</code>. <code>workflow_run</code> only fires when the plan workflow <strong>completes</strong> — it does not wait for a human. The human gate comes from an <strong>environment with required reviewers</strong>: the job pauses until a reviewer approves.</p>
+<div class="code-block">name: Agent Execution
+on:
+  workflow_run:
+    workflows: [&quot;Agent Planning Session&quot;]
+    types: [completed]
+
+jobs:
+  execute:
+    if: ${{ github.event.workflow_run.conclusion == &#39;success&#39; }}
+    runs-on: ubuntu-latest
+    # Human gate: configure &quot;agent-execution&quot; with required reviewers
+    environment: agent-execution
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: read
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Download approved plan from the triggering run
+        uses: actions/download-artifact@v4
+        with:
+          name: agent-plan
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Execute agent tasks
+        run: |
+          # Agent generates code, writes files, runs tests
+          mkdir -p src/utils
+          echo &#39;# Validator module&#39; &gt; src/utils/validator.py
+          echo &#39;Execution complete&#39;
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: agent-execution-${{ github.run_id }}
+          title: &#39;Agent: Implement validator module&#39;
+          body-path: plan.md</div>
+<ul>
+<li><code>on: workflow_run ... types: [completed]</code> — starts after the planning workflow finishes; it does <strong>not</strong> wait for a human by itself.</li>
+<li><code>if: ... conclusion == &#39;success&#39;</code> — skips execution if planning failed.</li>
+<li><code>environment: agent-execution</code> — the actual human gate. If that environment has required reviewers, the job pauses with &quot;Waiting for review&quot; until someone approves.</li>
+<li><code>permissions</code> — write access is granted <strong>only</strong> to this job, and only for what it needs (contents, pull requests, reading the other run&#39;s artifacts).</li>
+<li><code>actions/download-artifact</code> with <code>run-id</code> — fetches the exact plan that was produced (and reviewed) in the planning run.</li>
+<li><code>peter-evans/create-pull-request</code> — commits the changes to a new branch and opens a PR whose body is the plan, so review still happens before merge.</li>
+</ul>
+<div class="callout"><p><strong>🧠 Teaching Tip:</strong> Remember the slogan: <em>&quot;Plan is reviewable intent; execution changes state.&quot;</em> For high-risk work, an answer that combines planning and execution with no human validation before code is generated is wrong. For low-risk work, plan + execution in one PR is acceptable — as long as required checks and reviews still gate the merge.</p></div>
+
+</div>
+<div class="section">
+<h2 id="5-autonomy-levels">5. Autonomy Levels</h2>
+<p>Not all agent work needs the same level of freedom. The official module uses a <strong>risk-based autonomy model</strong> expressed through policy, not a single rule for everything:</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> A learner driver can practise in an empty car park alone, needs an instructor on the motorway, and isn&#39;t allowed to drive a bus at all. Autonomy is the same: the riskier the files or actions, the more people and checks sit in the passenger seat. <strong>Guardrails</strong> are the limits that keep the agent on the road — tool restrictions, required reviews, approvals.</p></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Task type</th>
+<th>Example paths</th>
+<th>Risk level</th>
+<th>Autonomy design</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Low</strong></td>
+<td><code>docs/</code>, formatting</td>
+<td>Low</td>
+<td>Merge can be automated using GitHub auto-merge after required checks (and reviews, if configured) pass</td>
+</tr>
+<tr>
+<td><strong>Medium</strong></td>
+<td><code>src/</code>, dependency bumps</td>
+<td>Medium</td>
+<td>PR required + checks + at least one review</td>
+</tr>
+<tr>
+<td><strong>High</strong></td>
+<td><code>infra/</code>, <code>.github/workflows/</code></td>
+<td>High</td>
+<td>CODEOWNERS + multiple reviews + stricter rulesets</td>
+</tr>
+<tr>
+<td><strong>Critical</strong></td>
+<td>Production deploy settings, secrets</td>
+<td>Critical</td>
+<td>Environment approvals; agent prepares but can&#39;t execute</td>
+</tr>
+</tbody></table></div>
+<p>Source: <a href="https://learn.microsoft.com/en-us/training/modules/design-agent-architecture-integration/6-reliable-workflows" target="_blank" rel="noopener">Build reliable workflows</a></p>
+<p>On the <strong>capability</strong> side, the same idea applies to tools: read-only toolsets for planning/review agents, edit/execute tools only for execution agents.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Capability profile</th>
+<th>Custom agent <code>tools</code></th>
+<th>Typical use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Read-only</td>
+<td><code>[&quot;read&quot;, &quot;search&quot;]</code></td>
+<td>Triage, research, planning, review</td>
+</tr>
+<tr>
+<td>Implement</td>
+<td><code>[&quot;read&quot;, &quot;search&quot;, &quot;edit&quot;]</code> (+ <code>&quot;execute&quot;</code> if it must run tests)</td>
+<td>Code generation, bug fixes, refactoring through a PR</td>
+</tr>
+<tr>
+<td>Extended</td>
+<td>Add specific MCP tools (<code>server/tool</code>) or <code>&quot;agent&quot;</code> for delegation</td>
+<td>Multi-step automation — only with guardrails (hooks, environments, reviews)</td>
+</tr>
+</tbody></table></div>
+<h3 id="choosing-the-right-level">Choosing the Right Level</h3>
+<p>The rule of thumb: <strong>start low, escalate only when needed</strong>. If a task can be accomplished with read-only access, don&#39;t give the agent write tools. If a task needs to open a PR but doesn&#39;t need a shell, don&#39;t grant <code>execute</code>.</p>
+<p>Here&#39;s how capability boundaries are configured for real, as GitHub Copilot <strong>custom agent profiles</strong> in <code>.github/agents/</code>. First, a read-only triage agent:</p>
+<div class="code-block">&lt;!-- .github/agents/triage-agent.agent.md --&gt;
+---
+name: triage-agent
+description: Researches and classifies issues; read-only, never edits files
+tools: [&quot;read&quot;, &quot;search&quot;]
+---
+
+You triage issues. Read and search the codebase, summarize findings,
+and propose labels and a plan. Do not modify files.</div>
+<ul>
+<li><code>tools: [&quot;read&quot;, &quot;search&quot;]</code> is what makes it read-only; the sentence &quot;Do not modify files&quot; only explains intent.</li>
+</ul>
+<p>Second, an implementation agent that may change files and run tests:</p>
+<div class="code-block">&lt;!-- .github/agents/fixer-agent.agent.md --&gt;
+---
+name: fixer-agent
+description: Implements approved plans under src/ and tests/ and opens a PR
+tools: [&quot;read&quot;, &quot;search&quot;, &quot;edit&quot;, &quot;execute&quot;]
+---
+
+Implement only the approved plan. Limit changes to src/ and tests/.
+Run the test suite before finishing.</div>
+<ul>
+<li><code>edit</code> lets it change files; <code>execute</code> lets it run shell commands such as the test suite.</li>
+<li>&quot;Limit changes to src/ and tests/&quot; is <strong>guidance only</strong> — the next paragraph explains how to enforce it.</li>
+</ul>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Leaving out <code>tools</code> to &quot;keep the profile simple&quot;. Omitting <code>tools</code> (or using <code>[&quot;*&quot;]</code>) enables <strong>all</strong> available tools; <code>tools: []</code> disables all of them (<a href="https://docs.github.com/en/copilot/reference/custom-agents-configuration" target="_blank" rel="noopener">Docs</a>). Always list the tools explicitly.</p></div>
+<p>Path restrictions, command deny lists, and file-size limits are <strong>not</strong> custom-agent frontmatter keys — enforce them with <code>preToolUse</code> hooks (section 9), CODEOWNERS, rulesets (e.g., <em>Restrict file paths</em>), and required reviews. MCP tools are scoped per server with <code>server-name/tool-name</code> entries in <code>tools</code> (prefer a narrow subset over <code>server/*</code>).</p>
+<h3 id="human-intervention-without-slowing-delivery">Human Intervention Without Slowing Delivery</h3>
+<p>The goal is to put humans only where they materially reduce risk. The Designing module frames it as delegating repetitive work while keeping humans in control of &quot;decisions that matter most&quot; (<a href="https://learn.microsoft.com/en-us/training/modules/design-agent-architecture-integration/9-summary" target="_blank" rel="noopener">summary</a>). Practical levers:</p>
+<ul>
+<li><strong>Tier the gates by risk</strong> (table above): low-risk paths can use auto-merge once checks pass; reserve multiple reviews and environment approvals for high/critical paths.</li>
+<li><strong>Route, don&#39;t broadcast:</strong> CODEOWNERS requests review only from owners of the paths that changed, instead of a blanket approval from everyone.</li>
+<li><strong>Let checks do first-line validation</strong> (required status checks) so reviewers judge intent and scope, not formatting.</li>
+<li><strong>Escalate by policy, not by default:</strong> the agent may revise and rerun checks on failure; only when the <em>same required check fails twice</em> does it hand off to a human with a summary (<a href="https://learn.microsoft.com/en-us/training/modules/design-agent-architecture-integration/7-agent-operations-controls" target="_blank" rel="noopener">safe iteration policy</a>).</li>
+<li><strong>Steer during the session:</strong> agent sessions are observable — you can watch the session log and give follow-up prompts instead of waiting for a finished PR (<a href="https://learn.microsoft.com/en-us/training/modules/agent-tooling-mcp-execution-environments/5-agent-execution-limits-protections" target="_blank" rel="noopener">Learn</a>).</li>
+<li><strong>Choose plan-first only where needed:</strong> plan-first PRs for high-risk work; plan + execution in one PR for low/medium risk.</li>
+</ul>
+<div class="callout warning"><p><strong>⚠️ Exam Trap:</strong> The exam will test whether you can <strong>match autonomy to risk</strong>. &quot;An agent that researches a bug&quot; → read-only tools. &quot;An agent that writes a fix and opens a PR in <code>src/</code>&quot; → medium: PR + checks + one review. &quot;An agent that edits <code>.github/workflows/</code> or infra&quot; → high: CODEOWNERS + multiple reviews + stricter rulesets. &quot;An agent that deploys to production or touches secrets&quot; → critical: environment approval, agent prepares but can&#39;t execute. Don&#39;t over- or under-assign.</p></div>
+
+</div>
+<div class="section">
+<h2 id="6-task-quality-weak-vs-well-defined">6. Task Quality: Weak vs Well-Defined</h2>
+<p>An agent is only as good as the task you give it. Vague instructions produce changes that look plausible but don&#39;t solve the underlying problem. The exam expects you to distinguish between <strong>weak tasks</strong> and <strong>well-defined tasks</strong>.</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> &quot;Fix the car&quot; vs. &quot;Replace the front-left brake pads, don&#39;t touch the engine, and the car must stop within 40 m at 100 km/h.&quot; The second one can be finished <em>and checked</em>.</p></div>
+<h3 id="weak-tasks-avoid-these">Weak Tasks (Avoid These)</h3>
+<ul>
+<li>&quot;Fix the login page&quot; — What&#39;s wrong with it? What does &quot;fixed&quot; mean?</li>
+<li>&quot;Improve performance&quot; — By how much? Measured how? In what scope?</li>
+<li>&quot;Review the code&quot; — What kind of review? Security, style, correctness?</li>
+<li>&quot;Make it better&quot; — This isn&#39;t a task at all.</li>
+</ul>
+<h3 id="well-defined-tasks-good-examples">Well-Defined Tasks (Good Examples)</h3>
+<ul>
+<li>&quot;Add input validation to <code>src/auth/login.ts</code> that rejects email addresses longer than 254 characters and returns a 400 error.&quot;</li>
+<li>&quot;Generate unit tests for <code>src/services/payment.ts</code> that achieve at least 80% branch coverage. Tests must pass on CI.&quot;</li>
+<li>&quot;Scan <code>requirements.txt</code> for packages with known CVSS 7+ vulnerabilities and open an issue for each one with remediation guidance.&quot;</li>
+</ul>
+<h3 id="the-checklist-for-well-defined-tasks">The Checklist for Well-Defined Tasks</h3>
+<p>When writing a task for an agent, check that it includes:</p>
+<ol>
+<li><strong>Scope:</strong> Which files or services are in scope?</li>
+<li><strong>Action:</strong> What exactly should the agent do?</li>
+<li><strong>Constraints:</strong> What must the agent NOT do?</li>
+<li><strong>Quality bar:</strong> How do we know it&#39;s done well?</li>
+<li><strong>Output format:</strong> What does the deliverable look like?</li>
+</ol>
+<p>The block below rewrites a weak task into a well-defined one using that checklist:</p>
+<div class="code-block"># ❌ Weak task
+Task: Fix the error handling in the API
+
+# ✅ Well-defined task
+Task: Improve error handling in src/routes/users.ts
+
+Scope:
+  - File: src/routes/users.ts
+  - Do not modify any other files
+
+Action:
+  - Wrap each route handler in a try/catch block
+  - Return consistent JSON error responses: { &quot;error&quot;: string, &quot;code&quot;: integer }
+  - Log each error with context using the existing logger
+
+Constraints:
+  - Do not change the route signatures or response shapes for success cases
+  - Do not add external dependencies
+
+Quality bar:
+  - All existing tests must still pass
+  - New error responses must match the format in /docs/api-errors.md
+  - No lint warnings introduced</div>
+<ul>
+<li><strong>Scope</strong> pins the work to one file — a reviewer instantly spots scope creep.</li>
+<li><strong>Action</strong> lists concrete steps and the exact error shape.</li>
+<li><strong>Constraints</strong> protect existing behavior and dependencies.</li>
+<li><strong>Quality bar</strong> turns &quot;done&quot; into checks CI and the reviewer can verify.</li>
+</ul>
+<div class="callout tip"><p><strong>🎯 Exam angle:</strong> You&#39;ll be shown two or more task descriptions and asked which will produce the most reliable agent result. Pick the one with explicit scope, constraints, and verifiable criteria — even if it&#39;s longer. &quot;Improve&quot;, &quot;clean up&quot;, or &quot;make better&quot; with no measure is the tell-tale weak task.</p></div>
+
+</div>
+<div class="section">
+<h2 id="the-agentic-sdlc-flow">The Agentic SDLC Flow</h2>
+<p>Here&#39;s the end-to-end workflow that Domain 1 expects you to understand. An issue triggers a branch, an agent works on it, opens a PR, checks run, a human reviews, and changes are merged. Every step has a governance point.</p>
+<div class="diagram-wrap"><svg viewBox="0 0 840 240" xmlns="http://www.w3.org/2000/svg" style="max-width:840px">
+        <defs>
+          <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/>
+          </marker>
+          <marker id="arrow-done" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#059669"/>
+          </marker>
+        </defs>
+
+        <!-- Row 1: Issue -> Branch -> Agent -> PR -->
+        <rect x="10" y="20" width="100" height="50" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+        <text x="60" y="50" text-anchor="middle" font-size="14" font-weight="700" fill="#1d4ed8">Issue</text>
+
+        <line x1="110" y1="45" x2="150" y2="45" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow)"/>
+
+        <rect x="155" y="20" width="100" height="50" rx="8" fill="#e0e7ff" stroke="#4f46e5" stroke-width="2"/>
+        <text x="205" y="50" text-anchor="middle" font-size="14" font-weight="700" fill="#3730a3">Branch</text>
+
+        <line x1="255" y1="45" x2="295" y2="45" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow)"/>
+
+        <rect x="300" y="20" width="100" height="50" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+        <text x="350" y="50" text-anchor="middle" font-size="14" font-weight="700" fill="#92400e">Agent</text>
+
+        <line x1="400" y1="45" x2="440" y2="45" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow)"/>
+
+        <rect x="445" y="20" width="100" height="50" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+        <text x="495" y="50" text-anchor="middle" font-size="14" font-weight="700" fill="#5b21b6">PR</text>
+
+        <!-- Arrow down from PR to row 2 -->
+        <line x1="495" y1="70" x2="495" y2="100" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow)"/>
+
+        <!-- Row 2: Checks -> Review -> Merge -->
+        <rect x="420" y="105" width="110" height="50" rx="8" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+        <text x="475" y="131" text-anchor="middle" font-size="13" font-weight="700" fill="#047857">Status Checks</text>
+
+        <line x1="530" y1="130" x2="570" y2="130" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow)"/>
+
+        <rect x="575" y="105" width="110" height="50" rx="8" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+        <text x="630" y="131" text-anchor="middle" font-size="14" font-weight="700" fill="#991b1b">Review</text>
+
+        <line x1="685" y1="130" x2="725" y2="130" stroke="#059669" stroke-width="2" marker-end="url(#arrow-done)"/>
+
+        <rect x="730" y="105" width="100" height="50" rx="8" fill="#059669" stroke="#047857" stroke-width="2"/>
+        <text x="780" y="131" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Merge</text>
+
+        <!-- Governance annotations below each step -->
+        <text x="60" y="90" text-anchor="middle" font-size="10" fill="#64748b">Issue templates</text>
+        <text x="350" y="90" text-anchor="middle" font-size="10" fill="#64748b">Plan-review gate</text>
+        <text x="475" y="168" text-anchor="middle" font-size="10" fill="#64748b">Required checks (Actions, CodeQL)</text>
+        <text x="630" y="168" text-anchor="middle" font-size="10" fill="#64748b">CODEOWNERS approval</text>
+        <text x="780" y="168" text-anchor="middle" font-size="10" fill="#64748b">Rulesets / branch protection</text>
+      </svg>
+<div class="diagram-caption">Figure 1: End-to-end agentic SDLC flow with governance controls at every step. Each box represents a stage with a human or automated gate.</div></div>
+
+</div>
+<div class="section">
+<h2 id="7-pr-based-governance">7. PR-Based Governance</h2>
+<p>Pull Requests are the <strong>primary control mechanism</strong> for agent execution in GitHub. Every change an agent makes should flow through a PR — never a direct push to a protected branch. A common safe workflow: agent creates branch → opens PR (includes plan) → required reviews validate approach → GitHub Actions run required checks → all checks pass + approvals complete → PR can be merged.</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> A PR is the inspection desk. Nothing gets into <code>main</code> without passing through it, and the desk has a checklist (template), automated scanners (status checks), named inspectors for sensitive areas (CODEOWNERS), and house rules nobody can skip (rulesets). An environment is a second, locked door in front of production.</p></div>
+<h3 id="github-as-system-of-record-and-control-plane">GitHub as System of Record and Control Plane</h3>
+<p>The <a href="https://learn.microsoft.com/en-us/training/modules/foundations-agentic-ai/4-describe-github-system-record-control-plane" target="_blank" rel="noopener">Foundations module</a> separates two roles:</p>
+<ul>
+<li><strong>System of record</strong> — where work is <em>stored and inspectable</em>: repositories and branches, commits and PRs, issues and discussions (intent), workflow runs and artifacts (evidence), review history (decisions).</li>
+<li><strong>Control plane</strong> — where work is <em>enforced</em>: PRs, required reviews, required status checks, CODEOWNERS, rulesets/branch protection, and environments.</li>
+</ul>
+<p>Enforcement only happens when the controls are turned on (typically an admin task). For agents, &quot;what the agent can do&quot; often reduces to &quot;what the workflow token and tool credentials can do&quot;, so set default workflow token permissions to read-only and elevate per job.</p>
+<h3 id="built-in-approval-gates-for-copilot-cloud-agent">Built-in Approval Gates for Copilot Cloud Agent</h3>
+<p>Copilot cloud agent ships with gates that prevent its work from taking effect until a human checks it (<a href="https://docs.github.com/en/copilot/concepts/agents/cloud-agent/risks-and-mitigations" target="_blank" rel="noopener">risks and mitigations</a>):</p>
+<ul>
+<li>Only users with <strong>write access</strong> can trigger it; comments from users without write access are never shown to the agent.</li>
+<li>Its PRs must be reviewed and merged by a human. It <strong>can&#39;t mark its PR &quot;Ready for review&quot;, approve, or merge</strong>.</li>
+<li>The user who asked Copilot to create the PR <strong>can&#39;t approve it</strong>, preserving &quot;Required approvals&quot;.</li>
+<li>When a PR isn&#39;t attributed to a person (Copilot&#39;s own app identity), <strong>one more approval</strong> is required if the repo already requires at least one — on by default in rulesets (admins can turn it off), always applied in branch protection.</li>
+<li><strong>GitHub Actions workflows don&#39;t run</strong> on its changes until a user with write access clicks <strong>Approve and run workflows</strong> (you can optionally allow them to run automatically).</li>
+<li>It&#39;s subject to the repository&#39;s branch protections and required checks.</li>
+</ul>
+<p>It also self-validates before finishing: CodeQL, a GitHub Advisory Database check of new dependencies, secret scanning, and a Copilot code review pass — no GitHub Advanced Security license required. These tools can be individually disabled.</p>
+<h3 id="pr-templates">PR Templates</h3>
+<p>Templates ensure agents produce consistent, reviewable PRs. An agent-generated PR should follow the same template as a human PR, with plan and evidence sections. PR templates are static Markdown — GitHub does <strong>not</strong> substitute variables, so leave placeholders for the agent to fill in. Save this file as <code>.github/pull_request_template.md</code>:</p>
+<div class="code-block">&lt;!-- .github/pull_request_template.md --&gt;
+## Plan (required)
+- **Goal:**
+- **Scope (paths/files):**
+- **Steps:**
+  1.
+  2.
+  3.
+- **Success criteria (verifiable):**
+  - [ ] Required checks pass
+  - [ ] Security signals reviewed (as applicable)
+- **Risks + mitigations:**
+- **Rollback / escalation plan:**
+
+## Evidence
+- Workflow run(s):
+- Scan results (if applicable):
+
+## Agent Metadata
+- **Agent:** &lt;!-- agent name / custom agent profile --&gt;
+- **Task / issue:** &lt;!-- link --&gt;
+- **Risk tier:** &lt;!-- low | medium | high | critical --&gt;
+
+## Review checklist
+- [ ] Plan reviewed and approved
+- [ ] Required reviews satisfied
+- [ ] Required checks satisfied</div>
+<ul>
+<li><strong>Plan</strong> mirrors the structured plan headings, so plan and PR stay consistent.</li>
+<li><strong>Evidence</strong> is where links to workflow runs and scan results go — reviewers check facts, not claims.</li>
+<li><strong>Agent Metadata</strong> records which agent did the work, for which issue, at which risk tier.</li>
+<li><code>&lt;!-- ... --&gt;</code> comments are hidden when the PR is rendered; they&#39;re hints for whoever fills it in.</li>
+<li>A template only pre-fills the description — it can be deleted or left blank, which is why section 4 adds a plan gate.</li>
+</ul>
+<h3 id="required-status-checks">Required Status Checks</h3>
+<p>Every agent PR should require passing checks before merge. This includes CI jobs, linting, security scanning, and test coverage thresholds. The settings below are what you&#39;d tick in a ruleset or branch protection rule (shown as text, not a file):</p>
+<div class="code-block"># Branch protection rule or ruleset targeting main
+- Require a pull request before merging
+  - Required approvals: 1 (rulesets add one more for unattributed Copilot PRs by default)
+  - Require review from Code Owners
+- Require status checks to pass before merging:
+  ✅ build-and-test (ubuntu-latest)
+  ✅ lint-and-format
+  ✅ security-scan (codeql)   # or the &quot;Require code scanning results&quot; rule
+  ✅ coverage-check (&gt;= 80%)  # or the &quot;Restrict code coverage&quot; rule (preview)
+- Block force pushes</div>
+<ul>
+<li><strong>Require a pull request</strong> — nobody (human or agent) can push straight to <code>main</code>.</li>
+<li><strong>Required approvals / Code Owners</strong> — a person, and the right person for sensitive paths, must approve.</li>
+<li><strong>Required status checks</strong> — each listed job name must report success on the PR&#39;s latest commit.</li>
+<li><strong>Block force pushes</strong> — history on <code>main</code> can&#39;t be rewritten, which keeps the audit trail intact.</li>
+</ul>
+<h3 id="codeowners">CODEOWNERS</h3>
+<p>CODEOWNERS files define who (or which team) must approve changes to specific files — enforced when combined with &quot;Require review from Code Owners&quot;. If a path has multiple owners, approval from <strong>any one</strong> of them satisfies the requirement. This is critical when an agent touches sensitive code paths:</p>
+<div class="code-block"># .github/CODEOWNERS
+# Global owners for review
+* @core-team
+
+# Security-critical paths require security team approval
+src/auth/** @security-team
+src/secrets/** @security-team
+
+# Deployment configs and workflows require platform team
+deploy/** @platform-team
+infra/** @platform-team
+.github/workflows/** @platform-team
+
+# Agent profiles and hooks are owned by the AI-Infra team
+.github/agents/** @ai-infra-team
+.github/hooks/** @ai-infra-team</div>
+<ul>
+<li>Each line is <code>path-pattern owner(s)</code>. <code>*</code> matches everything; <code>src/auth/**</code> matches everything under that folder.</li>
+<li>When several lines match a file, the <strong>last</strong> matching line wins — which is why the catch-all <code>*</code> goes first (<a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners" target="_blank" rel="noopener">Docs</a>).</li>
+<li>Owners are GitHub users or teams (<code>@org/team</code> in a real org).</li>
+<li>Putting <code>.github/agents/**</code> and <code>.github/hooks/**</code> under an owner means changes to the agent&#39;s own permissions get reviewed like any high-risk change.</li>
+</ul>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Adding a CODEOWNERS file and assuming it blocks merges. On its own it only <strong>requests</strong> reviews; it becomes a gate when the ruleset or branch protection has <strong>Require review from Code Owners</strong> turned on.</p></div>
+<h3 id="rulesets-and-environment-gates">Rulesets and Environment Gates</h3>
+<p>Repository <strong>rulesets</strong> enforce fine-grained policies — for example, requiring approvals from specific teams when certain paths change (the <em>Required reviewers</em> setting, up to 15 teams with per-team approval counts), requiring Code Owner review, required status checks, code scanning results, or restricting file paths. <strong>Environment protection rules</strong> gate jobs that reference an environment: <em>required reviewers</em> (manual approval, optionally preventing self-review), a <em>wait timer</em> (1–43,200 minutes) for cool-down periods, and deployment branch/tag restrictions — ensuring an agent can&#39;t promote a build without a human saying &quot;go.&quot; Environment secrets are only released to the job after approval.</p>
+<div class="callout"><p><strong>🔑 Exam Tip:</strong> You&#39;ll be asked to choose the right governance mechanism for a scenario. &quot;Prevent direct pushes to main&quot; → <strong>branch protection rule / ruleset</strong>. &quot;Require specific reviewers for security files&quot; → <strong>CODEOWNERS</strong> (+ require Code Owner review) or ruleset <em>required reviewers</em>. &quot;Require manual approval before production deploy&quot; → <strong>environment</strong> with required reviewers. &quot;Delay a deployment by N hours&quot; → environment <strong>wait timer</strong>. Know the difference.</p></div>
+
+</div>
+<div class="section">
+<h2 id="8-reliable-workflows">8. Reliable Workflows</h2>
+<p>Reliable agent workflows are built on four pillars: <strong>outputs, contexts, triggers, and cross-job handoffs</strong>. Let&#39;s break each one down.</p>
+<p>Quick vocabulary for GitHub Actions:</p>
+<ul>
+<li><strong>Workflow:</strong> a YAML file in <code>.github/workflows/</code> that describes automation.</li>
+<li><strong>Trigger (event):</strong> what starts the workflow — a push, a PR, a schedule, a manual click (<code>on:</code>).</li>
+<li><strong>Job:</strong> a group of steps that runs on one <strong>runner</strong> (a fresh virtual machine). Jobs run in parallel unless linked with <code>needs</code>.</li>
+<li><strong>Step:</strong> one command (<code>run:</code>) or one reusable action (<code>uses:</code>) inside a job.</li>
+<li><strong>Expression:</strong> <code>${{ ... }}</code> — a placeholder GitHub fills in before the step runs, for example <code>${{ github.actor }}</code>.</li>
+</ul>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> A workflow is a relay race. Triggers fire the starting pistol, each job is a runner on a separate track, and outputs are the baton. If you don&#39;t hand the baton over explicitly, the next runner starts empty-handed.</p></div>
+<h3 id="outputs">Outputs</h3>
+<p>Treat data that downstream steps or jobs consume as explicit outputs, not &quot;just logs&quot;. Step outputs pass values between steps in the same job; job outputs pass values across jobs (through <code>needs</code>); environment variables configure runtime behavior but shouldn&#39;t replace outputs for structured data. Write step outputs to the <code>$GITHUB_OUTPUT</code> file:</p>
+<div class="code-block">jobs:
+  agent-plan:
+    runs-on: ubuntu-latest
+    outputs:
+      plan_summary: ${{ steps.generate.outputs.summary }}
+      branch_name: ${{ steps.create_branch.outputs.branch }}
+    steps:
+      - id: generate
+        run: echo &quot;summary=Fix null-pointer in UserService.process()&quot; &gt;&gt; &quot;$GITHUB_OUTPUT&quot;
+      - id: create_branch
+        run: echo &quot;branch=fix-null-ptr-user-service&quot; &gt;&gt; &quot;$GITHUB_OUTPUT&quot;
+
+  agent-execute:
+    needs: [agent-plan]
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo &quot;Executing plan: ${{ needs.agent-plan.outputs.plan_summary }}&quot;
+          echo &quot;On branch: ${{ needs.agent-plan.outputs.branch_name }}&quot;</div>
+<ul>
+<li><code>id: generate</code> names a step so others can refer to it.</li>
+<li><code>echo &quot;summary=...&quot; &gt;&gt; &quot;$GITHUB_OUTPUT&quot;</code> writes a <strong>step output</strong> named <code>summary</code> (the <code>$GITHUB_OUTPUT</code> file is how steps publish values).</li>
+<li>The job-level <code>outputs:</code> block re-publishes step outputs as <strong>job outputs</strong>.</li>
+<li><code>needs: [agent-plan]</code> makes <code>agent-execute</code> wait for <code>agent-plan</code> and gives it access to <code>needs.agent-plan.outputs.*</code>.</li>
+</ul>
+<p>For larger evidence (reports, logs), upload artifacts where they&#39;re produced and download them where they&#39;re reviewed — instead of committing generated files back to the repo.</p>
+<h3 id="contexts">Contexts</h3>
+<p>GitHub Actions provides contextual information — <code>github</code> (event metadata, repo, actor: &quot;what triggered this run?&quot;), <code>env</code> (job/step environment variables), <code>vars</code> (centrally managed configuration variables), and <code>secrets</code> (sensitive values). Agents and workflows use these contexts to make decisions:</p>
+<div class="code-block">steps:
+  - name: Agent reads context
+    run: |
+      echo &quot;Event: ${{ github.event_name }}&quot;
+      echo &quot;Branch: ${{ github.ref_name }}&quot;
+      echo &quot;Actor: ${{ github.actor }}&quot;
+      echo &quot;SHA: ${{ github.sha }}&quot;
+      echo &quot;Repo: ${{ github.repository }}&quot;
+
+      # Use contexts in conditional logic
+      if [ &quot;${{ github.actor }}&quot; == &quot;github-actions[bot]&quot; ]; then
+        echo &quot;This is an automated agent run&quot;
+      fi</div>
+<ul>
+<li>Each <code>${{ github.* }}</code> value is filled in by GitHub before the script runs: which event fired, which branch, who triggered it, which commit, which repository.</li>
+<li>The <code>if</code> checks whether the actor is the built-in Actions bot — a simple way to branch logic for automated runs.</li>
+<li>Only inline trusted values like these; user-controlled text (PR titles, bodies) should go through <code>env:</code> as shown in the plan gate.</li>
+</ul>
+<h3 id="triggers">Triggers</h3>
+<p>Workflows can be triggered by <strong>events</strong> (push, pull_request, issues, schedule), <strong>workflow_dispatch</strong> (manual), <strong>workflow_run</strong> (chained), or <strong>repository_dispatch</strong> (external webhook). Each trigger type serves a different purpose for agent workflows. The snippets below are <strong>separate examples</strong> (a real file has one <code>on:</code> block):</p>
+<div class="code-block"># Trigger on issue creation (planning phase)
+on:
+  issues:
+    types: [opened, labeled]
+
+# Trigger on PRs *targeting* main, then filter to agent head branches.
+# Note: pull_request &quot;branches&quot; matches the BASE branch, not the head branch.
+on:
+  pull_request:
+    branches: [main]
+jobs:
+  validate:
+    if: startsWith(github.head_ref, &#39;agent-&#39;)
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo &quot;Validating agent PR&quot;
+
+# Chain workflows: runs after the plan workflow completes (no human wait by itself)
+on:
+  workflow_run:
+    workflows: [&quot;Agent Plan&quot;]
+    types: [completed]
+
+# External trigger (e.g., from an agent orchestrator)
+on:
+  repository_dispatch:
+    types: [agent-execute-task]</div>
+<ul>
+<li><code>issues: types: [opened, labeled]</code> — good for kicking off planning or triage when an issue appears or gets a label.</li>
+<li><code>pull_request</code> + <code>if: startsWith(github.head_ref, &#39;agent-&#39;)</code> — validates only PRs whose <strong>source</strong> branch starts with <code>agent-</code>.</li>
+<li><code>workflow_run</code> — chains one workflow after another.</li>
+<li><code>repository_dispatch</code> — lets an outside system start the workflow through the GitHub API with a custom event type.</li>
+</ul>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Writing <code>pull_request: branches: [agent-*]</code> to target agent branches. That filter matches the <strong>base</strong> (target) branch, not the branch the PR comes from — use <code>github.head_ref</code> in a job condition instead.</p></div>
+<p><strong>Defensive gating:</strong> repositories often have multiple triggers. Add job-level conditions so PR-only behavior doesn&#39;t run without a PR context:</p>
+<div class="code-block">on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  validate-pr:
+    if: github.event_name == &#39;pull_request&#39;
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm test</div>
+<ul>
+<li>Two triggers: PRs into <code>main</code> and manual runs.</li>
+<li><code>if: github.event_name == &#39;pull_request&#39;</code> skips the job on manual runs, where PR data (like <code>github.head_ref</code>) doesn&#39;t exist.</li>
+<li><code>actions/checkout</code> copies the repository onto the runner before tests run.</li>
+</ul>
+<h3 id="cross-job-handoffs-with-needs">Cross-Job Handoffs with <code>needs</code></h3>
+<p>The <code>needs</code> keyword creates a dependency graph of jobs within a workflow. A downstream job only runs after its upstream dependencies succeed; if a job fails or is skipped, jobs that need it are skipped unless they use a condition such as <code>always()</code>. This is essential for multi-step agent flows. The example below chains five jobs:</p>
+<div class="code-block">jobs:
+  validate-input:
+    runs-on: ubuntu-latest
+    outputs:
+      valid: ${{ steps.check.outputs.is_valid }}
+    steps:
+      - id: check
+        run: echo &quot;is_valid=true&quot; &gt;&gt; &quot;$GITHUB_OUTPUT&quot;
+
+  generate-code:
+    needs: [validate-input]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo &quot;Generating code...&quot;
+
+  run-tests:
+    needs: [generate-code]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo &quot;Running tests...&quot;
+
+  create-pr:
+    needs: [run-tests]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo &quot;Creating PR...&quot;
+      # If run-tests fails, create-pr never executes
+
+  notify:
+    if: always()
+    needs: [create-pr]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo &quot;Pipeline completed. create-pr result: ${{ needs.create-pr.result }}&quot;</div>
+<p>Notice the <code>notify</code> job uses <code>if: always()</code> — a reliability pattern that ensures notification even if upstream jobs fail. Use <code>needs.&lt;job&gt;.result</code> to report upstream outcome (<code>job.status</code> would only report the <code>notify</code> job&#39;s own status).</p>
+<div class="callout tip"><p><strong>🎯 Exam angle:</strong> Data-passing questions usually hinge on scope. Same job → step output via <code>$GITHUB_OUTPUT</code>. Different job in the same workflow → job <code>outputs</code> + <code>needs</code>. Large files or evidence → artifacts. Another workflow → <code>workflow_run</code> (plus artifacts with <code>run-id</code>). &quot;Always notify, even on failure&quot; → <code>if: always()</code>.</p></div>
+
+</div>
+<div class="section">
+<h2 id="9-agent-operations-observability-governance-reliability">9. Agent Operations: Observability, Governance &amp; Reliability</h2>
+<p>The final section of Domain 1 covers the operational side — how you run agents reliably in production. This includes observability, tool governance, secrets management, hooks, and reliability patterns.</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> <strong>Observability</strong> is the aircraft&#39;s flight recorder — after anything happens, you can replay what the agent saw, did, and why. <strong>Governance</strong> is the cockpit checklist that limits which switches the agent may touch. <strong>Reliability</strong> is what happens when an engine fails: a planned response, not panic.</p></div>
+<h3 id="observability">Observability</h3>
+<p>You can&#39;t manage what you can&#39;t see. The official <strong>minimum observability set</strong> for autonomous work uses GitHub-native artifacts:</p>
+<ul>
+<li>a visible, structured plan (PR description or discussion)</li>
+<li>a bounded PR and commit history</li>
+<li>workflow run links for required checks</li>
+<li>durable uploaded artifacts (logs, reports, traces)</li>
+<li>review outcomes and approvals</li>
+</ul>
+<p>Evidence should be traceable to a <strong>specific workflow run and a specific commit</strong>. Learn recommends linking workflow runs and artifacts in an <strong>&quot;Evidence&quot; section of the PR</strong> so reviewers can validate quickly, and uploading artifacts where they&#39;re produced and downloading them where they&#39;re reviewed.</p>
+<h3 id="inspectable-artifacts-and-the-audit-trail">Inspectable Artifacts and the Audit Trail</h3>
+<p>The <a href="https://learn.microsoft.com/en-us/training/modules/foundations-agentic-ai/5-identify-risks-traceability" target="_blank" rel="noopener">Foundations module</a> defines a <strong>minimum audit trail</strong> for every agent contribution:</p>
+<ol>
+<li>A stated goal (issue link or PR description)</li>
+<li>An inspectable plan (PR plan section or file)</li>
+<li>A bounded changeset (branch and commits)</li>
+<li>Automated evidence (workflow run and artifacts)</li>
+<li>Human judgment (review and approval)</li>
+<li>A clear outcome (merge, revert, or escalation)</li>
+</ol>
+<p>The wider trail can include code scanning uploads (SARIF) and alerts, secret scanning alerts and push protection events, and organization audit log events (availability depends on org/enterprise configuration).</p>
+<p>Copilot cloud agent produces these in standard tooling by design (<a href="https://docs.github.com/en/copilot/concepts/agents/cloud-agent/risks-and-mitigations" target="_blank" rel="noopener">Docs</a>):</p>
+<ul>
+<li>Commits are <strong>authored by Copilot with the requesting developer as co-author</strong>.</li>
+<li>Commits are <strong>signed</strong> and show as &quot;Verified&quot;.</li>
+<li>Each commit message <strong>links to the agent session log</strong>.</li>
+<li><strong>Session logs and audit log events</strong> are available to administrators.</li>
+</ul>
+<p>Additional operational metrics worth tracking:</p>
+<ul>
+<li><strong>Execution time</strong> per task — detect slowdowns</li>
+<li><strong>Success/failure rate</strong> — spot regressions</li>
+<li><strong>Tool call frequency</strong> — identify abuse patterns</li>
+<li><strong>Human intervention rate</strong> — measure autonomy effectiveness</li>
+<li><strong>Token usage / API costs</strong> — track resource consumption</li>
+</ul>
+<p>Here&#39;s an illustrative structured log record for a single tool call (field names are an example, not a GitHub format). A <strong>token</strong> here means a unit of text the model processes — not an access token:</p>
+<div class="code-block">{
+  &quot;timestamp&quot;: &quot;2026-06-01T14:30:00Z&quot;,
+  &quot;agent_id&quot;: &quot;fixer-agent-v2&quot;,
+  &quot;session_id&quot;: &quot;sess_abc123&quot;,
+  &quot;event&quot;: &quot;tool_call&quot;,
+  &quot;tool&quot;: &quot;edit&quot;,
+  &quot;target&quot;: &quot;src/auth/login.ts&quot;,
+  &quot;duration_ms&quot;: 342,
+  &quot;success&quot;: true,
+  &quot;tokens_used&quot;: 1250,
+  &quot;cost_usd&quot;: 0.025
+}</div>
+<ul>
+<li><code>timestamp</code>, <code>agent_id</code>, <code>session_id</code> — who did it and when, so events can be grouped per session.</li>
+<li><code>event</code>, <code>tool</code>, <code>target</code> — what happened and to which file.</li>
+<li><code>duration_ms</code>, <code>success</code> — feed the execution-time and failure-rate metrics above.</li>
+<li><code>tokens_used</code>, <code>cost_usd</code> — feed cost tracking.</li>
+</ul>
+<h3 id="tool-governance">Tool Governance</h3>
+<p>Not all tools should be available to all agents. Agent profile configuration gives three kinds of control: a <strong>capability boundary</strong> (which tools are allowed — prefer allowlists), a <strong>visibility boundary</strong> (whether the agent is user-selectable), and a <strong>delegation boundary</strong> (which subagents can be invoked). A common approach:</p>
+<ul>
+<li><strong>Allow lists:</strong> Only approved tools can be called, via the custom agent <code>tools</code> property (e.g., <code>read</code>, <code>search</code>, <code>edit</code>, <code>execute</code>, or specific MCP tools like <code>github/&lt;tool&gt;</code>). <code>tools: []</code> disables all tools; omitting <code>tools</code> enables all.</li>
+<li><strong>Deny rules:</strong> Block explicitly dangerous actions (e.g., <code>sudo</code>, <code>rm -rf</code>, network scanners) with a <code>preToolUse</code> hook that returns <code>&quot;permissionDecision&quot;: &quot;deny&quot;</code>.</li>
+<li><strong>Rate limits / budgets:</strong> Cap tool calls or runtime to prevent runaway agents (general practice; implement via hooks, job <code>timeout-minutes</code>, or orchestrator settings).</li>
+</ul>
+<p>Treat changes to tool allowlists and MCP servers as governance-sensitive changes, reviewed like a high-risk dependency.</p>
+<h3 id="secrets-management">Secrets Management</h3>
+<p>Keep secrets out of instructions files, committed config, and plain-text workflow YAML. Inject them at runtime through protected secret boundaries, pass them only to the components that need them, and scope them (e.g., by environment). GitHub masks registered secrets in logs, but any process that receives a secret in an environment variable <strong>can read it</strong> — so only pass secrets to steps that need them. Two ways to hand a secret to a step:</p>
+<div class="code-block">steps:
+  - name: Deploy using a secret via environment variable
+    env:
+      # Injected by GitHub at runtime; masked in logs
+      DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+    run: |
+      # Any code in this step can read DEPLOY_KEY — only run trusted code here
+      echo &quot;Deploying with key length: ${#DEPLOY_KEY}&quot;
+      # ❌ Never do this: echo &quot;Key is $DEPLOY_KEY&quot;
+      # ✅ Safe: pass the key only to the tool that needs it
+
+  - name: Install SSH key securely
+    uses: webfactory/ssh-agent@v0.9.0
+    with:
+      ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}</div>
+<ul>
+<li><code>env: DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}</code> scopes the secret to <strong>this step only</strong>; other steps never see it.</li>
+<li><code>${#DEPLOY_KEY}</code> prints the length, never the value — a safe way to confirm a secret is present.</li>
+<li>The second step passes the key as an action input instead of an environment variable, so only that action receives it.</li>
+</ul>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Assuming log masking makes a secret safe. Masking only hides the exact value in logs; any code running in that step (including an agent&#39;s shell commands) can still read and send it elsewhere. Keep secrets away from steps that run agent-generated code.</p></div>
+<div class="callout"><p>&quot;The agent&#39;s runtime environment has its own secret boundary; don&#39;t assume it automatically inherits repository CI secrets.&quot; For Copilot cloud agent, secrets used by MCP servers must be configured as <strong>Agents secrets or variables</strong> at the organization or repository level.</p></div>
+<h3 id="hooks">Hooks</h3>
+<p>Hooks execute custom commands at specific points during agent execution — before a tool runs, after a tool completes, or when an error occurs. They provide enforceable control points that operate independently of the model&#39;s reasoning.</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> A hook is a security guard at a door the agent must walk through. The agent can <em>want</em> to edit <code>infra/main.tf</code>; the guard checks the badge and says no, no matter how convincing the agent&#39;s reasoning is.</p></div>
+<p>For Copilot cloud agent and Copilot CLI, hooks are JSON files in <code>.github/hooks/*.json</code> (<code>&quot;version&quot;: 1</code>) with events such as <code>preToolUse</code>, <code>postToolUse</code>, <code>errorOccurred</code>, <code>sessionStart</code>, and <code>sessionEnd</code>. This example registers three hooks:</p>
+<div class="code-block">{
+  &quot;version&quot;: 1,
+  &quot;hooks&quot;: {
+    &quot;preToolUse&quot;: [
+      {
+        &quot;type&quot;: &quot;command&quot;,
+        &quot;bash&quot;: &quot;./.github/hooks/scripts/validate-path.sh&quot;,
+        &quot;timeoutSec&quot;: 10
+      }
+    ],
+    &quot;postToolUse&quot;: [
+      {
+        &quot;type&quot;: &quot;command&quot;,
+        &quot;bash&quot;: &quot;cat &gt;&gt; logs/tool-results.jsonl&quot;
+      }
+    ],
+    &quot;errorOccurred&quot;: [
+      {
+        &quot;type&quot;: &quot;command&quot;,
+        &quot;bash&quot;: &quot;./.github/hooks/scripts/notify-team.sh&quot;
+      }
+    ]
+  }
+}</div>
+<ul>
+<li><code>&quot;version&quot;: 1</code> — the hook file format version.</li>
+<li><code>preToolUse</code> — runs <code>validate-path.sh</code> <strong>before</strong> every tool call; it can allow or deny. <code>timeoutSec: 10</code> caps how long it may take.</li>
+<li><code>postToolUse</code> — appends each tool result to a log file after the tool finishes (audit trail).</li>
+<li><code>errorOccurred</code> — runs a notification script when the agent hits an error.</li>
+</ul>
+<p>The hook receives a JSON payload on stdin (<code>toolName</code>, <code>toolArgs</code>, …). A <code>preToolUse</code> hook denies a call by printing a decision object (or exiting non-zero — <code>preToolUse</code> command hooks are fail-closed on errors, but fail-open on timeout):</p>
+<div class="code-block">#!/usr/bin/env bash
+# .github/hooks/scripts/validate-path.sh
+input=$(cat)
+tool=$(echo &quot;$input&quot; | jq -r &#39;.toolName&#39;)
+# Argument names vary by tool; &quot;path&quot; is used by file tools
+target=$(echo &quot;$input&quot; | jq -r &#39;.toolArgs.path // empty&#39;)
+if [[ &quot;$tool&quot; =~ ^(edit|create)$ &amp;&amp; -n &quot;$target&quot; &amp;&amp; &quot;$target&quot; != src/* &amp;&amp; &quot;$target&quot; != tests/* ]]; then
+  echo &quot;{\&quot;permissionDecision\&quot;:\&quot;deny\&quot;,\&quot;permissionDecisionReason\&quot;:\&quot;Unauthorized path: $target\&quot;}&quot;
+  exit 0
+fi
+echo &#39;{&quot;permissionDecision&quot;:&quot;allow&quot;}&#39;</div>
+<ul>
+<li><code>input=$(cat)</code> reads the JSON payload describing the tool call.</li>
+<li><code>jq -r &#39;.toolName&#39;</code> and <code>.toolArgs.path</code> pull out which tool is being called and on which file.</li>
+<li>If the tool edits or creates a file outside <code>src/</code> or <code>tests/</code>, the script prints a <code>deny</code> decision with a reason the agent (and the log) will see.</li>
+<li>Otherwise it prints <code>allow</code>. This is how &quot;limit changes to src/ and tests/&quot; becomes enforcement rather than a request.</li>
+</ul>
+<p>Notes for Copilot cloud agent: hooks run in an ephemeral Linux sandbox (only <code>bash</code>/<code>command</code> entries honored, files written by hooks are discarded at job end), outbound network is restricted by the agent firewall (a Slack/webhook call needs an allow rule), and <code>${{ secrets.* }}</code> Actions expressions are <strong>not</strong> evaluated in hook files.</p>
+<h3 id="reliability-patterns">Reliability Patterns</h3>
+<p>Reliable systems assume failure. The official module&#39;s core pattern is: <strong>bounded retries</strong> for transient failures (the agent may revise the PR branch and rerun checks), <strong>escalation</strong> for repeated failures (same required check fails twice → hand off to a human with a summary), <strong>rollback readiness</strong> for high-risk changes (operate on explicit commit/tag references), and <strong>least-privilege permissions</strong> to reduce blast radius. A least-privilege <code>permissions</code> block for an agent job that only needs to comment on or update PRs:</p>
+<div class="code-block">permissions:
+  contents: read
+  pull-requests: write</div>
+<ul>
+<li><code>contents: read</code> — the job&#39;s <code>GITHUB_TOKEN</code> can read code but not push commits.</li>
+<li><code>pull-requests: write</code> — it can comment on and update PRs; every permission not listed is set to no access.</li>
+</ul>
+<p>General reliability engineering patterns that also apply:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Description</th>
+<th>Implementation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Retry with Backoff</strong></td>
+<td>Automatically retry failed operations with increasing delay</td>
+<td>Exponential backoff: 1s, 2s, 4s, 8s — bounded retries; escalate after repeated failure</td>
+</tr>
+<tr>
+<td><strong>Circuit Breaker</strong></td>
+<td>Stop calling a failing service after N consecutive failures</td>
+<td>After 10 failures, open circuit for 60s, then half-open test</td>
+</tr>
+<tr>
+<td><strong>Dead Letter Queue</strong></td>
+<td>Route failed tasks to a separate queue for human review</td>
+<td>Create an issue with failure details and assign to on-call</td>
+</tr>
+<tr>
+<td><strong>Timeout Enforcement</strong></td>
+<td>Prevent agents from running indefinitely</td>
+<td><code>timeout-minutes</code> on jobs/steps (max 360); hook <code>timeoutSec</code></td>
+</tr>
+<tr>
+<td><strong>Checkpointing</strong></td>
+<td>Save agent state at regular intervals for resume capability</td>
+<td>Persist session state to workflow artifacts or an external store</td>
+</tr>
+</tbody></table></div>
+<div class="callout success"><p><strong>✅ Key Insight:</strong> The exam treats agent operations as a <strong>systems engineering</strong> problem, not an AI problem. The same reliability patterns you&#39;d apply to a microservice (retries, escalation, timeouts, least privilege) apply to agents. If an answer choice describes an agent architecture without observability or error handling, it&#39;s incomplete.</p></div>
+<div class="callout tip"><p><strong>🎯 Exam angle:</strong> Operations questions often ask how to <em>guarantee</em> a restriction (&quot;the agent must never edit <code>infra/</code>&quot;). Rank the options: a <code>preToolUse</code> hook, tool allowlist, ruleset, or CODEOWNERS gate <strong>enforces</strong>; instructions in <code>AGENTS.md</code> or the agent body only <strong>guide</strong>. For failures, the expected answer is bounded retries → escalation with evidence, never infinite retries or silent continuation.</p></div>
+
+</div>
+<div class="section">
+<h2 id="instructor-summary-domain-1-exam-checklist">Instructor Summary — Domain 1 Exam Checklist</h2>
+<div class="callout warning"><p><strong>🎓</strong> Before moving on, make sure you can answer these questions:</p>
+<ol>
+<li>Which SDLC stages (planning, implementation, validation, deployment) are good for agents and which need human oversight?</li>
+<li>Can you name the four official anti-patterns (planless execution, over-permissioned agents, hidden reasoning, blind trust in automation) and the GitHub mitigation for each?</li>
+<li>What&#39;s the difference between a plan and execution, and when do you choose plan-first vs plan + execution?</li>
+<li>How does the risk-based autonomy model (low / medium / high / critical) map to GitHub controls?</li>
+<li>How do you write a well-defined task (inputs, outputs, success criteria) for an agent?</li>
+<li>What governance mechanisms does a PR provide (templates, checks, CODEOWNERS, rulesets, environment gates)?</li>
+<li>How do you pass data between steps and jobs (<code>$GITHUB_OUTPUT</code>, job outputs, <code>needs</code>) and chain workflows?</li>
+<li>What reliability patterns (retries, escalation, rollback readiness, least privilege) apply to agent operations?</li>
+</ol>
+<p>If you can confidently answer all eight, you&#39;re ready for Domain 1 questions.</p></div>
+
+</div>
+<div class="section">
+<h2 id="video-insight">Video Insight</h2>
+<div class="callout"><p><strong>🎓 Video Insight — &quot;Trust but verify&quot;</strong> <em>(unverified community info; the quoted sentence matches the official <a href="https://learn.microsoft.com/en-us/training/modules/foundations-agentic-ai/6-apply-contributor-model-agent-generated-work" target="_blank" rel="noopener">contributor model unit</a>)</em>: Ari emphasizes: &quot;Evaluate the work by the standards of the workflow, not by the novelty of the author.&quot; The agent proposes, but humans and policy (rulesets, branch protection) decide what gets merged. The Plan → Act → Evaluate cycle is the central concept — plan your architecture, let agents act within scoped tools, then validate via checks and scans. Feed evidence back into the plan.</p></div>
+
+</div>
+<div class="section">
+<h2 id="recap-key-takeaways">Recap: Key Takeaways</h2>
+<ul>
+<li>An agent <strong>acts</strong> (branches, commits, PRs) — it&#39;s a contributor, not a chatbot, and gets the same controls.</li>
+<li>The lifecycle is a loop: <strong>plan → act → evaluate</strong>, with evaluation based on system signals, not the agent&#39;s confidence.</li>
+<li>Agents fit best in <strong>implementation and validation</strong>; deployment and severe incidents stay human-gated.</li>
+<li>Every task needs <strong>inputs, a defined output, and verifiable success criteria</strong> that reflect the real intent.</li>
+<li>The four official anti-patterns: <strong>planless execution, over-permissioned agents, hidden reasoning, blind trust in automation</strong>.</li>
+<li>A plan is <strong>reviewable intent</strong>; execution <strong>changes state</strong>. Use plan-first PRs for high-risk work.</li>
+<li>Instructions <em>guide</em>; tool allowlists, hooks, required checks, and environments <em>enforce</em>.</li>
+<li>Match autonomy to risk: low (auto-merge after checks) → medium (PR + review) → high (CODEOWNERS + more reviews) → critical (environment approval; agent prepares only).</li>
+<li>PRs are the control point: template + required status checks + CODEOWNERS review + rulesets.</li>
+<li>Pass data with <code>$GITHUB_OUTPUT</code>, job <code>outputs</code> + <code>needs</code>, and artifacts; chain workflows with <code>workflow_run</code>.</li>
+<li>The minimum audit trail: goal, plan, bounded changeset, automated evidence, human approval, clear outcome.</li>
+<li>Failures: bounded retries, then escalate with evidence (same required check fails twice → hand off).</li>
+</ul>
+
+</div>
+<div class="section">
+<h2 id="hands-on-practice">Hands-On Practice</h2>
+<p>Use a personal repository you own (a new empty repo with a README is fine). Some steps need repository admin rights, which you have on your own repo.</p>
+<p><strong>Exercise 1 — Make &quot;no plan, no merge&quot; a system rule</strong></p>
+<ol>
+<li>Create <code>.github/pull_request_template.md</code> with the template from section 7.</li>
+<li>Create <code>.github/workflows/plan-gate.yml</code> with the Plan Gate workflow from section 4 and commit both to <code>main</code>.</li>
+<li>In <strong>Settings → Rules → Rulesets</strong>, create a branch ruleset targeting the default branch with <strong>Require a pull request before merging</strong> and <strong>Require status checks to pass</strong>, adding the <code>require-plan</code> check.</li>
+<li>Create a branch, change the README, and open a PR. Delete the template text so the description is empty.</li>
+</ol>
+<p><em>Expected result:</em> the <strong>Plan Gate / require-plan</strong> check fails and the merge button is blocked. Edit the description to add a <code>## Plan</code> line — the check re-runs (because of the <code>edited</code> event) and passes.</p>
+<p><strong>Exercise 2 — A planner that can&#39;t edit</strong></p>
+<ol>
+<li>Create <code>.github/agents/planner.agent.md</code> with the read-only planner profile from section 4. Leave out the first <code>&lt;!-- ... --&gt;</code> line: the file must start with <code>---</code> for the frontmatter to be read.</li>
+<li>In VS Code, open the repository, open Copilot Chat, and pick <strong>planner</strong> from the agent dropdown (VS Code detects agents in <code>.github/agents</code>; <a href="https://code.visualstudio.com/docs/copilot/customization/custom-agents" target="_blank" rel="noopener">VS Code docs</a>).</li>
+<li>Ask: &quot;Plan how to add a CONTRIBUTING.md file, then create it.&quot;</li>
+</ol>
+<p><em>Expected result:</em> you get a plan under the fixed headings, but no file is created, because the agent has no <code>edit</code> tool. Add <code>&quot;edit&quot;</code> to <code>tools</code>, retry, and notice the difference — then remove it again.</p>
+<p><strong>Exercise 3 — A human gate in front of a job</strong></p>
+<ol>
+<li>In <strong>Settings → Environments</strong>, create an environment named <code>agent-execution</code> and add yourself under <strong>Required reviewers</strong>.</li>
+<li>Add a workflow with <code>on: workflow_dispatch</code> and one job that sets <code>environment: agent-execution</code> and runs <code>echo &quot;Executing approved plan&quot;</code>.</li>
+<li>Run it from the <strong>Actions</strong> tab.</li>
+</ol>
+<p><em>Expected result:</em> the job shows <strong>Waiting</strong> for review and does nothing until you click <strong>Review deployments → Approve</strong>. This is the same gate the execution workflow in section 4 relies on.</p>
+<p><strong>Related Microsoft Learn units:</strong></p>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/training/modules/design-agent-architecture-integration/2-agent-responsibilities" target="_blank" rel="noopener">Map agent responsibilities to the SDLC</a></li>
+<li><a href="https://learn.microsoft.com/en-us/training/modules/design-agent-architecture-integration/3-inputs-outputs-success-criteria" target="_blank" rel="noopener">Define inputs, outputs, and success criteria</a></li>
+<li><a href="https://learn.microsoft.com/en-us/training/modules/design-agent-architecture-integration/4-plan-reason-execution" target="_blank" rel="noopener">Separate planning, reasoning, and execution</a></li>
+<li><a href="https://learn.microsoft.com/en-us/training/modules/design-agent-architecture-integration/5-pull-request-governance-controls" target="_blank" rel="noopener">PR governance with templates, checks, CODEOWNERS, rules, and environment gates</a></li>
+<li><a href="https://learn.microsoft.com/en-us/training/modules/design-agent-architecture-integration/6-reliable-workflows" target="_blank" rel="noopener">Build reliable workflows</a></li>
+<li><a href="https://learn.microsoft.com/en-us/training/modules/design-agent-architecture-integration/7-agent-operations-controls" target="_blank" rel="noopener">Control and operate agents</a></li>
+<li><a href="https://learn.microsoft.com/en-us/training/modules/foundations-agentic-ai/5-identify-risks-traceability" target="_blank" rel="noopener">Identify risks and traceability</a></li>
+</ul>
+
+</div>
+<div class="section">
+<h2 id="practice-questions">Practice Questions</h2>
+<p><strong>1.</strong> A team assigns an agent to remediate a vulnerable dependency. The agent&#39;s PR updates the package and CI passes, but a transitive dependency still pulls in the vulnerable version. Which change to the task definition would most directly have caught this?</p>
+<ul>
+<li>A. Add more unit tests to the CI workflow</li>
+<li>B. Make &quot;vulnerability resolved (including transitive dependencies)&quot; an explicit, verifiable success criterion</li>
+<li>C. Grant the agent the <code>execute</code> tool so it can run more commands</li>
+<li>D. Ask the agent to double-check its work in the instructions</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> B — success criteria must reflect the real intent; &quot;CI passed&quot; is necessary but not sufficient.</p></div>
+<p><strong>2.</strong> Your organization wants agents to propose changes to <code>.github/workflows/</code> and <code>infra/</code>. Reviewers must agree on the approach before any code is written. Which design fits?</p>
+<ul>
+<li>A. Plan + execution in the same PR with auto-merge after checks</li>
+<li>B. Plan-first PR: the agent opens a PR containing only the plan, reviewers approve it, then the agent implements</li>
+<li>C. Let the agent push directly to a feature branch and merge when tests pass</li>
+<li>D. Put &quot;do not edit files until approved&quot; in the agent&#39;s instructions</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> B — plan-first validates intent before code exists and is recommended for high-risk, hard-to-reverse changes; instructions alone are guidance, not enforcement.</p></div>
+<p><strong>3.</strong> Agent PRs keep arriving with an empty &quot;Plan&quot; section from the PR template, and some get merged. What is the most reliable fix?</p>
+<ul>
+<li>A. Rewrite the PR template with bolder headings</li>
+<li>B. Add a plan-gate workflow, mark it as a required status check, and require PR reviews</li>
+<li>C. Move the template to <code>.github/PULL_REQUEST_TEMPLATE/</code></li>
+<li>D. Remind the agent in <code>AGENTS.md</code> to fill in the plan</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> B — a required plan check plus required reviews turns the expectation into a system guarantee; a template alone can be left blank.</p></div>
+<p><strong>4.</strong> Leadership wants agent changes to <code>docs/</code> to ship quickly, while production deployments always need a person&#39;s sign-off. Which configuration best meets both goals?</p>
+<ul>
+<li>A. Require two reviewers on every PR, including docs</li>
+<li>B. Disable required checks on docs PRs and let the agent deploy after tests pass</li>
+<li>C. Auto-merge low-risk <code>docs/</code> PRs after required checks pass, and gate production deployment jobs with an environment that has required reviewers</li>
+<li>D. Give the agent read-only tools everywhere</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> C — risk-based autonomy keeps low-risk work fast while environments with required reviewers protect critical actions.</p></div>
+<p><strong>5.</strong> An auditor asks you to prove which agent session produced a merged commit and who started the task. Copilot cloud agent did the work. Where do you look?</p>
+<ul>
+<li>A. Only the CI logs, since agents don&#39;t create commit metadata</li>
+<li>B. The commit itself: it&#39;s authored by Copilot, co-authored by the requesting developer, signed, and its message links to the session log</li>
+<li>C. The agent&#39;s private reasoning, which is stored in the repository</li>
+<li>D. Nowhere — agent work isn&#39;t attributable</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> B — cloud agent commits are co-authored by the requester, signed (&quot;Verified&quot;), and link to the session log; admins also get session logs and audit log events.</p></div>
+<div class="nav-links"><a href="index.html">← Home</a><a href="domain-2.html">Domain 2: Tooling &amp; MCP →</a></div>
+</div>
+</main>
+
+<footer class="site-footer">GH-600 Study Guide (corrected) · Based on official Microsoft Learn modules and GitHub Docs · Not affiliated with GitHub or Microsoft</footer>
+</body>
+</html>

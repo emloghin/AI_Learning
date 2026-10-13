@@ -1,0 +1,103 @@
+# Learning Resources
+
+**Reference · Keep learning**
+
+These are hand-picked, free or freely readable resources for going deeper after AI Learn. Every link below was checked in October 2026; where a resource has moved or been renamed, the table points to its current home.
+
+## 1. Free courses
+
+| Resource | Type | Level | Why it's useful | Link |
+|---|---|---|---|---|
+| Google Machine Learning Crash Course | Course | Beginner | Short lessons, visuals and exercises covering regression, neural networks, overfitting and gradient descent. | [developers.google.com](https://developers.google.com/machine-learning/crash-course) |
+| Microsoft Learn: AI learning hub | Course hub | Beginner | Microsoft's starting point for AI training, including an introduction to generative AI and Responsible AI. | [learn.microsoft.com/ai](https://learn.microsoft.com/en-us/ai/) |
+| Microsoft: Introduction to AI in Azure (AI-901) | Course + certification | Beginner | Prepares for the Azure AI Fundamentals certification, which now uses exam AI-901 and covers AI concepts plus Microsoft Foundry. | [Course](https://learn.microsoft.com/en-us/training/courses/ai-901t00) · [Exam AI-901](https://learn.microsoft.com/en-us/credentials/certifications/exams/ai-901/) |
+| Generative AI for Beginners (Microsoft) | GitHub course | Beginner | Free lessons on building generative AI apps: prompting, RAG, agents and more, with code samples. | [github.com](https://github.com/microsoft/generative-ai-for-beginners) |
+| ML for Beginners (Microsoft) | GitHub course | Beginner | A 12-week classic machine learning curriculum with quizzes and projects. | [github.com](https://github.com/microsoft/ML-For-Beginners) |
+| Hugging Face LLM Course | Course | Beginner → Intermediate | Hands-on introduction to transformers, tokenizers, fine-tuning and sharing models with the Hugging Face ecosystem. | [huggingface.co](https://huggingface.co/learn/llm-course) |
+| fast.ai: Practical Deep Learning for Coders | Course | Intermediate | Top-down, code-first deep learning course for people who can already program. | [course.fast.ai](https://course.fast.ai/) |
+| DeepLearning.AI Short Courses | Short courses | Beginner → Intermediate | One- to two-hour courses on prompting, RAG, agents and evaluation, often made with model providers. | [deeplearning.ai](https://www.deeplearning.ai/short-courses/) |
+| Andrej Karpathy: Neural Networks: Zero to Hero | Video course | Intermediate | Build neural networks and a small GPT from scratch in Python, explaining every line. | [karpathy.ai](https://karpathy.ai/zero-to-hero.html) |
+
+> **💡 Example:** A good beginner path is Google's crash course first, then 3Blue1Brown's videos, then the Hugging Face LLM Course, and finally Karpathy's series once you are comfortable with Python.
+
+## 2. Videos
+
+| Resource | Type | Level | Why it's useful | Link |
+|---|---|---|---|---|
+| 3Blue1Brown: Neural Networks | Video series | Beginner | Beautiful visual explanations of neurons, gradient descent and backpropagation. | [3blue1brown.com](https://www.3blue1brown.com/topics/neural-networks) |
+| 3Blue1Brown: Transformers, the tech behind LLMs | Video lesson | Beginner → Intermediate | Shows how GPT-style models turn tokens into embeddings and predict the next token, step by step. | [3blue1brown.com](https://www.3blue1brown.com/lessons/gpt) |
+
+## 3. Interactive tools
+
+| Resource | Type | Level | Why it's useful | Link |
+|---|---|---|---|---|
+| TensorFlow Playground | Browser tool | Beginner | Train a tiny neural network in your browser and watch layers, neurons and learning rate change the result. | [playground.tensorflow.org](https://playground.tensorflow.org) |
+| Transformer Explainer | Browser tool | Beginner → Intermediate | Runs a small GPT-2 model live in the browser and visualizes attention and next-token probabilities. | [poloclub.github.io](https://poloclub.github.io/transformer-explainer/) |
+| OpenAI Tokenizer | Browser tool | Beginner | Paste text and see exactly how it splits into tokens and how many there are. | [platform.openai.com](https://platform.openai.com/tokenizer) |
+| LLM Visualization (Brendan Bycroft) | Browser tool | Intermediate | A 3D walk-through of every step inside a GPT-style model. | [bbycroft.net](https://bbycroft.net/llm) |
+
+## 4. Official documentation
+
+| Resource | Type | Level | Why it's useful | Link |
+|---|---|---|---|---|
+| OpenAI API docs | Docs | Beginner → Advanced | Guides for text generation, structured outputs, function calling, reasoning, caching and batch. | [developers.openai.com](https://developers.openai.com/api/docs) |
+| Anthropic (Claude) docs | Docs | Beginner → Advanced | Prompt engineering guide, token counting, prompt caching and tool use for Claude models. | [platform.claude.com](https://platform.claude.com/docs/en/home) |
+| Google Gemini API docs | Docs | Beginner → Advanced | Prompting strategies, context caching, batch API and multimodal input for Gemini. | [ai.google.dev](https://ai.google.dev/gemini-api/docs) |
+| Microsoft Foundry (formerly Azure AI Foundry) | Docs | Intermediate | Build, evaluate and deploy AI apps and agents on Azure with many model families. | [learn.microsoft.com](https://learn.microsoft.com/en-us/azure/ai-foundry/) |
+| GitHub Copilot docs | Docs | Beginner → Advanced | Using Copilot in the editor, agents, custom instructions, models and billing. | [docs.github.com](https://docs.github.com/en/copilot) |
+| Hugging Face docs | Docs | Beginner → Advanced | The Hub, Transformers library, datasets and model cards for open models. | [huggingface.co](https://huggingface.co/docs) |
+| Ollama docs | Docs | Beginner | Run open-weight models on your own computer with a single command. | [docs.ollama.com](https://docs.ollama.com/) |
+
+## 5. Key papers
+
+You do not need to read these to use AI, but each one changed the field. The arXiv abstract pages are free to read.
+
+| Resource | Type | Level | Why it's useful (one-line summary) | Link |
+|---|---|---|---|---|
+| Attention Is All You Need (Vaswani et al., 2017) | Paper | Advanced | Introduced the transformer: attention alone, no recurrence, which became the basis of modern LLMs. | [arXiv:1706.03762](https://arxiv.org/abs/1706.03762) |
+| Language Models are Few-Shot Learners (GPT-3, Brown et al., 2020) | Paper | Advanced | Showed that a very large language model can do new tasks from just a few examples in the prompt. | [arXiv:2005.14165](https://arxiv.org/abs/2005.14165) |
+| Training language models to follow instructions with human feedback (InstructGPT, Ouyang et al., 2022) | Paper | Advanced | Used RLHF to make a model follow instructions; a smaller tuned model was preferred over a much larger untuned one. | [arXiv:2203.02155](https://arxiv.org/abs/2203.02155) |
+| LoRA: Low-Rank Adaptation of Large Language Models (Hu et al., 2021) | Paper | Advanced | Fine-tune huge models cheaply by training small add-on matrices instead of all the weights. | [arXiv:2106.09685](https://arxiv.org/abs/2106.09685) |
+| Training Compute-Optimal Large Language Models (Chinchilla, Hoffmann et al., 2022) | Paper | Advanced | Found that for a fixed compute budget, model size and training data should grow together; many models were under-trained. | [arXiv:2203.15556](https://arxiv.org/abs/2203.15556) |
+| Direct Preference Optimization (DPO, Rafailov et al., 2023) | Paper | Advanced | Aligns models directly from preference pairs, skipping the separate reward model used in RLHF. | [arXiv:2305.18290](https://arxiv.org/abs/2305.18290) |
+| LLaMA: Open and Efficient Foundation Language Models (Touvron et al., 2023) | Paper | Advanced | Released strong models trained on public data, kick-starting the open-weight model wave. | [arXiv:2302.13971](https://arxiv.org/abs/2302.13971) |
+
+## 6. Security & responsible AI
+
+| Resource | Type | Level | Why it's useful | Link |
+|---|---|---|---|---|
+| OWASP Top 10 for LLM Applications (2025) | Guide | Beginner → Intermediate | The community list of the biggest security risks in LLM apps, from prompt injection to unbounded consumption. | [genai.owasp.org](https://genai.owasp.org/llm-top-10/) |
+| OWASP LLM01: Prompt Injection | Guide | Intermediate | Explains direct and indirect prompt injection with attack scenarios and mitigations. | [genai.owasp.org](https://genai.owasp.org/llmrisk/llm01-prompt-injection/) |
+| NIST AI Risk Management Framework | Framework | Intermediate | A voluntary framework (Govern, Map, Measure, Manage) plus a Generative AI Profile for managing AI risk. | [nist.gov](https://www.nist.gov/itl/ai-risk-management-framework) |
+| Microsoft: What is Responsible AI? | Docs | Beginner | Microsoft's six Responsible AI principles explained with practical tooling. | [learn.microsoft.com](https://learn.microsoft.com/en-us/azure/machine-learning/concept-responsible-ai) |
+
+## 7. Token-saving references
+
+| Resource | Type | Level | Why it's useful | Link |
+|---|---|---|---|---|
+| OpenAI: Prompt caching | Docs | Intermediate | How automatic caching works, minimum sizes, pricing and how to keep prefixes stable. | [developers.openai.com](https://developers.openai.com/api/docs/guides/prompt-caching) |
+| Anthropic: Prompt caching | Docs | Intermediate | Cache breakpoints, lifetimes and how to read cache usage fields. | [platform.claude.com](https://platform.claude.com/docs/en/build-with-claude/prompt-caching) |
+| Gemini: Context caching | Docs | Intermediate | Implicit and explicit caching for Gemini models. | [ai.google.dev](https://ai.google.dev/gemini-api/docs/caching) |
+| OpenAI: Batch API | Docs | Intermediate | Run large non-urgent jobs at a discount. | [developers.openai.com](https://developers.openai.com/api/docs/guides/batch) |
+| Anthropic: Batch processing | Docs | Intermediate | Message Batches for asynchronous, discounted processing. | [platform.claude.com](https://platform.claude.com/docs/en/build-with-claude/batch-processing) |
+| Gemini: Batch API | Docs | Intermediate | Asynchronous batch jobs for Gemini at reduced cost. | [ai.google.dev](https://ai.google.dev/gemini-api/docs/batch-api) |
+| Anthropic: Effective context engineering for AI agents | Article | Intermediate | Why context is a finite budget and how to curate it for agents. | [anthropic.com](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) |
+| GitHub: Optimizing your AI usage | Docs | Beginner | Practical habits for spending fewer AI credits in Copilot. | [docs.github.com](https://docs.github.com/en/copilot/tutorials/optimize-ai-usage) |
+| VS Code: Optimize AI credit usage | Docs | Beginner | Editor-specific tips: compacting chats, tool sets, cache explorer and usage indicators. | [code.visualstudio.com](https://code.visualstudio.com/docs/agents/guides/optimize-usage) |
+| tiktoken | Library | Intermediate | Count OpenAI tokens locally in Python. | [github.com](https://github.com/openai/tiktoken) |
+
+## 8. Communities
+
+| Resource | Type | Level | Why it's useful | Link |
+|---|---|---|---|---|
+| Hugging Face Forums | Forum | All levels | Questions about open models, the Transformers library, datasets and fine-tuning. | [discuss.huggingface.co](https://discuss.huggingface.co/) |
+| fast.ai Forums | Forum | All levels | Friendly help for fast.ai students and deep learning practitioners. | [forums.fast.ai](https://forums.fast.ai/) |
+| OpenAI Developer Community | Forum | All levels | Discussion and help for building with the OpenAI API. | [community.openai.com](https://community.openai.com/) |
+| Google AI Developers Forum | Forum | All levels | Discussion and help for the Gemini API and Google AI tools. | [discuss.ai.google.dev](https://discuss.ai.google.dev/) |
+| r/LocalLLaMA | Reddit community | Intermediate | Active community for running open-weight models on your own hardware. | [reddit.com](https://www.reddit.com/r/LocalLLaMA/) |
+
+> **⚠️ Common misconception:** "If a forum post says a model is best, it is best for me." Community opinions move fast and depend on the poster's hardware and tasks. Test claims on your own data (see [Chapter 8](best-practices.md)).
+
+> **✅ Key takeaway:** Start with one beginner course, one visual series and one interactive tool, then use the official docs as your source of truth whenever you build something real.
+
+[← Glossary](glossary.md) · [Home →](index.md)

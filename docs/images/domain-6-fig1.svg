@@ -1,0 +1,110 @@
+<svg viewBox="0 0 720 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Guardrails layered defense diagram showing six layers from branch protection to hooks">
+        <defs>
+          <linearGradient id="bgD6" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#fef2f2" />
+            <stop offset="100%" stop-color="#fee2e2" />
+          </linearGradient>
+          <!-- Layer colors from outermost to innermost -->
+          <linearGradient id="layer1" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#1e3a5f" />
+            <stop offset="100%" stop-color="#2563eb" />
+          </linearGradient>
+          <linearGradient id="layer2" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#3730a3" />
+            <stop offset="100%" stop-color="#4f46e5" />
+          </linearGradient>
+          <linearGradient id="layer3" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#7c3aed" />
+            <stop offset="100%" stop-color="#8b5cf6" />
+          </linearGradient>
+          <linearGradient id="layer4" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#b91c1c" />
+            <stop offset="100%" stop-color="#dc2626" />
+          </linearGradient>
+          <linearGradient id="layer5" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#a16207" />
+            <stop offset="100%" stop-color="#ca8a04" />
+          </linearGradient>
+          <linearGradient id="layer6" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#065f46" />
+            <stop offset="100%" stop-color="#059669" />
+          </linearGradient>
+          <filter id="shadowD6">
+            <feDropShadow dx="0" dy="2" stdDeviation="6" flood-opacity=".2" />
+          </filter>
+          <marker id="arrowD5" markerWidth="12" markerHeight="8" refX="12" refY="4" orient="auto">
+            <polygon points="0 0, 12 4, 0 8" fill="#475569"/>
+          </marker>
+        </defs>
+        <rect x="0" y="0" width="720" height="600" rx="10" fill="url(#bgD6)" />
+
+        <!-- Title -->
+        <text x="360" y="30" text-anchor="middle" fill="#7f1d1d" font-size="16" font-weight="800" font-family="Inter,sans-serif">Guardrails: Six Layers of Defense in Depth</text>
+        <text x="360" y="50" text-anchor="middle" fill="#991b1b" font-size="11" font-family="Inter,sans-serif">Outermost → Broadest protection &#160;&#160;|&#160;&#160; Innermost → Most specific control</text>
+
+        <!-- Outer ring labels -->
+        <text x="360" y="78" text-anchor="middle" fill="#1e3a5f" font-size="10" font-weight="700" font-family="Inter,sans-serif">Layer 1 (Outer-most)</text>
+        <text x="360" y="595" text-anchor="middle" fill="#065f46" font-size="10" font-weight="700" font-family="Inter,sans-serif">Layer 6 (Inner-most)</text>
+
+        <!-- Row 1: Branch Protection (Layer 1) -->
+        <rect x="110" y="88" width="500" height="62" rx="10" fill="url(#layer1)" filter="url(#shadowD6)" opacity=".95" />
+        <text x="360" y="111" text-anchor="middle" fill="#fff" font-size="14" font-weight="800" font-family="Inter,sans-serif">🔒 Layer 1: Branch Protection Rules</text>
+        <text x="360" y="128" text-anchor="middle" fill="#bfdbfe" font-size="11" font-family="Inter,sans-serif">Require PRs · Require linear history · Require up-to-date branches · Lock branches</text>
+        <text x="360" y="143" text-anchor="middle" fill="#93c5fd" font-size="10" font-family="Inter,sans-serif">Prevents direct pushes, ensures all changes go through PR workflow</text>
+
+        <!-- Arrow -->
+        <line x1="360" y1="150" x2="360" y2="172" stroke="#475569" stroke-width="2" marker-end="url(#arrowD5)" />
+
+        <!-- Row 2: Rulesets (Layer 2) -->
+        <rect x="130" y="175" width="460" height="62" rx="10" fill="url(#layer2)" filter="url(#shadowD6)" opacity=".95" />
+        <text x="360" y="198" text-anchor="middle" fill="#fff" font-size="14" font-weight="800" font-family="Inter,sans-serif">📋 Layer 2: Repository Rulesets</text>
+        <text x="360" y="215" text-anchor="middle" fill="#c7d2fe" font-size="11" font-family="Inter,sans-serif">Branch &amp; tag targets · Block force push/deletion · Require signed commits</text>
+        <text x="360" y="230" text-anchor="middle" fill="#a5b4fc" font-size="10" font-family="Inter,sans-serif">Layered with branch protection · exceptions only via the bypass list</text>
+
+        <!-- Arrow -->
+        <line x1="360" y1="237" x2="360" y2="258" stroke="#475569" stroke-width="2" marker-end="url(#arrowD5)" />
+
+        <!-- Row 3: Environment Protection (Layer 3) -->
+        <rect x="150" y="261" width="420" height="62" rx="10" fill="url(#layer3)" filter="url(#shadowD6)" opacity=".95" />
+        <text x="360" y="284" text-anchor="middle" fill="#fff" font-size="14" font-weight="800" font-family="Inter,sans-serif">🌐 Layer 3: Environment Protection Rules</text>
+        <text x="360" y="301" text-anchor="middle" fill="#e9d5ff" font-size="11" font-family="Inter,sans-serif">Required reviewers (any 1 of up to 6) · Wait timer · Deployment branches</text>
+        <text x="360" y="316" text-anchor="middle" fill="#d8b4fe" font-size="10" font-family="Inter,sans-serif">Controls who can deploy to staging, production, and other environments</text>
+
+        <!-- Arrow -->
+        <line x1="360" y1="323" x2="360" y2="344" stroke="#475569" stroke-width="2" marker-end="url(#arrowD5)" />
+
+        <!-- Row 4: Workflow Approvals (Layer 4) -->
+        <rect x="170" y="347" width="380" height="62" rx="10" fill="url(#layer4)" filter="url(#shadowD6)" opacity=".95" />
+        <text x="360" y="370" text-anchor="middle" fill="#fff" font-size="14" font-weight="800" font-family="Inter,sans-serif">✅ Layer 4: Pull Request Reviews &amp; Checks</text>
+        <text x="360" y="387" text-anchor="middle" fill="#fecaca" font-size="11" font-family="Inter,sans-serif">Required approvals · Code owner review · Required status checks</text>
+        <text x="360" y="402" text-anchor="middle" fill="#fca5a5" font-size="10" font-family="Inter,sans-serif">Copilot can't approve its own PR · workflows need "Approve and run"</text>
+
+        <!-- Arrow -->
+        <line x1="360" y1="409" x2="360" y2="430" stroke="#475569" stroke-width="2" marker-end="url(#arrowD5)" />
+
+        <!-- Row 5: Audit Logs (Layer 5) -->
+        <rect x="190" y="433" width="340" height="62" rx="10" fill="url(#layer5)" filter="url(#shadowD6)" opacity=".95" />
+        <text x="360" y="456" text-anchor="middle" fill="#fff" font-size="14" font-weight="800" font-family="Inter,sans-serif">📜 Layer 5: Audit Logs &amp; Traceability</text>
+        <text x="360" y="473" text-anchor="middle" fill="#fef9c3" font-size="11" font-family="Inter,sans-serif">GitHub Audit Log · Workflow run logs · Session logs</text>
+        <text x="360" y="488" text-anchor="middle" fill="#fde68a" font-size="10" font-family="Inter,sans-serif">Detective control: records actions, does not block them</text>
+
+        <!-- Arrow -->
+        <line x1="360" y1="495" x2="360" y2="516" stroke="#475569" stroke-width="2" marker-end="url(#arrowD5)" />
+
+        <!-- Row 6: Hooks (Layer 6 - Innermost) -->
+        <rect x="190" y="519" width="340" height="62" rx="10" fill="url(#layer6)" filter="url(#shadowD6)" opacity=".95" />
+        <text x="360" y="542" text-anchor="middle" fill="#fff" font-size="14" font-weight="800" font-family="Inter,sans-serif">🔗 Layer 6: Agent Hooks &amp; Pre-Receive Hooks</text>
+        <text x="360" y="559" text-anchor="middle" fill="#d1fae5" font-size="11" font-family="Inter,sans-serif">Copilot hooks: preToolUse deny · Pre-receive (GHES only)</text>
+        <text x="360" y="574" text-anchor="middle" fill="#a7f3d0" font-size="10" font-family="Inter,sans-serif">Blocks before execution; local git hooks can be skipped</text>
+
+        <!-- Side labels -->
+        <text x="35" y="120" text-anchor="start" fill="#475569" font-size="9" font-weight="600" font-family="Inter,sans-serif">BROAD</text>
+        <text x="35" y="135" text-anchor="start" fill="#475569" font-size="8" font-family="Inter,sans-serif">(repo-wide)</text>
+
+        <text x="670" y="545" text-anchor="end" fill="#475569" font-size="9" font-weight="600" font-family="Inter,sans-serif">SPECIFIC</text>
+        <text x="670" y="560" text-anchor="end" fill="#475569" font-size="8" font-family="Inter,sans-serif">(per-action)</text>
+
+        <!-- Side bracket arrows -->
+        <text x="80" y="365" text-anchor="middle" fill="#475569" font-size="12" font-weight="700" font-family="Inter,sans-serif" transform="rotate(-90, 80, 365)">DEFENSE IN DEPTH →</text>
+        <text x="645" y="365" text-anchor="middle" fill="#475569" font-size="12" font-weight="700" font-family="Inter,sans-serif" transform="rotate(90, 645, 365)">← EACH LAYER ADDS FRICTION</text>
+      </svg>

@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neural Networks: The Engine Inside AI — AI Learn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>.section td code,.callout code,.diagram-caption code{background:var(--primary-light);color:var(--primary);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:13px}.callout p+p{margin-top:8px}.callout ul{margin:8px 0 0 20px}</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-logo"><span>AI&nbsp;</span>Learn</div>
+    <nav class="header-nav">
+      <a href="index.html">Home</a>
+      <a href="foundations.html">1. Foundations</a>
+      <a href="neural-networks.html" class="active">2. Neural Networks</a>
+      <a href="transformers.html">3. Transformers &amp; LLMs</a>
+      <a href="training.html">4. Training &amp; Tuning</a>
+      <a href="models.html">5. Model Landscape</a>
+      <a href="using-ai.html">6. Using Models</a>
+      <a href="tokens.html">7. Tokens &amp; Cost</a>
+      <a href="best-practices.html">8. Best Practices</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="resources.html">Resources</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-badge">Chapter 2 · Neural Networks</div>
+  <h1>Neural Networks: The Engine Inside AI</h1>
+  <p>Every modern AI model — from your phone&#39;s face unlock to the largest chatbot — is a neural network: layers of tiny calculators connected by adjustable numbers, tuned by showing it examples and correcting its mistakes millions of times.</p>
+</section>
+
+<main class="main">
+<div class="section">
+<h2 id="1-inspired-by-the-brain-loosely">1. Inspired by the brain (loosely)</h2>
+<p>Your brain contains roughly 86 billion nerve cells called <em>neurons</em>. Each one receives signals from other neurons, and if the combined signal is strong enough, it &quot;fires&quot; and passes a signal on. Learning, roughly speaking, changes how strongly neurons influence each other.</p>
+<p>In 1943, Warren McCulloch and Walter Pitts proposed a mathematical model of a neuron, and in 1958 Frank Rosenblatt built the <em>perceptron</em>, an early learning machine based on the same idea. Today&#39;s artificial neural networks descend from that work.</p>
+<div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;Neural networks work like the human brain.&quot; They borrow a single loose idea — many simple units passing weighted signals — and nothing more. Real neurons are electrochemical cells with complex timing and chemistry. An artificial neuron is a line of arithmetic. AI models do not think, feel, or learn the way people do.</p></div>
+
+</div>
+<div class="section">
+<h2 id="2-the-artificial-neuron">2. The artificial neuron</h2>
+<p>An artificial neuron does three things:</p>
+<ol>
+<li><strong>Multiply</strong> each input by its own <em>weight</em> (how much that input matters).</li>
+<li><strong>Add</strong> everything up, plus one extra number called the <em>bias</em> (a baseline that shifts the result up or down).</li>
+<li><strong>Pass</strong> the total through an <em>activation function</em>, which decides what comes out.</li>
+</ol>
+<p>In symbols:</p>
+<div class="code-block">z      = (x₁ × w₁) + (x₂ × w₂) + (x₃ × w₃) + b      ← weighted sum
+output = activation(z)</div>
+<p>In words: &quot;multiply each input by how important it is, add them up with a baseline, then apply a simple rule to decide the output.&quot;</p>
+<h3 id="21-a-worked-example-with-three-inputs">2.1 A worked example with three inputs</h3>
+<p>Inputs: <code>x₁ = 2</code>, <code>x₂ = 1</code>, <code>x₃ = 3</code>
+Weights: <code>w₁ = 0.5</code>, <code>w₂ = -1</code>, <code>w₃ = 0.25</code>
+Bias: <code>b = 0.5</code></p>
+<div class="code-block">z = (2 × 0.5) + (1 × -1) + (3 × 0.25) + 0.5
+  =    1.0    +   -1.0   +    0.75    + 0.5
+  = 1.25</div>
+<p>A negative weight (like <code>w₂ = -1</code>) means &quot;this input pushes the answer <em>down</em>&quot;. A large weight means &quot;this input matters a lot&quot;.</p>
+<div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 340" role="img" aria-label="An artificial neuron: three inputs are multiplied by weights, summed with a bias, passed through an activation function, and produce one output">
+  <defs>
+    <marker id="nrArrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="820" height="340" rx="16" fill="#f8fafc"/>
+
+  <circle cx="90" cy="80" r="30" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="90" y="86" text-anchor="middle" font-family="Inter,sans-serif" font-size="15" font-weight="700" fill="#1e3a8a">x₁=2</text>
+  <circle cx="90" cy="170" r="30" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="90" y="176" text-anchor="middle" font-family="Inter,sans-serif" font-size="15" font-weight="700" fill="#1e3a8a">x₂=1</text>
+  <circle cx="90" cy="260" r="30" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="90" y="266" text-anchor="middle" font-family="Inter,sans-serif" font-size="15" font-weight="700" fill="#1e3a8a">x₃=3</text>
+  <text x="90" y="320" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="600" fill="#334155">Inputs</text>
+
+  <line x1="120" y1="85" x2="330" y2="160" stroke="#475569" stroke-width="2" marker-end="url(#nrArrow)"/>
+  <line x1="120" y1="170" x2="326" y2="170" stroke="#475569" stroke-width="2" marker-end="url(#nrArrow)"/>
+  <line x1="120" y1="255" x2="330" y2="180" stroke="#475569" stroke-width="2" marker-end="url(#nrArrow)"/>
+  <text x="200" y="100" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="#7c3aed">w₁ = 0.5</text>
+  <text x="200" y="162" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="#7c3aed">w₂ = -1</text>
+  <text x="200" y="250" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="#7c3aed">w₃ = 0.25</text>
+
+  <circle cx="380" cy="170" r="50" fill="#fef3c7" stroke="#d97706" stroke-width="2.5"/>
+  <text x="380" y="166" text-anchor="middle" font-family="Inter,sans-serif" font-size="22" font-weight="700" fill="#78350f">Σ</text>
+  <text x="380" y="190" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#78350f">+ bias 0.5</text>
+  <text x="380" y="250" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="600" fill="#334155">Weighted sum</text>
+  <text x="380" y="270" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#475569">z = 1 - 1 + 0.75 + 0.5 = 1.25</text>
+
+  <line x1="430" y1="170" x2="506" y2="170" stroke="#475569" stroke-width="2" marker-end="url(#nrArrow)"/>
+
+  <rect x="510" y="130" width="120" height="80" rx="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="2.5"/>
+  <text x="570" y="165" text-anchor="middle" font-family="Inter,sans-serif" font-size="15" font-weight="700" fill="#4c1d95">Activation</text>
+  <text x="570" y="188" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" fill="#4c1d95">ReLU(z)</text>
+  <text x="570" y="250" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="600" fill="#334155">Squash or clip</text>
+
+  <line x1="630" y1="170" x2="696" y2="170" stroke="#475569" stroke-width="2" marker-end="url(#nrArrow)"/>
+
+  <circle cx="740" cy="170" r="40" fill="#d1fae5" stroke="#059669" stroke-width="2.5"/>
+  <text x="740" y="176" text-anchor="middle" font-family="Inter,sans-serif" font-size="16" font-weight="700" fill="#064e3b">1.25</text>
+  <text x="740" y="250" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="600" fill="#334155">Output</text>
+</svg>
+<div class="diagram-caption">Figure 1 — One neuron: inputs times weights, summed with a bias, then passed through an activation function.</div></div>
+<h3 id="22-activation-functions">2.2 Activation functions</h3>
+<p>The activation function is applied to <code>z</code>. Three common ones:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Activation</th>
+<th>Rule in words</th>
+<th>Formula</th>
+<th>Our z = 1.25 gives</th>
+<th>Used for</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>ReLU</strong> (rectified linear unit)</td>
+<td>Negative numbers become 0; positive numbers pass through</td>
+<td><code>max(0, z)</code></td>
+<td>1.25</td>
+<td>Hidden layers of most networks</td>
+</tr>
+<tr>
+<td><strong>Sigmoid</strong></td>
+<td>Squashes any number into the range 0 to 1</td>
+<td><code>1 / (1 + e^(−z))</code></td>
+<td>≈ 0.78</td>
+<td>Yes/no probabilities</td>
+</tr>
+<tr>
+<td><strong>Softmax</strong></td>
+<td>Turns a list of scores into probabilities that add up to 1</td>
+<td><code>e^(score) / sum of e^(all scores)</code></td>
+<td>(needs a list)</td>
+<td>Choosing one option out of many — including the next token in an LLM</td>
+</tr>
+</tbody></table></div>
+<p>Checking the sigmoid: <code>e^(−1.25) ≈ 0.287</code>, so <code>1 / (1 + 0.287) = 1 / 1.287 ≈ 0.78</code>. (Here <code>e ≈ 2.718</code> is a fixed mathematical constant.)</p>
+<p><strong>Softmax example.</strong> A network deciding whether a photo shows a cat, a dog or a bird produces raw scores <code>[2.0, 1.0, 0.1]</code>:</p>
+<div class="code-block">e^2.0 = 7.39     e^1.0 = 2.72     e^0.1 = 1.11     total = 11.22
+
+cat  = 7.39 / 11.22 ≈ 0.66   (66%)
+dog  = 2.72 / 11.22 ≈ 0.24   (24%)
+bird = 1.11 / 11.22 ≈ 0.10   (10%)</div>
+<p>The biggest score gets the biggest probability, and all the probabilities add up to 100%. A language model does exactly this at every step — over a vocabulary of tens of thousands of tokens instead of three animals.</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Why bother with an activation? Without it, stacking layers would be pointless: a chain of &quot;multiply and add&quot; steps can always be collapsed into a single &quot;multiply and add&quot;. The activation adds a bend (a <em>non-linearity</em>), and stacking many bends lets the network model curvy, complex patterns like language and images. Google&#39;s crash course explains this in <a href="https://developers.google.com/machine-learning/crash-course/neural-networks/activation-functions" target="_blank" rel="noopener">Activation functions</a>.</p></div>
+
+</div>
+<div class="section">
+<h2 id="3-layers-and-depth">3. Layers and depth</h2>
+<p>One neuron is not very smart. The power comes from connecting many of them in <strong>layers</strong>:</p>
+<ul>
+<li><strong>Input layer</strong> — holds the raw data (house size, pixel brightness, token numbers). It does no calculation.</li>
+<li><strong>Hidden layers</strong> — the neurons in between. Each one combines the previous layer&#39;s outputs into a new, more useful <em>feature</em>. They are &quot;hidden&quot; because you never see their values directly.</li>
+<li><strong>Output layer</strong> — produces the final answer (a price, a probability per class, a probability per next token).</li>
+</ul>
+<p>When every neuron in one layer connects to every neuron in the next, the layers are called <em>fully connected</em> (or <em>dense</em>).</p>
+<div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 420" role="img" aria-label="A small neural network with 3 input neurons, 4 hidden neurons and 2 output neurons, every neuron connected to every neuron in the next layer">
+  <rect x="0" y="0" width="760" height="420" rx="16" fill="#f8fafc"/>
+  <g stroke="#94a3b8" stroke-width="1.5">
+    <line x1="150" y1="110" x2="380" y2="70"/>
+    <line x1="150" y1="110" x2="380" y2="150"/>
+    <line x1="150" y1="110" x2="380" y2="230"/>
+    <line x1="150" y1="110" x2="380" y2="310"/>
+    <line x1="150" y1="190" x2="380" y2="70"/>
+    <line x1="150" y1="190" x2="380" y2="150"/>
+    <line x1="150" y1="190" x2="380" y2="230"/>
+    <line x1="150" y1="190" x2="380" y2="310"/>
+    <line x1="150" y1="270" x2="380" y2="70"/>
+    <line x1="150" y1="270" x2="380" y2="150"/>
+    <line x1="150" y1="270" x2="380" y2="230"/>
+    <line x1="150" y1="270" x2="380" y2="310"/>
+    <line x1="380" y1="70" x2="610" y2="150"/>
+    <line x1="380" y1="70" x2="610" y2="230"/>
+    <line x1="380" y1="150" x2="610" y2="150"/>
+    <line x1="380" y1="150" x2="610" y2="230"/>
+    <line x1="380" y1="230" x2="610" y2="150"/>
+    <line x1="380" y1="230" x2="610" y2="230"/>
+    <line x1="380" y1="310" x2="610" y2="150"/>
+    <line x1="380" y1="310" x2="610" y2="230"/>
+  </g>
+
+  <g stroke-width="2">
+    <circle cx="150" cy="110" r="24" fill="#dbeafe" stroke="#2563eb"/>
+    <circle cx="150" cy="190" r="24" fill="#dbeafe" stroke="#2563eb"/>
+    <circle cx="150" cy="270" r="24" fill="#dbeafe" stroke="#2563eb"/>
+    <circle cx="380" cy="70" r="24" fill="#ede9fe" stroke="#7c3aed"/>
+    <circle cx="380" cy="150" r="24" fill="#ede9fe" stroke="#7c3aed"/>
+    <circle cx="380" cy="230" r="24" fill="#ede9fe" stroke="#7c3aed"/>
+    <circle cx="380" cy="310" r="24" fill="#ede9fe" stroke="#7c3aed"/>
+    <circle cx="610" cy="150" r="24" fill="#d1fae5" stroke="#059669"/>
+    <circle cx="610" cy="230" r="24" fill="#d1fae5" stroke="#059669"/>
+  </g>
+
+  <text x="60" y="115" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#334155">size</text>
+  <text x="60" y="195" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#334155">rooms</text>
+  <text x="60" y="275" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#334155">age</text>
+  <text x="700" y="155" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#334155">cheap</text>
+  <text x="700" y="235" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#334155">expensive</text>
+
+  <text x="150" y="350" text-anchor="middle" font-family="Inter,sans-serif" font-size="14" font-weight="700" fill="#1e3a8a">Input layer</text>
+  <text x="150" y="368" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#475569">3 neurons (the data)</text>
+  <text x="380" y="360" text-anchor="middle" font-family="Inter,sans-serif" font-size="14" font-weight="700" fill="#4c1d95">Hidden layer</text>
+  <text x="380" y="378" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#475569">4 neurons (learned features)</text>
+  <text x="610" y="350" text-anchor="middle" font-family="Inter,sans-serif" font-size="14" font-weight="700" fill="#064e3b">Output layer</text>
+  <text x="610" y="368" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#475569">2 neurons (the answer)</text>
+
+  <text x="265" y="405" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="600" fill="#7c3aed">3 × 4 = 12 weights + 4 biases</text>
+  <text x="495" y="405" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="600" fill="#7c3aed">4 × 2 = 8 weights + 2 biases</text>
+</svg>
+<div class="diagram-caption">Figure 2 — A small fully connected network: 3 inputs, one hidden layer of 4 neurons, 2 outputs.</div></div>
+<p><strong>Depth</strong> is the number of layers. &quot;Deep learning&quot; simply means networks with many hidden layers. Early layers tend to learn simple patterns, later layers combine them into complex ones. In an image network, early layers may react to edges, middle layers to shapes like eyes or wheels, and late layers to whole objects. The <a href="https://www.3blue1brown.com/lessons/neural-networks" target="_blank" rel="noopener">3Blue1Brown video &quot;But what is a neural network?&quot;</a> shows this idea beautifully with handwritten digits.</p>
+<div class="callout tip"><p><strong>💡 Example:</strong> In the house network of Figure 2, one hidden neuron might end up acting as a &quot;spacious family home&quot; detector (big size, many rooms), another as an &quot;old fixer-upper&quot; detector (high age). Nobody programs those roles — they emerge during training because they help predict the price.</p></div>
+
+</div>
+<div class="section">
+<h2 id="4-weights-parameters-and-what-7b-means">4. Weights, parameters, and what &quot;7B&quot; means</h2>
+<p><strong>Parameters</strong> are all the learned numbers in a network: every weight plus every bias. The word &quot;weights&quot; is often used loosely to mean all of them. When people say &quot;the model&#39;s weights&quot;, they mean the file of learned numbers.</p>
+<h3 id="41-counting-parameters-in-a-tiny-network">4.1 Counting parameters in a tiny network</h3>
+<p>For a fully connected layer: <code>parameters = (inputs × outputs) + outputs</code>. The first part counts the weights (one per connection); the second counts the biases (one per neuron).</p>
+<p>For the network in Figure 2 (3 → 4 → 2):</p>
+<div class="code-block">Input → hidden:   3 × 4 = 12 weights  +  4 biases  =  16
+Hidden → output:  4 × 2 =  8 weights  +  2 biases  =  10
+                                          Total     =  26 parameters</div>
+<p>Twenty-six numbers. A modern LLM has billions — GPT-3, described in 2020, had 175 billion (<a href="https://arxiv.org/abs/2005.14165" target="_blank" rel="noopener">Brown et al., 2020</a>). The principle is identical; there are just vastly more neurons, layers, and connections.</p>
+<h3 id="42-what-7b-parameters-means-for-memory">4.2 What &quot;7B parameters&quot; means for memory</h3>
+<p>&quot;7B&quot; means about 7 billion parameters. Each parameter is stored as a number that takes a certain number of bytes, depending on its <strong>precision</strong> (how many digits it keeps):</p>
+<div class="code-block">memory for weights ≈ number of parameters × bytes per parameter</div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Precision</th>
+<th>Bytes per parameter</th>
+<th>7B model needs about</th>
+<th>70B model needs about</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FP32 (32-bit &quot;full&quot; precision)</td>
+<td>4</td>
+<td>7B × 4 = <strong>28 GB</strong></td>
+<td>280 GB</td>
+</tr>
+<tr>
+<td>FP16 / BF16 (16-bit &quot;half&quot; precision)</td>
+<td>2</td>
+<td>7B × 2 = <strong>14 GB</strong></td>
+<td>140 GB</td>
+</tr>
+<tr>
+<td>INT8 (8-bit quantized)</td>
+<td>1</td>
+<td>7B × 1 = <strong>7 GB</strong></td>
+<td>70 GB</td>
+</tr>
+<tr>
+<td>INT4 (4-bit quantized)</td>
+<td>0.5</td>
+<td>7B × 0.5 = <strong>3.5 GB</strong></td>
+<td>35 GB</td>
+</tr>
+</tbody></table></div>
+<p>(GB here means billions of bytes. These figures cover the weights only.)</p>
+<p><strong>Quantization</strong> means storing each parameter with fewer bits — like rounding 0.123456 to 0.12. It shrinks the model and speeds it up, usually at a small cost in quality. This is why a 4-bit 7B model can run on an ordinary laptop with 8–16 GB of memory, while the same model in FP32 cannot.</p>
+<div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;If the weights fit, the model will run.&quot; Running a model also needs memory for the text being processed (the context) and temporary calculations, so plan for extra headroom on top of the table above. <em>Training</em> needs far more: a commonly cited estimate for standard mixed-precision training with the Adam optimizer is about 16 bytes per parameter before counting activations (<a href="https://arxiv.org/abs/1910.02054" target="_blank" rel="noopener">Rajbhandari et al., ZeRO, 2019</a>) — over 100 GB for a 7B model.</p></div>
+<div class="callout success"><p><strong>✅ Key takeaway:</strong> Parameters = learned numbers. More parameters usually means more capability but also more memory, slower responses and higher cost. Memory ≈ parameters × bytes per parameter.</p></div>
+
+</div>
+<div class="section">
+<h2 id="5-the-forward-pass">5. The forward pass</h2>
+<p>Running data through the network from input to output is called the <strong>forward pass</strong>. Every time you use a model (inference), you are doing forward passes.</p>
+<p>Take our three inputs <code>[2, 1, 3]</code> and a hidden layer of two neurons, A and B, followed by one output neuron:</p>
+<div class="code-block">Hidden neuron A:  weights [0.5, -1, 0.25], bias 0.5
+                  z = 1 - 1 + 0.75 + 0.5 = 1.25   → ReLU → 1.25
+
+Hidden neuron B:  weights [1, 0, -0.5], bias -1
+                  z = 2 + 0 - 1.5 - 1 = -0.5      → ReLU → 0
+
+Output neuron:    weights [2, 1], bias 0.1
+                  z = (1.25 × 2) + (0 × 1) + 0.1 = 2.6   → final answer 2.6</div>
+<p>Notice that neuron B&#39;s negative total was switched off by ReLU — that is how a network &quot;decides&quot; which features matter for this particular input.</p>
+
+</div>
+<div class="section">
+<h2 id="6-measuring-mistakes-the-loss-function">6. Measuring mistakes: the loss function</h2>
+<p>To learn, the network needs a single number that says <em>how wrong</em> it is. That number is the <strong>loss</strong> (also called <em>cost</em> or <em>error</em>). Lower is better; training is the search for parameters with the lowest loss.</p>
+<h3 id="61-regression-guessing-house-prices">6.1 Regression: guessing house prices</h3>
+<p>Suppose a model predicts prices (in thousands) for three houses:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>House</th>
+<th>Real price</th>
+<th>Predicted</th>
+<th>Error (predicted − real)</th>
+<th>Error squared</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A</td>
+<td>300</td>
+<td>350</td>
+<td>50</td>
+<td>2,500</td>
+</tr>
+<tr>
+<td>B</td>
+<td>200</td>
+<td>180</td>
+<td>−20</td>
+<td>400</td>
+</tr>
+<tr>
+<td>C</td>
+<td>250</td>
+<td>260</td>
+<td>10</td>
+<td>100</td>
+</tr>
+</tbody></table></div>
+<p><strong>Mean squared error (MSE)</strong> = average of the squared errors = (2,500 + 400 + 100) / 3 = <strong>1,000</strong>.</p>
+<p>In words: square each mistake (so negatives do not cancel positives, and big mistakes count much more than small ones), then average them. See Google&#39;s <a href="https://developers.google.com/machine-learning/crash-course/linear-regression/loss" target="_blank" rel="noopener">Loss</a> page for more.</p>
+<h3 id="62-classification-cross-entropy">6.2 Classification: cross-entropy</h3>
+<p>For &quot;pick one category&quot; problems — including predicting the next token — the usual loss is <strong>cross-entropy</strong>. The idea: look at the probability the model gave to the <em>correct</em> answer, and penalize it if that probability is low.</p>
+<div class="code-block">loss = −log(probability given to the correct answer)</div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Probability the model gave the correct answer</th>
+<th>Loss</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0.9 (confident and right)</td>
+<td>−log(0.9) ≈ <strong>0.11</strong></td>
+</tr>
+<tr>
+<td>0.5 (unsure)</td>
+<td>−log(0.5) ≈ <strong>0.69</strong></td>
+</tr>
+<tr>
+<td>0.1 (confident and wrong)</td>
+<td>−log(0.1) ≈ <strong>2.30</strong></td>
+</tr>
+</tbody></table></div>
+<p>(<code>log</code> here is the natural logarithm, a calculator button usually labelled &quot;ln&quot;.) Confidently wrong answers are punished heavily. When an LLM is trained on the sentence &quot;The cat sat on the mat&quot;, the loss at the last step is −log of the probability it gave to &quot;mat&quot;.</p>
+
+</div>
+<div class="section">
+<h2 id="7-gradient-descent-walking-downhill">7. Gradient descent: walking downhill</h2>
+<p>We have a loss. How do we change the parameters to make it smaller?</p>
+<p><strong>The hiker in the fog.</strong> Imagine you are on a hillside in thick fog and want to reach the valley floor. You cannot see the valley, but you can feel the slope under your feet. So you take a step in the steepest downhill direction, feel the slope again, take another step, and repeat. Eventually you reach low ground.</p>
+<p>That is <strong>gradient descent</strong>:</p>
+<ul>
+<li>The <em>landscape</em> is the loss for every possible combination of parameter values.</li>
+<li>Your <em>position</em> is the current parameter values.</li>
+<li>The <em>slope</em> under your feet is the <strong>gradient</strong> — for each parameter, it says &quot;if you increase this number a little, does the loss go up or down, and how fast?&quot;</li>
+<li>Each <em>step</em> updates every parameter a little in the downhill direction.</li>
+</ul>
+<div class="code-block">new weight = old weight − learning rate × gradient</div>
+<p>In words: &quot;move each weight a small step in the direction that lowers the loss.&quot; The minus sign means &quot;go <em>against</em> the uphill direction&quot;.</p>
+<div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 380" role="img" aria-label="Gradient descent: a curve of loss against a weight value, with steps going downhill toward the lowest point, taking smaller steps as the slope flattens">
+  <defs>
+    <marker id="gdArrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#dc2626"/>
+    </marker>
+    <marker id="gdAxis" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="800" height="380" rx="16" fill="#f8fafc"/>
+
+  <line x1="60" y1="330" x2="770" y2="330" stroke="#475569" stroke-width="2" marker-end="url(#gdAxis)"/>
+  <line x1="60" y1="330" x2="60" y2="30" stroke="#475569" stroke-width="2" marker-end="url(#gdAxis)"/>
+  <text x="760" y="356" text-anchor="end" font-family="Inter,sans-serif" font-size="13" font-weight="600" fill="#334155">Weight value →</text>
+  <text x="74" y="40" font-family="Inter,sans-serif" font-size="13" font-weight="600" fill="#334155">Loss (error) ↑</text>
+
+  <path d="M 80 60 Q 400 520 720 60" fill="none" stroke="#2563eb" stroke-width="3"/>
+
+  <line x1="131" y1="128" x2="200" y2="202" stroke="#dc2626" stroke-width="2" marker-end="url(#gdArrow)"/>
+  <line x1="208" y1="207" x2="277" y2="256" stroke="#dc2626" stroke-width="2" marker-end="url(#gdArrow)"/>
+  <line x1="285" y1="260" x2="341" y2="281" stroke="#dc2626" stroke-width="2" marker-end="url(#gdArrow)"/>
+  <line x1="349" y1="284" x2="392" y2="289" stroke="#dc2626" stroke-width="2" marker-end="url(#gdArrow)"/>
+
+  <circle cx="131" cy="128" r="7" fill="#dc2626"/>
+  <circle cx="208" cy="207" r="7" fill="#dc2626"/>
+  <circle cx="285" cy="260" r="7" fill="#dc2626"/>
+  <circle cx="349" cy="284" r="7" fill="#dc2626"/>
+  <circle cx="400" cy="290" r="9" fill="#059669"/>
+
+  <text x="145" y="118" font-family="Inter,sans-serif" font-size="12" fill="#991b1b">Start: random weight, high loss</text>
+  <text x="225" y="196" font-family="Inter,sans-serif" font-size="12" fill="#991b1b">Steep slope → big step</text>
+  <text x="300" y="250" font-family="Inter,sans-serif" font-size="12" fill="#991b1b">Flatter slope → smaller step</text>
+  <text x="400" y="316" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="#064e3b">Minimum: lowest loss</text>
+
+  <rect x="360" y="36" width="270" height="92" rx="10" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="375" y="60" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="#0f172a">Each step:</text>
+  <text x="375" y="82" font-family="Inter,sans-serif" font-size="12" fill="#334155">new weight = old weight</text>
+  <text x="375" y="100" font-family="Inter,sans-serif" font-size="12" fill="#334155">   − learning rate × slope</text>
+  <text x="375" y="118" font-family="Inter,sans-serif" font-size="11" fill="#64748b">(the slope is called the gradient)</text>
+</svg>
+<div class="diagram-caption">Figure 3 — Gradient descent: steps are bigger where the slope is steep and shrink as the curve flattens near the minimum.</div></div>
+<h3 id="71-the-learning-rate">7.1 The learning rate</h3>
+<p>The <strong>learning rate</strong> controls the size of each step. It is a <em>hyperparameter</em> — a setting chosen by people, not learned by the model.</p>
+<ul>
+<li><strong>Too small:</strong> you inch downhill and training takes forever.</li>
+<li><strong>Too large:</strong> you overshoot the valley and bounce around, or even climb higher.</li>
+<li><strong>Just right:</strong> steady progress toward low loss.</li>
+</ul>
+<p>You will see this happen with real numbers in the worked example in section 12. Google&#39;s crash course page on <a href="https://developers.google.com/machine-learning/crash-course/linear-regression/gradient-descent" target="_blank" rel="noopener">Gradient descent</a> and the <a href="https://www.3blue1brown.com/lessons/gradient-descent" target="_blank" rel="noopener">3Blue1Brown lesson on gradient descent</a> are excellent companions.</p>
+<div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;Gradient descent finds the perfect answer.&quot; For big networks the landscape has billions of dimensions and many dips. Gradient descent finds <em>good enough</em> low points, not a guaranteed best one — and in practice that works remarkably well.</p></div>
+
+</div>
+<div class="section">
+<h2 id="8-backpropagation-assigning-the-blame">8. Backpropagation: assigning the blame</h2>
+<p>A network with billions of weights produced a wrong answer. <em>Which</em> weights were responsible, and by how much? Working that out is the job of <strong>backpropagation</strong> (short for &quot;backward propagation of errors&quot;), popularized by Rumelhart, Hinton and Williams in their 1986 paper <em>Learning representations by back-propagating errors</em>.</p>
+<p><strong>Blame assignment analogy.</strong> A restaurant receives a complaint: the soup was too salty. The head chef asks the cook who finished the soup; that cook says the stock was already salty; the stock maker says the salt measurement was off. Blame flows <em>backwards</em> through the kitchen, and each person adjusts in proportion to their share of the problem.</p>
+<p>Backpropagation does the same:</p>
+<ol>
+<li>Run the forward pass and compute the loss.</li>
+<li>Start at the output and work backwards, layer by layer.</li>
+<li>At each layer, use calculus (the <em>chain rule</em>) to calculate how much each weight contributed to the error — that is its gradient.</li>
+<li>Hand those gradients to gradient descent, which nudges every weight.</li>
+</ol>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Backpropagation figures out <em>who is to blame and by how much</em>. Gradient descent <em>does the correcting</em>. Together, they are how almost every neural network learns. The <a href="https://www.3blue1brown.com/lessons/backpropagation" target="_blank" rel="noopener">3Blue1Brown lesson &quot;What is backpropagation really doing?&quot;</a> visualizes this without heavy math, and Google covers it in <a href="https://developers.google.com/machine-learning/crash-course/neural-networks/backpropagation" target="_blank" rel="noopener">Training using backpropagation</a>.</p></div>
+
+</div>
+<div class="section">
+<h2 id="9-the-training-loop-epochs-batches-iterations">9. The training loop: epochs, batches, iterations</h2>
+<p>Training repeats forward pass → loss → backpropagation → update, over and over. Three words describe the rhythm:</p>
+<ul>
+<li><strong>Batch</strong> — a small group of examples processed together (e.g. 32 or 1,000). Averaging over a batch gives a more stable gradient than one example, and is efficient on GPUs.</li>
+<li><strong>Iteration</strong> (or <em>step</em>) — one parameter update, made after one batch.</li>
+<li><strong>Epoch</strong> — one full pass through the entire training dataset.</li>
+</ul>
+<p><em>Numeric example:</em> 10,000 training examples with a batch size of 100 means 10,000 / 100 = <strong>100 iterations per epoch</strong>. Training for 5 epochs is 500 updates.</p>
+<div class="code-block">initialize all weights with small random numbers
+
+for epoch in 1 to number_of_epochs:
+    shuffle the training data
+    for each batch in the training data:
+        predictions = forward_pass(batch.inputs)
+        loss        = loss_function(predictions, batch.labels)
+        gradients   = backpropagation(loss)
+        for each weight:
+            weight = weight - learning_rate * gradient_of(weight)
+    check the loss on the validation set</div>
+<div class="callout tip"><p><strong>💡 Example:</strong> Large language models are often trained for about one epoch (or a few) over a dataset of trillions of tokens, because the dataset is so large that one pass already takes weeks on thousands of GPUs. Small models on small datasets may run for hundreds of epochs.</p></div>
+
+</div>
+<div class="section">
+<h2 id="10-overfitting-and-regularization">10. Overfitting and regularization</h2>
+<p>As you saw in <a href="foundations.html">Chapter 1</a>, a model can memorize its training data instead of learning general patterns. Neural networks — with their huge numbers of parameters — are especially prone to this. <strong>Regularization</strong> is the umbrella term for techniques that keep a model honest:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Technique</th>
+<th>What it does</th>
+<th>Analogy</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>More (and more varied) data</strong></td>
+<td>Harder to memorize; patterns that hold across lots of data are more likely to be real</td>
+<td>Practising with many different past papers</td>
+</tr>
+<tr>
+<td><strong>Early stopping</strong></td>
+<td>Watch the validation loss; stop training when it starts rising even though training loss keeps falling</td>
+<td>Stop cramming when practice-test scores stop improving</td>
+</tr>
+<tr>
+<td><strong>Dropout</strong></td>
+<td>During training, randomly switch off a fraction of neurons at each step, so no neuron can rely on specific partners (<a href="https://jmlr.org/papers/v15/srivastava14a.html" target="_blank" rel="noopener">Srivastava et al., 2014</a>)</td>
+<td>A team that practises with random players absent, so everyone learns every role</td>
+</tr>
+<tr>
+<td><strong>Weight decay (L2 regularization)</strong></td>
+<td>Adds a small penalty for large weights, nudging the model toward simpler solutions</td>
+<td>Preferring the simplest explanation that fits</td>
+</tr>
+<tr>
+<td><strong>Data augmentation</strong></td>
+<td>Create extra variations of training examples (flip or crop images, rephrase text)</td>
+<td>Seeing the same lesson explained different ways</td>
+</tr>
+</tbody></table></div>
+<p>Google&#39;s crash course covers these in <a href="https://developers.google.com/machine-learning/crash-course/overfitting/overfitting" target="_blank" rel="noopener">Overfitting</a> and <a href="https://developers.google.com/machine-learning/crash-course/overfitting/regularization" target="_blank" rel="noopener">L2 regularization</a>.</p>
+<div class="callout success"><p><strong>✅ Key takeaway:</strong> If training loss keeps falling but validation loss starts rising, the model has begun memorizing. Stop, add data, or add regularization.</p></div>
+
+</div>
+<div class="section">
+<h2 id="11-why-gpus-it-is-all-matrix-multiplication">11. Why GPUs: it is all matrix multiplication</h2>
+<p>A layer of neurons is really one big table operation. Put the inputs in a row and the weights in a grid (a <strong>matrix</strong>), and computing every neuron at once is a <em>matrix multiplication</em>:</p>
+<div class="code-block">inputs [2, 1, 3]  ×  weight matrix        =  sums for each neuron
+                     neuron A  neuron B
+                     [ 0.5      1   ]
+                     [ -1       0   ]
+                     [ 0.25    -0.5 ]
+
+neuron A: 2×0.5 + 1×(−1) + 3×0.25 = 0.75
+neuron B: 2×1   + 1×0    + 3×(−0.5) = 0.5</div>
+<p>(Then add the biases and apply the activation, as in section 5.) Each neuron&#39;s sum is independent of the others, so they can all be computed <em>at the same time</em>.</p>
+<ul>
+<li>A <strong>CPU</strong> has a handful of powerful cores — great for doing different, complicated tasks one after another.</li>
+<li>A <strong>GPU</strong> (graphics processing unit) has thousands of simpler cores — built to do the same arithmetic on many numbers simultaneously, originally for drawing pixels in video games.</li>
+</ul>
+<p>A large model needs billions of multiply-and-add operations for every token it reads or writes, which is exactly the kind of work GPUs (and specialised AI chips such as Google&#39;s TPUs) excel at. The 2012 <em>AlexNet</em> image-recognition network, trained on two consumer GPUs, is often credited with kicking off the deep learning boom.</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> A CPU is a few expert chefs; a GPU is a thousand line cooks all chopping onions at once. Neural networks need a mountain of chopped onions.</p></div>
+
+</div>
+<div class="section">
+<h2 id="12-worked-example-one-training-step-by-hand">12. Worked example: one training step, by hand</h2>
+<p>Let us train the tiniest possible network — a single neuron with no activation — to learn the pattern <strong>&quot;output = 2 × input&quot;</strong>.</p>
+<p><strong>Training data:</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Input x</th>
+<th>Correct output y</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>2</td>
+<td>4</td>
+</tr>
+<tr>
+<td>3</td>
+<td>6</td>
+</tr>
+</tbody></table></div>
+<p><strong>Model:</strong> <code>prediction = w × x + b</code>. The perfect answer is <code>w = 2</code>, <code>b = 0</code>, but the model does not know that.</p>
+<p><strong>Start:</strong> random-ish values <code>w = 0.5</code>, <code>b = 0</code>. <strong>Learning rate:</strong> 0.01. <strong>Loss:</strong> squared error, <code>(prediction − y)²</code>.</p>
+<h3 id="step-1-forward-pass-take-the-example-x-3-y-6">Step 1 — Forward pass (take the example x = 3, y = 6)</h3>
+<div class="code-block">prediction = 0.5 × 3 + 0 = 1.5
+error      = prediction − y = 1.5 − 6 = −4.5
+loss       = (−4.5)² = 20.25</div>
+<p>The model guessed 1.5 instead of 6 — far too low.</p>
+<h3 id="step-2-backpropagation-compute-the-gradients">Step 2 — Backpropagation (compute the gradients)</h3>
+<p>Calculus gives simple rules for this model:</p>
+<div class="code-block">gradient for w = 2 × error × x = 2 × (−4.5) × 3 = −27
+gradient for b = 2 × error     = 2 × (−4.5)     = −9</div>
+<p>In words: both gradients are negative, which means &quot;increasing w and b would <em>reduce</em> the loss&quot;. The gradient for <code>w</code> is bigger because the input (3) amplifies <code>w</code>&#39;s effect.</p>
+<h3 id="step-3-gradient-descent-update">Step 3 — Gradient descent (update)</h3>
+<div class="code-block">new w = 0.5 − 0.01 × (−27) = 0.5 + 0.27 = 0.77
+new b = 0   − 0.01 × (−9)  = 0   + 0.09 = 0.09</div>
+<h3 id="step-4-check-did-it-improve">Step 4 — Check: did it improve?</h3>
+<div class="code-block">new prediction = 0.77 × 3 + 0.09 = 2.40
+new error      = 2.40 − 6 = −3.60
+new loss       = (−3.60)² = 12.96</div>
+<p>The loss fell from <strong>20.25 to 12.96</strong> in one step. The model learned something.</p>
+<h3 id="repeating-the-step">Repeating the step</h3>
+<p>Doing the same calculation again on the same example:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Step</th>
+<th>w</th>
+<th>b</th>
+<th>Prediction for x = 3</th>
+<th>Loss</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Start</td>
+<td>0.50</td>
+<td>0.00</td>
+<td>1.50</td>
+<td>20.25</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0.77</td>
+<td>0.09</td>
+<td>2.40</td>
+<td>12.96</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.99</td>
+<td>0.16</td>
+<td>3.12</td>
+<td>8.29</td>
+</tr>
+<tr>
+<td>3</td>
+<td>1.16</td>
+<td>0.22</td>
+<td>3.70</td>
+<td>5.31</td>
+</tr>
+</tbody></table></div>
+<p>Each step shrinks the loss. In real training you would cycle through <em>all three</em> examples (an epoch) many times; using all of them forces the model toward <code>w ≈ 2</code>, <code>b ≈ 0</code>, the rule that fits every example — not just one.</p>
+<h3 id="what-if-the-learning-rate-is-too-big">What if the learning rate is too big?</h3>
+<p>Try the very first update with a learning rate of <strong>0.1</strong> instead of 0.01:</p>
+<div class="code-block">new w = 0.5 − 0.1 × (−27) = 3.2
+new b = 0   − 0.1 × (−9)  = 0.9
+new prediction = 3.2 × 3 + 0.9 = 10.5   → error 4.5, loss 20.25</div>
+<p>The model jumped from far too low (1.5) to far too high (10.5) — overshooting the valley — and the loss did not improve at all. This is exactly the &quot;too large&quot; learning rate from section 7.1.</p>
+<div class="callout success"><p><strong>✅ Key takeaway:</strong> That is all training is: forward pass → loss → gradients → small update → repeat. An LLM does the same four steps, just with billions of parameters, cross-entropy loss over tokens, and trillions of examples.</p></div>
+<div class="callout tip"><p><strong>🎯 Try it:</strong> Open Google&#39;s interactive <a href="https://developers.google.com/machine-learning/crash-course/neural-networks/interactive-exercises" target="_blank" rel="noopener">Neural networks exercises</a> or the free TensorFlow Playground, change the learning rate and the number of hidden neurons, and watch the loss curve respond.</p></div>
+
+</div>
+<div class="section">
+<h2 id="recap">Recap</h2>
+<ul>
+<li>An artificial neuron multiplies inputs by weights, adds a bias, and applies an activation function (ReLU, sigmoid, softmax).</li>
+<li>Activations add non-linearity; without them, many layers collapse into one.</li>
+<li>Networks stack neurons into input, hidden and output layers. &quot;Deep&quot; means many hidden layers.</li>
+<li>Parameters are all the weights and biases. Count per dense layer: inputs × outputs + outputs.</li>
+<li>Memory for weights ≈ parameters × bytes per parameter: a 7B model is about 14 GB in FP16 and about 3.5 GB in 4-bit.</li>
+<li>The loss measures how wrong the model is: mean squared error for numbers, cross-entropy for categories and tokens.</li>
+<li>Gradient descent nudges each parameter downhill; the learning rate sets the step size.</li>
+<li>Backpropagation works backwards from the loss to assign each parameter its share of the blame (its gradient).</li>
+<li>Training loops over batches (iterations) and full passes over the data (epochs).</li>
+<li>Regularization (more data, early stopping, dropout, weight decay) fights overfitting.</li>
+<li>GPUs excel because neural networks are mostly giant matrix multiplications.</li>
+</ul>
+
+</div>
+<div class="section">
+<h2 id="check-your-understanding">Check Your Understanding</h2>
+<p><strong>1. A neuron has inputs [1, 2], weights [3, −1], bias 1 and ReLU activation. What is its output?</strong></p>
+<ul>
+<li>A) 0</li>
+<li>B) 1</li>
+<li>C) 2</li>
+<li>D) 6</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> C — z = (1 × 3) + (2 × −1) + 1 = 3 − 2 + 1 = 2. ReLU keeps positive numbers unchanged, so the output is 2.</p></div>
+<p><strong>2. How many parameters does a fully connected layer with 4 inputs and 3 outputs have?</strong></p>
+<ul>
+<li>A) 7</li>
+<li>B) 12</li>
+<li>C) 15</li>
+<li>D) 16</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> C — 4 × 3 = 12 weights plus 3 biases = 15 parameters.</p></div>
+<p><strong>3. Roughly how much memory do the weights of a 13-billion-parameter model need at 4-bit (INT4) precision?</strong></p>
+<ul>
+<li>A) About 3 GB</li>
+<li>B) About 6.5 GB</li>
+<li>C) About 26 GB</li>
+<li>D) About 52 GB</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> B — 13 billion × 0.5 bytes = 6.5 GB. (FP16 would be 26 GB; FP32 would be 52 GB.)</p></div>
+<p><strong>4. What does backpropagation do?</strong></p>
+<ul>
+<li>A) Collects more training data</li>
+<li>B) Calculates how much each parameter contributed to the error (its gradient)</li>
+<li>C) Converts text into tokens</li>
+<li>D) Picks the learning rate automatically</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> B — Backpropagation works backwards from the loss to compute a gradient for every parameter. Gradient descent then uses those gradients to update the parameters.</p></div>
+<p><strong>5. During training, the loss jumps around and sometimes increases sharply after each update. What is the most likely cause?</strong></p>
+<ul>
+<li>A) The learning rate is too high</li>
+<li>B) The learning rate is too low</li>
+<li>C) The model has too few epochs</li>
+<li>D) The softmax is missing</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> A — Steps that are too large overshoot the low point of the loss landscape, as in the worked example with a learning rate of 0.1.</p></div>
+<p><strong>6. A dataset has 50,000 examples and the batch size is 500. How many iterations make up one epoch?</strong></p>
+<ul>
+<li>A) 10</li>
+<li>B) 100</li>
+<li>C) 500</li>
+<li>D) 50,000</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> B — One epoch processes every example once: 50,000 / 500 = 100 batches, so 100 iterations (parameter updates).</p></div>
+<div class="nav-links"><a href="foundations.html">← Chapter 1: Foundations</a><a href="transformers.html">Chapter 3: Transformers &amp; LLMs →</a></div>
+</div>
+</main>
+
+<footer class="site-footer">AI Learn · A beginner's guide to how AI models work · Based on official docs and open course material · Not affiliated with any model provider</footer>
+</body>
+</html>

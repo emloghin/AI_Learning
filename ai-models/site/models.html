@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Model Landscape: Proprietary vs Open — AI Learn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>.section td code,.callout code,.diagram-caption code{background:var(--primary-light);color:var(--primary);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:13px}.callout p+p{margin-top:8px}.callout ul{margin:8px 0 0 20px}</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-logo"><span>AI&nbsp;</span>Learn</div>
+    <nav class="header-nav">
+      <a href="index.html">Home</a>
+      <a href="foundations.html">1. Foundations</a>
+      <a href="neural-networks.html">2. Neural Networks</a>
+      <a href="transformers.html">3. Transformers &amp; LLMs</a>
+      <a href="training.html">4. Training &amp; Tuning</a>
+      <a href="models.html" class="active">5. Model Landscape</a>
+      <a href="using-ai.html">6. Using Models</a>
+      <a href="tokens.html">7. Tokens &amp; Cost</a>
+      <a href="best-practices.html">8. Best Practices</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="resources.html">Resources</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-badge">Chapter 5 · Model Landscape</div>
+  <h1>The Model Landscape: Proprietary vs Open</h1>
+  <p>You now know what a model <em>is</em> — a huge set of trained weights running a transformer — so this chapter answers the next practical question: <em>which</em> model should you use, and what are you actually allowed to do with it? We sort today&#39;s models into closed, open-weight and fully open-source, decode licenses and model cards, run an open model on your own computer, and finish with a decision guide you can reuse every time a new model is announced.</p>
+</section>
+
+<main class="main">
+<div class="section">
+<h2 id="1-three-kinds-of-open">1. Three Kinds of &quot;Open&quot;</h2>
+<p>People say &quot;open model&quot; to mean very different things. The useful question is not &quot;is it open?&quot; but <strong>&quot;what exactly was released, and under what terms?&quot;</strong> A trained model has several parts: the <strong>weights</strong> (the learned numbers from <a href="neural-networks.html">Chapter 2</a>), the <strong>inference code</strong> that runs them, the <strong>training code</strong> that produced them, the <strong>training data</strong> (or a detailed description of it), and the <strong>license</strong> that says what you may do with all of it.</p>
+<div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 450" width="900" height="450" font-family="Inter,sans-serif" role="img" aria-label="Openness spectrum: closed models, open-weight models and fully open-source models, and what each releases">
+  <defs>
+    <marker id="os-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="900" height="450" fill="#ffffff"/>
+  <text x="450" y="32" text-anchor="middle" font-size="20" font-weight="700" fill="#0f172a">The openness spectrum: what is actually released?</text>
+
+  <rect x="30" y="56" width="270" height="330" rx="14" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
+  <text x="165" y="88" text-anchor="middle" font-size="18" font-weight="700" fill="#991b1b">Closed / proprietary</text>
+  <text x="165" y="110" text-anchor="middle" font-size="13" fill="#7f1d1d">Use it through an API or app</text>
+
+  <rect x="315" y="56" width="270" height="330" rx="14" fill="#fffbeb" stroke="#d97706" stroke-width="2"/>
+  <text x="450" y="88" text-anchor="middle" font-size="18" font-weight="700" fill="#92400e">Open-weight</text>
+  <text x="450" y="110" text-anchor="middle" font-size="13" fill="#78350f">Download the trained weights</text>
+
+  <rect x="600" y="56" width="270" height="330" rx="14" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+  <text x="735" y="88" text-anchor="middle" font-size="18" font-weight="700" fill="#166534">Fully open-source</text>
+  <text x="735" y="110" text-anchor="middle" font-size="13" fill="#14532d">Everything needed to rebuild it</text>
+
+  <g font-size="14" fill="#334155">
+    <text x="46" y="150">Use via API</text>
+    <text x="46" y="182">Download weights</text>
+    <text x="46" y="214">Inference code</text>
+    <text x="46" y="246">Training code</text>
+    <text x="46" y="278">Training data details</text>
+    <text x="46" y="310">License</text>
+
+    <text x="331" y="150">Use via API</text>
+    <text x="331" y="182">Download weights</text>
+    <text x="331" y="214">Inference code</text>
+    <text x="331" y="246">Training code</text>
+    <text x="331" y="278">Training data details</text>
+    <text x="331" y="310">License</text>
+
+    <text x="616" y="150">Use via API</text>
+    <text x="616" y="182">Download weights</text>
+    <text x="616" y="214">Inference code</text>
+    <text x="616" y="246">Training code</text>
+    <text x="616" y="278">Training data details</text>
+    <text x="616" y="310">License</text>
+  </g>
+
+  <g font-size="14" font-weight="700" text-anchor="end">
+    <text x="284" y="150" fill="#16a34a">Yes</text>
+    <text x="284" y="182" fill="#dc2626">No</text>
+    <text x="284" y="214" fill="#dc2626">No</text>
+    <text x="284" y="246" fill="#dc2626">No</text>
+    <text x="284" y="278" fill="#dc2626">No</text>
+    <text x="284" y="310" fill="#7f1d1d">Terms of service</text>
+
+    <text x="569" y="150" fill="#16a34a">Often</text>
+    <text x="569" y="182" fill="#16a34a">Yes</text>
+    <text x="569" y="214" fill="#16a34a">Usually</text>
+    <text x="569" y="246" fill="#d97706">Rarely</text>
+    <text x="569" y="278" fill="#d97706">Rarely</text>
+    <text x="569" y="310" fill="#78350f">Permissive or custom</text>
+
+    <text x="854" y="150" fill="#16a34a">Often</text>
+    <text x="854" y="182" fill="#16a34a">Yes</text>
+    <text x="854" y="214" fill="#16a34a">Yes</text>
+    <text x="854" y="246" fill="#16a34a">Yes</text>
+    <text x="854" y="278" fill="#16a34a">Yes</text>
+    <text x="854" y="310" fill="#14532d">OSI-approved terms</text>
+  </g>
+
+  <line x1="46" y1="328" x2="284" y2="328" stroke="#fecaca" stroke-width="1"/>
+  <line x1="331" y1="328" x2="569" y2="328" stroke="#fde68a" stroke-width="1"/>
+  <line x1="616" y1="328" x2="854" y2="328" stroke="#bbf7d0" stroke-width="1"/>
+
+  <text x="165" y="352" text-anchor="middle" font-size="13" font-weight="600" fill="#991b1b">e.g. GPT, Claude, Gemini, Grok</text>
+  <text x="450" y="352" text-anchor="middle" font-size="13" font-weight="600" fill="#92400e">e.g. Llama, Mistral, Qwen, DeepSeek,</text>
+  <text x="450" y="370" text-anchor="middle" font-size="13" font-weight="600" fill="#92400e">Gemma, Phi, Granite</text>
+  <text x="735" y="352" text-anchor="middle" font-size="13" font-weight="600" fill="#166534">e.g. OLMo (Ai2)</text>
+
+  <line x1="60" y1="414" x2="840" y2="414" stroke="#475569" stroke-width="2.5" marker-start="url(#os-arrow)" marker-end="url(#os-arrow)"/>
+  <text x="60" y="440" font-size="13" fill="#475569">Less you can inspect or change</text>
+  <text x="840" y="440" text-anchor="end" font-size="13" fill="#475569">More you can inspect, rebuild and change</text>
+</svg>
+<div class="diagram-caption">Figure 1 — The openness spectrum. Moving right, more of the model is released and you can inspect, rebuild and change more of it.</div></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>Closed / proprietary</th>
+<th>Open-weight</th>
+<th>Fully open-source</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>How you use it</strong></td>
+<td>API, chat app or cloud platform</td>
+<td>Download and run anywhere, or use a hosted API</td>
+<td>Download, run, study, retrain</td>
+</tr>
+<tr>
+<td><strong>Weights</strong></td>
+<td>Kept secret</td>
+<td>Released</td>
+<td>Released</td>
+</tr>
+<tr>
+<td><strong>Inference code</strong></td>
+<td>Hidden behind the API</td>
+<td>Usually released</td>
+<td>Released</td>
+</tr>
+<tr>
+<td><strong>Training code</strong></td>
+<td>Hidden</td>
+<td>Rarely released</td>
+<td>Released</td>
+</tr>
+<tr>
+<td><strong>Training data</strong></td>
+<td>Undisclosed</td>
+<td>Usually only a vague summary</td>
+<td>Released or described in detail</td>
+</tr>
+<tr>
+<td><strong>License</strong></td>
+<td>Provider&#39;s terms of service</td>
+<td>Permissive (Apache-2.0, MIT) or a custom license</td>
+<td>OSI-approved terms for all parts</td>
+</tr>
+<tr>
+<td><strong>Examples</strong></td>
+<td>OpenAI GPT, Anthropic Claude, Google Gemini, xAI Grok</td>
+<td>Meta Llama, Mistral, Qwen, DeepSeek, Gemma, Phi, Granite</td>
+<td>Ai2 OLMo</td>
+</tr>
+</tbody></table></div>
+<h3 id="11-closed-proprietary-models">1.1 Closed (proprietary) models</h3>
+<p>The provider trains the model, keeps the weights on its own servers and sells access. You send text (or images, audio, files) over the internet and get a response back. You never see the weights, and the provider can update or retire a model version on its own schedule.</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> A closed model is like a restaurant. You can order anything on the menu and the food may be excellent, but you never get the recipe and you eat on their premises.</p></div>
+<h3 id="12-open-weight-models">1.2 Open-weight models</h3>
+<p>The creator publishes the trained weights so anyone can download them, run them on their own hardware, and usually fine-tune them. This is what most people mean today by &quot;open model.&quot; However, the training data and the full training pipeline are usually <strong>not</strong> released, and the license may add conditions.</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> An open-weight model is like a frozen ready-meal. You can take it home, heat it in your own kitchen and add your own spices (fine-tuning), but you still do not know exactly how it was cooked or where every ingredient came from.</p></div>
+<h3 id="13-fully-open-source-models">1.3 Fully open-source models</h3>
+<p>Everything needed to understand and reproduce the model is released: weights, training and inference code, detailed data information, and often intermediate checkpoints — all under open terms. Ai2&#39;s <a href="https://allenai.org/olmo" target="_blank" rel="noopener">OLMo</a> family is a well-known example: Ai2 publishes the weights together with its training data, code and evaluation tooling.</p>
+<div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;I can download it, so it is open source.&quot; Downloadable weights alone make a model <strong>open-weight</strong>. Calling it open source also requires the code and data information, under terms that let anyone use, study, modify and share it — see the next section.</p></div>
+
+</div>
+<div class="section">
+<h2 id="2-the-osi-open-source-ai-definition">2. The OSI Open Source AI Definition</h2>
+<p>For software, &quot;open source&quot; has had a precise meaning for decades, maintained by the <a href="https://opensource.org/" target="_blank" rel="noopener">Open Source Initiative (OSI)</a>. In October 2024 the OSI published version 1.0 of the <a href="https://opensource.org/ai/open-source-ai-definition" target="_blank" rel="noopener">Open Source AI Definition (OSAID)</a> to do the same for AI.</p>
+<p>The definition says an Open Source AI system must grant four freedoms, adapted from the Free Software Definition:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Freedom</th>
+<th>What it means in practice</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Use</strong></td>
+<td>Use the system for any purpose without asking permission</td>
+</tr>
+<tr>
+<td><strong>Study</strong></td>
+<td>Inspect how the system works and its components</td>
+</tr>
+<tr>
+<td><strong>Modify</strong></td>
+<td>Change the system for any purpose, including changing its output</td>
+</tr>
+<tr>
+<td><strong>Share</strong></td>
+<td>Pass the system on to others, with or without changes, for any purpose</td>
+</tr>
+</tbody></table></div>
+<p>To actually exercise those freedoms you need the <strong>preferred form for making modifications</strong>, which the OSAID spells out as three elements:</p>
+<ol>
+<li><strong>Data information</strong> — enough detail about the training data (where it came from, how it was selected, labeled and filtered, and where to obtain publicly available or third-party data) that a skilled person could build a substantially equivalent system.</li>
+<li><strong>Code</strong> — the complete source code used to train <em>and</em> run the system, including data processing, training settings and the model architecture, under OSI-approved licenses.</li>
+<li><strong>Parameters</strong> — the model weights and other configuration, under OSI-approved terms.</li>
+</ol>
+<div class="callout tip"><p><strong>💡 Example:</strong> A model released with weights under Apache-2.0 but with no training code and only a one-line note that it was &quot;trained on public web data&quot; meets the <em>Parameters</em> element but not <em>Code</em> or <em>Data information</em>. Under the OSAID it is open-weight, not Open Source AI.</p></div>
+<p>Notice that the OSAID does not require publishing the raw training data itself — some data cannot legally be shared — but it does require a complete description and pointers to obtainable data. The OSI also explains the difference between <a href="https://opensource.org/ai/open-weights" target="_blank" rel="noopener">open weights and open source AI</a> on a separate page.</p>
+<div class="callout success"><p><strong>✅ Key takeaway:</strong> &quot;Open source AI&quot; has an official definition: freedom to use, study, modify and share, backed by data information, full code and parameters. Most popular &quot;open&quot; models are open-weight, which is still very useful.</p></div>
+
+</div>
+<div class="section">
+<h2 id="3-licenses-in-practice">3. Licenses in Practice</h2>
+<p>The license is what decides whether your project is allowed. Always read the license file in the model repository, because two models from the same family can have different licenses.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>License</th>
+<th>Commercial use?</th>
+<th>Fine-tune and modify?</th>
+<th>Redistribute?</th>
+<th>Main conditions</th>
+<th>Seen on</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Apache-2.0</strong></td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Keep the license and notices; mark changed files; includes a patent grant</td>
+<td>Many Mistral, Qwen, IBM Granite and Ai2 OLMo releases; Gemma 4</td>
+</tr>
+<tr>
+<td><strong>MIT</strong></td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Keep the copyright and license notice</td>
+<td>Microsoft Phi; several DeepSeek releases</td>
+</tr>
+<tr>
+<td><strong>Llama Community License</strong></td>
+<td>Yes, with a big-company limit</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Companies with over 700 million monthly active users must ask Meta for a license; show &quot;Built with Llama&quot;; start derivative model names with &quot;Llama&quot;; follow the Acceptable Use Policy</td>
+<td>Meta Llama 3.x</td>
+</tr>
+<tr>
+<td><strong>Gemma Terms of Use</strong></td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Pass on the Prohibited Use Policy restrictions to your users; include the license and a notice file</td>
+<td>Gemma 1–3 and related Gemma variants</td>
+</tr>
+<tr>
+<td><strong>Research-only / non-commercial</strong></td>
+<td>No</td>
+<td>Usually, for research</td>
+<td>Limited</td>
+<td>Personal, academic or evaluation use only</td>
+<td>Some research releases (for example under CC BY-NC or a vendor &quot;research license&quot;)</td>
+</tr>
+<tr>
+<td><strong>Proprietary terms of service</strong></td>
+<td>Yes, as a paying customer</td>
+<td>Only through the provider&#39;s own fine-tuning service, if offered</td>
+<td>No</td>
+<td>Usage policies, rate limits, data-handling terms</td>
+<td>GPT, Claude, Gemini, Grok</td>
+</tr>
+</tbody></table></div>
+<p>The Llama row comes from the <a href="https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct/blob/main/LICENSE" target="_blank" rel="noopener">Llama 3.1 Community License</a>: it grants a royalty-free license to use, copy, modify and distribute, then adds the 700-million-user clause, the &quot;Built with Llama&quot; attribution and the naming rule. Because these extra conditions restrict <em>who</em> can use it and <em>how</em>, the Llama license is not an OSI-approved open source license.</p>
+<p>The Gemma row comes from Google&#39;s <a href="https://ai.google.dev/gemma/terms" target="_blank" rel="noopener">Gemma Terms of Use</a>, which apply to Gemma 1 through 3 and related variants; Google publishes the newer <a href="https://ai.google.dev/gemma/apache_2" target="_blank" rel="noopener">Gemma 4 under Apache 2.0</a>. Google also states it claims no rights in the outputs you generate.</p>
+<div class="callout tip"><p><strong>💡 Example:</strong> You fine-tune a Llama 3.1 model on your company&#39;s support tickets and ship it inside your app. Under its license you need to include a copy of the license, display &quot;Built with Llama&quot; somewhere such as your About page, and name your model something like &quot;Llama-SupportBot&quot;.</p></div>
+<div class="callout warning"><p><strong>⚠️ Warning:</strong> This section is a beginner&#39;s map, not legal advice. Licenses change between versions, and a fine-tuned model on Hugging Face may carry a different license than its base model. For anything commercial, read the actual license text and check with your legal team.</p></div>
+
+</div>
+<div class="section">
+<h2 id="4-the-major-model-families">4. The Major Model Families</h2>
+<p>Model versions change every few months, so learn the <strong>families</strong> — who makes them, what kind they are, and what they are known for — and then check the current model card or documentation for the latest version.</p>
+<h3 id="41-proprietary-families">4.1 Proprietary families</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Family</th>
+<th>Provider</th>
+<th>What it is known for</th>
+<th>Where you can use it</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>GPT and reasoning models</strong> (earlier reasoning models were branded &quot;o-series&quot;)</td>
+<td><a href="https://developers.openai.com/api/docs/models" target="_blank" rel="noopener">OpenAI</a></td>
+<td>General-purpose chat and coding, reasoning effort controls, built-in tools, very large developer ecosystem</td>
+<td>ChatGPT, OpenAI API, Microsoft Foundry</td>
+</tr>
+<tr>
+<td><strong>Claude</strong> (tiers such as Haiku, Sonnet, Opus)</td>
+<td><a href="https://docs.anthropic.com/" target="_blank" rel="noopener">Anthropic</a></td>
+<td>Long documents, careful instruction following, coding and agent work</td>
+<td>Claude apps, Anthropic API, Amazon Bedrock, Google Cloud, Microsoft Foundry</td>
+</tr>
+<tr>
+<td><strong>Gemini</strong> (tiers such as Flash and Pro)</td>
+<td><a href="https://ai.google.dev/" target="_blank" rel="noopener">Google</a></td>
+<td>Native multimodal input (text, images, audio, video), very long context windows</td>
+<td>Gemini app, Google AI Studio, Gemini Enterprise Agent Platform</td>
+</tr>
+<tr>
+<td><strong>Grok</strong></td>
+<td><a href="https://docs.x.ai/" target="_blank" rel="noopener">xAI</a></td>
+<td>Conversational model integrated with X, real-time information features</td>
+<td>Grok app, xAI API, some cloud platforms</td>
+</tr>
+</tbody></table></div>
+<p>Providers usually sell each family in <strong>tiers</strong>: a small fast cheap tier for high-volume simple tasks and a large slower expensive tier for hard problems. Many recent models also offer a <strong>reasoning</strong> or &quot;thinking&quot; mode that spends extra tokens working through a problem before answering (more on cost in <a href="tokens.html">Chapter 7</a>).</p>
+<h3 id="42-open-weight-and-open-source-families">4.2 Open-weight and open-source families</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Family</th>
+<th>Creator</th>
+<th>Typical license</th>
+<th>Strengths</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Llama</strong></td>
+<td>Meta</td>
+<td>Llama Community License</td>
+<td>The largest ecosystem of fine-tunes, tutorials and tooling</td>
+</tr>
+<tr>
+<td><strong>Mistral / Mixtral</strong></td>
+<td>Mistral AI (France)</td>
+<td>Many models Apache-2.0; some premium models proprietary or research-only</td>
+<td>Efficient models; Mixtral helped popularize Mixture-of-Experts in open models</td>
+</tr>
+<tr>
+<td><strong>Qwen</strong></td>
+<td>Alibaba Cloud</td>
+<td>Many models Apache-2.0</td>
+<td>Very wide size range, strong multilingual and coding variants, vision variants</td>
+</tr>
+<tr>
+<td><strong>DeepSeek</strong></td>
+<td>DeepSeek</td>
+<td>Recent major releases MIT</td>
+<td>Strong reasoning and coding; large Mixture-of-Experts designs</td>
+</tr>
+<tr>
+<td><strong>Gemma</strong></td>
+<td>Google</td>
+<td>Gemma Terms of Use; Apache 2.0 from Gemma 4</td>
+<td>Small, efficient, built for laptops and phones; shares research with Gemini</td>
+</tr>
+<tr>
+<td><strong>Phi</strong></td>
+<td>Microsoft</td>
+<td>MIT</td>
+<td>&quot;Small language models&quot; that punch above their size, good for edge devices</td>
+</tr>
+<tr>
+<td><strong>Granite</strong></td>
+<td>IBM</td>
+<td>Apache-2.0</td>
+<td>Enterprise focus, transparency about training data sources</td>
+</tr>
+<tr>
+<td><strong>OLMo</strong></td>
+<td>Ai2 (Allen Institute for AI)</td>
+<td>Apache-2.0, with data, code and checkpoints</td>
+<td>A fully open model you can study end to end — popular in research and teaching</td>
+</tr>
+</tbody></table></div>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Proprietary families are usually the strongest at the very top end and the easiest to start with. Open families give you control: you choose where the model runs, you can fine-tune it, and nobody can switch it off or change it under you.</p></div>
+<div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;Open models are always far behind.&quot; The gap between the best open-weight and the best proprietary models has shrunk a lot, and for many everyday tasks — summarizing, classifying, extracting data, simple chat — a good open model is more than enough. Compare on <em>your</em> task, not on headlines.</p></div>
+
+</div>
+<div class="section">
+<h2 id="5-model-sizes-and-what-they-imply">5. Model Sizes and What They Imply</h2>
+<p>Model size is measured in <strong>parameters</strong> (weights). Bigger models generally know more and reason better, but need more memory, are slower, and cost more to run. Remember from <a href="training.html">Chapter 4</a> that <strong>Mixture-of-Experts (MoE)</strong> models have a large <em>total</em> parameter count but only use a fraction of them — the <em>active</em> parameters — for each token.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Size class</th>
+<th>Rough parameter count</th>
+<th>Where it runs</th>
+<th>Good for</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Tiny / edge</strong></td>
+<td>Under about 4 billion</td>
+<td>Phones, laptops, browsers, small devices</td>
+<td>Autocomplete, simple chat, classification, offline features</td>
+</tr>
+<tr>
+<td><strong>Small</strong></td>
+<td>About 4–15 billion</td>
+<td>A laptop with a decent GPU or Apple silicon; a single small server GPU</td>
+<td>Summaries, RAG over documents, coding help, most business chat</td>
+</tr>
+<tr>
+<td><strong>Medium</strong></td>
+<td>About 15–70 billion</td>
+<td>A workstation or one or two data-center GPUs</td>
+<td>Harder reasoning, better writing quality, agents with tools</td>
+</tr>
+<tr>
+<td><strong>Large / frontier</strong></td>
+<td>Hundreds of billions or more (often MoE; often undisclosed for closed models)</td>
+<td>Clusters of data-center GPUs</td>
+<td>The hardest reasoning, long multi-step agent tasks, broad expert knowledge</td>
+</tr>
+</tbody></table></div>
+<div class="callout tip"><p><strong>💡 Example:</strong> A note-taking app that suggests tags for each note offline uses a tiny model on the phone. A legal research assistant that must reason over 200-page contracts uses a frontier model through an API. Same technology, very different size choices.</p></div>
+<div class="callout success"><p><strong>✅ Key takeaway:</strong> Start with the smallest model that does your task well enough. It will be faster and cheaper, and you can always move up a size if quality is not good enough.</p></div>
+
+</div>
+<div class="section">
+<h2 id="6-reading-a-model-card">6. Reading a Model Card</h2>
+<p>A <strong>model card</strong> is the &quot;nutrition label&quot; of a model. On <a href="https://huggingface.co/docs/hub/model-cards" target="_blank" rel="noopener">Hugging Face</a> it is the <code>README.md</code> of the model repository: a block of YAML metadata at the top, followed by a written description. According to the Hugging Face docs, a good card describes the model, its intended uses and limitations (including bias and ethical considerations), training details, the datasets used, and evaluation results.</p>
+<h3 id="61-decoding-model-names">6.1 Decoding model names</h3>
+<p>Model names look cryptic, but they follow common conventions:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Name part</th>
+<th>Example</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Family and version</td>
+<td><code>Llama-3.1</code>, <code>Qwen2.5</code></td>
+<td>Which model line and which generation</td>
+</tr>
+<tr>
+<td>Size</td>
+<td><code>8B</code>, <code>70B</code>, <code>0.5B</code></td>
+<td>Billions of parameters (<code>B</code>); sometimes <code>M</code> for millions</td>
+</tr>
+<tr>
+<td>MoE size</td>
+<td><code>8x7B</code>, <code>30B-A3B</code></td>
+<td>Mixture-of-Experts: number of experts × expert size, or total size with &quot;A&quot; = active parameters</td>
+</tr>
+<tr>
+<td><code>-Base</code></td>
+<td><code>...-7B-Base</code></td>
+<td>Pre-trained only; continues text, not tuned to follow instructions</td>
+</tr>
+<tr>
+<td><code>-Instruct</code>, <code>-Chat</code>, <code>-it</code></td>
+<td><code>...-8B-Instruct</code></td>
+<td>Fine-tuned to follow instructions and chat — what beginners usually want</td>
+</tr>
+<tr>
+<td>Specialty</td>
+<td><code>-Coder</code>, <code>-VL</code>, <code>-Vision</code>, <code>-Embedding</code></td>
+<td>Tuned for code, vision-language input, or producing embeddings</td>
+</tr>
+<tr>
+<td>File format</td>
+<td><code>GGUF</code>, <code>safetensors</code>, <code>AWQ</code>, <code>GPTQ</code>, <code>MLX</code></td>
+<td>How the weights are stored; GGUF is used by llama.cpp, Ollama and LM Studio</td>
+</tr>
+<tr>
+<td>Quantization</td>
+<td><code>Q4_K_M</code>, <code>Q8_0</code>, <code>FP16</code>, <code>BF16</code></td>
+<td>Bits per weight (see <a href="training.html">Chapter 4</a>); <code>Q4_K_M</code> is a popular 4-bit llama.cpp format balancing size and quality</td>
+</tr>
+<tr>
+<td>Context length</td>
+<td><code>128k</code>, <code>32k</code></td>
+<td>Maximum tokens the model can read at once (its context window, from <a href="transformers.html">Chapter 3</a>)</td>
+</tr>
+</tbody></table></div>
+<div class="callout tip"><p><strong>💡 Example:</strong> A file named <code>Llama-3.1-8B-Instruct-Q4_K_M.gguf</code> is Meta&#39;s Llama 3.1, 8 billion parameters, tuned to follow instructions, quantized to about 4 bits per weight in llama.cpp&#39;s K-quant &quot;medium&quot; style, stored in GGUF format — ready to run in Ollama, LM Studio or llama.cpp.</p></div>
+<h3 id="62-a-model-card-walkthrough">6.2 A model card walkthrough</h3>
+<p>Here is the metadata block of a made-up model card, written in the format Hugging Face uses. Read it top to bottom before you read any code:</p>
+<div class="code-block">---
+license: apache-2.0
+base_model: example-org/Helper-7B-Base
+pipeline_tag: text-generation
+library_name: transformers
+language:
+  - en
+  - fr
+datasets:
+  - example-org/helpdesk-conversations
+tags:
+  - chat
+  - customer-support
+---</div>
+<p>What each line tells you:</p>
+<ul>
+<li><code>license: apache-2.0</code> — you may use it commercially, modify it and redistribute it, keeping the notices. If you see <code>license: other</code>, look for <code>license_name</code> and <code>license_link</code> and read that custom license.</li>
+<li><code>base_model</code> — this is a fine-tune of another model. The base model&#39;s license and limitations may still matter.</li>
+<li><code>pipeline_tag: text-generation</code> — the task it is built for (others include <code>feature-extraction</code> for embeddings or <code>image-text-to-text</code> for vision).</li>
+<li><code>library_name</code> — which library loads it (here, Hugging Face Transformers).</li>
+<li><code>language</code> and <code>datasets</code> — what it was trained or fine-tuned on; a model fine-tuned on English and French support chats may be weak at Spanish legal text.</li>
+</ul>
+<p>Below the metadata, look for these written sections and ask these questions:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Section</th>
+<th>Ask yourself</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Model description</td>
+<td>Is it a base model or an instruction-tuned model? How big? What context length?</td>
+</tr>
+<tr>
+<td>Intended uses and limitations</td>
+<td>Is my use case listed? Is it explicitly out of scope (for example medical advice)?</td>
+</tr>
+<tr>
+<td>Training data</td>
+<td>Where did the data come from? Could it contain personal or copyrighted data I am worried about?</td>
+</tr>
+<tr>
+<td>Evaluation</td>
+<td>Which benchmarks? Are they relevant to my task, and were they run by the creator or independently?</td>
+</tr>
+<tr>
+<td>Bias, risks and safety</td>
+<td>What known failure modes or biases are documented?</td>
+</tr>
+<tr>
+<td>How to use</td>
+<td>Is there a prompt template or chat format I must follow?</td>
+</tr>
+</tbody></table></div>
+<div class="callout tip"><p><strong>🎯 Try it:</strong> Open any popular model on Hugging Face, for example a Qwen, Granite or OLMo model. Find the license in the right sidebar, the <code>base_model</code>, the context length and the intended-use section. Then compare it with a quantized GGUF version of the same model uploaded by someone else and note what changed.</p></div>
+
+</div>
+<div class="section">
+<h2 id="7-running-open-models-locally">7. Running Open Models Locally</h2>
+<p>Running a model on your own computer means your prompts never leave the machine, there is no per-token bill, and it works offline. The trade-off is that you need enough memory, and you are limited to models your hardware can hold.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>What it is</th>
+<th>Best for</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://docs.ollama.com/" target="_blank" rel="noopener">Ollama</a></td>
+<td>Command-line tool and desktop app with a local API server and a model library</td>
+<td>The quickest start; developers who want a local API</td>
+</tr>
+<tr>
+<td><a href="https://lmstudio.ai/" target="_blank" rel="noopener">LM Studio</a></td>
+<td>Desktop app with a chat window, model browser and local server</td>
+<td>Beginners who prefer clicking to typing</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ggml-org/llama.cpp" target="_blank" rel="noopener">llama.cpp</a></td>
+<td>The C/C++ inference engine behind many local tools; runs GGUF models on CPUs and GPUs</td>
+<td>Maximum control, small devices, custom builds</td>
+</tr>
+<tr>
+<td><a href="https://docs.vllm.ai/" target="_blank" rel="noopener">vLLM</a></td>
+<td>High-throughput inference server for GPUs, with an OpenAI-compatible API</td>
+<td>Serving a model to many users on a server</td>
+</tr>
+</tbody></table></div>
+<h3 id="71-step-by-step-with-ollama">7.1 Step by step with Ollama</h3>
+<p>These steps follow the <a href="https://docs.ollama.com/quickstart" target="_blank" rel="noopener">Ollama quickstart</a> and <a href="https://docs.ollama.com/cli" target="_blank" rel="noopener">CLI reference</a>. Model names in the Ollama library change over time, so check the <a href="https://ollama.com/search" target="_blank" rel="noopener">model library</a> for current tags.</p>
+<p><strong>Step 1 — Install.</strong> Download Ollama for Windows, macOS or Linux from <a href="https://ollama.com/download" target="_blank" rel="noopener">ollama.com/download</a> and open it. On Linux, start the server with <code>ollama serve</code> if it is not already running.</p>
+<p><strong>Step 2 — Download and chat with a small model.</strong> In a terminal, run the command below. Ollama downloads the model the first time, then opens an interactive chat:</p>
+<div class="code-block">ollama run gemma4:e2b</div>
+<p>Type a question and press Enter. Type <code>/bye</code> to leave. At the time of writing the Ollama docs note this model is about a 7.2 GB download and recommend about 8 GB of available GPU memory (or unified memory on a Mac); with less, Ollama falls back to system RAM and runs slower.</p>
+<p><strong>Step 3 — Manage your models.</strong> These commands list downloaded models, show which ones are loaded in memory, and delete one you no longer need:</p>
+<div class="code-block">ollama ls
+ollama ps
+ollama rm gemma4:e2b</div>
+<p><strong>Step 4 — Call it from code.</strong> Ollama runs a local API server on port 11434. This request sends one chat message and asks for the whole answer at once instead of streaming:</p>
+<div class="code-block">curl http://localhost:11434/api/chat -H &quot;Content-Type: application/json&quot; -d &quot;{\&quot;model\&quot;: \&quot;gemma4:e2b\&quot;, \&quot;messages\&quot;: [{\&quot;role\&quot;: \&quot;user\&quot;, \&quot;content\&quot;: \&quot;Explain RAG in one sentence.\&quot;}], \&quot;stream\&quot;: false}&quot;</div>
+<p>The answer comes back as JSON, with the text in <code>message.content</code>. Ollama also offers OpenAI-compatible endpoints (such as <code>/v1/chat/completions</code> and <code>/v1/responses</code>), so code written for a cloud API can often point at your local model by changing only the base URL. On Windows PowerShell, type <code>curl.exe</code> instead of <code>curl</code> so you get the real curl program.</p>
+<h3 id="72-hardware-rule-of-thumb">7.2 Hardware rule of thumb</h3>
+<p>Memory is the main limit. You already met the math in <a href="neural-networks.html">Chapter 2</a> and <a href="training.html">Chapter 4</a>: every parameter takes a fixed number of bytes, depending on precision.</p>
+<p><strong>Memory (GB) ≈ parameters (in billions) × bytes per weight × 1.2</strong></p>
+<p>The extra 20% is a rough allowance for the runtime and the context (the KV cache), and long context windows need more.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Model size</th>
+<th>16-bit (2 bytes)</th>
+<th>8-bit (1 byte)</th>
+<th>4-bit (about 0.5 byte)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>3B</td>
+<td>~7 GB</td>
+<td>~4 GB</td>
+<td>~2 GB</td>
+</tr>
+<tr>
+<td>8B</td>
+<td>~19 GB</td>
+<td>~10 GB</td>
+<td>~5 GB</td>
+</tr>
+<tr>
+<td>14B</td>
+<td>~34 GB</td>
+<td>~17 GB</td>
+<td>~8 GB</td>
+</tr>
+<tr>
+<td>70B</td>
+<td>~168 GB</td>
+<td>~84 GB</td>
+<td>~42 GB</td>
+</tr>
+</tbody></table></div>
+<div class="callout tip"><p><strong>💡 Example:</strong> A laptop with a 12 GB GPU comfortably runs an 8B model at 4-bit (about 5 GB) with room for a long conversation, but a 70B model will not fit even at 4-bit. For MoE models, plan for the <strong>total</strong> parameter count in memory, even though only the active parameters do work for each token.</p></div>
+<div class="callout warning"><p><strong>⚠️ Warning:</strong> Downloading model files from unknown uploaders carries risk. Prefer the creator&#39;s official repository or well-known quantizers, prefer <code>safetensors</code> and GGUF over formats that can run code when loaded (such as Python pickle files), and check the license of the quantized copy.</p></div>
+
+</div>
+<div class="section">
+<h2 id="8-using-models-through-apis-and-platforms">8. Using Models Through APIs and Platforms</h2>
+<p>If you do not want to manage hardware, call a model over the internet. You pay per token (see <a href="tokens.html">Chapter 7</a>), and someone else handles the GPUs, scaling and updates.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>What it is</th>
+<th>Good for</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://developers.openai.com/api/docs" target="_blank" rel="noopener">OpenAI API</a></td>
+<td>Direct access to OpenAI&#39;s GPT and reasoning models through the Responses API</td>
+<td>Building with OpenAI models and built-in tools</td>
+</tr>
+<tr>
+<td><a href="https://docs.anthropic.com/" target="_blank" rel="noopener">Anthropic API</a></td>
+<td>Direct access to Claude models through the Messages API</td>
+<td>Building with Claude</td>
+</tr>
+<tr>
+<td><a href="https://aistudio.google.com/" target="_blank" rel="noopener">Google AI Studio</a> and <a href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/models" target="_blank" rel="noopener">Gemini Enterprise Agent Platform</a> (formerly Vertex AI)</td>
+<td>AI Studio is a quick way to try the Gemini API; the Agent Platform is Google Cloud&#39;s enterprise service with Model Garden, including Gemini, Gemma, partner models such as Claude and Mistral, and open models</td>
+<td>Prototyping with Gemini; enterprise deployments on Google Cloud</td>
+</tr>
+<tr>
+<td><a href="https://learn.microsoft.com/azure/foundry/what-is-foundry" target="_blank" rel="noopener">Microsoft Foundry</a> (formerly Azure AI Foundry)</td>
+<td>Azure platform with a catalog of thousands of models from Microsoft, OpenAI, Anthropic, Meta and others, plus agents, evaluation and governance</td>
+<td>Enterprises on Azure that need security, networking and compliance controls</td>
+</tr>
+<tr>
+<td><a href="https://huggingface.co/docs/inference-providers" target="_blank" rel="noopener">Hugging Face Inference Providers</a></td>
+<td>One API and account to call many open models hosted by Hugging Face partners</td>
+<td>Trying many open models without hosting them</td>
+</tr>
+<tr>
+<td><a href="https://aws.amazon.com/bedrock/" target="_blank" rel="noopener">Amazon Bedrock</a></td>
+<td>AWS service offering models from Anthropic, Meta, Mistral, Amazon and others</td>
+<td>Teams already on AWS</td>
+</tr>
+</tbody></table></div>
+<div class="callout warning"><p><strong>⚠️ Warning:</strong> Platforms change. For example, <a href="https://docs.github.com/en/github-models/about-github-models" target="_blank" rel="noopener">GitHub Models has been retired</a> as of July 30, 2026; GitHub now points users to Microsoft Foundry for model access and to <a href="https://docs.github.com/en/copilot" target="_blank" rel="noopener">GitHub Copilot</a> for AI inside GitHub workflows. Before you build on any platform, check its current documentation and model retirement schedule.</p></div>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Many providers and local tools speak the same &quot;OpenAI-compatible&quot; request format. That makes it easier to swap models: often you change the base URL, the API key and the model name, and the rest of your code keeps working.</p></div>
+
+</div>
+<div class="section">
+<h2 id="9-choosing-a-model-a-decision-guide">9. Choosing a Model: A Decision Guide</h2>
+<p>There is no single best model — only the best model <strong>for your constraints</strong>. Go through these six factors in order of what matters most to you.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Factor</th>
+<th>Ask yourself</th>
+<th>Leans proprietary API when…</th>
+<th>Leans open-weight when…</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Privacy and data control</strong></td>
+<td>Can this data leave my network?</td>
+<td>Provider contract and data-handling terms satisfy your rules</td>
+<td>Data must stay on your own servers or device</td>
+</tr>
+<tr>
+<td><strong>Cost</strong></td>
+<td>How many tokens per month?</td>
+<td>Low or spiky volume — pay only for what you use</td>
+<td>High, steady volume — owning hardware can be cheaper</td>
+</tr>
+<tr>
+<td><strong>Latency</strong></td>
+<td>How fast must it answer?</td>
+<td>Provider&#39;s global infrastructure is fast enough</td>
+<td>You need very low latency on-device or on-premises</td>
+</tr>
+<tr>
+<td><strong>Quality</strong></td>
+<td>How hard is the task?</td>
+<td>You need top-end reasoning or very long context</td>
+<td>A smaller model passes your quality tests</td>
+</tr>
+<tr>
+<td><strong>License</strong></td>
+<td>What will I build and sell?</td>
+<td>Provider&#39;s terms allow your use</td>
+<td>You need to modify, fine-tune deeply or redistribute the model</td>
+</tr>
+<tr>
+<td><strong>On-device / offline</strong></td>
+<td>Must it work without internet?</td>
+<td>Always online</td>
+<td>Offline, edge or air-gapped</td>
+</tr>
+</tbody></table></div>
+<p>The same logic as a flowchart:</p>
+<div class="code-block">START: What does your app need?
+ │
+ ├─ Must data stay on your own machines (law, contract, policy)?
+ │     YES → Open-weight model, self-hosted (or a private cloud deployment
+ │           whose data terms your compliance team approves)
+ │     NO  ↓
+ ├─ Must it run offline or on a phone/laptop?
+ │     YES → Small open-weight model, quantized (Ollama, llama.cpp, on-device runtime)
+ │     NO  ↓
+ ├─ Is it a prototype or low-volume tool?
+ │     YES → Proprietary API (fastest start, no hardware)
+ │     NO  ↓
+ ├─ Does a smaller/open model pass your quality tests on real examples?
+ │     YES → Open-weight model on a hosted platform or your own GPUs
+ │           (check the license allows your use)
+ │     NO  → Proprietary frontier model through an API or cloud platform
+ │
+ └─ Either way: build a small test set, measure, and re-check every few months.</div>
+<div class="callout success"><p><strong>✅ Key takeaway:</strong> Let your constraints choose the model. Privacy and offline needs point to open-weight; speed of getting started and top-end quality point to proprietary APIs. Many real products use both.</p></div>
+
+</div>
+<div class="section">
+<h2 id="10-proprietary-vs-open-pros-cons-and-real-scenarios">10. Proprietary vs Open: Pros, Cons and Real Scenarios</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>Proprietary (API)</th>
+<th>Open-weight (self-hosted)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Pros</strong></td>
+<td>Top-end quality; no hardware; instant start; built-in tools, safety filters and scaling; provider handles updates</td>
+<td>Full data control; works offline; predictable cost at scale; deep fine-tuning; no forced model changes; inspectable weights</td>
+</tr>
+<tr>
+<td><strong>Cons</strong></td>
+<td>Data leaves your network; per-token cost grows with use; provider can change or retire models; rate limits; vendor lock-in</td>
+<td>You run and secure the hardware; you handle updates and scaling; the strongest models need serious GPUs; you own the safety layer</td>
+</tr>
+</tbody></table></div>
+<h3 id="scenario-1-a-hospital-summarizing-patient-notes">Scenario 1 — A hospital summarizing patient notes</h3>
+<p>Patient records are highly sensitive and regulated. The hospital either self-hosts an open-weight model inside its own data center, or uses a cloud platform deployment that its compliance team has reviewed, with a contract covering health data. A medium-size open model fine-tuned on clinical summaries may be enough, and every summary is still reviewed by a clinician.</p>
+<h3 id="scenario-2-a-startup-prototype">Scenario 2 — A startup prototype</h3>
+<p>A two-person startup wants to test whether customers like an AI writing assistant. Speed matters most, volume is low, and the data is not sensitive. They call a proprietary API, ship in a week, and revisit the choice only if usage — and the bill — grows.</p>
+<h3 id="scenario-3-an-offline-field-app">Scenario 3 — An offline field app</h3>
+<p>Inspectors in remote areas need an app that explains repair manuals with no internet signal. The team ships a tiny, quantized open-weight model inside the app, combined with the manuals stored on the device. Answers are simpler than a frontier model&#39;s, but they work anywhere.</p>
+<h3 id="scenario-4-a-support-bot-at-large-scale">Scenario 4 — A support bot at large scale</h3>
+<p>A retailer answers millions of routine questions per month. It routes simple questions to a small, cheap model (open-weight on its own GPUs or a low-cost API tier) and escalates hard or unusual ones to a frontier model. This <strong>routing</strong> pattern keeps quality high and cost low.</p>
+<div class="callout tip"><p><strong>🎯 Try it:</strong> Pick a project idea of your own. Write one line for each of the six factors in Section 9, then decide: proprietary API, open-weight, or a mix? Keep the note — you will reuse it in <a href="best-practices.html">Chapter 8</a>.</p></div>
+
+</div>
+<div class="section">
+<h2 id="recap">Recap</h2>
+<ul>
+<li>&quot;Open&quot; has levels: <strong>closed</strong> (API only), <strong>open-weight</strong> (downloadable weights) and <strong>fully open-source</strong> (weights, code and data information).</li>
+<li>The <strong>OSI Open Source AI Definition 1.0</strong> requires freedom to use, study, modify and share, backed by data information, complete code and parameters.</li>
+<li><strong>Licenses decide what you may do</strong>: Apache-2.0 and MIT are permissive; the Llama and earlier Gemma licenses add conditions; research-only licenses forbid commercial use.</li>
+<li>Learn <strong>families</strong>, not version numbers: GPT, Claude, Gemini and Grok are proprietary; Llama, Mistral, Qwen, DeepSeek, Gemma, Phi and Granite are open-weight; OLMo is fully open.</li>
+<li><strong>Model size</strong> drives memory, speed and cost; start small and move up only if needed.</li>
+<li>A <strong>model card</strong> and the model&#39;s name tell you size, tuning, format, quantization, context length and license.</li>
+<li>You can <strong>run open models locally</strong> with Ollama, LM Studio, llama.cpp or vLLM; memory ≈ parameters × bytes per weight × 1.2.</li>
+<li><strong>APIs and platforms</strong> (OpenAI, Anthropic, Google, Microsoft Foundry, Hugging Face, Amazon Bedrock) trade control for convenience — and platforms themselves change.</li>
+<li>Choose with a <strong>decision guide</strong>: privacy, cost, latency, quality, license and on-device needs.</li>
+</ul>
+
+</div>
+<div class="section">
+<h2 id="check-your-understanding">Check Your Understanding</h2>
+<p><strong>1. A company publishes its model&#39;s weights under Apache-2.0 but releases no training code and no training data information. What is it, according to the OSI definition?</strong></p>
+<ul>
+<li>A) Closed / proprietary</li>
+<li>B) Open-weight, but not Open Source AI</li>
+<li>C) Fully Open Source AI</li>
+<li>D) Research-only</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> B — The weights are openly licensed, so it is open-weight. The OSAID also requires complete code and detailed data information, so it does not meet the full definition.</p></div>
+<p><strong>2. Which three elements make up the &quot;preferred form for making modifications&quot; in the OSAID?</strong></p>
+<ul>
+<li>A) Weights, a chat app and an API key</li>
+<li>B) Data information, code and parameters</li>
+<li>C) Model card, benchmark scores and a license</li>
+<li>D) Training data, GPUs and electricity</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> B — The OSAID lists data information, the complete code to train and run the system, and the parameters (weights).</p></div>
+<p><strong>3. What does the file name <code>Qwen2.5-7B-Instruct-Q4_K_M.gguf</code> tell you?</strong></p>
+<ul>
+<li>A) A 7-million-parameter base model in Python pickle format</li>
+<li>B) A 7-billion-parameter instruction-tuned model, quantized to about 4 bits, in GGUF format</li>
+<li>C) A model with a 7k-token context window that only runs in the cloud</li>
+<li>D) A Mixture-of-Experts model with 7 experts</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> B — <code>7B</code> is the size, <code>Instruct</code> means tuned to follow instructions, <code>Q4_K_M</code> is a 4-bit llama.cpp quantization, and <code>.gguf</code> is the file format used by llama.cpp, Ollama and LM Studio.</p></div>
+<p><strong>4. Roughly how much memory does an 8-billion-parameter model need at 4-bit quantization, using this chapter&#39;s rule of thumb?</strong></p>
+<ul>
+<li>A) About 1 GB</li>
+<li>B) About 5 GB</li>
+<li>C) About 19 GB</li>
+<li>D) About 80 GB</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> B — 8 billion × 0.5 byte = 4 GB, plus about 20% overhead ≈ 5 GB. At 16-bit it would be about 19 GB.</p></div>
+<p><strong>5. A clinic needs an assistant that summarizes patient notes, and the data may not leave its own servers. Which choice fits best?</strong></p>
+<ul>
+<li>A) Any free public chatbot website</li>
+<li>B) A proprietary API with default settings</li>
+<li>C) A self-hosted open-weight model whose license allows the use</li>
+<li>D) A research-only model in production</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> C — Self-hosting an open-weight model keeps data on the clinic&#39;s own servers. The license still has to permit the use, which rules out research-only models in production.</p></div>
+<div class="nav-links"><a href="training.html">← Chapter 4: Training &amp; Tuning</a><a href="using-ai.html">Chapter 6: Using Models →</a></div>
+</div>
+</main>
+
+<footer class="site-footer">AI Learn · A beginner's guide to how AI models work · Based on official docs and open course material · Not affiliated with any model provider</footer>
+</body>
+</html>

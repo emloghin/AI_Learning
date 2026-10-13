@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Domain 5: Orchestrate Multi-Agent Coordination — GH-600 Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>.section td code,.callout code,.diagram-caption code{background:var(--primary-light);color:var(--primary);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:13px}.callout p+p{margin-top:8px}.callout ul{margin:8px 0 0 20px}</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-logo"><span>GH-</span>600</div>
+    <nav class="header-nav">
+      <a href="index.html">Home</a>
+      <a href="basics.html">Start Here</a>
+      <a href="domain-1.html">D1: Architecture</a>
+      <a href="domain-2.html">D2: Tooling &amp; MCP</a>
+      <a href="domain-3.html">D3: Memory &amp; State</a>
+      <a href="domain-4.html">D4: Evaluation</a>
+      <a href="domain-5.html" class="active">D5: Multi-Agent</a>
+      <a href="domain-6.html">D6: Guardrails</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="resources.html">Resources</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-badge">Domain 5 · Weight: 15–20%</div>
+  <h1>Domain 5: Orchestrate Multi-Agent Coordination</h1>
+  <p>One agent is a tool. Multiple agents are a <strong>system</strong>. Domain 5 teaches you how to design, coordinate, and troubleshoot multi-agent workflows — deciding <em>which</em> agent does <em>what</em> and <em>when</em>, while managing isolation, conflicts, and observability across the entire pipeline.</p>
+</section>
+
+<main class="main">
+<div class="section">
+<h2 id="what-youll-learn-why-it-matters">What You&#39;ll Learn &amp; Why It Matters</h2>
+<ul>
+<li>How to split work across several specialized AI agents (planner, coder, tester, reviewer) instead of one do-everything agent, and why that is safer.</li>
+<li>The main ways to coordinate agents — one after another, side by side, or a lead agent delegating to helpers — and how to pick one from a scenario.</li>
+<li>How to stop agents from tripping over each other with separate branches, separate jobs, narrow permissions, and concurrency groups.</li>
+<li>What to do when two agents change the same code, duplicate each other&#39;s work, or contradict each other.</li>
+<li>How to leave a paper trail (logs, artifacts, PR notes) so anyone can reconstruct later what each agent did.</li>
+<li>How to detect, recover from, and escalate failures, and how to add, update, or retire agents without breaking running work.</li>
+</ul>
+<p><strong>Why it matters:</strong> this domain is 15–20% of the exam, and nearly every question is a scenario (&quot;two agents…, which mechanism…?&quot;). The decision rules on this page turn most of them into quick picks.</p>
+<p><strong>Prerequisites:</strong> Git branches and pull requests, GitHub Actions basics (workflows, jobs, steps, YAML), and what a custom agent is. If any of these are new, read <a href="basics.html">Fundamentals</a> first.</p>
+<h3 id="key-terms-in-plain-words">Key Terms in Plain Words</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Plain-language meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Orchestration</strong></td>
+<td>Deciding which agent does what, in what order, and how the results are combined — &quot;conducting&quot; several agents.</td>
+</tr>
+<tr>
+<td><strong>Subagent</strong></td>
+<td>A helper agent that a parent agent calls to do one piece of a task; it works in its own context and reports back.</td>
+</tr>
+<tr>
+<td><strong>Handoff</strong></td>
+<td>Passing work, and the context it needs, from one agent to the next (for example planner → coder).</td>
+</tr>
+<tr>
+<td><strong>Fan-out / fan-in</strong></td>
+<td>Fan-out: start several jobs in parallel. Fan-in: one later job waits for all of them and combines their results.</td>
+</tr>
+<tr>
+<td><strong>Matrix (<code>strategy.matrix</code>)</strong></td>
+<td>A GitHub Actions feature that runs the <em>same</em> job several times with different input values (one &quot;leg&quot; per value).</td>
+</tr>
+<tr>
+<td><strong>Concurrency group</strong></td>
+<td>A label set with the <code>concurrency:</code> key; GitHub runs at most one run or job with that label at a time.</td>
+</tr>
+<tr>
+<td><strong>Artifact</strong></td>
+<td>A file a workflow job saves (plan, report, test results) that people and later jobs can download.</td>
+</tr>
+<tr>
+<td><strong>HITL (human-in-the-loop)</strong></td>
+<td>A point where a person must review or approve before automation continues.</td>
+</tr>
+</tbody></table></div>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Picture a restaurant kitchen. The head chef (the orchestrator) reads the order, line cooks (subagents) each prepare one part at their own station, and nothing leaves the pass until the head chef checks the plate. Domain 5 is about running that kitchen so cooks never bump into each other — and knowing what to do when a dish comes out wrong.</p></div>
+
+</div>
+<div class="section">
+<h2 id="official-skills-measured">Official Skills Measured</h2>
+<p>From the <a href="https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/gh-600" target="_blank" rel="noopener">GH-600 study guide</a>, with the section of this page that covers each bullet.</p>
+<p><strong>Operate and manage multi-agent workflows</strong></p>
+<ul>
+<li>Apply an orchestration pattern to coordinate multiple agents → see <a href="#2-orchestration-patterns-hierarchical-sequential-parallel-competitive">2. Orchestration Patterns</a></li>
+<li>Configure agent isolation for parallel execution → see <a href="#4-agent-isolation-branches-workflows-permissions-concurrency">4. Agent Isolation</a></li>
+<li>Detect and resolve agent conflicts, including overlapping code changes, duplicated effort, and contradictory outputs → see <a href="#5-conflict-detection-and-resolution">5. Conflict Detection and Resolution</a></li>
+</ul>
+<p><strong>Configure observability for multi-agent behavior by using logs, artifacts, and operational signals</strong></p>
+<ul>
+<li>Configure multi-agent workflows to produce artifacts suitable for review and audit → see <a href="#6-system-observability-attribution-evidence-cross-job-handoffs">6. System Observability</a></li>
+<li>Document key decisions, handoffs, and outcomes across agents → see <a href="#cross-job-handoffs">Cross-Job Handoffs</a></li>
+<li>Perform post-hoc analysis of multi-agent behavior → see <a href="#post-hoc-analysis-of-multi-agent-behavior">Post-Hoc Analysis of Multi-Agent Behavior</a></li>
+</ul>
+<p><strong>Detect and respond to multi-agent failures and degraded behavior</strong></p>
+<ul>
+<li>Identify failed, partial, or stalled agent executions → see <a href="#7-failure-diagnosis-and-recovery-at-scale">7. Failure Diagnosis and Recovery at Scale</a></li>
+<li>Respond to degraded behavior or coordination across agents → see <a href="#recovery-strategies">Recovery Strategies</a></li>
+<li>Implement multi-agent recovery patterns, including rollback and human-in-the-loop → see <a href="#recovery-strategies">Recovery Strategies</a></li>
+</ul>
+<p><strong>Manage the lifecycle of agents within multi-agent workflows</strong></p>
+<ul>
+<li>Add agents to existing multi-agent workflows → see <a href="#adding-agents-to-an-existing-workflow">Adding Agents to an Existing Workflow</a></li>
+<li>Update, reconfigure, or replace agents without disrupting active workflows → see <a href="#updating-or-replacing-agents-without-disruption">Updating or Replacing Agents Without Disruption</a></li>
+<li>Retire agents while preserving auditability and workflow continuity → see <a href="#retiring-agents-while-preserving-auditability">Retiring Agents While Preserving Auditability</a></li>
+</ul>
+
+</div>
+<div class="section">
+<h2 id="1-multi-agent-responsibilities-in-the-sdlc-software-development-lifecycle">1. Multi-Agent Responsibilities in the SDLC (Software Development Lifecycle)</h2>
+<p>In a modern agentic SDLC, different agents specialize in different stages of the software lifecycle. Rather than one monolithic agent doing everything, you build a <strong>team of agents</strong> — each with its own profile, tools, scope, and responsibilities. Microsoft Learn frames the boundary as: <strong>agents propose; humans and policy accept</strong>.</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> An agent &quot;role&quot; is a job title. The planner only writes the plan, the coder only codes, the reviewer only reviews. A narrow job means a mistake stays small and it is obvious which agent made it — like a kitchen where the pastry cook never touches the grill.</p></div>
+<h3 id="common-agent-roles-across-the-sdlc">Common Agent Roles Across the SDLC</h3>
+<p>Tool names below are the real custom-agent tool aliases (<code>read</code>, <code>edit</code>, <code>search</code>, <code>execute</code>/<code>shell</code>, <code>web</code>, <code>agent</code>) plus GitHub MCP server tools (<code>github/*</code>). Note: <code>web</code> is currently not applicable to Copilot cloud agent.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>SDLC Phase</th>
+<th>Agent Role</th>
+<th>Typical Tools</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Planning</strong></td>
+<td>Plan Agent — analyzes requirements, breaks down work, produces a plan (PR plan section or <code>PLAN.md</code>)</td>
+<td><code>read</code>, <code>search</code>, <code>github/*</code> (issues)</td>
+</tr>
+<tr>
+<td><strong>Development</strong></td>
+<td>Dev Agent — writes code in an isolated branch, runs tests, commits changes</td>
+<td><code>read</code>, <code>edit</code>, <code>execute</code>, <code>search</code></td>
+</tr>
+<tr>
+<td><strong>Review</strong></td>
+<td>Review Agent — inspects PR diffs, runs linters, flags issues</td>
+<td><code>read</code>, <code>search</code>, <code>github/*</code> (PR comments)</td>
+</tr>
+<tr>
+<td><strong>Testing</strong></td>
+<td>Test Agent — writes and runs unit, integration, and E2E tests</td>
+<td><code>execute</code>, <code>edit</code>, <code>search</code></td>
+</tr>
+<tr>
+<td><strong>Deployment</strong></td>
+<td>Deploy Agent — builds artifacts, deploys via an approval-gated GitHub environment</td>
+<td><code>execute</code>, <code>read</code> (+ workflow <code>environment:</code>)</td>
+</tr>
+<tr>
+<td><strong>Monitoring</strong></td>
+<td>Monitor Agent — watches for alerts, investigates incidents</td>
+<td><code>read</code>, <code>search</code>, <code>web</code></td>
+</tr>
+</tbody></table></div>
+<p>Learn&#39;s reference mapping: Planning → PR plan / <code>PLAN.md</code>; Implementation → branch + commits + PR; Validation → Actions runs + checks + artifacts; Acceptance → CODEOWNERS + reviews + required checks; Deployment → environments + approvals.</p>
+<p>The key insight: <strong>each agent has a bounded scope</strong> (by path and artifact type). A dev agent shouldn&#39;t deploy. A review agent shouldn&#39;t write code. This separation of concerns is what makes multi-agent systems safe and auditable at scale.</p>
+<div class="callout tip"><p><strong>📘 Teaching Tip — Role Separation Is Governance:</strong> The exam treats agent role separation as a <strong>governance mechanism</strong>, not just a design pattern. When a scenario describes an agent that both writes <em>and</em> deploys code, the correct answer is usually to split it into two agents with different permission boundaries. Think of it like separation of duties in financial systems — no single agent should have end-to-end power.</p></div>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Assuming &quot;one powerful agent with every tool&quot; is better than several narrow ones. It is harder to review, harder to audit, and does more damage when it goes wrong. On the exam, &quot;split into narrower agents with separate permissions&quot; usually beats &quot;give the agent more access&quot;.</p></div>
+
+</div>
+<div class="section">
+<h2 id="2-orchestration-patterns-hierarchical-sequential-parallel-competitive">2. Orchestration Patterns: Hierarchical, Sequential, Parallel, Competitive</h2>
+<p>Once you have multiple agents, you need a way to <strong>coordinate them</strong>. Microsoft Learn covers <strong>sequential</strong> orchestration, <strong>parallel</strong> (fan-out/fan-in) orchestration, <strong>artifact-based coordination</strong>, and subagent <strong>handoffs</strong>; the &quot;four patterns&quot; grouping below is this guide&#39;s framing. Each maps to a GitHub-native mechanism.</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> <strong>Orchestration</strong> is just organizing who works when. <em>Hierarchical</em> = a head chef handing out tasks as the order unfolds. <em>Sequential</em> = an assembly line, each station waits for the previous one. <em>Parallel (fan-out/fan-in)</em> = several cooks at separate stations, then one person assembles the plate. <em>Competitive</em> = several cooks try the same dish and the best one is served.</p></div>
+<h3 id="hierarchical-parentchild-via-the-agent-tool">Hierarchical (Parent/Child via the <code>agent</code> tool)</h3>
+<p>A parent agent delegates sub-tasks to child (sub)agents. The parent defines the task, the child executes it, and the parent collects the result. This is the most flexible pattern — the parent can dynamically decide which child to invoke based on the task at hand.</p>
+<ul>
+<li><strong>When to use:</strong> Complex tasks that require specialized sub-tasks; dynamic delegation based on runtime context</li>
+<li><strong>GitHub mechanism:</strong> Parent agent profile includes the <code>agent</code> tool alias (<code>custom-agent</code>/<code>Task</code>), which lets it invoke another custom agent. In VS Code, the parent can also list allowed subagents with <code>agents: [...]</code> and define <code>handoffs</code>; <code>handoffs</code> is <strong>ignored by Copilot cloud agent on GitHub.com</strong>. A child with <code>disable-model-invocation: true</code> cannot be called as a subagent.</li>
+<li><strong>Pros:</strong> Dynamic, flexible, perfect for divide-and-conquer</li>
+<li><strong>Cons:</strong> Parent becomes a potential single point of failure; parent must have the <code>agent</code> tool</li>
+</ul>
+<h3 id="sequential-pipeline-via-needs-or-workflow_run">Sequential (Pipeline via <code>needs</code> or <code>workflow_run</code>)</h3>
+<p>Agents execute in a fixed sequence, where each agent&#39;s output feeds the next. Within one workflow use job-level <code>needs</code> — Job B waits for Job A to complete successfully. Across workflows use the <code>workflow_run</code> trigger (e.g., run security validation after the &quot;CI Validation&quot; workflow completes).</p>
+<ul>
+<li><strong>When to use:</strong> Linear workflows where each step depends on the previous (plan → code → test → deploy)</li>
+<li><strong>GitHub mechanism:</strong> <code>jobs: { job_a: {…}, job_b: { needs: [job_a], … } }</code> or <code>on: workflow_run: { workflows: [CI Validation], types: [completed] }</code></li>
+<li><strong>Pros:</strong> Predictable, easy to reason about, natural dependency model</li>
+<li><strong>Cons:</strong> Slow — total time is sum of all steps; failures block the entire pipeline</li>
+</ul>
+<h3 id="parallel-fan-outfan-in-strategymatrix">Parallel (Fan-out/fan-in, <code>strategy.matrix</code>)</h3>
+<p>Multiple agents execute simultaneously. <strong>Fan-out/fan-in</strong> = independent jobs run in parallel, then a downstream job lists them all in <code>needs</code> (Learn&#39;s example: <code>plan_merger</code> with <code>needs: [spec_analyzer, risk_reviewer]</code>). <code>strategy.matrix</code> is the variant for running the <strong>same</strong> job with different inputs.</p>
+<ul>
+<li><strong>When to use:</strong> Agents working on isolated paths (e.g., docs agent + refactor agent); running tests across multiple OS/version combinations</li>
+<li><strong>GitHub mechanism:</strong> separate jobs + fan-in <code>needs</code>, or <code>strategy: { matrix: { os: [ubuntu-latest, macos-latest, windows-latest] } }</code></li>
+<li><strong>Pros:</strong> Fast — total time equals the slowest parallel job; natural for CI/CD</li>
+<li><strong>Cons:</strong> Requires isolation — if agents can collide on the same files, parallelism increases instability; matrix sprawl; harder to aggregate results</li>
+</ul>
+<h3 id="competitive-contest-pattern-unverified-community-info">Competitive (Contest Pattern) (unverified community info)</h3>
+<p>Multiple agents independently attempt the same task. The first to produce a valid result wins; other agents are cancelled. This pattern is not covered in the official Learn module.</p>
+<ul>
+<li><strong>When to use:</strong> When you need the fastest possible answer; when different approaches might yield different quality results</li>
+<li><strong>GitHub mechanism:</strong> Custom workflow with cancellation of redundant jobs; result comparison gate</li>
+<li><strong>Pros:</strong> Lowest latency; redundancy against individual agent failure</li>
+<li><strong>Cons:</strong> Resource waste (N-1 agents&#39; work is discarded); result reconciliation complexity. Note Learn lists <strong>duplicate effort</strong> (two PRs solving the same problem) as a conflict to avoid.</li>
+</ul>
+<h3 id="artifact-based-coordination">Artifact-Based Coordination</h3>
+<p><a href="https://learn.microsoft.com/en-us/training/modules/multi-agent-systems-orchestration/3-agent-orchestration-github-workflows" target="_blank" rel="noopener">Learn</a> considers direct agent-to-agent communication less reliable than shared, reviewable artifacts. The robust pattern is three steps: run the agent with restricted permissions → have it produce a structured output (plan, report, proposal) uploaded as an artifact → let a separate, controlled step apply only the operations the workflow allows (e.g., create an issue from <code>report.json</code>). This separates &quot;reasoning&quot; from &quot;writing&quot; and leaves evidence for reviewers.</p>
+<p>Triggers that keep coordination visible: <code>schedule</code> for periodic work, <code>pull_request</code> events for validation, and <code>workflow_run</code> when one step must follow another. Coordination that happens outside GitHub and leaves no trace in PRs or workflow runs makes failures impossible to diagnose.</p>
+<h3 id="subagents-handoffs-and-fleet-mode">Subagents, Handoffs, and Fleet Mode</h3>
+<ul>
+<li><strong>VS Code handoffs</strong> (<a href="https://learn.microsoft.com/en-us/training/modules/multi-agent-systems-orchestration/7-scale-failure-recovery" target="_blank" rel="noopener">Learn</a>): the parent profile lists allowed subagents in <code>agents: [...]</code>; each <code>handoffs</code> entry has a <code>label</code> and target <code>agent</code>, and can auto-submit a prompt (<code>send: true</code>) or set a <code>model</code>. Handoffs resolve to a subagent by its <code>name</code> attribute or by matching filename.</li>
+<li><strong>Invocation flags</strong> (<a href="https://docs.github.com/en/copilot/reference/custom-agents-configuration" target="_blank" rel="noopener">GitHub Docs</a>): <code>disable-model-invocation: true</code> stops Copilot from picking the agent automatically (Learn: it then can&#39;t be invoked as a subagent, a common orchestration failure); <code>user-invocable: false</code> hides it from manual selection so it can only be reached programmatically. <code>infer</code> is retired.</li>
+<li><strong>Copilot CLI <code>/fleet</code></strong> (<a href="https://docs.github.com/en/copilot/concepts/agents/copilot-cli/fleet" target="_blank" rel="noopener">GitHub Docs</a>): the main agent splits a plan into independent subtasks and acts as orchestrator, running subagents in parallel where dependencies allow. Each subagent has <strong>its own context window</strong>, uses a low-cost model by default (unless the prompt or the custom agent profile names a model), and may pick a matching custom agent — or you force one with <code>@CUSTOM-AGENT-NAME</code>. Monitor subtasks with <code>/tasks</code> (Enter = details, <code>x</code> = kill). <code>--fleet</code> is the command-line equivalent (works with <code>-p</code>, <code>-i</code>, or piped input; not with <code>--acp</code>). <code>/fleet</code> and autopilot are separate features that are often combined.</li>
+</ul>
+<div class="callout warning"><p><strong>⚠️ Exam Trap:</strong> <code>/fleet</code> only helps when work decomposes into <strong>independent</strong> subtasks; an inherently sequential request gains nothing, and because each subagent calls the model independently, fleet mode can consume <strong>more</strong> GitHub AI Credits.</p></div>
+<div class="callout warning"><p><strong>⚠️ Exam Trap:</strong> The exam will give you a scenario and ask which orchestration pattern to use. If the scenario mentions <strong>dynamic delegation</strong> where a lead agent decides sub-tasks at runtime → <strong>hierarchical/subagents</strong>. If it&#39;s a <strong>fixed sequence of steps</strong> → <strong>sequential</strong> (<code>needs</code> / <code>workflow_run</code>). If agents work <strong>in parallel on isolated paths</strong> and a later job must combine results → <strong>fan-out/fan-in</strong> with <code>needs</code>. If it&#39;s <strong>same task with different inputs</strong> → <strong>matrix</strong>. Learn&#39;s rule: use parallel orchestration only when agents operate on isolated paths.</p></div>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Using <code>strategy.matrix</code> for agents that need <em>different</em> permissions. Every matrix leg shares one job definition, so every leg gets the same <code>permissions:</code>, runner, and steps. When roles need different access (a reader and a writer), use separate jobs plus a fan-in <code>needs</code>.</p></div>
+<div class="callout tip"><p><strong>🎯 Exam angle:</strong> Pattern questions hide the answer in one phrase. &quot;Decides at runtime which helper to call&quot; → hierarchical/subagents. &quot;Must run after&quot; → <code>needs</code> or <code>workflow_run</code>. &quot;Run at the same time, then combine&quot; → fan-out/fan-in. &quot;Same job, different inputs&quot; → matrix. &quot;Split a plan into independent subtasks from the CLI&quot; → <code>/fleet</code>.</p></div>
+
+</div>
+<div class="section">
+<h2 id="3-multi-agent-pipeline-parallel-sequential-orchestration">3. Multi-Agent Pipeline: Parallel + Sequential Orchestration</h2>
+<p>The diagram below shows a multi-agent pipeline that combines <strong>parallel</strong> (matrix-based) and <strong>sequential</strong> (needs-based) orchestration. The Plan Agent kicks things off, then Dev Agents work in parallel, followed by sequential review and deployment phases:</p>
+<div class="diagram-wrap"><svg viewBox="0 0 800 680" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Multi-agent pipeline diagram showing parallel and sequential orchestration">
+        <defs>
+          <linearGradient id="bgD5" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f0fdf4" />
+            <stop offset="100%" stop-color="#dcfce7" />
+          </linearGradient>
+          <linearGradient id="planGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#2563eb" />
+            <stop offset="100%" stop-color="#3b82f6" />
+          </linearGradient>
+          <linearGradient id="devGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#f59e0b" />
+            <stop offset="100%" stop-color="#fbbf24" />
+          </linearGradient>
+          <linearGradient id="reviewGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#7c3aed" />
+            <stop offset="100%" stop-color="#8b5cf6" />
+          </linearGradient>
+          <linearGradient id="testGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#059669" />
+            <stop offset="100%" stop-color="#10b981" />
+          </linearGradient>
+          <linearGradient id="deployGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#dc2626" />
+            <stop offset="100%" stop-color="#ef4444" />
+          </linearGradient>
+          <filter id="shadowD5">
+            <feDropShadow dx="0" dy="3" stdDeviation="4" flood-opacity=".15" />
+          </filter>
+          <marker id="arrowD5" markerWidth="12" markerHeight="8" refX="12" refY="4" orient="auto">
+            <polygon points="0 0, 12 4, 0 8" fill="#475569"/>
+          </marker>
+          <marker id="arrowD5green" markerWidth="12" markerHeight="8" refX="12" refY="4" orient="auto">
+            <polygon points="0 0, 12 4, 0 8" fill="#059669"/>
+          </marker>
+        </defs>
+        <rect x="0" y="0" width="800" height="680" rx="10" fill="url(#bgD5)" />
+
+        <!-- Title -->
+        <text x="400" y="30" text-anchor="middle" fill="#065f46" font-size="16" font-weight="800" font-family="Inter,sans-serif">Multi-Agent Pipeline: Parallel + Sequential Orchestration</text>
+
+        <!-- Phase labels on left -->
+        <text x="20" y="89" text-anchor="start" fill="#475569" font-size="11" font-weight="700" font-family="Inter,sans-serif">PHASE 1</text>
+        <text x="20" y="145" text-anchor="start" fill="#475569" font-size="11" font-weight="700" font-family="Inter,sans-serif">PHASE 2</text>
+        <text x="20" y="158" text-anchor="start" fill="#475569" font-size="10" font-family="Inter,sans-serif">(Parallel)</text>
+        <text x="20" y="324" text-anchor="start" fill="#475569" font-size="11" font-weight="700" font-family="Inter,sans-serif">PHASE 3</text>
+        <text x="20" y="414" text-anchor="start" fill="#475569" font-size="11" font-weight="700" font-family="Inter,sans-serif">PHASE 4</text>
+        <text x="20" y="524" text-anchor="start" fill="#475569" font-size="11" font-weight="700" font-family="Inter,sans-serif">PHASE 5</text>
+
+        <!-- Phase 1: Plan Agent (Single, Sequential start) -->
+        <rect x="260" y="60" width="280" height="50" rx="10" fill="url(#planGrad)" filter="url(#shadowD5)" />
+        <text x="400" y="83" text-anchor="middle" fill="#fff" font-size="13" font-weight="700" font-family="Inter,sans-serif">📋 Plan Agent</text>
+        <text x="400" y="100" text-anchor="middle" fill="#dbeafe" font-size="10" font-family="Inter,sans-serif">Analyze requirements · Create issues · Define scope</text>
+
+        <!-- Arrow down from Plan -->
+        <line x1="400" y1="110" x2="400" y2="145" stroke="#475569" stroke-width="2.5" marker-end="url(#arrowD5)" />
+        <text x="420" y="135" text-anchor="start" fill="#059669" font-size="9" font-weight="600" font-family="Inter,sans-serif">needs: [plan]</text>
+
+        <!-- Phase 2: Parallel Dev Agents (Matrix) -->
+        <!-- Branch vertical line -->
+        <line x1="400" y1="145" x2="400" y2="155" stroke="#475569" stroke-width="2" />
+        <line x1="140" y1="155" x2="660" y2="155" stroke="#475569" stroke-width="2" />
+        <line x1="140" y1="155" x2="140" y2="165" stroke="#475569" stroke-width="2" marker-end="url(#arrowD5)" />
+        <line x1="400" y1="155" x2="400" y2="165" stroke="#475569" stroke-width="2" marker-end="url(#arrowD5)" />
+        <line x1="660" y1="155" x2="660" y2="165" stroke="#475569" stroke-width="2" marker-end="url(#arrowD5)" />
+
+        <!-- Dev Agent A -->
+        <rect x="60" y="170" width="160" height="50" rx="10" fill="url(#devGrad)" filter="url(#shadowD5)" />
+        <text x="140" y="193" text-anchor="middle" fill="#fff" font-size="12" font-weight="700" font-family="Inter,sans-serif">🖥️ Dev Agent A</text>
+        <text x="140" y="210" text-anchor="middle" fill="#fef3c7" font-size="9" font-family="Inter,sans-serif">Frontend module</text>
+
+        <!-- Dev Agent B -->
+        <rect x="320" y="170" width="160" height="50" rx="10" fill="url(#devGrad)" filter="url(#shadowD5)" />
+        <text x="400" y="193" text-anchor="middle" fill="#fff" font-size="12" font-weight="700" font-family="Inter,sans-serif">🖥️ Dev Agent B</text>
+        <text x="400" y="210" text-anchor="middle" fill="#fef3c7" font-size="9" font-family="Inter,sans-serif">Backend / API</text>
+
+        <!-- Dev Agent C -->
+        <rect x="580" y="170" width="160" height="50" rx="10" fill="url(#devGrad)" filter="url(#shadowD5)" />
+        <text x="660" y="193" text-anchor="middle" fill="#fff" font-size="12" font-weight="700" font-family="Inter,sans-serif">🖥️ Dev Agent C</text>
+        <text x="660" y="210" text-anchor="middle" fill="#fef3c7" font-size="9" font-family="Inter,sans-serif">Tests</text>
+
+        <!-- "strategy.matrix" label -->
+        <text x="400" y="240" text-anchor="middle" fill="#059669" font-size="10" font-weight="700" font-family="Inter,sans-serif">strategy.matrix: 3 parallel legs, each on its own branch</text>
+
+        <!-- Join lines from parallel agents -->
+        <line x1="140" y1="220" x2="140" y2="260" stroke="#475569" stroke-width="1.5" />
+        <line x1="400" y1="220" x2="400" y2="260" stroke="#475569" stroke-width="1.5" />
+        <line x1="660" y1="220" x2="660" y2="260" stroke="#475569" stroke-width="1.5" />
+        <line x1="140" y1="260" x2="660" y2="260" stroke="#475569" stroke-width="2" />
+        <line x1="400" y1="260" x2="400" y2="290" stroke="#475569" stroke-width="2" marker-end="url(#arrowD5)" />
+        <text x="420" y="283" text-anchor="start" fill="#059669" font-size="9" font-weight="600" font-family="Inter,sans-serif">needs: [dev]  (waits for all matrix legs)</text>
+
+        <!-- Phase 3: Sequential Review -> Test -->
+        <!-- Review Agent -->
+        <rect x="260" y="295" width="280" height="50" rx="10" fill="url(#reviewGrad)" filter="url(#shadowD5)" />
+        <text x="400" y="318" text-anchor="middle" fill="#fff" font-size="13" font-weight="700" font-family="Inter,sans-serif">🔍 Review Agent</text>
+        <text x="400" y="335" text-anchor="middle" fill="#e9d5ff" font-size="10" font-family="Inter,sans-serif">Inspect diffs · Lint · Flag issues</text>
+
+        <!-- Arrow: Review -> Test -->
+        <line x1="400" y1="345" x2="400" y2="380" stroke="#475569" stroke-width="2.5" marker-end="url(#arrowD5)" />
+        <text x="420" y="372" text-anchor="start" fill="#059669" font-size="9" font-weight="600" font-family="Inter,sans-serif">needs: [review]</text>
+
+        <!-- Phase 4: Test Agent -->
+        <rect x="260" y="385" width="280" height="50" rx="10" fill="url(#testGrad)" filter="url(#shadowD5)" />
+        <text x="400" y="408" text-anchor="middle" fill="#fff" font-size="13" font-weight="700" font-family="Inter,sans-serif">🧪 Test Agent</text>
+        <text x="400" y="425" text-anchor="middle" fill="#d1fae5" font-size="10" font-family="Inter,sans-serif">Run unit + integration + E2E tests</text>
+
+        <!-- Arrow: Test -> Deploy -->
+        <line x1="400" y1="435" x2="400" y2="490" stroke="#475569" stroke-width="2.5" marker-end="url(#arrowD5)" />
+        <text x="420" y="478" text-anchor="start" fill="#059669" font-size="9" font-weight="600" font-family="Inter,sans-serif">needs: [test]</text>
+
+        <!-- Phase 5: Deploy Agent -->
+        <rect x="260" y="495" width="280" height="50" rx="10" fill="url(#deployGrad)" filter="url(#shadowD5)" />
+        <text x="400" y="518" text-anchor="middle" fill="#fff" font-size="13" font-weight="700" font-family="Inter,sans-serif">🚀 Deploy Agent</text>
+        <text x="400" y="535" text-anchor="middle" fill="#fecaca" font-size="10" font-family="Inter,sans-serif">environment: production · required human reviewer</text>
+
+        <!-- Legend -->
+        <rect x="50" y="570" width="700" height="85" rx="8" fill="#fff" stroke="#e2e8f0" stroke-width="1" />
+        <text x="400" y="590" text-anchor="middle" fill="#475569" font-size="11" font-weight="700" font-family="Inter,sans-serif">Legend</text>
+
+        <rect x="70" y="600" width="12" height="12" rx="3" fill="url(#planGrad)" />
+        <text x="88" y="610" fill="#475569" font-size="10" font-family="Inter,sans-serif">Sequential (needs)</text>
+
+        <rect x="220" y="600" width="12" height="12" rx="3" fill="url(#devGrad)" />
+        <text x="238" y="610" fill="#475569" font-size="10" font-family="Inter,sans-serif">Parallel (strategy.matrix)</text>
+
+        <rect x="410" y="600" width="12" height="12" rx="3" fill="url(#reviewGrad)" />
+        <text x="428" y="610" fill="#475569" font-size="10" font-family="Inter,sans-serif">Sequential Review Gate</text>
+
+        <rect x="590" y="600" width="12" height="12" rx="3" fill="url(#deployGrad)" />
+        <text x="608" y="610" fill="#475569" font-size="10" font-family="Inter,sans-serif">Deploy (needs)</text>
+
+        <text x="400" y="640" text-anchor="middle" fill="#059669" font-size="9" font-weight="600" font-family="Inter,sans-serif">Phase 1 → Phase 2 (parallel) → Phase 3 → Phase 4 → Phase 5 (sequential)</text>
+      </svg>
+<div class="diagram-caption">Figure 5.1 — Multi-Agent Pipeline: Plan Agent initiates parallel Dev Agents (one matrix job, <code>dev</code>, with three legs), then sequential Review → Test → Deploy Agents (via <code>needs</code>). A downstream job references the matrix job by its single job ID (<code>needs: [dev]</code>) and waits for all legs.</div></div>
+<p>This combined approach gives you the <strong>speed of parallelism</strong> where it matters (development) and the <strong>safety of sequential gates</strong> where it matters (review, testing, deployment). The exam expects you to recognize when each pattern is appropriate and how to combine them.</p>
+<h3 id="worked-example-planner-implementer-test-writer-reviewer-human-merge">Worked Example: Planner → Implementer + Test Writer → Reviewer → Human Merge</h3>
+<p><strong>Scenario:</strong> when someone labels an issue <code>agent-ready</code>, a planner agent writes a plan; an implementer agent (allowed to change only <code>src/</code>) and a test-writer agent (only <code>tests/</code>) then work at the same time on their own branches; a reviewer agent combines both branches, runs the tests, and opens <strong>one</strong> pull request; a human approves and merges it.</p>
+<p>The flow, in GitHub terms:</p>
+<ol>
+<li><strong>Plan (sequential start):</strong> job <code>plan</code> writes <code>plan.json</code> and uploads it as an artifact — the durable handoff.</li>
+<li><strong>Fan-out:</strong> job <code>build</code> uses a matrix with two legs (<code>implementer</code>, <code>test-writer</code>), each on its own branch <code>agent/&lt;role&gt;/issue-&lt;n&gt;</code>.</li>
+<li><strong>Fan-in:</strong> job <code>review</code> lists <code>build</code> in <code>needs</code>, so it waits for <strong>both</strong> legs, then merges the branches into an integration branch (the merge validation check), runs tests, and opens the PR.</li>
+<li><strong>HITL:</strong> a ruleset on <code>main</code> requires a pull request, an approving review, and passing checks, so only a human can finish the job (see <a href="domain-6.html">Domain 6</a>).</li>
+</ol>
+<p>Here is the complete workflow. <code>./scripts/run-agent.sh</code> is a <strong>placeholder</strong> for however you invoke an agent (for example a CLI agent in programmatic mode); assume it commits its work to the current branch.</p>
+<div class="code-block"># .github/workflows/multi-agent-feature.yml
+name: Multi-agent feature pipeline
+
+on:
+  issues:
+    types: [labeled]                        # runs whenever a label is added to an issue
+
+permissions:
+  contents: read                            # default token for every job: read-only
+
+concurrency:
+  group: ${{ github.workflow }}-issue-${{ github.event.issue.number }}  # one pipeline per issue at a time
+  cancel-in-progress: false                 # never kill agents mid-work; a newer run waits as pending
+
+jobs:
+  plan:                                     # 1) Planner agent
+    if: github.event.label.name == &#39;agent-ready&#39;   # react to this label only
+    runs-on: ubuntu-latest
+    outputs:
+      risk: ${{ steps.plan.outputs.risk }}  # machine-readable value for later jobs
+    steps:
+      - uses: actions/checkout@v4
+      - id: plan
+        run: |
+          ./scripts/run-agent.sh planner &quot;${{ github.event.issue.number }}&quot; &gt; plan.json
+          RISK=$(jq -r .risk plan.json)
+          case &quot;$RISK&quot; in low|medium|high|critical) ;; *) echo &quot;::error::invalid risk &#39;$RISK&#39;&quot;; exit 1 ;; esac
+          echo &quot;risk=$RISK&quot; &gt;&gt; &quot;$GITHUB_OUTPUT&quot;   # validated before anyone else uses it
+      - uses: actions/upload-artifact@v4    # the plan becomes evidence and the handoff to the next agents
+        with:
+          name: plan
+          path: plan.json
+
+  build:                                    # 2) Fan-out: implementer + test writer in parallel
+    needs: plan                             # starts only after the planner succeeds
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write                       # may push its branch; every other scope becomes none
+    strategy:
+      fail-fast: false                      # one failing agent doesn&#39;t cancel the other
+      matrix:
+        include:
+          - role: implementer
+            scope: src/                     # the only folder this agent may change
+          - role: test-writer
+            scope: tests/
+    env:
+      BRANCH: agent/${{ matrix.role }}/issue-${{ github.event.issue.number }}  # branch isolation
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4  # both agents start from the same plan
+        with:
+          name: plan
+      - run: |
+          git config user.name &quot;github-actions[bot]&quot;
+          git config user.email &quot;41898282+github-actions[bot]@users.noreply.github.com&quot;
+          git switch -c &quot;$BRANCH&quot;
+      - run: ./scripts/run-agent.sh &quot;${{ matrix.role }}&quot; plan.json   # placeholder agent runner
+      - name: Enforce path scope            # fail if the agent touched files outside its folder
+        run: |
+          OUT=$(git diff --name-only &quot;$GITHUB_SHA&quot; HEAD | grep -v &quot;^${{ matrix.scope }}&quot; || true)
+          if [ -n &quot;$OUT&quot; ]; then echo &quot;::error::Out-of-scope changes: $OUT&quot;; exit 1; fi
+      - run: git push origin &quot;$BRANCH&quot;
+
+  review:                                   # 3) Fan-in: combine, test, open ONE PR
+    needs: [plan, build]                    # waits for the planner and ALL matrix legs
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write                       # push the integration branch
+      pull-requests: write                  # elevated scope, granted to this job only
+    env:
+      N: ${{ github.event.issue.number }}
+      RISK: ${{ needs.plan.outputs.risk }}  # passed via env, never pasted into the script text
+      GH_TOKEN: ${{ github.token }}         # lets the gh CLI use this job&#39;s token
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0                    # full history so the agent branches can be merged
+      - name: Merge agent branches (merge validation check)
+        run: |
+          git config user.name &quot;github-actions[bot]&quot;
+          git config user.email &quot;41898282+github-actions[bot]@users.noreply.github.com&quot;
+          git switch -c &quot;agent/integration/issue-$N&quot;
+          git merge --no-ff &quot;origin/agent/implementer/issue-$N&quot;
+          git merge --no-ff &quot;origin/agent/test-writer/issue-$N&quot;   # stops here on a textual conflict
+      - run: ./scripts/test.sh              # catches semantic conflicts: clean merge, broken behavior
+      - run: ./scripts/run-agent.sh reviewer &gt; review.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: review
+          path: review.md
+      - name: Open the pull request for a human
+        run: |
+          git push origin &quot;agent/integration/issue-$N&quot;
+          gh pr create --base main --head &quot;agent/integration/issue-$N&quot; \
+            --title &quot;[agent: pipeline] Issue #$N (risk: $RISK)&quot; --body-file review.md</div>
+<p>What the important lines do:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Line(s)</th>
+<th>Why it is there</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Top-level <code>permissions: contents: read</code></td>
+<td>Least privilege by default; jobs elevate only what they need. Setting any scope sets all unlisted scopes to <code>none</code> (<a href="https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#permissions" target="_blank" rel="noopener">workflow syntax</a>).</td>
+</tr>
+<tr>
+<td><code>concurrency</code> with the issue number</td>
+<td>Relabeling the same issue can&#39;t start a second pipeline that races the first. With <code>cancel-in-progress: false</code> the newer run waits as <em>pending</em>; only one pending run is kept unless you set <code>queue: max</code> (up to 100) (<a href="https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#concurrency" target="_blank" rel="noopener">workflow syntax</a>).</td>
+</tr>
+<tr>
+<td><code>outputs.risk</code> + the <code>case</code> check</td>
+<td>The plan&#39;s risk travels as a validated, machine-readable value — not prose — so later jobs (or a deploy gate) can branch on it with <code>if:</code>.</td>
+</tr>
+<tr>
+<td><code>needs: plan</code> / <code>needs: [plan, build]</code></td>
+<td><code>needs</code> makes the order explicit. If a needed job fails or is skipped, dependent jobs are skipped too, so a half-finished pipeline never opens a PR.</td>
+</tr>
+<tr>
+<td><code>matrix.include</code> with <code>role</code> and <code>scope</code></td>
+<td>Two legs from one job definition — same permissions, different inputs. Downstream jobs reference the single job ID <code>build</code> and wait for every leg.</td>
+</tr>
+<tr>
+<td><code>fail-fast: false</code></td>
+<td>The default is <code>true</code>, which cancels the other legs when one fails (<a href="https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#jobsjob_idstrategyfail-fast" target="_blank" rel="noopener">workflow syntax</a>). Turning it off keeps finished work from a healthy agent.</td>
+</tr>
+<tr>
+<td><code>BRANCH: agent/&lt;role&gt;/issue-&lt;n&gt;</code></td>
+<td>Branch isolation and attribution in one name.</td>
+</tr>
+<tr>
+<td>&quot;Enforce path scope&quot; step</td>
+<td>Turns &quot;only touch <code>src/</code>&quot; from an instruction the agent might ignore into a check that fails the job.</td>
+</tr>
+<tr>
+<td><code>git merge</code> ×2 in <code>review</code></td>
+<td>The merge validation check: textual conflicts fail here, before any PR exists.</td>
+</tr>
+<tr>
+<td><code>RISK</code> via <code>env:</code></td>
+<td>Agent output is untrusted text; inserting <code>${{ … }}</code> straight into a <code>run:</code> script invites script injection.</td>
+</tr>
+<tr>
+<td><code>gh pr create</code></td>
+<td>One reviewable PR with the reviewer&#39;s report as the body. The human approval and merge happen outside the workflow, enforced by the ruleset.</td>
+</tr>
+</tbody></table></div>
+<p>For <code>gh pr create</code> to work with <code>GITHUB_TOKEN</code>, the repository (or organization) setting <strong>Allow GitHub Actions to create and approve pull requests</strong> must be enabled (<a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#preventing-github-actions-from-creating-or-approving-pull-requests" target="_blank" rel="noopener">Actions settings</a>). What happens when the two agents collide is walked through in <a href="#worked-example-two-agents-edit-the-same-file">Worked Example: Two Agents Edit the Same File</a>, and what happens when one fails in <a href="#worked-example-a-failed-agent-and-its-recovery">Worked Example: A Failed Agent and Its Recovery</a>.</p>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Letting the reviewer agent merge to <code>main</code> itself &quot;because it already reviewed&quot;. An agent review is evidence, not acceptance — Learn&#39;s rule is <em>agents propose; humans and policy accept</em>, and Copilot cloud agent can&#39;t approve or merge its own PRs anyway.</p></div>
+
+</div>
+<div class="section">
+<h2 id="4-agent-isolation-branches-workflows-permissions-concurrency">4. Agent Isolation: Branches, Workflows, Permissions, Concurrency</h2>
+<p>When multiple agents operate in the same repository, you need <strong>isolation</strong> — agents must not interfere with each other&#39;s work. Learn identifies four isolation mechanisms:</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Isolation means giving each agent its own workbench. A separate <strong>branch</strong> is its own copy of the code, a separate <strong>workflow or job</strong> is its own room, separate <strong>permissions</strong> are its own set of keys, and a <strong>concurrency group</strong> is a &quot;one at a time&quot; sign on a shared door (for example, the production deploy).</p></div>
+<h3 id="branch-isolation">Branch Isolation</h3>
+<p>Each agent works in its own branch. This is the simplest and most important isolation mechanism — changes are staged in separate branches until they&#39;re ready to merge.</p>
+<ul>
+<li><strong>Implement via:</strong> Agent workflow creates a unique branch per task; branch protection/rulesets protect the target branch. Copilot cloud agent does this automatically: it creates a <code>copilot/</code> branch and can only push to that single branch (or to the PR branch when <code>@copilot</code> is mentioned on an existing PR).</li>
+<li><strong>Best practice:</strong> Use descriptive branch naming like <code>agent/{agent-name}/{task-id}</code> (Learn: <code>agent/dependency/&lt;ticket&gt;</code>)</li>
+<li><strong>Exam tip:</strong> Branch isolation prevents agents from overwriting each other&#39;s work in progress</li>
+</ul>
+<h3 id="workflow-isolation">Workflow Isolation</h3>
+<p>Each agent runs in its own GitHub Actions workflow (or a dedicated job with distinct permissions). Workflow isolation prevents one agent&#39;s execution from affecting another&#39;s triggers, permissions, and outputs.</p>
+<ul>
+<li><strong>Implement via:</strong> Separate workflow YAML files per agent or per task type</li>
+<li><strong>Best practice:</strong> Use separate runners or container environments per agent type</li>
+<li><strong>Exam tip:</strong> Workflow isolation is about runtime separation, not just code separation</li>
+</ul>
+<h3 id="permission-isolation">Permission Isolation</h3>
+<p>Each agent gets only the capabilities it needs. For custom agents, capabilities are set by the profile&#39;s <code>tools</code> (and <code>mcp-servers</code>) properties; for workflows, by the <code>permissions:</code> key on the <code>GITHUB_TOKEN</code>.</p>
+<ul>
+<li><strong>Implement via:</strong> <code>.github/agents/*.agent.md</code> — each agent has its own <code>tools</code> list (custom agent profiles have <strong>no</strong> <code>permissions</code> property); workflow/job <code>permissions:</code> such as <code>contents: read</code>, <code>pull-requests: write</code></li>
+<li><strong>Best practice:</strong> Apply least-privilege: give each agent only the tools and token scopes it needs for its role</li>
+<li><strong>Exam tip:</strong> A dev agent shouldn&#39;t have deploy permissions; a monitor agent shouldn&#39;t have write permissions</li>
+</ul>
+<h3 id="concurrency-controls">Concurrency Controls</h3>
+<p>GitHub Actions <strong>concurrency groups</strong> ensure that at most one run (plus one pending) in the same group executes at a time.</p>
+<ul>
+<li><strong>Implement via:</strong> <code>concurrency:</code> key in workflow YAML with a group name. Learn recommends <code>group: ${{ github.workflow }}-${{ github.ref }}</code> — using only <code>${{ github.ref }}</code> makes concurrency global to the branch and can block unrelated workflows.</li>
+<li><strong>Best practice:</strong> Use <code>cancel-in-progress: true</code> to cancel older runs when a new one starts</li>
+<li><strong>Exam tip:</strong> Concurrency groups prevent race conditions across runs. Job-level <code>concurrency</code> applies only within a workflow run, and <code>strategy.matrix</code> controls intra-run parallelism, not parallelism across triggers or agent sessions.</li>
+</ul>
+<p>Parallelism support by invocation mode (Learn): Copilot cloud agent — parallel sessions across tasks; Copilot CLI — parallel; local (IDE) agent — serial only.</p>
+<p>The workflow below shows a deployment agent that uses one concurrency group per target environment:</p>
+<div class="code-block"># Example: Concurrency control for deployment agent
+name: Deploy Agent
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: &#39;Target environment&#39;
+        required: true
+        type: choice
+        options: [staging, production]
+
+concurrency:
+  group: deploy-${{ github.event.inputs.environment }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy
+        run: ./deploy.sh</div>
+<p>Two runs that target <code>production</code> share the group <code>deploy-production</code>, so they can never deploy at the same moment; because of <code>cancel-in-progress: true</code>, a newer run cancels the older one. A <code>staging</code> run uses a different group name and doesn&#39;t wait for <code>production</code>. The <code>environment:</code> line also applies that environment&#39;s protection rules, such as required reviewers (see <a href="domain-6.html">Domain 6</a>).</p>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Treating <code>cancel-in-progress: true</code> as always right. It suits &quot;only the latest matters&quot; work such as CI on a branch. For agents doing long edits or deploys, killing a run halfway can leave half-applied changes; use <code>cancel-in-progress: false</code> (wait as pending) or <code>queue: max</code> to keep several pending runs in order.</p></div>
+<div class="callout tip"><p><strong>🎯 Exam angle:</strong> Isolation questions name a symptom; map it to the dimension. &quot;Agents overwrite each other&#39;s work in progress&quot; → branches. &quot;One agent&#39;s run changed another&#39;s triggers or outputs&quot; → separate workflows/jobs. &quot;Agent could do more than its role&quot; → permissions (<code>tools</code>, <code>permissions:</code>). &quot;Two runs deployed at once&quot; → concurrency group.</p></div>
+
+</div>
+<div class="section">
+<h2 id="5-conflict-detection-and-resolution">5. Conflict Detection and Resolution</h2>
+<p>A <strong>conflict</strong> is what happens when two agents&#39; work doesn&#39;t fit together — like two people editing the same sentence of a shared document at the same time.</p>
+<p>When multiple agents work concurrently, conflicts are inevitable. Learn lists four conflict types: <strong>textual merge conflicts</strong> (same files/lines), <strong>semantic conflicts</strong> (clean merge, broken combined behavior), <strong>policy conflicts</strong> (different reviews/approvals required), and <strong>duplicate effort</strong> (two PRs solving the same problem differently).</p>
+<h3 id="pr-reviews-as-conflict-resolution">PR Reviews as Conflict Resolution</h3>
+<p>Pull requests are the <strong>primary conflict resolution mechanism</strong>. When two agents make changes to the same repository, their work is merged via PRs, which:</p>
+<ul>
+<li>Surface merge conflicts that must be resolved before merging</li>
+<li>Provide a review process for human or agent reviewers to validate changes</li>
+<li>Require status checks (CI) to pass, ensuring conflicting changes don&#39;t break the build</li>
+<li>Enable CODEOWNERS approval for files that need specialized review (routes review by path — e.g., <code>/.github/workflows/ @platform-team</code>)</li>
+</ul>
+<p>Learn also recommends a <strong>merge validation check</strong> (e.g., <code>git fetch origin main &amp;&amp; git merge --no-commit origin/main</code>) set as a required check, so conflicts fail fast instead of depending on reviewers noticing them.</p>
+<h3 id="concurrency-groups-for-conflict-prevention">Concurrency Groups for Conflict Prevention</h3>
+<p>As discussed above, concurrency groups prevent conflicting workflow runs from executing at the same time. This is a <strong>preventive</strong> measure — it stops conflicts before they happen.</p>
+<h3 id="branch-protection-rules">Branch Protection Rules</h3>
+<p>Branch protection rules (or rulesets) enforce conflict-avoidance policies:</p>
+<ul>
+<li><strong>Require linear history</strong> — prevents merge commits from being pushed; PRs must be merged with squash or rebase merging</li>
+<li><strong>Require branches to be up to date before merging</strong> — the PR branch must include the latest base-branch commits (via merge or rebase) before merging</li>
+<li><strong>Require status checks</strong> — ensures all evaluation gates pass before merge</li>
+</ul>
+<h3 id="escalation-thresholds">Escalation Thresholds</h3>
+<p>Learn: stop automation and escalate to a human when a PR conflicts twice after rebase attempts, when required checks fail twice with the same failure signature, or when two agents propose incompatible fixes to the same alert. Include a short report: what conflicted, what was attempted, which options exist. Without arbitration rules, whichever PR merges first &quot;wins&quot; — outcomes are decided by timing rather than correctness (<a href="https://learn.microsoft.com/en-us/training/modules/multi-agent-systems-orchestration/5-conflict-resolution-github-arbitration" target="_blank" rel="noopener">Learn</a>).</p>
+<h3 id="worked-example-two-agents-edit-the-same-file">Worked Example: Two Agents Edit the Same File</h3>
+<p>Using the <a href="#worked-example-planner-implementer-test-writer-reviewer-human-merge">pipeline above</a>: the path-scope step already stops the test writer from editing <code>src/</code>. But suppose both agents legitimately need the shared root file <code>package.json</code> — the implementer adds a runtime library, the test writer adds a test library — on the same line.</p>
+<ol>
+<li><strong>Each branch is fine alone.</strong> Both <code>build</code> legs pass and push their branches.</li>
+<li><strong>The fan-in detects it.</strong> In <code>review</code>, the first <code>git merge</code> succeeds; the second stops with <code>CONFLICT (content): Merge conflict in package.json</code>. The job fails, so tests, the review report, and the PR never happen — nothing conflicting reaches <code>main</code>.</li>
+<li><strong>Find it.</strong> The failed <code>review</code> job in the run&#39;s log names the file; both branch names show which agents collided.</li>
+<li><strong>Resolve (pick one):</strong><ul>
+<li><strong>Serialize the dependent work:</strong> re-run the test writer from the implementer&#39;s branch so it sees the new line and adds its own below it.</li>
+<li><strong>Human fix:</strong> a person resolves the conflict on the integration branch and pushes; the required checks then run on the result.</li>
+</ul>
+</li>
+<li><strong>Prevent next time:</strong> give <code>package.json</code> a single owner (only the implementer changes dependencies; the test writer asks for them in the plan), and add a CODEOWNERS entry for it.</li>
+<li><strong>Escalate if it repeats:</strong> Learn&#39;s threshold is two conflicts after rebase attempts → stop and hand a human a short report (what conflicted, what was tried, the options).</li>
+</ol>
+<p><strong>The semantic variant:</strong> the implementer renames <code>getUser()</code> to <code>fetchUser()</code>, while the new tests still call <code>getUser()</code>. Git merges cleanly because different lines changed, but <code>./scripts/test.sh</code> fails. That is why the pipeline runs tests <strong>after</strong> combining branches, not only on each branch.</p>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Believing concurrency groups prevent merge conflicts. They only stop two <em>runs</em> from executing at the same time; they know nothing about which lines of code two branches changed. Code-level conflicts are caught by merging (PR conflict detection, a merge validation check) and by tests.</p></div>
+<div class="callout tip"><p><strong>🎯 Exam angle:</strong> Sort the conflict type first. Same lines → textual → merge validation check / rebase. Clean merge but broken behavior → semantic → tests as required checks after combining. Two PRs fixing the same thing → duplicate effort → clearer ownership and scoping. Different approval rules → policy conflict → rulesets and CODEOWNERS. Repeated failure → escalate to a human.</p></div>
+<div class="callout tip"><p><strong>📘 Teaching Tip — Conflict Resolution Flow:</strong> Think of conflict resolution as a three-stage pipeline: <strong>Prevent</strong> (concurrency groups, branch isolation, path scoping) → <strong>Detect</strong> (PR merge conflict detection, merge validation checks, CI failures) → <strong>Resolve</strong> (CODEOWNERS routing, PR review, human escalation, rebase). Make sure you can map each mechanism to its stage.</p></div>
+<div class="callout warning"><p><strong>⚠️ Exam Trap:</strong> A question might present a scenario where two agents create conflicting changes and ask: <em>&quot;Which GitHub-native mechanism detects this conflict?&quot;</em> The answer is <strong>PR merge conflict detection / a required merge validation check</strong>, not concurrency groups. Concurrency groups prevent <em>simultaneous execution</em> conflicts; PR checks catch <em>code-level</em> conflicts. Know the difference.</p></div>
+
+</div>
+<div class="section">
+<h2 id="6-system-observability-attribution-evidence-cross-job-handoffs">6. System Observability: Attribution, Evidence, Cross-Job Handoffs</h2>
+<p>In a multi-agent system, you need to know <strong>who did what, when, and why</strong>. Learn&#39;s goal: every meaningful step leaves a durable trace in GitHub.</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Observability is an airplane&#39;s flight recorder. Nobody reads it during a good flight, but after an incident it is the only reliable story. <strong>Attribution</strong> says which agent acted, <strong>evidence</strong> (artifacts, check results) shows what it produced, and the <strong>audit log</strong> — GitHub&#39;s built-in record of activity in an organization or enterprise — says who triggered what and when.</p></div>
+<h3 id="attribution">Attribution</h3>
+<p>Every action must be traceable to a specific agent. Attribution is achieved through:</p>
+<ul>
+<li><strong>Naming conventions:</strong> PR titles like <code>[agent: dependency] Update &lt;package&gt; to &lt;version&gt;</code>, labels like <code>agent: security</code>, PR body sections (Plan, Evidence, Risks, Rollback/Escalation)</li>
+<li><strong>Commit authorship:</strong> Copilot cloud agent&#39;s commits are authored by Copilot, with the developer who assigned the task marked as co-author; commits are signed (&quot;Verified&quot;) and each commit message links to the agent session log</li>
+<li><strong>PR authorship:</strong> PRs created by agents show the agent (or, for Copilot automations, the user who created the automation) as the author</li>
+<li><strong>Audit log:</strong> filter the enterprise audit log with <code>actor:Copilot</code>; agentic events carry <code>actor_is_agent: true</code>, an <code>agent_session_id</code> linking to the session, and <code>user</code> (the person who initiated it) (<a href="https://docs.github.com/en/copilot/reference/enterprise-administrators/agentic-audit-log-events" target="_blank" rel="noopener">GitHub Docs</a>)</li>
+</ul>
+<h3 id="evidence">Evidence</h3>
+<p>Agents must produce evidence that they performed their tasks correctly. Evidence includes:</p>
+<ul>
+<li><strong>Workflow artifacts:</strong> Test reports, coverage summaries, structured agent reports (<code>actions/upload-artifact</code>) — the primary post-hoc evidence even if live logs are incomplete</li>
+<li><strong>Session logs:</strong> Copilot cloud agent session logs trace agent actions and tool calls; they can be streamed live with <code>gh agent-task view --log --follow</code></li>
+<li><strong>Check run results:</strong> Status checks that validate agent output</li>
+<li><strong>Audit log:</strong> e.g., search the org audit log for <code>action:artifact.destroy</code> to find who deleted a missing artifact</li>
+</ul>
+<h3 id="cross-job-handoffs">Cross-Job Handoffs</h3>
+<p>When one agent&#39;s output becomes another agent&#39;s input, the handoff must be observable:</p>
+<ul>
+<li><strong>Workflow outputs:</strong> Jobs produce outputs consumed by downstream jobs via <code>needs</code></li>
+<li><strong>Artifact passing:</strong> Build artifacts are uploaded and downloaded between jobs</li>
+<li><strong>Workflow run URL:</strong> Each run has a unique URL that links all jobs together</li>
+<li><strong>Log correlation:</strong> Cross-referencing log entries across jobs via run ID and timestamps</li>
+<li><strong>PR handoff template:</strong> Objective, Plan, Evidence, Decisions and handoffs (decision, rationale, next owner), Risks and rollback</li>
+</ul>
+<h3 id="post-hoc-analysis-of-multi-agent-behavior">Post-Hoc Analysis of Multi-Agent Behavior</h3>
+<p>Post-hoc analysis reconstructs what a set of agents did <em>after</em> the runs finished. Evidence sources, in the order Learn emphasizes them (<a href="https://learn.microsoft.com/en-us/training/modules/multi-agent-systems-orchestration/6-system-observability-evidence-workflows" target="_blank" rel="noopener">unit 6</a>, <a href="https://learn.microsoft.com/en-us/training/modules/multi-agent-systems-orchestration/7-scale-failure-recovery" target="_blank" rel="noopener">unit 7</a>):</p>
+<ol>
+<li><strong>Workflow artifacts</strong> — the primary evidence source even when live logs are incomplete. Open the run in the Actions tab, scroll to the <strong>Artifacts</strong> section of the run summary, and download (e.g., <code>agent-report</code>).</li>
+<li><strong>PR timelines</strong> — what changed and when, plus the Decisions and handoffs section of each PR.</li>
+<li><strong>Required check results</strong> — what failed and <em>how often</em>.</li>
+<li><strong>Workflow run history</strong> — patterns of failures and cancellations (flapping, repeated <code>cancel-in-progress</code> cancellations, competing PRs).</li>
+<li><strong>Agent session logs and audit log</strong> — each Copilot commit message links to its session log; <code>actor:Copilot</code> audit events correlate to sessions via <code>agent_session_id</code>.</li>
+</ol>
+<p>Things to know:</p>
+<ul>
+<li><strong>Missing artifact?</strong> Search the org audit log for <code>action:artifact.destroy</code> to see who deleted it, when, and in which repository.</li>
+<li><strong>Retention:</strong> the audit log keeps agent events for <strong>180 days</strong>; stream it to a SIEM for longer history and alerting (<a href="https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-for-organization/review-activity/review-audit-logs" target="_blank" rel="noopener">GitHub Docs</a>).</li>
+<li><strong>Blind spot:</strong> the audit log does <strong>not</strong> include local client session data (e.g., prompts sent from Copilot CLI); capturing that requires a custom solution such as hooks that forward CLI events to your own logging service.</li>
+<li><strong>Close the loop:</strong> classify each root cause (reasoning error, tool misuse, context or environment issue) and feed it back into instructions, scope boundaries, tool access, or escalation thresholds.</li>
+</ul>
+<div class="callout"><p><strong>🎓 Teaching Tip — Traceability Is Exam Gold:</strong> If an exam scenario describes a problem in a multi-agent system, the first step is always <strong>check attribution and logs</strong>. Who was the last agent to touch this file? What did the session log show? Traceability is the starting point for all debugging in multi-agent systems.</p></div>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Relying on what an agent printed in a chat window or terminal. That output disappears and isn&#39;t reviewable. If a decision matters, it belongs in a durable place: an uploaded artifact, the PR body (Plan, Evidence, Decisions and handoffs), or a commit.</p></div>
+<div class="callout tip"><p><strong>🎯 Exam angle:</strong> &quot;Reconstruct what happened&quot; or &quot;prove to an auditor&quot; questions want durable GitHub evidence: artifacts first, then PR timeline, check history, run history, session logs, audit log. Answers based on local history, chat transcripts, or re-running the agent to &quot;see what it does&quot; are distractors.</p></div>
+
+</div>
+<div class="section">
+<h2 id="7-failure-diagnosis-and-recovery-at-scale">7. Failure Diagnosis and Recovery at Scale</h2>
+<p>When a multi-agent pipeline fails — and it will — you need a systematic approach to diagnosis and recovery. Learn&#39;s common failure modes: <strong>partial execution</strong> (PR exists but evidence/validation missing), <strong>stalled workflows</strong> (checks fail repeatedly or approvals never arrive), <strong>conflicting outputs</strong>, and <strong>flapping</strong> (reruns with no convergence).</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Treat it like a mechanic: find which part failed, figure out <em>why</em> (a loose cable or a broken engine?), then either fix and restart, or tow the car to a specialist. A loose cable is a <strong>transient</strong> failure — try again. A broken engine is a <strong>logic</strong> failure — retrying changes nothing. Towing is <strong>escalation</strong> to a human.</p></div>
+<h3 id="diagnosis-workflow">Diagnosis Workflow</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Action</th>
+<th>Tool / Resource</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Identify the failing job or agent</td>
+<td>Workflow run page, job status indicators, PR timeline</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Examine session logs for error messages</td>
+<td>GitHub Actions log viewer, agent session logs (<code>gh agent-task view --log --follow</code>)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Check workflow artifacts for failure evidence</td>
+<td>Artifact download, test report viewer</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Attribute the failure to an agent or action</td>
+<td>Log correlation, commit attribution</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Classify the root cause</td>
+<td>Study guide categories: reasoning errors, tool misuse, context or environment issues (also check agent config, e.g., <code>disable-model-invocation: true</code> blocks subagent calls)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Apply the fix and re-run</td>
+<td>Tuning levers: instructions, workflows/constraints, memory, tools and tool access</td>
+</tr>
+</tbody></table></div>
+<h3 id="recovery-strategies">Recovery Strategies</h3>
+<ul>
+<li><strong>Bounded retry:</strong> For transient failures (network timeouts, rate limits), retry within a fixed limit to prevent endless loops. GitHub Actions has no built-in step <code>retry</code> key — script the retry (with backoff) or use <strong>Re-run failed jobs</strong>.</li>
+<li><strong>Rollback and retry:</strong> For code-level failures, revert the agent&#39;s last changes and retry with corrected instructions. Prefer small, scoped PRs so rollback is safe.</li>
+<li><strong>Fallback to human:</strong> Escalate to a human (e.g., after the same required check fails twice) with links and a concise summary, via issue, PR comment, or <code>workflow_dispatch</code>.</li>
+<li><strong>Partial replay:</strong> Re-run only the failed job(s) (Re-run failed jobs), not the entire multi-agent pipeline.</li>
+<li><strong>Policy block → human:</strong> when a <code>preToolUse</code> hook denies a command (e.g., <code>Reason: destructive_operation_detected</code>), the expected behavior is a handoff to human review, not a retry (<a href="https://learn.microsoft.com/en-us/training/modules/multi-agent-systems-orchestration/7-scale-failure-recovery" target="_blank" rel="noopener">Learn</a>).</li>
+<li><strong>Break automation chains:</strong> an issue or PR opened by one Copilot automation can trigger another; because Actions workflows don&#39;t run on Copilot PRs until a user with write access approves them, chains can&#39;t run unattended (<a href="https://docs.github.com/en/copilot/concepts/agents/cloud-agent/risks-and-mitigations" target="_blank" rel="noopener">GitHub Docs</a>).</li>
+<li><strong>Checkpoint restart:</strong> Restore from a known-good checkpoint (durable artifacts/plan) and resume execution from that point.</li>
+</ul>
+<h3 id="worked-example-a-failed-agent-and-its-recovery">Worked Example: A Failed Agent and Its Recovery</h3>
+<p>In the <a href="#worked-example-planner-implementer-test-writer-reviewer-human-merge">pipeline above</a>, the <code>test-writer</code> leg fails while the implementer leg succeeds.</p>
+<ol>
+<li><strong>Contain:</strong> because of <code>fail-fast: false</code>, the implementer finishes and pushes its branch. Because <code>review</code> needs <code>build</code>, <code>review</code> is <strong>skipped</strong> — no PR is opened from incomplete work, so there is nothing to roll back on <code>main</code>.</li>
+<li><strong>Identify:</strong> the run page shows a red <code>build (test-writer, tests/)</code> job. Download the <code>plan</code> artifact and read the job log.</li>
+<li><strong>Classify:</strong> the log shows an HTTP 429 (rate limit) from the agent runner → <strong>transient</strong>.</li>
+<li><strong>Recover with a bounded retry:</strong> use <strong>Re-run failed jobs</strong>. Only the failed leg (and the jobs that depend on it) run again; the implementer&#39;s branch is reused, not redone.</li>
+<li><strong>If the same failure happens again,</strong> stop retrying. Comment on the issue with the run link, the failure signature, and the options (wait for quota, reduce scope, assign a human) — Learn&#39;s &quot;fails twice with the same signature → escalate&quot; rule.</li>
+<li><strong>Different signals, different moves:</strong><ul>
+<li>Log shows <code>Denied by preToolUse hook</code> or a <code>destructive_operation_detected</code> reason → a <strong>policy block</strong>: hand to a human, don&#39;t retry.</li>
+<li>Tests fail because the generated tests are wrong → <strong>logic</strong> failure: fix the plan or the agent instructions, then re-run.</li>
+<li>The bad change was <strong>already merged</strong> → open a revert PR (the <strong>Revert</strong> button on the merged PR does this) and retry with corrected instructions in a new small PR.</li>
+</ul>
+</li>
+<li><strong>Clean up and learn:</strong> delete abandoned <code>agent/*</code> branches, record the root-cause category, and update instructions, scope, tools, or thresholds.</li>
+</ol>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Clicking <strong>Re-run all jobs</strong> on a big pipeline. It repeats work that already succeeded (and re-invokes every agent). Re-run only what failed, and only a bounded number of times.</p></div>
+<h3 id="recovery-at-scale-unverified-community-info">Recovery at Scale (unverified community info)</h3>
+<p>The following patterns are general reliability-engineering practice and are not named in the official Learn module:</p>
+<ul>
+<li><strong>Self-healing agents:</strong> Configure agents to detect their own failures and attempt recovery (within bounded retries) before reporting failure</li>
+<li><strong>Circuit breaker pattern:</strong> After N consecutive failures, stop retrying and alert a human (consistent with Learn&#39;s escalation threshold)</li>
+<li><strong>Dead letter queue:</strong> Route unrecoverable failures to a queue for human review</li>
+<li><strong>Health monitoring:</strong> Regular heartbeat checks on agent availability and pipeline health</li>
+</ul>
+<div class="callout warning"><p><strong>⚠️ Exam Trap:</strong> The exam may present a failure scenario and ask: <em>&quot;What&#39;s the best recovery strategy?&quot;</em> If the failure is <strong>transient</strong> (network blip, API rate limit), the answer is <strong>bounded retry</strong>. If the failure is <strong>logic-based</strong> (wrong code, bad instructions), the answer is <strong>fix instructions and re-run</strong>. If the failure is <strong>repeated or security-related</strong> (policy breach, same check failing twice), the answer is <strong>stop and escalate to a human</strong> — Learn: investigate security failures instead of repeatedly retrying.</p></div>
+
+</div>
+<div class="section">
+<h2 id="8-agent-lifecycle-management">8. Agent Lifecycle Management</h2>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Managing agents is like managing staff: onboard a new hire with a clear job description and limited keys, change their duties through a reviewed process, and when they leave, take back their badge but keep their work records.</p></div>
+<p>Learn frames agent lifecycle as a continuous sequence — <strong>deploy → monitor → update → retire</strong> — where both agents and their guardrails evolve, so each agent needs a clear owner, runbooks, and a review cadence (<a href="https://learn.microsoft.com/en-us/training/modules/governance-guardrails-operations/7-maintain-governance-operational-reliability" target="_blank" rel="noopener">Learn</a>). The GitHub mechanics below come from the <a href="https://docs.github.com/en/copilot/reference/custom-agents-configuration" target="_blank" rel="noopener">custom agents configuration reference</a> and <a href="https://docs.github.com/en/copilot/concepts/agents/cloud-agent/about-custom-agents" target="_blank" rel="noopener">About custom agents</a>.</p>
+<h3 id="adding-agents-to-an-existing-workflow">Adding Agents to an Existing Workflow</h3>
+<ul>
+<li><strong>Define the boundary first:</strong> a narrow role, the paths and artifact types it may change, and a completion signal verifiable through checks and reviews (<a href="https://learn.microsoft.com/en-us/training/modules/multi-agent-systems-orchestration/2-multi-agent-responsibilities" target="_blank" rel="noopener">Learn</a>). Overlapping responsibilities produce duplicated work and conflicting PRs.</li>
+<li><strong>Create the profile</strong> where it should be available: <code>.github/agents/NAME.agent.md</code> (repository), <code>/agents/NAME.md</code> in the org&#39;s <code>.github</code> or <code>.github-private</code> repo (organization), or in the enterprise-designated <code>.github-private</code> repo (enterprise). <code>description</code> is the only required property; on name conflicts the <strong>lowest level wins</strong> (repository &gt; organization &gt; enterprise).</li>
+<li><strong>Give it its own isolation:</strong> dedicated branch prefix (<code>agent/&lt;name&gt;/&lt;ticket&gt;</code>), dedicated workflow or job with least-privilege <code>permissions:</code>, a <code>tools</code> list (omitting <code>tools</code> grants <strong>all</strong> tools), CODEOWNERS for its paths, and an attribution label such as <code>agent: &lt;name&gt;</code>.</li>
+<li><strong>Wire it into orchestration:</strong> add it to the parent&#39;s <code>agents: [...]</code> / <code>handoffs</code> (VS Code), make sure the parent has the <code>agent</code> tool, and don&#39;t set <code>disable-model-invocation: true</code> on an agent that must be called as a subagent. In Copilot CLI, <code>/fleet</code> can pick it up automatically or via <code>@NAME</code>.</li>
+</ul>
+<h3 id="updating-or-replacing-agents-without-disruption">Updating or Replacing Agents Without Disruption</h3>
+<ul>
+<li><strong>Versioning is by Git commit SHA</strong> of the profile file. A task is instantiated from the latest profile on that repository and branch, and once the agent opens a PR, <strong>interactions in that PR keep using the same version</strong> — so editing a profile doesn&#39;t change behavior mid-flight for in-progress PRs.</li>
+<li><strong>Stage changes on a branch or tag:</strong> different versions can live on different branches/tags, letting you trial a reconfigured agent before merging to the default branch.</li>
+<li><strong>Review profile changes like code:</strong> GitHub recommends protecting Copilot and MCP configuration files with CODEOWNERS plus the &quot;Require review from Code Owners&quot; rule (<a href="https://docs.github.com/copilot/tutorials/cloud-agent/build-guardrails" target="_blank" rel="noopener">build guardrails</a>).</li>
+<li><strong>Replace, don&#39;t rename silently:</strong> when swapping one agent for another, update orchestrator <code>agents</code>/<code>handoffs</code> references in the same PR (handoffs resolve by name or filename), and avoid renaming workflow jobs that back required checks — Learn treats renamed or removed required checks as governance drift.</li>
+</ul>
+<h3 id="retiring-agents-while-preserving-auditability">Retiring Agents While Preserving Auditability</h3>
+<ul>
+<li><strong>Stop new work first:</strong> <code>disable-model-invocation: true</code> stops automatic selection, and <code>user-invocable: false</code> stops manual selection. Remove the agent from every parent&#39;s <code>agents</code>/<code>handoffs</code> so orchestration doesn&#39;t fail calling it.</li>
+<li><strong>Delete through a reviewed PR</strong>, not by force-pushing history: Git history keeps every prior version of the profile, and past PRs, signed Copilot commits (with session-log links), and workflow runs remain intact.</li>
+<li><strong>Keep the evidence:</strong> artifacts should be retained long enough for audits and incident response (<a href="https://learn.microsoft.com/en-us/training/modules/governance-guardrails-operations/6-make-actions-observable-traceable-auditable" target="_blank" rel="noopener">Learn</a>); the audit log keeps <code>actor:Copilot</code> events for 180 days, so stream to a SIEM if you need longer.</li>
+<li><strong>Remove what it was granted:</strong> its workflow permissions, Agents secrets/variables, branch rules, and CODEOWNERS entries — leftover access is the &quot;permissions expanded&quot; form of governance drift.</li>
+</ul>
+<div class="callout warning"><p><strong>⚠️ Exam Trap:</strong> &quot;Update the agent without disrupting active work&quot; points to <strong>commit-SHA versioning</strong> (in-flight PRs keep their version) plus a reviewed PR to the profile — not to pausing all workflows. &quot;Retire but stay auditable&quot; means <strong>disable invocation, then delete via PR</strong> while keeping history, logs, and artifacts.</p></div>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Deleting an agent&#39;s profile first. Any orchestrator that still lists it in <code>agents</code>/<code>handoffs</code> starts failing. Order matters: stop new invocations → remove references from parents → delete through a reviewed PR → revoke its access.</p></div>
+
+</div>
+<div class="section">
+<h2 id="9-hands-on-lab-build-an-ai-dream-team-with-copilot-cli">9. Hands-On Lab: Build an AI Dream Team with Copilot CLI</h2>
+<p>The module&#39;s exercise, <a href="https://learn.microsoft.com/en-us/training/modules/multi-agent-systems-orchestration/exercise" target="_blank" rel="noopener">Build an AI dream team with GitHub Copilot CLI custom agents</a> (about 45 minutes), is the best practical rehearsal for this domain:</p>
+<ol>
+<li>Create a repo from the exercise template (public recommended, to avoid Actions minutes), start a <strong>Codespace</strong>, and open Copilot CLI in the terminal.</li>
+<li>Inspect <code>.github/agents/</code> and identify four roles: <strong>Orchestrator</strong> (coordinates), <strong>Planner</strong> (breaks work into phases), <strong>Designer</strong> (visual structure and UX), <strong>Coder</strong> (implements files).</li>
+<li>Ask the Orchestrator to involve the Planner and produce an implementation plan for &quot;Mona&#39;s Project Pulse&quot; dashboard; review the phases.</li>
+<li>Have the Orchestrator delegate design to the Designer, then implementation to the Coder (<code>app/index.html</code>, <code>app/styles.css</code>, <code>app/project-data.json</code>, <code>.vscode/launch.json</code>).</li>
+<li>Run and validate the dashboard, then ask the Orchestrator for a <strong>handoff summary</strong> of what each agent did; planning and handoff notes land under <code>docs/</code>.</li>
+<li>Commit. Don&#39;t edit the exercise&#39;s workflow files — they grade your progress.</li>
+</ol>
+<div class="callout tip"><p><strong>📘 Teaching Tip:</strong> While doing the lab, map what you see to the exam vocabulary: the Orchestrator is the hierarchical pattern, the plan and handoff notes are durable artifacts, and the final summary is the &quot;document key decisions, handoffs, and outcomes&quot; skill.</p></div>
+
+</div>
+<div class="section">
+<h2 id="10-domain-5-key-takeaways">10. Domain 5 Key Takeaways</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Key Insight</th>
+<th>Exam Tip</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Multi-Agent SDLC Roles</td>
+<td>Each SDLC phase needs a specialized agent with bounded scope</td>
+<td>Agents propose; humans and policy accept</td>
+</tr>
+<tr>
+<td>Orchestration Patterns</td>
+<td>Hierarchical (<code>agent</code> tool/subagents), Sequential (<code>needs</code>/<code>workflow_run</code>), Parallel (fan-out/fan-in, matrix), Competitive (community)</td>
+<td>Match pattern to scenario: dynamic delegation = hierarchical, fixed sequence = sequential</td>
+</tr>
+<tr>
+<td>Agent Isolation</td>
+<td>Branches, workflows, permissions, concurrency controls — all four are needed</td>
+<td>Each mechanism isolates a different dimension (code, runtime, access, execution)</td>
+</tr>
+<tr>
+<td>Conflict Resolution</td>
+<td>Prevent → Detect → Resolve: concurrency groups, merge validation checks, CODEOWNERS + human review</td>
+<td>Escalate when automated resolution fails twice</td>
+</tr>
+<tr>
+<td>System Observability</td>
+<td>Attribution + Evidence + Cross-Job Handoffs = full traceability</td>
+<td>Always start debugging with logs and attribution</td>
+</tr>
+<tr>
+<td>Failure Recovery</td>
+<td>Bounded retry → Rollback → Escalate: match strategy to failure type</td>
+<td>Transient = retry; Logic = fix &amp; re-run; Repeated/security = human</td>
+</tr>
+<tr>
+<td>Post-Hoc Analysis</td>
+<td>Artifacts first, then PR timeline, check history, run history, session logs, audit log</td>
+<td>Missing artifact → <code>action:artifact.destroy</code>; audit log keeps 180 days</td>
+</tr>
+<tr>
+<td>Agent Lifecycle</td>
+<td>Deploy → monitor → update → retire; profile versioned by commit SHA</td>
+<td>In-flight PRs keep their agent version; retire via disable + reviewed delete</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p><strong>🎓 Video Insight — Real multi-agent architecture from Ari (unverified community info):</strong> Ari&#39;s demo: Orchestrator agent coordinates everything. Planner agent reads the codebase (read-only). Coder and Designer agents work in parallel on isolated branches. Each proposes a PR. &quot;Every time you use an agent, it&#39;s going to create its own branch. You could specify that. Should you merge directly to main? Probably not.&quot;</p></div>
+
+</div>
+<div class="section">
+<h2 id="recap-key-takeaways">Recap: Key Takeaways</h2>
+<ul>
+<li>Give each agent one narrow role, its own tools, and its own paths; agents propose, humans and policy accept.</li>
+<li>Hierarchical = a lead agent delegates at runtime; sequential = <code>needs</code> / <code>workflow_run</code>; parallel = fan-out/fan-in; matrix = same job, different inputs.</li>
+<li>Run agents in parallel only when they work on isolated paths.</li>
+<li>Isolation has four dimensions: branches, workflows/jobs, permissions, concurrency groups.</li>
+<li>Concurrency groups stop simultaneous runs; they don&#39;t detect code conflicts.</li>
+<li>Detect textual conflicts by merging (merge validation check) and semantic conflicts with tests run after combining.</li>
+<li>Hand off through durable artifacts and PR sections, not chat output.</li>
+<li>Post-hoc analysis starts with artifacts; the audit log (<code>actor:Copilot</code>) keeps 180 days.</li>
+<li>Transient failure → bounded retry; logic failure → fix and re-run; repeated or policy failure → escalate to a human.</li>
+<li>Re-run failed jobs only; <code>needs</code> keeps a failed pipeline from opening a PR.</li>
+<li>Agent profiles are versioned by commit SHA; in-flight PRs keep their version.</li>
+<li>Retire agents by disabling invocation, removing references, deleting via reviewed PR, and revoking access.</li>
+</ul>
+
+</div>
+<div class="section">
+<h2 id="hands-on-practice">Hands-On Practice</h2>
+<p>Use a <strong>public</strong> personal repository (public repos get free GitHub-hosted Actions minutes).</p>
+<p><strong>Exercise 1 — See fan-out, fan-in, and a concurrency group.</strong> Add this workflow as <code>.github/workflows/fan.yml</code>:</p>
+<div class="code-block">name: Fan demo
+on: workflow_dispatch
+concurrency:
+  group: fan-demo
+  cancel-in-progress: false
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo &quot;plan ready&quot;
+  work:
+    needs: plan
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        role: [implementer, test-writer]
+    steps:
+      - run: sleep 60 &amp;&amp; echo &quot;${{ matrix.role }} done&quot;
+  combine:
+    needs: work
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo &quot;both legs finished&quot;</div>
+<p>Steps: open <strong>Actions → Fan demo → Run workflow</strong> twice within a few seconds. <strong>Expected result:</strong> the run graph shows <code>plan</code> → two <code>work</code> legs side by side → <code>combine</code>, and <code>combine</code> starts only after both legs finish. The second run shows as <em>pending</em> until the first completes, because both share the <code>fan-demo</code> concurrency group. Bonus: change one leg&#39;s step to <code>exit 1</code> and see <code>combine</code> get skipped; then use <strong>Re-run failed jobs</strong>.</p>
+<p><strong>Exercise 2 — Create and resolve a conflict.</strong></p>
+<ol>
+<li>Create branches <code>agent/a/1</code> and <code>agent/b/1</code> from <code>main</code>, and in each change the <strong>same line</strong> of <code>README.md</code> differently.</li>
+<li>Open a PR for each. Merge the first one.</li>
+<li><strong>Expected result:</strong> the second PR shows <em>This branch has conflicts that must be resolved</em>. Use <strong>Resolve conflicts</strong> in the web editor, keep the right content, and merge. Then repeat with changes on <em>different</em> lines and confirm GitHub merges cleanly — a clean merge says nothing about whether the code still works.</li>
+</ol>
+<p><strong>Exercise 3 — Build an agent team.</strong> Complete the Learn exercise <a href="https://learn.microsoft.com/en-us/training/modules/multi-agent-systems-orchestration/exercise" target="_blank" rel="noopener">Build an AI dream team with GitHub Copilot CLI custom agents</a> (walkthrough in <a href="#9-hands-on-lab-build-an-ai-dream-team-with-copilot-cli">section 9</a>). <strong>Expected result:</strong> a working dashboard, plan and handoff notes under <code>docs/</code>, and a handoff summary that names what each agent did.</p>
+<p>Related Learn units: <a href="https://learn.microsoft.com/en-us/training/modules/multi-agent-systems-orchestration/3-agent-orchestration-github-workflows" target="_blank" rel="noopener">Agent orchestration with GitHub workflows</a>, <a href="https://learn.microsoft.com/en-us/training/modules/multi-agent-systems-orchestration/5-conflict-resolution-github-arbitration" target="_blank" rel="noopener">Conflict resolution and arbitration</a>, <a href="https://learn.microsoft.com/en-us/training/modules/multi-agent-systems-orchestration/6-system-observability-evidence-workflows" target="_blank" rel="noopener">System observability</a>, and <a href="https://learn.microsoft.com/en-us/training/modules/multi-agent-systems-orchestration/7-scale-failure-recovery" target="_blank" rel="noopener">Scale and failure recovery</a>.</p>
+
+</div>
+<div class="section">
+<h2 id="practice-questions">Practice Questions</h2>
+<p><strong>1.</strong> A spec-analyzer agent and a risk-reviewer agent work on separate paths. A plan-merger job must start only after both finish. What should you configure?</p>
+<ul>
+<li>A. <code>strategy.matrix</code> with both agents as matrix values</li>
+<li>B. Two independent jobs, plus a third job with <code>needs: [spec_analyzer, risk_reviewer]</code></li>
+<li>C. A <code>workflow_run</code> trigger on each agent&#39;s workflow</li>
+<li>D. Job-level <code>concurrency</code> on the plan-merger job</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> B — fan-out/fan-in: parallel jobs, then a downstream job that lists both in <code>needs</code>.</p></div>
+<p><strong>2.</strong> You edit a custom agent&#39;s profile on the default branch while that agent is still iterating on an open PR. What happens to the open PR?</p>
+<ul>
+<li>A. The PR session restarts with the new profile</li>
+<li>B. The PR is closed because its agent version no longer exists</li>
+<li>C. Interactions in that PR keep using the profile version it started with</li>
+<li>D. The agent switches to the organization-level profile</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> C — versioning is by commit SHA, and a PR keeps using the same agent version for consistency.</p></div>
+<p><strong>3.</strong> After a weekend of automated runs, the <code>agent-report</code> artifact from one workflow run is missing. What is the fastest way to find out what happened?</p>
+<ul>
+<li>A. Re-run the workflow and compare outputs</li>
+<li>B. Search the organization audit log for <code>action:artifact.destroy</code></li>
+<li>C. Increase the workflow&#39;s <code>cancel-in-progress</code> setting</li>
+<li>D. Check the Copilot CLI local session history</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> B — that audit event shows who deleted the artifact, when, and in which repository.</p></div>
+<p><strong>4.</strong> A planner agent fails every time it tries to delegate to a <code>reviewer</code> agent, while users can still select <code>reviewer</code> manually. What is the most likely cause?</p>
+<ul>
+<li>A. <code>reviewer</code> has <code>user-invocable: false</code></li>
+<li>B. <code>reviewer</code> has <code>disable-model-invocation: true</code></li>
+<li>C. <code>reviewer</code> omits the <code>tools</code> property</li>
+<li>D. <code>reviewer</code> is defined at the organization level</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> B — an agent with <code>disable-model-invocation: true</code> can&#39;t be invoked as a subagent, though users can still pick it.</p></div>
+<p><strong>5.</strong> Your team wants to retire a dependency agent while keeping the ability to explain its past changes to auditors next year. Which approach fits best?</p>
+<ul>
+<li>A. Force-push to remove the agent profile from history</li>
+<li>B. Delete its PRs and artifacts so no one reuses them</li>
+<li>C. Disable invocation, remove it from orchestrator handoffs, delete the profile via a reviewed PR, and stream the audit log to a SIEM</li>
+<li>D. Rename the profile so its name no longer matches any handoff</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> C — stop new invocations, keep Git history and evidence, and extend audit retention beyond 180 days.</p></div>
+<div class="nav-links"><a href="domain-4.html">← D4: Evaluation</a><a href="domain-6.html">D6: Guardrails →</a></div>
+</div>
+</main>
+
+<footer class="site-footer">GH-600 Study Guide (corrected) · Based on official Microsoft Learn modules and GitHub Docs · Not affiliated with GitHub or Microsoft</footer>
+</body>
+</html>

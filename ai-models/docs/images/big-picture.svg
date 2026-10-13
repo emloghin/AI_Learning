@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 330" role="img" aria-label="The big picture: data goes into training, training produces a model made of weights, and inference turns a prompt into output tokens">
+  <defs>
+    <marker id="bpArrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="900" height="330" rx="16" fill="#f8fafc"/>
+  <text x="450" y="34" text-anchor="middle" font-family="Inter,sans-serif" font-size="18" font-weight="700" fill="#0f172a">From data to answers: the life of an AI model</text>
+
+  <text x="290" y="66" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#7c3aed">BUILD ONCE (expensive, months)</text>
+  <text x="720" y="66" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#059669">USE MANY TIMES (cheap, seconds)</text>
+
+  <rect x="30" y="80" width="170" height="130" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="115" y="110" text-anchor="middle" font-family="Inter,sans-serif" font-size="16" font-weight="700" fill="#1e3a8a">1. Data</text>
+  <text x="115" y="136" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#1e3a8a">Books, web pages,</text>
+  <text x="115" y="154" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#1e3a8a">code, images,</text>
+  <text x="115" y="172" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#1e3a8a">examples</text>
+
+  <line x1="200" y1="145" x2="246" y2="145" stroke="#475569" stroke-width="2.5" marker-end="url(#bpArrow)"/>
+
+  <rect x="250" y="80" width="170" height="130" rx="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+  <text x="335" y="110" text-anchor="middle" font-family="Inter,sans-serif" font-size="16" font-weight="700" fill="#4c1d95">2. Training</text>
+  <text x="335" y="136" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#4c1d95">Guess, measure error,</text>
+  <text x="335" y="154" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#4c1d95">nudge the numbers.</text>
+  <text x="335" y="172" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#4c1d95">Repeat billions</text>
+  <text x="335" y="190" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#4c1d95">of times on GPUs</text>
+
+  <line x1="420" y1="145" x2="466" y2="145" stroke="#475569" stroke-width="2.5" marker-end="url(#bpArrow)"/>
+
+  <rect x="470" y="80" width="170" height="130" rx="12" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="555" y="110" text-anchor="middle" font-family="Inter,sans-serif" font-size="16" font-weight="700" fill="#78350f">3. Model</text>
+  <text x="555" y="136" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#78350f">A file of learned</text>
+  <text x="555" y="154" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#78350f">numbers (weights)</text>
+  <text x="555" y="178" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="600" fill="#78350f">0.12  -0.87  1.04 ...</text>
+
+  <line x1="640" y1="145" x2="686" y2="145" stroke="#475569" stroke-width="2.5" marker-end="url(#bpArrow)"/>
+
+  <rect x="690" y="80" width="180" height="130" rx="12" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+  <text x="780" y="110" text-anchor="middle" font-family="Inter,sans-serif" font-size="16" font-weight="700" fill="#064e3b">4. Inference</text>
+  <text x="780" y="136" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#064e3b">Run the model on</text>
+  <text x="780" y="154" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#064e3b">new input to get</text>
+  <text x="780" y="172" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#064e3b">an answer</text>
+
+  <rect x="470" y="240" width="400" height="66" rx="12" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="490" y="266" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="#0f172a">Prompt in:</text>
+  <text x="572" y="266" font-family="Inter,sans-serif" font-size="13" fill="#334155">"The sky is"</text>
+  <text x="490" y="292" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="#0f172a">Tokens out:</text>
+  <text x="580" y="292" font-family="Inter,sans-serif" font-size="13" fill="#334155">" blue" → " today" → "." (one at a time)</text>
+  <line x1="780" y1="210" x2="780" y2="236" stroke="#475569" stroke-width="2" marker-end="url(#bpArrow)"/>
+
+  <text x="30" y="262" font-family="Inter,sans-serif" font-size="12" fill="#475569">Training happens rarely and costs a lot.</text>
+  <text x="30" y="282" font-family="Inter,sans-serif" font-size="12" fill="#475569">Inference happens every time you send</text>
+  <text x="30" y="302" font-family="Inter,sans-serif" font-size="12" fill="#475569">a message, and the weights do not change.</text>
+</svg>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Learn: How AI Models Really Work — AI Learn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>.section td code,.callout code,.diagram-caption code{background:var(--primary-light);color:var(--primary);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:13px}.callout p+p{margin-top:8px}.callout ul{margin:8px 0 0 20px}</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-logo"><span>AI&nbsp;</span>Learn</div>
+    <nav class="header-nav">
+      <a href="index.html" class="active">Home</a>
+      <a href="foundations.html">1. Foundations</a>
+      <a href="neural-networks.html">2. Neural Networks</a>
+      <a href="transformers.html">3. Transformers &amp; LLMs</a>
+      <a href="training.html">4. Training &amp; Tuning</a>
+      <a href="models.html">5. Model Landscape</a>
+      <a href="using-ai.html">6. Using Models</a>
+      <a href="tokens.html">7. Tokens &amp; Cost</a>
+      <a href="best-practices.html">8. Best Practices</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="resources.html">Resources</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-badge">Beginner guide · Start here</div>
+  <h1>AI Learn: How AI Models Really Work</h1>
+  <p>A friendly, from-zero guide to how AI models like ChatGPT, Claude, Gemini, Llama and Mistral actually work — no math or programming background needed, just curiosity.</p>
+</section>
+
+<main class="main">
+<div class="section">
+<h2 id="1-what-this-site-is">1. What this site is</h2>
+<p>AI Learn is a step-by-step course that explains what happens <em>inside</em> an AI model: how it learns from data, what its &quot;billions of parameters&quot; really are, why it writes one word-piece at a time, and why it sometimes gets things confidently wrong.</p>
+<p>Every chapter uses plain language first, then a small worked example with real numbers, then a picture. Where a fact matters, we link to the source — mainly the <a href="https://developers.google.com/machine-learning/crash-course" target="_blank" rel="noopener">Google Machine Learning Crash Course</a>, <a href="https://learn.microsoft.com/training/modules/get-started-ai-fundamentals/" target="_blank" rel="noopener">Microsoft Learn: Introduction to AI concepts</a>, the <a href="https://huggingface.co/learn/llm-course" target="_blank" rel="noopener">Hugging Face LLM Course</a>, the <a href="https://www.3blue1brown.com/topics/neural-networks" target="_blank" rel="noopener">3Blue1Brown neural network series</a>, and the original research papers.</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> This site is the &quot;how does the engine work&quot; manual. It is not a list of prompts or a product review. Once you understand the engine, every AI product starts to make sense.</p></div>
+
+</div>
+<div class="section">
+<h2 id="2-who-it-is-for">2. Who it is for</h2>
+<ul>
+<li><strong>Curious beginners</strong> who use AI chat tools and want to know what is going on behind the text box.</li>
+<li><strong>Professionals</strong> (managers, analysts, writers, IT staff) who need to make decisions about AI and want a solid mental model instead of buzzwords.</li>
+<li><strong>Future builders</strong> who plan to go on to coding courses and want the concepts in place first.</li>
+</ul>
+<p>You do <strong>not</strong> need to know calculus, statistics, or programming. When a formula appears, it is explained in words and followed by a tiny example you can check with a phone calculator.</p>
+
+</div>
+<div class="section">
+<h2 id="3-how-to-use-it">3. How to use it</h2>
+<ol>
+<li><strong>Read in order.</strong> Each chapter builds on the previous one. Chapter 3 (Transformers) makes much more sense after Chapter 2 (Neural Networks).</li>
+<li><strong>Look for the callouts.</strong> 📘 boxes restate an idea in plain words, 💡 boxes give examples, ⚠️ boxes flag common misconceptions, ✅ boxes summarize, and 🎯 boxes suggest something to try.</li>
+<li><strong>Do the quiz.</strong> Each chapter ends with &quot;Check Your Understanding&quot;. If you miss a question, reread that section — it is the fastest way to make ideas stick.</li>
+<li><strong>Use the glossary.</strong> Any unfamiliar word is probably in the <a href="glossary.html">Glossary</a>.</li>
+</ol>
+<div class="callout tip"><p><strong>🎯 Try it:</strong> Keep an AI chat tool open while you read. When a chapter explains an idea (for example, tokens or temperature), try it out and see the effect for yourself.</p></div>
+
+</div>
+<div class="section">
+<h2 id="4-the-learning-path">4. The learning path</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Chapter</th>
+<th>What you will learn</th>
+<th>Reading time</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="foundations.html">1. Foundations</a></td>
+<td>AI vs machine learning vs deep learning vs generative AI; what a &quot;model&quot; is; training vs inference; overfitting</td>
+<td>~25 min</td>
+</tr>
+<tr>
+<td><a href="neural-networks.html">2. Neural Networks</a></td>
+<td>Neurons, weights, layers, parameters, loss, gradient descent, backpropagation — with a worked example</td>
+<td>~40 min</td>
+</tr>
+<tr>
+<td><a href="transformers.html">3. Transformers &amp; LLMs</a></td>
+<td>Embeddings, attention, the Transformer architecture, and how a large language model predicts the next token</td>
+<td>~40 min</td>
+</tr>
+<tr>
+<td><a href="training.html">4. Training &amp; Tuning</a></td>
+<td>Pre-training, fine-tuning, instruction tuning, RLHF, and why training is so expensive</td>
+<td>~30 min</td>
+</tr>
+<tr>
+<td><a href="models.html">5. Model Landscape</a></td>
+<td>Proprietary vs open-weight models, model families and sizes, multimodal models, how to compare them</td>
+<td>~30 min</td>
+</tr>
+<tr>
+<td><a href="using-ai.html">6. Using Models</a></td>
+<td>Prompting, temperature, system prompts, RAG, tools and agents, running models locally</td>
+<td>~35 min</td>
+</tr>
+<tr>
+<td><a href="tokens.html">7. Tokens &amp; Cost</a></td>
+<td>What tokens are, context windows, how pricing works, and how to estimate cost</td>
+<td>~25 min</td>
+</tr>
+<tr>
+<td><a href="best-practices.html">8. Best Practices</a></td>
+<td>Hallucinations, bias, privacy, security, evaluation, and responsible use</td>
+<td>~30 min</td>
+</tr>
+<tr>
+<td><a href="glossary.html">Glossary</a></td>
+<td>Every key term in one place</td>
+<td>reference</td>
+</tr>
+<tr>
+<td><a href="resources.html">Resources</a></td>
+<td>Free courses, videos, papers, and tools for going further</td>
+<td>reference</td>
+</tr>
+</tbody></table></div>
+<p>Total: about four and a quarter hours of reading, spread over as many sessions as you like.</p>
+
+</div>
+<div class="section">
+<h2 id="5-the-big-picture-in-60-seconds">5. The big picture in 60 seconds</h2>
+<p>Imagine you want to build a machine that finishes sentences.</p>
+<p><strong>Step 1 — Collect data.</strong> You gather an enormous pile of text: books, articles, websites, code. This is the <em>training data</em>.</p>
+<p><strong>Step 2 — Train.</strong> You start with a giant mathematical function full of random numbers. You show it the beginning of a sentence from your data — &quot;The cat sat on the&quot; — and ask it to guess the next word. At first it guesses nonsense. You measure how wrong it was, then nudge every number a tiny bit in the direction that would have made the right answer (&quot;mat&quot;) more likely. Repeat this trillions of times across the whole pile of text. This is <em>training</em>, and for large models it takes thousands of specialized chips (GPUs) running for weeks or months.</p>
+<p><strong>Step 3 — Keep the numbers.</strong> When training finishes, the numbers are frozen. These numbers are called <em>weights</em> or <em>parameters</em>, and together with the recipe for how to combine them, they <em>are</em> the model. A &quot;7B&quot; model has about 7 billion of them. The model does not store the books it read; it stores patterns compressed into those numbers.</p>
+<p><strong>Step 4 — Use it (inference).</strong> Now you type a <em>prompt</em>: &quot;Write a haiku about rain.&quot; The text is chopped into small pieces called <em>tokens</em>. The model runs the tokens through its frozen weights and produces a probability for every possible next token. One token is picked, added to the text, and the whole process repeats — one token at a time — until the answer is complete. That is <em>inference</em>, and it is what happens every time you press Enter in a chat app.</p>
+<div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 330" role="img" aria-label="The big picture: data goes into training, training produces a model made of weights, and inference turns a prompt into output tokens">
+  <defs>
+    <marker id="bpArrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="900" height="330" rx="16" fill="#f8fafc"/>
+  <text x="450" y="34" text-anchor="middle" font-family="Inter,sans-serif" font-size="18" font-weight="700" fill="#0f172a">From data to answers: the life of an AI model</text>
+
+  <text x="290" y="66" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#7c3aed">BUILD ONCE (expensive, months)</text>
+  <text x="720" y="66" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#059669">USE MANY TIMES (cheap, seconds)</text>
+
+  <rect x="30" y="80" width="170" height="130" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="115" y="110" text-anchor="middle" font-family="Inter,sans-serif" font-size="16" font-weight="700" fill="#1e3a8a">1. Data</text>
+  <text x="115" y="136" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#1e3a8a">Books, web pages,</text>
+  <text x="115" y="154" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#1e3a8a">code, images,</text>
+  <text x="115" y="172" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#1e3a8a">examples</text>
+
+  <line x1="200" y1="145" x2="246" y2="145" stroke="#475569" stroke-width="2.5" marker-end="url(#bpArrow)"/>
+
+  <rect x="250" y="80" width="170" height="130" rx="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+  <text x="335" y="110" text-anchor="middle" font-family="Inter,sans-serif" font-size="16" font-weight="700" fill="#4c1d95">2. Training</text>
+  <text x="335" y="136" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#4c1d95">Guess, measure error,</text>
+  <text x="335" y="154" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#4c1d95">nudge the numbers.</text>
+  <text x="335" y="172" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#4c1d95">Repeat billions</text>
+  <text x="335" y="190" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#4c1d95">of times on GPUs</text>
+
+  <line x1="420" y1="145" x2="466" y2="145" stroke="#475569" stroke-width="2.5" marker-end="url(#bpArrow)"/>
+
+  <rect x="470" y="80" width="170" height="130" rx="12" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="555" y="110" text-anchor="middle" font-family="Inter,sans-serif" font-size="16" font-weight="700" fill="#78350f">3. Model</text>
+  <text x="555" y="136" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#78350f">A file of learned</text>
+  <text x="555" y="154" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#78350f">numbers (weights)</text>
+  <text x="555" y="178" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="600" fill="#78350f">0.12  -0.87  1.04 ...</text>
+
+  <line x1="640" y1="145" x2="686" y2="145" stroke="#475569" stroke-width="2.5" marker-end="url(#bpArrow)"/>
+
+  <rect x="690" y="80" width="180" height="130" rx="12" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+  <text x="780" y="110" text-anchor="middle" font-family="Inter,sans-serif" font-size="16" font-weight="700" fill="#064e3b">4. Inference</text>
+  <text x="780" y="136" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#064e3b">Run the model on</text>
+  <text x="780" y="154" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#064e3b">new input to get</text>
+  <text x="780" y="172" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#064e3b">an answer</text>
+
+  <rect x="470" y="240" width="400" height="66" rx="12" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="490" y="266" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="#0f172a">Prompt in:</text>
+  <text x="572" y="266" font-family="Inter,sans-serif" font-size="13" fill="#334155">"The sky is"</text>
+  <text x="490" y="292" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="#0f172a">Tokens out:</text>
+  <text x="580" y="292" font-family="Inter,sans-serif" font-size="13" fill="#334155">" blue" → " today" → "." (one at a time)</text>
+  <line x1="780" y1="210" x2="780" y2="236" stroke="#475569" stroke-width="2" marker-end="url(#bpArrow)"/>
+
+  <text x="30" y="262" font-family="Inter,sans-serif" font-size="12" fill="#475569">Training happens rarely and costs a lot.</text>
+  <text x="30" y="282" font-family="Inter,sans-serif" font-size="12" fill="#475569">Inference happens every time you send</text>
+  <text x="30" y="302" font-family="Inter,sans-serif" font-size="12" fill="#475569">a message, and the weights do not change.</text>
+</svg>
+<div class="diagram-caption">Figure 1 — The life of a model: build once (data and training), then use many times (inference).</div></div>
+<div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;The AI looks up answers in a database of everything it read.&quot; It does not. A plain language model has no search index of its training data. It generates text from patterns stored in its weights, which is why it can be fluent and wrong at the same time. (Some products <em>add</em> a search step on top — you will learn about that, called RAG, in <a href="using-ai.html">Using Models</a>.)</p></div>
+<div class="callout success"><p><strong>✅ Key takeaway:</strong> Data → training → weights → inference. Almost every question about AI (&quot;Why is it expensive?&quot;, &quot;Why does it make things up?&quot;, &quot;Why does it have a knowledge cut-off?&quot;) traces back to one of these four stages.</p></div>
+
+</div>
+<div class="section">
+<h2 id="6-ten-terms-to-know-first">6. Ten terms to know first</h2>
+<p>Short definitions now; fuller explanations in the chapters and the <a href="glossary.html">Glossary</a>.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Quick definition</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Model</strong></td>
+<td>A mathematical function with learned numbers that turns an input (text, image) into an output (an answer, a label, the next word).</td>
+</tr>
+<tr>
+<td><strong>Parameters (weights)</strong></td>
+<td>The learned numbers inside a model. Training adjusts them; inference uses them unchanged.</td>
+</tr>
+<tr>
+<td><strong>Training</strong></td>
+<td>The process of adjusting a model&#39;s parameters by showing it examples and correcting its mistakes.</td>
+</tr>
+<tr>
+<td><strong>Inference</strong></td>
+<td>Using a trained model to produce an output for new input — what happens when you chat with an AI.</td>
+</tr>
+<tr>
+<td><strong>Neural network</strong></td>
+<td>A model made of layers of simple units (&quot;neurons&quot;) connected by weights. The engine behind modern AI.</td>
+</tr>
+<tr>
+<td><strong>Transformer</strong></td>
+<td>The neural network design (introduced in 2017) that powers today&#39;s language models, built around a mechanism called <em>attention</em>.</td>
+</tr>
+<tr>
+<td><strong>LLM (large language model)</strong></td>
+<td>A very large Transformer trained on huge amounts of text to predict the next token. GPT, Claude, Gemini, Llama and Mistral models are LLMs.</td>
+</tr>
+<tr>
+<td><strong>Token</strong></td>
+<td>A chunk of text (a word, part of a word, or punctuation) — the unit a language model reads, writes, and is billed by.</td>
+</tr>
+<tr>
+<td><strong>Prompt</strong></td>
+<td>The input you give a model: your question, instructions, and any context.</td>
+</tr>
+<tr>
+<td><strong>Context window</strong></td>
+<td>The maximum number of tokens a model can consider at once, including both your prompt and its reply.</td>
+</tr>
+</tbody></table></div>
+<div class="nav-links"><a href="foundations.html">Start Chapter 1: Foundations →</a></div>
+</div>
+</main>
+
+<footer class="site-footer">AI Learn · A beginner's guide to how AI models work · Based on official docs and open course material · Not affiliated with any model provider</footer>
+</body>
+</html>

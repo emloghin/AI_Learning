@@ -1,0 +1,57 @@
+<svg viewBox="0 0 760 460" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three-tier memory hierarchy diagram">
+        <defs>
+          <linearGradient id="bgGradD3" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f0f9ff" />
+            <stop offset="100%" stop-color="#e0f2fe" />
+          </linearGradient>
+          <linearGradient id="shortGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#f59e0b" />
+            <stop offset="100%" stop-color="#fbbf24" />
+          </linearGradient>
+          <linearGradient id="longGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#2563eb" />
+            <stop offset="100%" stop-color="#3b82f6" />
+          </linearGradient>
+          <linearGradient id="extGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#059669" />
+            <stop offset="100%" stop-color="#10b981" />
+          </linearGradient>
+          <filter id="shadowD3">
+            <feDropShadow dx="0" dy="3" stdDeviation="4" flood-opacity=".15" />
+          </filter>
+        </defs>
+        <rect x="0" y="0" width="760" height="460" rx="10" fill="url(#bgGradD3)" />
+
+        <!-- Title -->
+        <text x="380" y="32" text-anchor="middle" fill="#1e3a5f" font-size="16" font-weight="800" font-family="Inter,sans-serif">Three-Tier Memory Hierarchy</text>
+
+        <!-- Tier 1: Short-Term Memory (bottom, widest) -->
+        <rect x="30" y="340" width="700" height="80" rx="10" fill="url(#shortGrad)" filter="url(#shadowD3)" />
+        <text x="380" y="370" text-anchor="middle" fill="#fff" font-size="16" font-weight="800" font-family="Inter,sans-serif">Tier 1: Short-Term Memory (Session)</text>
+        <text x="380" y="392" text-anchor="middle" fill="#fef3c7" font-size="11" font-family="Inter,sans-serif">Duration: Single session · Scope: Current conversation · Volatile: Lost when session ends</text>
+
+        <!-- Arrow up -->
+        <line x1="380" y1="340" x2="380" y2="300" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4,3" />
+        <polygon points="375,304 380,294 385,304" fill="#94a3b8" />
+
+        <!-- Tier 2: Long-Term Memory (middle) -->
+        <rect x="80" y="210" width="600" height="80" rx="10" fill="url(#longGrad)" filter="url(#shadowD3)" />
+        <text x="380" y="240" text-anchor="middle" fill="#fff" font-size="16" font-weight="800" font-family="Inter,sans-serif">Tier 2: Long-Term Memory (e.g., Copilot Memory)</text>
+        <text x="380" y="262" text-anchor="middle" fill="#dbeafe" font-size="11" font-family="Inter,sans-serif">Copilot Memory: deleted after 28 days unused · Repository facts + User preferences</text>
+
+        <!-- Arrow up -->
+        <line x1="380" y1="210" x2="380" y2="170" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4,3" />
+        <polygon points="375,174 380,164 385,174" fill="#94a3b8" />
+
+        <!-- Tier 3: External (top, narrowest) -->
+        <rect x="130" y="80" width="500" height="80" rx="10" fill="url(#extGrad)" filter="url(#shadowD3)" />
+        <text x="380" y="110" text-anchor="middle" fill="#fff" font-size="16" font-weight="800" font-family="Inter,sans-serif">Tier 3: External / Durable Artifacts</text>
+        <text x="380" y="132" text-anchor="middle" fill="#d1fae5" font-size="11" font-family="Inter,sans-serif">Issues, PRs, Commits, Docs · Workflow logs/artifacts: 90-day default</text>
+
+        <!-- Side annotations: Volatility -->
+        <text x="380" y="445" text-anchor="middle" font-size="10" fill="#64748b" font-family="Inter,sans-serif">Tier 1: volatile, current task only  ·  Tier 2: reusable, curated  ·  Tier 3: durable, auditable record</text>
+
+        <!-- Arrow labels -->
+        <text x="390" y="323" fill="#64748b" font-size="9" font-family="Inter,sans-serif">Promote reusable knowledge</text>
+        <text x="390" y="193" fill="#64748b" font-size="9" font-family="Inter,sans-serif">Capture decisions as artifacts (PRs, issues, docs)</text>
+      </svg>

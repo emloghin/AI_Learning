@@ -1,0 +1,118 @@
+<svg viewBox="0 0 760 580" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Tool permission decision tree">
+        <defs>
+          <linearGradient id="bgGrad2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f0f9ff" />
+            <stop offset="100%" stop-color="#e0f2fe" />
+          </linearGradient>
+          <linearGradient id="greenGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#059669" />
+            <stop offset="100%" stop-color="#10b981" />
+          </linearGradient>
+          <linearGradient id="yellowGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#d97706" />
+            <stop offset="100%" stop-color="#f59e0b" />
+          </linearGradient>
+          <linearGradient id="orangeGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ea580c" />
+            <stop offset="100%" stop-color="#f97316" />
+          </linearGradient>
+          <linearGradient id="redGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#dc2626" />
+            <stop offset="100%" stop-color="#ef4444" />
+          </linearGradient>
+          <filter id="shadow2">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity=".15" />
+          </filter>
+        </defs>
+        <rect x="0" y="0" width="760" height="580" rx="10" fill="url(#bgGrad2)" />
+
+        <!-- Start / Question -->
+        <ellipse cx="380" cy="40" rx="100" ry="22" fill="#1e293b" filter="url(#shadow2)" />
+        <text x="380" y="45" text-anchor="middle" fill="#fff" font-size="13" font-weight="700" font-family="Inter,sans-serif">What does the task need?</text>
+
+        <!-- Arrow down -->
+        <line x1="380" y1="62" x2="380" y2="82" stroke="#94a3b8" stroke-width="2" />
+        <polygon points="375,78 380,88 385,78" fill="#94a3b8" />
+
+        <!-- Decision diamond: Read only? -->
+        <polygon points="380,85 460,120 380,155 300,120" fill="#fff" stroke="#059669" stroke-width="2.5" filter="url(#shadow2)" />
+        <text x="380" y="117" text-anchor="middle" fill="#059669" font-size="12" font-weight="700" font-family="Inter,sans-serif">Read only?</text>
+        <text x="380" y="132" text-anchor="middle" fill="#059669" font-size="11" font-family="Inter,sans-serif">Just need to see code?</text>
+
+        <!-- YES -> Read -->
+        <line x1="460" y1="120" x2="530" y2="120" stroke="#059669" stroke-width="2" />
+        <polygon points="526,115 536,120 526,125" fill="#059669" />
+        <text x="495" y="112" text-anchor="middle" fill="#059669" font-size="11" font-weight="700" font-family="Inter,sans-serif">YES</text>
+
+        <rect x="540" y="105" width="80" height="30" rx="15" fill="url(#greenGrad)" filter="url(#shadow2)" />
+        <text x="580" y="124" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="Inter,sans-serif">read</text>
+
+        <!-- NO -> down to search -->
+        <line x1="300" y1="120" x2="230" y2="120" stroke="#94a3b8" stroke-width="2" />
+        <polygon points="234,115 224,120 234,125" fill="#94a3b8" />
+        <text x="265" y="112" text-anchor="middle" fill="#94a3b8" font-size="11" font-weight="700" font-family="Inter,sans-serif">NO</text>
+
+        <line x1="224" y1="120" x2="224" y2="215" stroke="#94a3b8" stroke-width="2" />
+        <polygon points="219,211 224,221 229,211" fill="#94a3b8" />
+
+        <!-- Decision diamond: Need to find? -->
+        <polygon points="224,218 304,253 224,288 144,253" fill="#fff" stroke="#059669" stroke-width="2.5" filter="url(#shadow2)" />
+        <text x="224" y="250" text-anchor="middle" fill="#059669" font-size="12" font-weight="700" font-family="Inter,sans-serif">Need to find?</text>
+        <text x="224" y="265" text-anchor="middle" fill="#059669" font-size="11" font-family="Inter,sans-serif">Search files or text?</text>
+
+        <!-- YES -> Search -->
+        <line x1="304" y1="253" x2="374" y2="253" stroke="#059669" stroke-width="2" />
+        <polygon points="370,248 380,253 370,258" fill="#059669" />
+        <text x="339" y="245" text-anchor="middle" fill="#059669" font-size="11" font-weight="700" font-family="Inter,sans-serif">YES</text>
+
+        <rect x="384" y="238" width="80" height="30" rx="15" fill="url(#greenGrad)" filter="url(#shadow2)" />
+        <text x="424" y="257" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="Inter,sans-serif">search</text>
+
+        <!-- NO -> down to edit -->
+        <line x1="144" y1="253" x2="144" y2="315" stroke="#94a3b8" stroke-width="2" />
+        <line x1="144" y1="315" x2="144" y2="345" stroke="#94a3b8" stroke-width="2" />
+        <polygon points="139,341 144,351 149,341" fill="#94a3b8" />
+        <text x="144" y="308" text-anchor="middle" fill="#94a3b8" font-size="11" font-weight="700" font-family="Inter,sans-serif">NO</text>
+
+        <!-- Decision diamond: Need to change? -->
+        <polygon points="144,348 224,383 144,418 64,383" fill="#fff" stroke="#d97706" stroke-width="2.5" filter="url(#shadow2)" />
+        <text x="144" y="380" text-anchor="middle" fill="#d97706" font-size="12" font-weight="700" font-family="Inter,sans-serif">Need to change?</text>
+        <text x="144" y="395" text-anchor="middle" fill="#d97706" font-size="11" font-family="Inter,sans-serif">Modify files?</text>
+
+        <!-- YES -> Edit -->
+        <line x1="224" y1="383" x2="294" y2="383" stroke="#d97706" stroke-width="2" />
+        <polygon points="290,378 300,383 290,388" fill="#d97706" />
+        <text x="259" y="375" text-anchor="middle" fill="#d97706" font-size="11" font-weight="700" font-family="Inter,sans-serif">YES</text>
+
+        <rect x="304" y="368" width="75" height="30" rx="15" fill="url(#yellowGrad)" filter="url(#shadow2)" />
+        <text x="341" y="387" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="Inter,sans-serif">edit</text>
+
+        <!-- NO -> down to execute -->
+        <line x1="144" y1="418" x2="144" y2="432" stroke="#94a3b8" stroke-width="2" />
+        <polygon points="139,428 144,438 149,428" fill="#94a3b8" />
+        <text x="124" y="432" text-anchor="middle" fill="#94a3b8" font-size="11" font-weight="700" font-family="Inter,sans-serif">NO</text>
+
+        <!-- Decision diamond: Need to run? -->
+        <polygon points="144,438 224,473 144,508 64,473" fill="#fff" stroke="#ea580c" stroke-width="2.5" filter="url(#shadow2)" />
+        <text x="144" y="470" text-anchor="middle" fill="#ea580c" font-size="12" font-weight="700" font-family="Inter,sans-serif">Need to run?</text>
+        <text x="144" y="485" text-anchor="middle" fill="#ea580c" font-size="11" font-family="Inter,sans-serif">Execute commands?</text>
+
+        <!-- YES -> Execute -->
+        <line x1="224" y1="473" x2="294" y2="473" stroke="#ea580c" stroke-width="2" />
+        <polygon points="290,468 300,473 290,478" fill="#ea580c" />
+        <text x="259" y="465" text-anchor="middle" fill="#ea580c" font-size="11" font-weight="700" font-family="Inter,sans-serif">YES</text>
+
+        <rect x="304" y="458" width="95" height="30" rx="15" fill="url(#orangeGrad)" filter="url(#shadow2)" />
+        <text x="351" y="477" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="Inter,sans-serif">execute</text>
+
+        <!-- NO -> Agent -->
+        <line x1="64" y1="473" x2="64" y2="473" stroke="#94a3b8" stroke-width="0" />
+        <!-- NO arrow from execute diamond -->
+        <line x1="144" y1="508" x2="144" y2="530" stroke="#94a3b8" stroke-width="2" />
+        <polygon points="139,526 144,536 149,526" fill="#94a3b8" />
+        <text x="124" y="525" text-anchor="middle" fill="#94a3b8" font-size="11" font-weight="700" font-family="Inter,sans-serif">NO</text>
+
+        <rect x="104" y="538" width="80" height="30" rx="15" fill="url(#redGrad)" filter="url(#shadow2)" />
+        <text x="144" y="557" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="Inter,sans-serif">agent</text>
+        <text x="194" y="557" fill="#dc2626" font-size="10" font-weight="600" font-family="Inter,sans-serif">(delegate to another custom agent)</text>
+      </svg>

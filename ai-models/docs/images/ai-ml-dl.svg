@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 450" role="img" aria-label="Nested circles: artificial intelligence contains machine learning, which contains deep learning, which contains generative AI">
+  <rect x="0" y="0" width="760" height="450" rx="16" fill="#f8fafc"/>
+  <ellipse cx="380" cy="230" rx="360" ry="210" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <ellipse cx="380" cy="270" rx="290" ry="165" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+  <ellipse cx="380" cy="310" rx="215" ry="120" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <ellipse cx="380" cy="350" rx="130" ry="68" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+
+  <text x="380" y="50" text-anchor="middle" font-family="Inter,sans-serif" font-size="18" font-weight="700" fill="#1e3a8a">Artificial Intelligence</text>
+  <text x="380" y="70" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#1e3a8a">Any technique that makes computers act smart.</text>
+  <text x="380" y="86" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#1e3a8a">Includes hand-written rules (chess engines, route planners).</text>
+
+  <text x="380" y="135" text-anchor="middle" font-family="Inter,sans-serif" font-size="17" font-weight="700" fill="#4c1d95">Machine Learning</text>
+  <text x="380" y="153" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#4c1d95">Learns patterns from data instead of rules.</text>
+  <text x="380" y="169" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#4c1d95">e.g. spam filters, price predictors.</text>
+
+  <text x="380" y="220" text-anchor="middle" font-family="Inter,sans-serif" font-size="16" font-weight="700" fill="#78350f">Deep Learning</text>
+  <text x="380" y="238" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#78350f">ML with many-layer neural networks.</text>
+  <text x="380" y="254" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#78350f">e.g. face unlock, speech recognition.</text>
+
+  <text x="380" y="322" text-anchor="middle" font-family="Inter,sans-serif" font-size="15" font-weight="700" fill="#064e3b">Generative AI</text>
+  <text x="380" y="341" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#064e3b">Creates new text, images,</text>
+  <text x="380" y="357" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#064e3b">audio and code (e.g. LLMs)</text>
+</svg>

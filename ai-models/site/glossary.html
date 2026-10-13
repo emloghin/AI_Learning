@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Glossary — AI Learn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>.section td code,.callout code,.diagram-caption code{background:var(--primary-light);color:var(--primary);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:13px}.callout p+p{margin-top:8px}.callout ul{margin:8px 0 0 20px}</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-logo"><span>AI&nbsp;</span>Learn</div>
+    <nav class="header-nav">
+      <a href="index.html">Home</a>
+      <a href="foundations.html">1. Foundations</a>
+      <a href="neural-networks.html">2. Neural Networks</a>
+      <a href="transformers.html">3. Transformers &amp; LLMs</a>
+      <a href="training.html">4. Training &amp; Tuning</a>
+      <a href="models.html">5. Model Landscape</a>
+      <a href="using-ai.html">6. Using Models</a>
+      <a href="tokens.html">7. Tokens &amp; Cost</a>
+      <a href="best-practices.html">8. Best Practices</a>
+      <a href="glossary.html" class="active">Glossary</a>
+      <a href="resources.html">Resources</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-badge">Reference · A–Z</div>
+  <h1>AI Glossary</h1>
+  <p>This glossary explains the words you meet throughout AI Learn in plain language. Each entry gives a short definition, an example where it helps, and a link to the chapter that covers the idea in more depth.</p>
+</section>
+
+<main class="main">
+<div class="section">
+<h2 id="a">A</h2>
+<h3 id="activation-function">Activation function</h3>
+<p>A small math function inside each neuron that decides how strongly it &quot;fires&quot;, adding the non-linearity that lets networks learn complex patterns. Common ones are ReLU (turns negatives into 0) and sigmoid (squashes values between 0 and 1). See <a href="neural-networks.html">Chapter 2</a>.</p>
+<h3 id="agent">Agent</h3>
+<p>An AI system that uses a model in a loop to plan, call tools, look at the results and decide the next step until a goal is reached. Example: a coding agent that reads an error, edits a file, runs tests and repeats. See <a href="using-ai.html">Chapter 6</a>.</p>
+<h3 id="alignment">Alignment</h3>
+<p>The work of making a model behave the way people intend: helpful, honest and harmless. Techniques such as RLHF and DPO are used for alignment. See <a href="training.html">Chapter 4</a>.</p>
+<h3 id="attention">Attention</h3>
+<p>The transformer mechanism that lets each token &quot;look at&quot; other tokens and decide which ones matter for its meaning. In &quot;The cat sat because it was tired&quot;, attention helps &quot;it&quot; connect to &quot;cat&quot;. See <a href="transformers.html">Chapter 3</a>.</p>
+
+</div>
+<div class="section">
+<h2 id="b">B</h2>
+<h3 id="backpropagation">Backpropagation</h3>
+<p>The method that works out how much each weight contributed to the error, moving backwards from the output layer to the input. Those amounts (gradients) are then used by gradient descent to update the weights. See <a href="neural-networks.html">Chapter 2</a>.</p>
+<h3 id="batch">Batch</h3>
+<p>A group of training examples processed together before the weights are updated once. A batch of 32 images means the network looks at 32 images, averages the error, then takes one learning step. See <a href="neural-networks.html">Chapter 2</a>.</p>
+<h3 id="batch-api">Batch API</h3>
+<p>A way to send many model requests as one job that finishes later (often within 24 hours) in exchange for a lower price, typically half. Useful for non-urgent work such as classifying thousands of reviews overnight. See <a href="tokens.html">Chapter 7</a>.</p>
+<h3 id="benchmark">Benchmark</h3>
+<p>A standard test set used to compare models, such as a collection of math problems or coding tasks. Scores are useful signals but may not reflect how a model performs on your own task. See <a href="training.html">Chapter 4</a>.</p>
+<h3 id="bias-fairness">Bias (fairness)</h3>
+<p>When an AI system treats people or groups unfairly, often because its training data under-represents them or reflects past prejudice. Example: a hiring model that scores CVs lower for one gender. See <a href="best-practices.html">Chapter 8</a>.</p>
+<h3 id="bias-neuron">Bias (neuron)</h3>
+<p>A learned number added inside a neuron before the activation function, shifting when the neuron switches on. It plays the role of the intercept <code>b</code> in <code>y = w·x + b</code>. See <a href="neural-networks.html">Chapter 2</a>.</p>
+<h3 id="bpe-byte-pair-encoding">BPE (Byte Pair Encoding)</h3>
+<p>A tokenization method that starts from single characters or bytes and repeatedly merges the most common neighbouring pairs into new tokens. Frequent words end up as one token, rare words as several pieces. See <a href="transformers.html">Chapter 3</a>.</p>
+
+</div>
+<div class="section">
+<h2 id="c">C</h2>
+<h3 id="chain-of-thought">Chain-of-thought</h3>
+<p>Asking or allowing a model to work through a problem step by step before giving the final answer, which often improves results on maths and logic. Example prompt: &quot;Think through this step by step, then give the answer.&quot; See <a href="using-ai.html">Chapter 6</a>.</p>
+<h3 id="checkpoint">Checkpoint</h3>
+<p>A saved snapshot of a model&#39;s weights at a point during training, so training can resume or an earlier version can be reused. Downloaded open models are usually checkpoints too. See <a href="training.html">Chapter 4</a>.</p>
+<h3 id="context-engineering">Context engineering</h3>
+<p>Choosing and maintaining the best set of information (instructions, tools, history, retrieved data) in the model&#39;s context at every step. It extends prompt engineering to agents and long tasks. See <a href="best-practices.html">Chapter 8</a>.</p>
+<h3 id="context-window">Context window</h3>
+<p>The maximum number of tokens a model can handle in one request, counting both input and output. Everything must fit: instructions, history, documents, the question and the answer. See <a href="transformers.html">Chapter 3</a> and <a href="tokens.html">Chapter 7</a>.</p>
+<h3 id="cross-entropy">Cross-entropy</h3>
+<p>A loss function for classification that measures how much probability the model gave to the correct answer; the less probability, the higher the loss. Language models are trained with cross-entropy on the next token. See <a href="neural-networks.html">Chapter 2</a>.</p>
+
+</div>
+<div class="section">
+<h2 id="d">D</h2>
+<h3 id="dataset">Dataset</h3>
+<p>A collection of examples used to train, validate or test a model. Example: 50,000 labelled photos of cats and dogs, or trillions of tokens of web text for pretraining. See <a href="foundations.html">Chapter 1</a>.</p>
+<h3 id="decoder">Decoder</h3>
+<p>The part of a transformer that generates output one token at a time, only looking at earlier tokens. GPT-style chat models are decoder-only transformers. See <a href="transformers.html">Chapter 3</a>.</p>
+<h3 id="distillation">Distillation</h3>
+<p>Training a smaller &quot;student&quot; model to imitate the outputs of a larger &quot;teacher&quot; model, keeping much of the quality at lower cost. See <a href="training.html">Chapter 4</a>.</p>
+<h3 id="dpo-direct-preference-optimization">DPO (Direct Preference Optimization)</h3>
+<p>A preference-tuning method that learns directly from pairs of &quot;better&quot; and &quot;worse&quot; answers, without training a separate reward model as RLHF does. See <a href="training.html">Chapter 4</a>.</p>
+
+</div>
+<div class="section">
+<h2 id="e">E</h2>
+<h3 id="embedding">Embedding</h3>
+<p>A list of numbers (a vector) that represents the meaning of a token, sentence or document, so that similar meanings are close together. Embeddings power semantic search and RAG. See <a href="transformers.html">Chapter 3</a> and <a href="using-ai.html">Chapter 6</a>.</p>
+<h3 id="encoder">Encoder</h3>
+<p>The part of a transformer that reads the whole input at once and builds a representation of it, looking in both directions. BERT is an encoder-only model often used for classification and search. See <a href="transformers.html">Chapter 3</a>.</p>
+<h3 id="epoch">Epoch</h3>
+<p>One complete pass through the entire training dataset. Training for 10 epochs means the model has seen every example 10 times. See <a href="neural-networks.html">Chapter 2</a>.</p>
+<h3 id="evaluation">Evaluation</h3>
+<p>Measuring how well a model or AI feature performs, using test sets, automated checks, human review or another model as a judge. Good evaluation is how you know a change made things better. See <a href="using-ai.html">Chapter 6</a> and <a href="best-practices.html">Chapter 8</a>.</p>
+
+</div>
+<div class="section">
+<h2 id="f">F</h2>
+<h3 id="few-shot">Few-shot</h3>
+<p>Including a few worked examples in the prompt so the model copies the pattern. Example: three &quot;review → sentiment&quot; pairs followed by a new review to label. See <a href="using-ai.html">Chapter 6</a>.</p>
+<h3 id="fine-tuning">Fine-tuning</h3>
+<p>Continuing to train an existing model on a smaller, specific dataset to adapt it to a task, style or domain. See <a href="training.html">Chapter 4</a>.</p>
+<h3 id="flops">FLOPs</h3>
+<p>Floating-point operations: the count of basic arithmetic steps a computer performs. Used to describe how much compute training a model takes (total FLOPs) or how fast hardware is (FLOPs per second). See <a href="training.html">Chapter 4</a>.</p>
+<h3 id="foundation-model">Foundation model</h3>
+<p>A large model pretrained on broad data that can be adapted to many tasks, such as the base models behind chat assistants. See <a href="foundations.html">Chapter 1</a> and <a href="training.html">Chapter 4</a>.</p>
+<h3 id="function-calling">Function calling</h3>
+<p>A feature where the model, instead of answering in text, returns a structured request to run one of your functions (for example <code>get_weather(city=&quot;Paris&quot;)</code>). Your code runs it and sends the result back. Also called tool calling. See <a href="using-ai.html">Chapter 6</a>.</p>
+
+</div>
+<div class="section">
+<h2 id="g">G</h2>
+<h3 id="gguf">GGUF</h3>
+<p>A file format for storing (often quantized) model weights so they can run efficiently on ordinary computers with tools like llama.cpp and Ollama. See <a href="models.html">Chapter 5</a>.</p>
+<h3 id="gpu">GPU</h3>
+<p>Graphics Processing Unit: a chip with thousands of small cores that do many multiplications in parallel, which makes it ideal for training and running neural networks. See <a href="neural-networks.html">Chapter 2</a> and <a href="training.html">Chapter 4</a>.</p>
+<h3 id="gradient">Gradient</h3>
+<p>A set of numbers that says, for each weight, which direction and how strongly changing it would increase the loss. Training moves weights the opposite way. See <a href="neural-networks.html">Chapter 2</a>.</p>
+<h3 id="gradient-descent">Gradient descent</h3>
+<p>The training method that repeatedly nudges weights a small step in the direction that reduces the loss, like walking downhill in fog. See <a href="neural-networks.html">Chapter 2</a>.</p>
+<h3 id="guardrails">Guardrails</h3>
+<p>Checks and limits around an AI system that block or correct unsafe or unwanted inputs and outputs, such as content filters, output validation or approval steps. See <a href="best-practices.html">Chapter 8</a>.</p>
+
+</div>
+<div class="section">
+<h2 id="h">H</h2>
+<h3 id="hallucination">Hallucination</h3>
+<p>When a model produces confident but false or made-up information, such as a citation to a paper that does not exist. It happens because models predict likely text, not verified facts. See <a href="transformers.html">Chapter 3</a>.</p>
+
+</div>
+<div class="section">
+<h2 id="i">I</h2>
+<h3 id="inference">Inference</h3>
+<p>Using a trained model to make predictions or generate output, as opposed to training it. Every chat message you send triggers inference. See <a href="foundations.html">Chapter 1</a>.</p>
+<h3 id="instruction-tuning">Instruction tuning</h3>
+<p>Fine-tuning a base model on examples of instructions and good responses so it learns to follow requests instead of just continuing text. See <a href="training.html">Chapter 4</a>.</p>
+
+</div>
+<div class="section">
+<h2 id="k">K</h2>
+<h3 id="kv-cache">KV cache</h3>
+<p>Stored &quot;key&quot; and &quot;value&quot; results from attention for tokens already processed, so the model does not recompute them when generating each new token. It speeds up generation but uses memory. See <a href="transformers.html">Chapter 3</a>.</p>
+
+</div>
+<div class="section">
+<h2 id="l">L</h2>
+<h3 id="latency">Latency</h3>
+<p>How long you wait for a response. Often split into time to first token (affected by input size) and total time (affected by output length). See <a href="using-ai.html">Chapter 6</a> and <a href="tokens.html">Chapter 7</a>.</p>
+<h3 id="layer">Layer</h3>
+<p>A group of neurons that process data at the same stage; data flows from the input layer through hidden layers to the output layer. &quot;Deep&quot; learning means many layers. See <a href="neural-networks.html">Chapter 2</a>.</p>
+<h3 id="learning-rate">Learning rate</h3>
+<p>The size of each step gradient descent takes when updating weights. Too large and training jumps around or diverges; too small and it crawls. See <a href="neural-networks.html">Chapter 2</a>.</p>
+<h3 id="llm-large-language-model">LLM (Large Language Model)</h3>
+<p>A neural network, usually a transformer, trained on huge amounts of text to predict the next token, with billions of parameters. Examples include the models behind ChatGPT, Claude, Gemini and Copilot. See <a href="transformers.html">Chapter 3</a>.</p>
+<h3 id="lora-low-rank-adaptation">LoRA (Low-Rank Adaptation)</h3>
+<p>A parameter-efficient fine-tuning method that freezes the original weights and trains small add-on matrices instead, making fine-tuning far cheaper. See <a href="training.html">Chapter 4</a>.</p>
+<h3 id="loss">Loss</h3>
+<p>A single number that measures how wrong the model&#39;s predictions are; training tries to make it smaller. See <a href="neural-networks.html">Chapter 2</a>.</p>
+
+</div>
+<div class="section">
+<h2 id="m">M</h2>
+<h3 id="mcp-model-context-protocol">MCP (Model Context Protocol)</h3>
+<p>An open standard that lets AI applications connect to tools and data sources through &quot;MCP servers&quot; in a consistent way, like a USB-C port for AI tools. See <a href="using-ai.html">Chapter 6</a>.</p>
+<h3 id="moe-mixture-of-experts">MoE (Mixture of Experts)</h3>
+<p>A model design with many &quot;expert&quot; sub-networks where a router activates only a few for each token, so the model can have many parameters but use only some per step. See <a href="training.html">Chapter 4</a>.</p>
+<h3 id="model-card">Model card</h3>
+<p>A document published with a model describing its intended use, training data, evaluation results, limitations and license. See <a href="models.html">Chapter 5</a>.</p>
+<h3 id="multimodal">Multimodal</h3>
+<p>A model that can handle more than one type of data, such as text plus images, audio or video. Example: asking a model to describe a photo. See <a href="transformers.html">Chapter 3</a> and <a href="using-ai.html">Chapter 6</a>.</p>
+
+</div>
+<div class="section">
+<h2 id="n">N</h2>
+<h3 id="neural-network">Neural network</h3>
+<p>A model made of layers of connected artificial neurons whose weights are learned from data. See <a href="neural-networks.html">Chapter 2</a>.</p>
+<h3 id="neuron">Neuron</h3>
+<p>The basic unit of a neural network: it multiplies its inputs by weights, adds a bias, and passes the result through an activation function. See <a href="neural-networks.html">Chapter 2</a>.</p>
+
+</div>
+<div class="section">
+<h2 id="o">O</h2>
+<h3 id="open-weight">Open-weight</h3>
+<p>A model whose trained weights are published for download, so you can run it yourself, even if its training data and code are not released. See <a href="models.html">Chapter 5</a>.</p>
+<h3 id="overfitting">Overfitting</h3>
+<p>When a model memorizes its training data, including noise, and performs poorly on new data. Like a student who memorized past exam answers but cannot solve new questions. See <a href="foundations.html">Chapter 1</a> and <a href="neural-networks.html">Chapter 2</a>.</p>
+
+</div>
+<div class="section">
+<h2 id="p">P</h2>
+<h3 id="parameter">Parameter</h3>
+<p>A number inside the model that is learned during training, mainly weights and biases. &quot;7B&quot; means about 7 billion parameters. See <a href="neural-networks.html">Chapter 2</a>.</p>
+<h3 id="perplexity">Perplexity</h3>
+<p>A measure of how &quot;surprised&quot; a language model is by a piece of text; lower perplexity means it predicts the text better. See <a href="training.html">Chapter 4</a>.</p>
+<h3 id="pretraining">Pretraining</h3>
+<p>The first, most expensive training stage, where a model learns general patterns of language from massive amounts of text by predicting the next token. See <a href="training.html">Chapter 4</a>.</p>
+<h3 id="prompt">Prompt</h3>
+<p>The input you give a model: instructions, context, examples and the question. See <a href="using-ai.html">Chapter 6</a>.</p>
+<h3 id="prompt-caching">Prompt caching</h3>
+<p>A provider feature that reuses the already-processed beginning of a prompt when later requests start with the same tokens, making them cheaper and faster. Put stable content first to benefit. See <a href="tokens.html">Chapter 7</a>.</p>
+<h3 id="prompt-injection">Prompt injection</h3>
+<p>An attack where text in the input, or in content the model reads such as a web page or email, tries to override the app&#39;s instructions. It is number one on the OWASP Top 10 for LLM Applications. See <a href="best-practices.html">Chapter 8</a>.</p>
+
+</div>
+<div class="section">
+<h2 id="q">Q</h2>
+<h3 id="quantization">Quantization</h3>
+<p>Storing a model&#39;s weights with fewer bits (for example 4-bit instead of 16-bit) to cut memory and speed up inference, usually with a small loss in quality. See <a href="training.html">Chapter 4</a> and <a href="models.html">Chapter 5</a>.</p>
+
+</div>
+<div class="section">
+<h2 id="r">R</h2>
+<h3 id="rag-retrieval-augmented-generation">RAG (Retrieval-Augmented Generation)</h3>
+<p>A pattern where your app first searches your own documents for relevant passages and adds them to the prompt, so the model answers from that information. Example: a bot answering questions from a company handbook. See <a href="using-ai.html">Chapter 6</a>.</p>
+<h3 id="reasoning-model">Reasoning model</h3>
+<p>A model trained to &quot;think&quot; through problems internally, producing hidden reasoning tokens before its final answer. Better on hard problems, but slower and more expensive. See <a href="transformers.html">Chapter 3</a> and <a href="tokens.html">Chapter 7</a>.</p>
+<h3 id="reasoning-tokens">Reasoning tokens</h3>
+<p>The hidden &quot;thinking&quot; tokens a reasoning model generates before answering. You do not see them, but they use context space and are billed as output tokens. See <a href="tokens.html">Chapter 7</a>.</p>
+<h3 id="reinforcement-learning">Reinforcement learning</h3>
+<p>A type of learning where an agent tries actions, receives rewards or penalties, and learns to maximize reward over time. See <a href="foundations.html">Chapter 1</a>.</p>
+<h3 id="reranking">Reranking</h3>
+<p>A second step in search that reorders retrieved results with a more accurate model so the best few go into the prompt. See <a href="tokens.html">Chapter 7</a>.</p>
+<h3 id="rlhf-reinforcement-learning-from-human-feedback">RLHF (Reinforcement Learning from Human Feedback)</h3>
+<p>A tuning method where humans rank model answers, a reward model learns those preferences, and the language model is trained to produce answers the reward model scores highly. See <a href="training.html">Chapter 4</a>.</p>
+
+</div>
+<div class="section">
+<h2 id="s">S</h2>
+<h3 id="sampling">Sampling</h3>
+<p>How a model picks the next token from its probability list. Settings such as temperature and top-p control how random the choice is. See <a href="transformers.html">Chapter 3</a>.</p>
+<h3 id="sft-supervised-fine-tuning">SFT (Supervised Fine-Tuning)</h3>
+<p>Fine-tuning on example prompts paired with high-quality answers written or approved by people. It is usually the first step in turning a base model into a chat model. See <a href="training.html">Chapter 4</a>.</p>
+<h3 id="softmax">Softmax</h3>
+<p>A function that turns a list of raw scores into probabilities that are all positive and add up to 1. Used at a model&#39;s output and inside attention. See <a href="neural-networks.html">Chapter 2</a> and <a href="transformers.html">Chapter 3</a>.</p>
+<h3 id="stop-sequence">Stop sequence</h3>
+<p>A string that tells the model to stop generating when it appears, such as <code>&quot;\n\n&quot;</code> or <code>&quot;END&quot;</code>. Useful for keeping outputs short. See <a href="tokens.html">Chapter 7</a>.</p>
+<h3 id="structured-output">Structured output</h3>
+<p>Asking a model to reply in a fixed format, usually JSON that matches a schema, so your code can read it reliably. See <a href="using-ai.html">Chapter 6</a>.</p>
+<h3 id="system-prompt">System prompt</h3>
+<p>Instructions given to the model with higher priority than user messages, setting its role, rules and style for the whole conversation. See <a href="using-ai.html">Chapter 6</a>.</p>
+
+</div>
+<div class="section">
+<h2 id="t">T</h2>
+<h3 id="temperature">Temperature</h3>
+<p>A sampling setting that controls randomness: low values make answers more predictable, high values more varied and creative. See <a href="transformers.html">Chapter 3</a>.</p>
+<h3 id="token">Token</h3>
+<p>The unit of text a model reads and writes, often a word or part of a word. In English, 1 token is roughly 4 characters or ¾ of a word. See <a href="transformers.html">Chapter 3</a> and <a href="tokens.html">Chapter 7</a>.</p>
+<h3 id="tokenizer">Tokenizer</h3>
+<p>The component that splits text into tokens and maps them to numbers (and back). Different model families use different tokenizers. See <a href="transformers.html">Chapter 3</a>.</p>
+<h3 id="top-p">Top-p</h3>
+<p>A sampling setting (nucleus sampling) that limits choices to the smallest group of tokens whose probabilities add up to p, for example 0.9. See <a href="transformers.html">Chapter 3</a>.</p>
+<h3 id="training">Training</h3>
+<p>The process of adjusting a model&#39;s parameters using data so its predictions improve. See <a href="foundations.html">Chapter 1</a> and <a href="training.html">Chapter 4</a>.</p>
+<h3 id="transformer">Transformer</h3>
+<p>The neural network architecture behind modern LLMs, built around attention so every token can consider every other token in parallel. Introduced in the 2017 paper &quot;Attention Is All You Need&quot;. See <a href="transformers.html">Chapter 3</a>.</p>
+
+</div>
+<div class="section">
+<h2 id="v">V</h2>
+<h3 id="vector-database">Vector database</h3>
+<p>A database built to store embeddings and quickly find the ones most similar to a query, used for semantic search and RAG. See <a href="using-ai.html">Chapter 6</a>.</p>
+
+</div>
+<div class="section">
+<h2 id="w">W</h2>
+<h3 id="weights">Weights</h3>
+<p>The learned numbers on the connections between neurons that determine how strongly each input influences the output. &quot;Downloading a model&quot; mostly means downloading its weights. See <a href="neural-networks.html">Chapter 2</a>.</p>
+
+</div>
+<div class="section">
+<h2 id="z">Z</h2>
+<h3 id="zero-shot">Zero-shot</h3>
+<p>Asking a model to do a task with no examples in the prompt, relying only on instructions. Example: &quot;Classify this review as positive or negative.&quot; See <a href="using-ai.html">Chapter 6</a>.</p>
+<div class="nav-links"><a href="best-practices.html">← Chapter 8: Best Practices</a><a href="resources.html">Resources →</a></div>
+</div>
+</main>
+
+<footer class="site-footer">AI Learn · A beginner's guide to how AI models work · Based on official docs and open course material · Not affiliated with any model provider</footer>
+</body>
+</html>

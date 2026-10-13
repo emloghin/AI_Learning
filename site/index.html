@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GH-600: GitHub Certified: Agentic AI Developer — GH-600 Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>.section td code,.callout code,.diagram-caption code{background:var(--primary-light);color:var(--primary);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:13px}.callout p+p{margin-top:8px}.callout ul{margin:8px 0 0 20px}</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-logo"><span>GH-</span>600</div>
+    <nav class="header-nav">
+      <a href="index.html" class="active">Home</a>
+      <a href="basics.html">Start Here</a>
+      <a href="domain-1.html">D1: Architecture</a>
+      <a href="domain-2.html">D2: Tooling &amp; MCP</a>
+      <a href="domain-3.html">D3: Memory &amp; State</a>
+      <a href="domain-4.html">D4: Evaluation</a>
+      <a href="domain-5.html">D5: Multi-Agent</a>
+      <a href="domain-6.html">D6: Guardrails</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="resources.html">Resources</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-badge">GH-600 · Corrected study guide</div>
+  <h1>GH-600: GitHub Certified: Agentic AI Developer</h1>
+  <p>A comprehensive study guide built from official Microsoft Learn modules, GitHub Docs, and community resources. Designed to teach you every concept tested on the exam.</p>
+</section>
+
+<main class="main">
+<div class="section">
+<div class="callout"><p><strong>Historical note:</strong> The original site launched during the beta (May 2026) with discount code <code>GH600Flanders</code>. As of 2026-10-13 the beta and its discount code are no longer current.</p></div>
+
+</div>
+<div class="section">
+<h2 id="about-this-exam">About This Exam</h2>
+<p>The <strong>GH-600: Developing in Agentic AI Systems</strong> exam (credential: <strong>GitHub Certified: Agentic AI Developer</strong>) validates your ability to <strong>operate, integrate, supervise, and govern AI agents</strong> inside production-grade SDLC (Software Development Lifecycle) workflows using GitHub as the system of record and control plane.</p>
+<p>Unlike feature-based certifications, GH-600 is <strong>role-based and scenario-driven</strong>. You won&#39;t be tested on memorizing documentation — you&#39;ll be asked to make architectural decisions about agent systems.</p>
+
+</div>
+<div class="section">
+<h2 id="exam-at-a-glance">Exam at a Glance</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Detail</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Exam code</td>
+<td><strong>GH-600</strong> — Developing in Agentic AI Systems</td>
+</tr>
+<tr>
+<td>Credential</td>
+<td>GitHub Certified: Agentic AI Developer</td>
+</tr>
+<tr>
+<td>Exam format</td>
+<td>56 questions + 2 case studies <em>(unverified community info)</em></td>
+</tr>
+<tr>
+<td>Duration</td>
+<td>120 minutes, proctored; schedule through Pearson VUE</td>
+</tr>
+<tr>
+<td>Passing score</td>
+<td>700 or greater (scale 1–1000)</td>
+</tr>
+<tr>
+<td>Languages</td>
+<td>English only. If the exam isn&#39;t available in your preferred language, you can request an extra 30 minutes</td>
+</tr>
+<tr>
+<td>Validity / renewal</td>
+<td>GitHub certifications are valid for <strong>2 years</strong>. GitHub is transitioning to Microsoft&#39;s recertification process</td>
+</tr>
+<tr>
+<td>Retake</td>
+<td>Allowed 24 hours after the first failed attempt; later retakes follow the Microsoft retake policy</td>
+</tr>
+<tr>
+<td>Exam sandbox</td>
+<td><a href="https://ghcertdemo.starttest.com/" target="_blank" rel="noopener">ghcertdemo.starttest.com</a> (generic Microsoft sandbox: <a href="https://aka.ms/examdemo" target="_blank" rel="noopener">aka.ms/examdemo</a>)</td>
+</tr>
+<tr>
+<td>Beta discount</td>
+<td><em>(historical)</em> <code>GH600Flanders</code> — 80% off for the first 100 candidates during the May 2026 beta. Expired</td>
+</tr>
+<tr>
+<td>Beta results</td>
+<td><em>(historical)</em> ~8 weeks after the beta period ended <em>(unverified community info)</em></td>
+</tr>
+<tr>
+<td>GA date</td>
+<td><em>(historical)</em> July 2026 <em>(unverified community info)</em></td>
+</tr>
+</tbody></table></div>
+<div class="callout warning"><p><strong>⚠️ Official vs. community exam facts:</strong> Microsoft publishes only the <strong>duration (120 minutes)</strong>, the <strong>passing score (700)</strong>, that the exam is <strong>proctored</strong> and <strong>may include interactive components</strong>, and that most questions cover <strong>generally available</strong> features (commonly used preview features can appear). The <strong>number of questions</strong> and <strong>case studies</strong> are <strong>not published</strong>. &quot;56 questions + 2 case studies&quot; comes only from community reports and is <strong>unverified</strong> — the count can vary between candidates. Sources: <a href="https://learn.microsoft.com/en-us/credentials/certifications/agentic-ai-developer/" target="_blank" rel="noopener">certification page</a>, <a href="https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/gh-600" target="_blank" rel="noopener">study guide</a>, <a href="https://learn.microsoft.com/en-us/credentials/support/exam-duration-exam-experience" target="_blank" rel="noopener">exam duration and experience</a>.</p></div>
+
+</div>
+<div class="section">
+<h2 id="the-six-exam-domains">The Six Exam Domains</h2>
+<p>The exam tests six skill areas. Study <strong>proportionally</strong>: Domain 2 is the heaviest at 20–25%.</p>
+<div class="domain-card"><div class="domain-num">Domain 1 · 15–20%</div><h3>Prepare Agent Architecture and SDLC Processes</h3><p>Integrate agents into the SDLC, define boundaries between planning, reasoning, and action, configure observability and control (autonomy, inspectable artifacts, human intervention) for autonomous agents.</p><span class="weight">Weight: 15–20%</span> &nbsp;<a href="domain-1.html">Study this domain →</a></div>
+<div class="domain-card"><div class="domain-num">Domain 2 · 20–25% ★ Heaviest</div><h3>Implement Tool Use and Environment Interaction</h3><p>Select and configure agent tools, MCP servers, CI integration, safe execution paths, and error handling.</p><span class="weight heavy">Weight: 20–25% ★ Heaviest</span> &nbsp;<a href="domain-2.html">Study this domain →</a></div>
+<div class="domain-card"><div class="domain-num">Domain 3 · 10–15%</div><h3>Manage Memory, State, and Execution</h3><p>Implement memory strategies, persist agent state, manage context drift, ensure continuity across tools.</p><span class="weight">Weight: 10–15%</span> &nbsp;<a href="domain-3.html">Study this domain →</a></div>
+<div class="domain-card"><div class="domain-num">Domain 4 · 15–20%</div><h3>Perform Evaluation, Error Analysis, and Tuning</h3><p>Define success criteria, analyze failures, tune agent behavior through instructions, tools, and environment changes.</p><span class="weight">Weight: 15–20%</span> &nbsp;<a href="domain-4.html">Study this domain →</a></div>
+<div class="domain-card"><div class="domain-num">Domain 5 · 15–20%</div><h3>Orchestrate Multi-Agent Coordination</h3><p>Operate multi-agent workflows, isolate execution, detect conflicts, ensure observability, recover from failures, and manage agent lifecycle in multi-agent systems.</p><span class="weight">Weight: 15–20%</span> &nbsp;<a href="domain-5.html">Study this domain →</a></div>
+<div class="domain-card"><div class="domain-num">Domain 6 · 10–15%</div><h3>Implement Guardrails and Accountability</h3><p>Define risk-based autonomy levels, implement guardrails and human-in-the-loop workflows, enforce least privilege, and require controlled paths for irreversible changes.</p><span class="weight">Weight: 10–15%</span> &nbsp;<a href="domain-6.html">Study this domain →</a></div>
+
+</div>
+<div class="section">
+<h2 id="how-to-use-this-site">How to Use This Site</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>� <strong>Start Here</strong></td>
+<td>New to agents, Git, or GitHub Actions? Begin with <a href="basics.html">Start Here: Fundamentals</a>, then practice with the Hands-On Labs section in <a href="resources.html">Resources</a>.</td>
+</tr>
+<tr>
+<td>�📖 <strong>Read Domain Pages</strong></td>
+<td>Each domain has its own page with detailed explanations, diagrams, and code examples drawn from official sources.</td>
+</tr>
+<tr>
+<td>📋 <strong>Study the Glossary</strong></td>
+<td>Key terms and exam-relevant file paths (<a href="glossary.html">glossary.md</a>).</td>
+</tr>
+<tr>
+<td>🔗 <strong>Visit Resources</strong></td>
+<td>The <a href="resources.html">Resources</a> page links every Microsoft Learn module, community study guide, and practice exam.</td>
+</tr>
+<tr>
+<td>🎓 <strong>Teach Yourself</strong></td>
+<td>These pages are written as if an instructor is guiding you. Read, understand, then test yourself.</td>
+</tr>
+</tbody></table></div>
+
+</div>
+<div class="section">
+<h2 id="official-learning-path">Official Learning Path</h2>
+<p>The GH-600 exam is supported by six Microsoft Learn modules. This site follows the same structure:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Covers Domain</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Foundations of Agentic AI in GitHub</td>
+<td>All (intro)</td>
+<td><a href="https://learn.microsoft.com/en-us/training/modules/foundations-agentic-ai/" target="_blank" rel="noopener">foundations-agentic-ai</a></td>
+</tr>
+<tr>
+<td>Designing Agent Architecture and SDLC Integration</td>
+<td>Domain 1</td>
+<td><a href="https://learn.microsoft.com/en-us/training/modules/design-agent-architecture-integration/" target="_blank" rel="noopener">design-agent-architecture-integration</a></td>
+</tr>
+<tr>
+<td>Tooling, MCP, and Agent Execution Environments</td>
+<td>Domain 2</td>
+<td><a href="https://learn.microsoft.com/en-us/training/modules/agent-tooling-mcp-execution-environments/" target="_blank" rel="noopener">agent-tooling-mcp-execution-environments</a></td>
+</tr>
+<tr>
+<td>Memory, State, and Evaluation</td>
+<td>Domains 3 &amp; 4</td>
+<td><a href="https://learn.microsoft.com/en-us/training/modules/memory-state-evaluation/" target="_blank" rel="noopener">memory-state-evaluation</a></td>
+</tr>
+<tr>
+<td>Multi-Agent Systems and Orchestration</td>
+<td>Domain 5</td>
+<td><a href="https://learn.microsoft.com/en-us/training/modules/multi-agent-systems-orchestration/" target="_blank" rel="noopener">multi-agent-systems-orchestration</a></td>
+</tr>
+<tr>
+<td>Governance, Guardrails, and Operations</td>
+<td>Domain 6</td>
+<td><a href="https://learn.microsoft.com/en-us/training/modules/governance-guardrails-operations/" target="_blank" rel="noopener">governance-guardrails-operations</a></td>
+</tr>
+</tbody></table></div>
+<p>Official exam pages: <a href="https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/gh-600" target="_blank" rel="noopener">Study guide</a> · <a href="https://learn.microsoft.com/en-us/credentials/certifications/agentic-ai-developer/" target="_blank" rel="noopener">Certification page</a></p>
+
+</div>
+<div class="section">
+<h2 id="community-resources">Community Resources</h2>
+<p><em>(All entries below are unverified community info — not official Microsoft/GitHub material.)</em></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>📚 <strong>jtur671 Study Repo</strong></td>
+<td>67 flashcards, 41-question mock exam, 6 hands-on labs, Anki decks. <a href="https://github.com/jtur671/gh-600-study-guide" target="_blank" rel="noopener">github.com/jtur671/gh-600-study-guide</a></td>
+</tr>
+<tr>
+<td>📝 <strong>Naim149 Public Study Guide</strong></td>
+<td>Artifact mapping reference with exam-relevant file paths and concepts. <a href="https://gist.github.com/naim149/a8aa41c7468685b7d984822c38863aae" target="_blank" rel="noopener">View on GitHub Gist</a></td>
+</tr>
+<tr>
+<td>🎬 <strong>7-Video PromptLab Series</strong></td>
+<td>One video per exam domain plus overview. Free on YouTube. <a href="https://www.youtube.com/playlist?list=PLxgUmxsBhjMhyjJhNM9dxSCdJj2yExS2Y" target="_blank" rel="noopener">Watch playlist</a></td>
+</tr>
+<tr>
+<td>▶️ <strong>Agent Orchestration On-Demand</strong></td>
+<td>Ari&#39;s earlier Reactor session on building multi-agent teams (orchestrator, planner, coder, designer).</td>
+</tr>
+<tr>
+<td>▶️ <strong>Microsoft Reactor Deep Dive</strong></td>
+<td>1-hour walkthrough by Ari Levigny (GitHub Sr. Dev Advocate) covering all 6 domains, study tips, and a (now historical) Reactor discount code. <a href="https://www.youtube.com/watch?v=bgj20o0kYKg" target="_blank" rel="noopener">Watch on YouTube</a></td>
+</tr>
+</tbody></table></div>
+
+</div>
+<div class="section">
+<h2 id="microsoft-reactor-deep-dive-key-takeaways">Microsoft Reactor Deep Dive — Key Takeaways</h2>
+<p>Based on Ari Levigny&#39;s (GitHub Sr. Developer Advocate) 1-hour exam walkthrough. These are quotes and emphasis points from the video <em>(unverified community info, except where an official source is cited)</em>.</p>
+<div class="callout"><p><strong>Core mantra — &quot;Trust but verify&quot;:</strong> &quot;Evaluate the work by the standards of the workflow, not by the novelty of the author. The human and the policy accept the agent&#39;s proposals.&quot; Agents propose, humans and rulesets decide what gets merged. <em>(The &quot;standards of the workflow&quot; sentence matches the official <a href="https://learn.microsoft.com/en-us/training/modules/foundations-agentic-ai/6-apply-contributor-model-agent-generated-work" target="_blank" rel="noopener">contributor model unit</a>; &quot;agents propose; humans and policy accept&quot; matches <a href="https://learn.microsoft.com/en-us/training/modules/design-agent-architecture-integration/2-agent-responsibilities" target="_blank" rel="noopener">Map agent responsibilities to the SDLC</a>.)</em></p></div>
+<div class="callout"><p><strong>Plan → Act → Evaluate is the heartbeat:</strong> Plan your architecture, let agents act within scoped tools, then evaluate via checks and scans. Feed the evidence back into the plan. It&#39;s a cycle, not a straight line. <em>(Matches the official <a href="https://learn.microsoft.com/en-us/training/modules/foundations-agentic-ai/3-explain-agent-lifecycle-plan-act-evaluate" target="_blank" rel="noopener">agent lifecycle unit</a>.)</em></p></div>
+<div class="callout"><p><strong>Domain 2 is the bulk of the exam:</strong> Ari explicitly says &quot;spend a lot of time on the Tooling module.&quot; Planning agents should be read-only (just read/search). Execution agents (coder, designer) get edit/execute. Always ask: what is the <strong>least privilege</strong> needed?</p></div>
+<div class="callout"><p><strong>Context rot / context drift is tested:</strong> When the context window gets too full, the model struggles and drifts from the main goal. Domain 3 tests your ability to manage memory expiration, pruning, and session resumption.</p></div>
+<div class="callout"><p><strong>Multi-agent orchestration is a skill to learn for real work:</strong> &quot;Not just for the exam.&quot; Orchestrator → Planner → Coder + Designer working in parallel on isolated branches. Each agent gets its own branch, proposes a PR, runs checks. Never merge to main directly.</p></div>
+<div class="callout"><p><strong>Governance = least privilege + rulesets + CODEOWNERS + environment gates:</strong> Ari emphasizes &quot;you got to understand what does least privilege mean.&quot; The agent operates in isolated branches with tightly scoped workflow permissions, branch policies, and rulesets. Required scans (CodeQL), human-in-the-loop via CODEOWNERS, and deployment approvals.</p></div>
+<div class="callout warning"><p>⚠️ <strong>Execution without validation = anti-pattern:</strong> &quot;If an agent can bypass required checks or merge without reviews, the architecture loses its primary safety mechanisms.&quot; Always keep human review + status checks + rulesets between the agent and main. <em>(Verbatim from the official <a href="https://learn.microsoft.com/en-us/training/modules/design-agent-architecture-integration/5-pull-request-governance-controls" target="_blank" rel="noopener">PR governance unit</a>.)</em></p></div>
+<div class="callout"><p><strong>Actions knowledge needed — but not deep YAML:</strong> You need to understand how agents <em>touch</em> GitHub Actions (evaluating workflows, fixing errors in workflows). You don&#39;t need to know every YAML key or action detail. High-level understanding is enough.</p></div>
+<div class="callout"><p><strong>Beta exam counts — no retake needed at GA</strong> <em>(historical)</em>: If you passed the beta, you&#39;re grandfathered in. The beta was for Microsoft to collect feedback on ambiguous questions. Results took ~8 weeks. <strong>Certification validity is 2 years</strong> (per the official certification page; the video&#39;s &quot;~2–3 years&quot; was imprecise).</p></div>
+<div class="callout"><p><strong>Hands-on practice is how you learn:</strong> &quot;Reading and videos are great, but hands-on practice really drives the point home.&quot; Do the GitHub Skills, run the Microsoft Learn modules, and use the exam sandbox (<a href="https://ghcertdemo.starttest.com/" target="_blank" rel="noopener">ghcertdemo.starttest.com</a> or <a href="https://aka.ms/examdemo" target="_blank" rel="noopener">aka.ms/examdemo</a>).</p></div>
+
+</div>
+<div class="section">
+<h2 id="exam-tips-from-the-community-reddit">Exam Tips from the Community (Reddit)</h2>
+<div class="callout"><p><strong>Reddit tip</strong> <em>(unverified community info)</em>: &quot;56 questions with 2 case studies. A lot of questions on using GA workflows and Copilot CLI.&quot; — r/AzureCertification</p></div>
+<div class="callout"><p><strong>Reddit tip</strong> <em>(unverified community info)</em>: &quot;The exam is about governance, not coding. If you&#39;re deep in agent workflows already, trust your experience.&quot; — r/vibecoding</p></div>
+<div class="callout warning"><p>⚠️ <strong>Warning:</strong> Exam content is covered by the exam NDA. Do <strong>not</strong> buy &quot;braindump&quot; question packs — any leaked questions are either fake or stolen.</p></div>
+<div class="nav-links"><a href="domain-1.html">Start Learning: Domain 1 →</a></div>
+</div>
+</main>
+
+<footer class="site-footer">GH-600 Study Guide (corrected) · Based on official Microsoft Learn modules and GitHub Docs · Not affiliated with GitHub or Microsoft</footer>
+</body>
+</html>

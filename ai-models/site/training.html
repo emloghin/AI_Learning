@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How LLMs Are Trained & Tuned — AI Learn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>.section td code,.callout code,.diagram-caption code{background:var(--primary-light);color:var(--primary);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:13px}.callout p+p{margin-top:8px}.callout ul{margin:8px 0 0 20px}</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-logo"><span>AI&nbsp;</span>Learn</div>
+    <nav class="header-nav">
+      <a href="index.html">Home</a>
+      <a href="foundations.html">1. Foundations</a>
+      <a href="neural-networks.html">2. Neural Networks</a>
+      <a href="transformers.html">3. Transformers &amp; LLMs</a>
+      <a href="training.html" class="active">4. Training &amp; Tuning</a>
+      <a href="models.html">5. Model Landscape</a>
+      <a href="using-ai.html">6. Using Models</a>
+      <a href="tokens.html">7. Tokens &amp; Cost</a>
+      <a href="best-practices.html">8. Best Practices</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="resources.html">Resources</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-badge">Chapter 4 · Training & Tuning</div>
+  <h1>How LLMs Are Trained &amp; Tuned</h1>
+  <p>In <a href="transformers.md">Chapter 3</a> you saw what a transformer <em>is</em>. But a freshly built transformer knows nothing — its billions of weights start as random numbers. This chapter follows a model from that blank start to a helpful assistant: reading trillions of words in <strong>pretraining</strong>, learning to follow instructions in <strong>fine-tuning</strong>, being shaped by human preferences with <strong>RLHF</strong> and <strong>DPO</strong>, and finally being tested for safety. You will also learn the practical tools around models — LoRA, distillation, quantization, mixture of experts — and how to judge benchmark scores with a healthy dose of skepticism.</p>
+</section>
+
+<main class="main">
+<div class="section">
+<h2 id="1-the-big-picture">1. The Big Picture</h2>
+<p>Building a modern chat model happens in stages. Each stage starts from the result of the one before it.</p>
+<div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 340" font-family="Inter,sans-serif" role="img" aria-label="LLM training pipeline: data collection, pretraining, base model, instruction tuning, preference tuning, safety evaluations, deployment, with monitoring feeding back into data">
+  <defs>
+    <marker id="tpArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="900" height="340" fill="#ffffff"/>
+
+  <text x="335" y="40" text-anchor="middle" font-size="12" font-weight="600" fill="#1e3a8a">PRETRAINING — most of the compute</text>
+  <line x1="20" y1="48" x2="650" y2="48" stroke="#93c5fd" stroke-width="2"/>
+  <text x="785" y="40" text-anchor="middle" font-size="12" font-weight="600" fill="#14532d">POST-TRAINING — shapes behavior</text>
+  <line x1="695" y1="48" x2="875" y2="48" stroke="#86efac" stroke-width="2"/>
+
+  <!-- Row 1 -->
+  <rect x="20" y="64" width="180" height="70" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="110" y="94" text-anchor="middle" font-size="14" font-weight="700" fill="#1e3a8a">1 · Data collection</text>
+  <text x="110" y="114" text-anchor="middle" font-size="12" fill="#1e40af">web, books, code, papers</text>
+
+  <rect x="245" y="64" width="180" height="70" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="335" y="94" text-anchor="middle" font-size="14" font-weight="700" fill="#1e3a8a">2 · Pretraining</text>
+  <text x="335" y="114" text-anchor="middle" font-size="12" fill="#1e40af">predict the next token</text>
+
+  <rect x="470" y="64" width="180" height="70" rx="10" fill="#f1f5f9" stroke="#475569" stroke-width="2"/>
+  <text x="560" y="94" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">3 · Base model</text>
+  <text x="560" y="114" text-anchor="middle" font-size="12" fill="#334155">a powerful autocomplete</text>
+
+  <rect x="695" y="64" width="180" height="70" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="785" y="94" text-anchor="middle" font-size="14" font-weight="700" fill="#14532d">4 · Instruction tuning</text>
+  <text x="785" y="114" text-anchor="middle" font-size="12" fill="#166534">SFT on example chats</text>
+
+  <line x1="200" y1="99" x2="243" y2="99" stroke="#475569" stroke-width="2" marker-end="url(#tpArrow)"/>
+  <line x1="425" y1="99" x2="468" y2="99" stroke="#475569" stroke-width="2" marker-end="url(#tpArrow)"/>
+  <line x1="650" y1="99" x2="693" y2="99" stroke="#475569" stroke-width="2" marker-end="url(#tpArrow)"/>
+  <line x1="785" y1="134" x2="785" y2="194" stroke="#475569" stroke-width="2" marker-end="url(#tpArrow)"/>
+
+  <!-- Row 2 (right to left) -->
+  <rect x="695" y="196" width="180" height="70" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="785" y="226" text-anchor="middle" font-size="14" font-weight="700" fill="#14532d">5 · Preference tuning</text>
+  <text x="785" y="246" text-anchor="middle" font-size="12" fill="#166534">RLHF or DPO</text>
+
+  <rect x="470" y="196" width="180" height="70" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="560" y="226" text-anchor="middle" font-size="14" font-weight="700" fill="#78350f">6 · Safety evals</text>
+  <text x="560" y="246" text-anchor="middle" font-size="12" fill="#92400e">benchmarks, red teaming</text>
+
+  <rect x="245" y="196" width="180" height="70" rx="10" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+  <text x="335" y="226" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">7 · Deployment</text>
+  <text x="335" y="246" text-anchor="middle" font-size="12" fill="#5b21b6">API, chat apps, devices</text>
+
+  <line x1="695" y1="231" x2="652" y2="231" stroke="#475569" stroke-width="2" marker-end="url(#tpArrow)"/>
+  <line x1="470" y1="231" x2="427" y2="231" stroke="#475569" stroke-width="2" marker-end="url(#tpArrow)"/>
+
+  <!-- Feedback loop -->
+  <path d="M245 231 H110 V136" fill="none" stroke="#7c3aed" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#tpArrow)"/>
+  <text x="110" y="296" text-anchor="middle" font-size="12" fill="#5b21b6">usage feedback and new data</text>
+  <text x="110" y="312" text-anchor="middle" font-size="12" fill="#5b21b6">feed the next model version</text>
+</svg>
+<div class="diagram-caption">Figure 1 — The typical LLM pipeline. Pretraining uses most of the compute; post-training is smaller but decides how the model behaves.</div></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>What happens</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1. Data collection</td>
+<td>Gather and clean huge amounts of text and code</td>
+<td>a training dataset of trillions of tokens</td>
+</tr>
+<tr>
+<td>2. Pretraining</td>
+<td>Learn to predict the next token on that data</td>
+<td>general knowledge and language skill</td>
+</tr>
+<tr>
+<td>3. Base model</td>
+<td>The raw output of pretraining</td>
+<td>a powerful autocomplete, not yet an assistant</td>
+</tr>
+<tr>
+<td>4. Instruction tuning (SFT)</td>
+<td>Train on example conversations</td>
+<td>follows instructions, answers questions</td>
+</tr>
+<tr>
+<td>5. Preference tuning (RLHF / DPO)</td>
+<td>Learn which answers humans prefer</td>
+<td>more helpful, honest, and harmless</td>
+</tr>
+<tr>
+<td>6. Safety evals</td>
+<td>Test for dangerous or harmful behavior</td>
+<td>decision to release, plus fixes</td>
+</tr>
+<tr>
+<td>7. Deployment</td>
+<td>Serve the model through apps and APIs</td>
+<td>the model you actually use</td>
+</tr>
+</tbody></table></div>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Pretraining is like a student reading an entire library — they absorb a huge amount, but they have never had a conversation. Post-training is like coaching that student on how to be a good assistant: answer the question asked, be clear, be polite, and refuse dangerous requests.</p></div>
+
+</div>
+<div class="section">
+<h2 id="2-pretraining-learning-from-a-mountain-of-text">2. Pretraining: Learning from a Mountain of Text</h2>
+<h3 id="where-the-data-comes-from">Where the data comes from</h3>
+<p>Pretraining data is mostly public text: web pages (often from large crawls like Common Crawl), books, Wikipedia, scientific papers, and source code, plus licensed and increasingly synthetic (model-generated) data. The amounts are enormous:</p>
+<ul>
+<li>GPT-3 (2020) was trained on about 300 billion tokens (<a href="https://arxiv.org/abs/2005.14165" target="_blank" rel="noopener">paper</a>).</li>
+<li>Meta&#39;s Llama 3.1 (2024) was pretrained on about <strong>15 trillion</strong> tokens (<a href="https://github.com/meta-llama/llama-models/blob/main/models/llama3_1/MODEL_CARD.md" target="_blank" rel="noopener">model card</a>).</li>
+</ul>
+<p>Raw web text is messy, so most of the work is <strong>cleaning</strong>: removing duplicates, spam, low-quality pages, and personal information, and filtering by language and quality. Data quality has a big effect on the final model.</p>
+<h3 id="self-supervised-learning">Self-supervised learning</h3>
+<p>Normally, supervised learning (from <a href="foundations.html">Chapter 1</a>) needs humans to label every example. Pretraining avoids that with a clever trick: <strong>the text labels itself</strong>. Hide the next token, ask the model to guess it, then reveal the answer and compute the <a href="neural-networks.html">loss</a>. This is called <strong>self-supervised learning</strong>.</p>
+<div class="callout tip"><p><strong>💡 Example:</strong> The single sentence <code>The cat sat on the mat</code> gives the model five practice questions for free:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Model sees</th>
+<th>Must predict</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>The</td>
+<td>cat</td>
+</tr>
+<tr>
+<td>The cat</td>
+<td>sat</td>
+</tr>
+<tr>
+<td>The cat sat</td>
+<td>on</td>
+</tr>
+<tr>
+<td>The cat sat on</td>
+<td>the</td>
+</tr>
+<tr>
+<td>The cat sat on the</td>
+<td>mat</td>
+</tr>
+</tbody></table></div>
+<p>Every guess is scored, and <a href="neural-networks.html">gradient descent</a> nudges billions of weights slightly toward the right answer. Repeat this over trillions of tokens.</p></div>
+<p>To predict the next word well across all of human writing, the model is forced to pick up grammar, facts, reasoning patterns, coding conventions, and even some common sense — all as a side-effect of one simple objective.</p>
+
+</div>
+<div class="section">
+<h2 id="3-compute-gpus-and-cost">3. Compute: GPUs and Cost</h2>
+<p>Training is mostly giant <strong>matrix multiplications</strong> (multiplying big grids of numbers). <strong>GPUs</strong> (graphics processing units) and similar AI chips (like Google&#39;s TPUs) are built to do thousands of these multiplications in parallel, which makes them far faster than ordinary CPUs for this job. Large models are trained on clusters of thousands to tens of thousands of GPUs running for weeks or months.</p>
+<h3 id="how-much-compute">How much compute?</h3>
+<p>A widely used rule of thumb (<a href="https://arxiv.org/abs/2001.08361" target="_blank" rel="noopener">Kaplan et al., 2020</a>) estimates training compute as:</p>
+<div class="code-block">training compute (FLOPs) ≈ 6 × parameters × training tokens</div>
+<p>FLOPs means &quot;floating-point operations&quot; — individual multiplications and additions. The 6 comes from roughly 2 operations per parameter per token for the forward pass and about 4 more for backpropagation.</p>
+<div class="callout tip"><p><strong>💡 Example:</strong> A 7-billion-parameter model trained on 1 trillion tokens: 6 × 7,000,000,000 × 1,000,000,000,000 = <strong>4.2 × 10²²</strong> FLOPs. That is 42 thousand billion billion operations.</p></div>
+<h3 id="a-real-world-example">A real-world example</h3>
+<p>Meta reports that training the Llama 3.1 family used a cumulative <strong>39.3 million GPU-hours</strong> on H100-80GB GPUs, of which <strong>30.84 million</strong> were for the 405-billion-parameter model (<a href="https://github.com/meta-llama/llama-models/blob/main/models/llama3_1/MODEL_CARD.md" target="_blank" rel="noopener">model card</a>).</p>
+<div class="callout tip"><p><strong>💡 Example:</strong> To get a feel for the cost, <em>assume</em> renting one such GPU costs $2 per hour (an illustrative figure — real prices vary widely, and Meta uses its own hardware). Then 30.84 million GPU-hours × $2 ≈ <strong>$62 million</strong> of compute for one final training run — before counting failed experiments, staff, data, and electricity.</p></div>
+<div class="callout success"><p><strong>✅ Key takeaway:</strong> Pretraining a frontier model costs tens to hundreds of millions of dollars and is done by only a few organizations. Almost everyone else <strong>starts from an existing model</strong> and adapts it.</p></div>
+
+</div>
+<div class="section">
+<h2 id="4-scaling-laws">4. Scaling Laws</h2>
+<p>Researchers discovered that model quality improves in a remarkably <strong>predictable</strong> way as you increase three things:</p>
+<ol>
+<li><strong>Parameters</strong> — the size of the model.</li>
+<li><strong>Data</strong> — the number of training tokens.</li>
+<li><strong>Compute</strong> — the total amount of calculation (which depends on the first two).</li>
+</ol>
+<p>Plot the loss against compute on a log scale and you get a fairly smooth line: each 10× increase in compute buys a reliable, if shrinking, improvement. These patterns are called <strong>scaling laws</strong> (<a href="https://arxiv.org/abs/2001.08361" target="_blank" rel="noopener">Kaplan et al., 2020</a>).</p>
+<h3 id="the-chinchilla-idea">The Chinchilla idea</h3>
+<p>For a fixed compute budget, should you build a bigger model or train on more data? DeepMind&#39;s Chinchilla paper (<a href="https://arxiv.org/abs/2203.15556" target="_blank" rel="noopener">Hoffmann et al., 2022</a>) trained over 400 models and found that many large models of the time were <strong>undertrained</strong> — too many parameters, too little data. Their finding: model size and training tokens should grow <strong>together</strong> — every time you double the model size, you should also double the training tokens.</p>
+<p>They proved it with <strong>Chinchilla</strong>: 70 billion parameters trained on about 4× more data than DeepMind&#39;s earlier Gopher model (280 billion parameters), using the <strong>same</strong> compute. Chinchilla outperformed Gopher, GPT-3 (175B), and other larger models on a wide range of tasks.</p>
+<div class="callout tip"><p><strong>💡 Example:</strong> A common reading of the Chinchilla results is &quot;about <strong>20 training tokens per parameter</strong>&quot; for compute-optimal training. For a 70B model: 70 billion × 20 = <strong>1.4 trillion tokens</strong>, which is roughly what Chinchilla was trained on.</p></div>
+<div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;Chinchilla&#39;s 20-to-1 ratio is how everyone trains now.&quot; Chinchilla optimizes <strong>training</strong> cost only. Because a model is run billions of times after training, many labs deliberately train <em>smaller</em> models on <em>far more</em> data so they are cheaper to use. Llama 3.1 8B saw about 15 trillion tokens — roughly 1,900 tokens per parameter.</p></div>
+
+</div>
+<div class="section">
+<h2 id="5-base-model-vs-instruct-chat-model">5. Base Model vs. Instruct (Chat) Model</h2>
+<p>At the end of pretraining you have a <strong>base model</strong>. It is knowledgeable, but it only knows how to continue text — it has never been taught to be an assistant.</p>
+<div class="callout tip"><p><strong>💡 Example:</strong> The same prompt, given to two versions of a model (illustrative outputs):</p>
+<p><strong>Prompt:</strong> <code>What is the capital of France?</code></p>
+<p><strong>Base model:</strong> <code>What is the capital of Germany? What is the capital of Italy? What is the capital of Spain?</code> — it guesses this text is from a quiz list and continues the list.</p>
+<p><strong>Instruct model:</strong> <code>The capital of France is Paris.</code> — it recognizes a question and answers it.</p></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>Base model</th>
+<th>Instruct / chat model</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Trained with</td>
+<td>pretraining only</td>
+<td>pretraining + SFT + preference tuning</td>
+</tr>
+<tr>
+<td>Behavior</td>
+<td>continues text</td>
+<td>follows instructions, holds a conversation</td>
+</tr>
+<tr>
+<td>Typical use</td>
+<td>research, further fine-tuning, text completion</td>
+<td>assistants, apps, APIs</td>
+</tr>
+<tr>
+<td>Naming hints</td>
+<td>&quot;base&quot;, no suffix</td>
+<td>&quot;Instruct&quot;, &quot;Chat&quot;, &quot;-it&quot;</td>
+</tr>
+</tbody></table></div>
+<p>Open-model families often publish both versions — for example, Llama 3.1 8B and Llama 3.1 8B Instruct.</p>
+
+</div>
+<div class="section">
+<h2 id="6-supervised-fine-tuning-sft">6. Supervised Fine-Tuning (SFT)</h2>
+<p><strong>Supervised fine-tuning</strong> (also called <strong>instruction tuning</strong>) continues training the base model on a much smaller set of high-quality example conversations: a prompt plus an ideal response, often written or checked by people.</p>
+<div class="code-block">Prompt:   Summarize this email in one sentence: &lt;email text&gt;
+Response: The client wants to move Friday&#39;s meeting to Monday at 10am.</div>
+<p>The training is the same next-token prediction as before — the model simply learns from examples of <em>assistant behavior</em> instead of random web text. A dataset of tens of thousands of examples (tiny compared with pretraining) can dramatically change how the model behaves. Meta, for example, reports using publicly available instruction datasets plus over 25 million synthetically generated examples for Llama 3.1&#39;s fine-tuning.</p>
+<p>SFT also teaches the <strong>chat format</strong>: special tokens that mark where the system instructions, the user&#39;s message, and the assistant&#39;s reply begin and end.</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Pretraining teaches the model <em>what the world&#39;s text looks like</em>. SFT teaches it <em>what a good assistant&#39;s answer looks like</em>.</p></div>
+
+</div>
+<div class="section">
+<h2 id="7-preference-tuning-rlhf-and-dpo">7. Preference Tuning: RLHF and DPO</h2>
+<p>SFT shows the model good answers, but it is hard to write a perfect example for everything. It is much easier for a person to look at two answers and say <strong>which one is better</strong>. Preference tuning uses those comparisons.</p>
+<h3 id="rlhf-step-by-step">RLHF step by step</h3>
+<p><strong>Reinforcement Learning from Human Feedback (RLHF)</strong> was popularized by OpenAI&#39;s InstructGPT paper (<a href="https://arxiv.org/abs/2203.02155" target="_blank" rel="noopener">Ouyang et al., 2022</a>). It has three steps:</p>
+<ol>
+<li><strong>Supervised fine-tuning.</strong> Human labelers write example answers; fine-tune the model on them (section 6).</li>
+<li><strong>Train a reward model.</strong> For many prompts, the model writes several answers. Humans <strong>rank</strong> them from best to worst. A separate model — the <strong>reward model</strong> — is trained to predict those rankings, so it learns to give a score for &quot;how much would a human like this answer?&quot;.</li>
+<li><strong>Optimize with reinforcement learning.</strong> The chat model writes answers, the reward model scores them, and an algorithm (PPO) adjusts the chat model&#39;s weights to earn higher scores. A penalty keeps it from drifting too far from the SFT model, so it does not learn to &quot;game&quot; the reward model with weird outputs.</li>
+</ol>
+<div class="callout tip"><p><strong>💡 Example:</strong> Prompt: &quot;Explain photosynthesis to a 7-year-old.&quot; Answer A uses words like &quot;chlorophyll-mediated carbon fixation&quot;; answer B says &quot;plants use sunlight to turn air and water into food&quot;. A labeler ranks <strong>B above A</strong>. After thousands of such rankings, the reward model learns that age-appropriate, clear answers score higher — and RL pushes the chat model toward them.</p></div>
+<p>The InstructGPT result was striking: people preferred answers from a <strong>1.3-billion-parameter</strong> InstructGPT model over the <strong>175-billion-parameter</strong> GPT-3, despite it having over 100× fewer parameters. Alignment work can matter more than raw size for usefulness.</p>
+<h3 id="dpo-a-simpler-shortcut">DPO: a simpler shortcut</h3>
+<p>RLHF is powerful but complicated: you train an extra reward model and run an often-unstable reinforcement learning loop. <strong>Direct Preference Optimization (DPO)</strong> (<a href="https://arxiv.org/abs/2305.18290" target="_blank" rel="noopener">Rafailov et al., 2023</a>) showed that you can skip both.</p>
+<p>DPO trains directly on preference pairs — (prompt, <strong>chosen</strong> answer, <strong>rejected</strong> answer) — with a simple classification-style loss: make the chosen answer more likely and the rejected answer less likely, relative to the starting model. The paper found it matched or beat PPO-based RLHF on the tasks tested while being much simpler to implement.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>RLHF (PPO)</th>
+<th>DPO</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Needs a separate reward model</td>
+<td>yes</td>
+<td>no</td>
+</tr>
+<tr>
+<td>Needs reinforcement learning loop</td>
+<td>yes</td>
+<td>no</td>
+</tr>
+<tr>
+<td>Data</td>
+<td>human rankings</td>
+<td>pairs of chosen vs. rejected answers</td>
+</tr>
+<tr>
+<td>Complexity</td>
+<td>high</td>
+<td>low</td>
+</tr>
+</tbody></table></div>
+<div class="callout success"><p><strong>✅ Key takeaway:</strong> Both RLHF and DPO teach a model <em>which kind of answer people prefer</em> — helpful, clear, honest, safe — something that is hard to capture with example answers alone.</p></div>
+<h3 id="ai-feedback-and-constitutional-ai">AI feedback and Constitutional AI</h3>
+<p>Human feedback is slow and expensive. Anthropic&#39;s <strong>Constitutional AI</strong> (<a href="https://arxiv.org/abs/2212.08073" target="_blank" rel="noopener">Bai et al., 2022</a>) replaces much of it with <strong>AI feedback</strong>: the model is given a written list of principles (a &quot;constitution&quot;), asked to critique and revise its own answers according to those principles, and an AI judge — rather than humans — picks the better of two answers for the preference-training step. This is often called <strong>RLAIF</strong> (reinforcement learning from AI feedback). Today, most labs mix human and AI feedback.</p>
+
+</div>
+<div class="section">
+<h2 id="8-fine-tuning-for-your-own-use">8. Fine-Tuning for Your Own Use</h2>
+<p>You can also fine-tune an existing model on your own examples — for example to always answer in your company&#39;s format, or to classify support tickets into your categories.</p>
+<h3 id="full-fine-tuning-vs-parameter-efficient-fine-tuning">Full fine-tuning vs. parameter-efficient fine-tuning</h3>
+<ul>
+<li><strong>Full fine-tuning</strong> updates <strong>every</strong> weight. For large models that needs a lot of GPU memory, and each fine-tuned copy is as big as the original.</li>
+<li><strong>Parameter-efficient fine-tuning (PEFT)</strong> freezes the original weights and trains only a small number of new ones. The most popular method is <strong>LoRA</strong>.</li>
+</ul>
+<h3 id="lora-low-rank-adaptation">LoRA — Low-Rank Adaptation</h3>
+<p>LoRA (<a href="https://arxiv.org/abs/2106.09685" target="_blank" rel="noopener">Hu et al., 2021</a>) keeps the original weight matrix <code>W</code> frozen and learns a small correction made of two thin matrices, <code>B</code> and <code>A</code>:</p>
+<div class="code-block">new weights = W + B × A
+
+W : d × d   (frozen, huge)
+B : d × r   (trainable, thin)
+A : r × d   (trainable, thin)
+r : the &quot;rank&quot;, a small number like 8 or 16</div>
+<div class="callout tip"><p><strong>💡 Example:</strong> One weight matrix of size 4,096 × 4,096 has <strong>16,777,216</strong> numbers. With LoRA rank r = 8, the two thin matrices have 4,096 × 8 + 8 × 4,096 = <strong>65,536</strong> numbers — about <strong>0.4%</strong> of the original. You train only those, and store them as a small add-on file.</p></div>
+<p>The LoRA paper reports that, compared with fully fine-tuning GPT-3 175B, LoRA can cut the number of trainable parameters by <strong>10,000×</strong> and GPU memory needs by <strong>3×</strong>, while matching or beating full fine-tuning quality on the models tested.</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Full fine-tuning is like reprinting an entire textbook to change a few chapters. LoRA is like adding <strong>sticky notes</strong> to the original textbook — the book stays untouched, the notes are small and cheap, and you can keep different sets of notes for different jobs.</p></div>
+<p><strong>QLoRA</strong> (<a href="https://arxiv.org/abs/2305.14314" target="_blank" rel="noopener">Dettmers et al., 2023</a>) goes further: it stores the frozen base model in compressed <strong>4-bit</strong> form (see quantization in section 10) and trains LoRA adapters on top. The paper showed fine-tuning a <strong>65-billion-parameter</strong> model on a <strong>single 48 GB GPU</strong>. Hugging Face&#39;s <a href="https://huggingface.co/docs/peft" target="_blank" rel="noopener">PEFT library</a> is the common open-source tool for both.</p>
+<h3 id="when-not-to-fine-tune">When NOT to fine-tune</h3>
+<p>Fine-tuning is often the <em>last</em> tool to reach for, not the first. It needs good training data, evaluation, and maintenance, and it is poor at teaching a model <strong>new, changing facts</strong>.</p>
+<div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;Fine-tuning is how you give the model my company&#39;s documents.&quot; Usually it is not. Facts that change, or that must be quoted accurately, are better handled with <strong>RAG</strong> (retrieval-augmented generation): look up the relevant documents and put them in the prompt. Fine-tuning is better for teaching a consistent <strong>style, format, or narrow skill</strong>.</p></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Your need</th>
+<th>Try first</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Better answers to general tasks</td>
+<td><strong>Prompting</strong> (clear instructions, examples)</td>
+<td>fast, free, easy to change</td>
+</tr>
+<tr>
+<td>Answers based on your documents or current data</td>
+<td><strong>RAG</strong></td>
+<td>facts stay up to date and can be cited</td>
+</tr>
+<tr>
+<td>A consistent tone, format, or structure every time</td>
+<td>prompting with examples, then <strong>fine-tuning</strong></td>
+<td>fine-tuning bakes in style that prompts struggle to enforce</td>
+</tr>
+<tr>
+<td>A narrow, repetitive task at high volume (e.g. classification)</td>
+<td><strong>fine-tuning</strong> a smaller model</td>
+<td>can be cheaper and faster than a big model with long prompts</td>
+</tr>
+<tr>
+<td>Teach brand-new knowledge that changes often</td>
+<td><strong>RAG</strong> (not fine-tuning)</td>
+<td>fine-tuned facts go stale and can still be hallucinated</td>
+</tr>
+</tbody></table></div>
+<div class="callout success"><p><strong>✅ Key takeaway:</strong> Prompting → RAG → fine-tuning, in that order. Move to the next step only when the previous one clearly falls short. See <a href="using-ai.html">Chapter 6</a> for prompting and RAG in practice.</p></div>
+
+</div>
+<div class="section">
+<h2 id="9-distillation-teacher-and-student">9. Distillation: Teacher and Student</h2>
+<p><strong>Knowledge distillation</strong> (<a href="https://arxiv.org/abs/1503.02531" target="_blank" rel="noopener">Hinton et al., 2015</a>) trains a small <strong>student</strong> model to imitate a large <strong>teacher</strong> model. Instead of learning only from the right answers, the student learns from the teacher&#39;s full probability distribution — which also reveals which <em>wrong</em> answers are &quot;almost right&quot;.</p>
+<div class="callout tip"><p><strong>💡 Example:</strong> For &quot;The cat sat on the ___&quot;, the plain training data only says &quot;mat&quot;. The teacher, however, says &quot;mat 40%, floor 20%, sofa 15%...&quot;. That richer signal teaches the student more per example. DistilBERT (<a href="https://arxiv.org/abs/1910.01108" target="_blank" rel="noopener">Sanh et al., 2019</a>) used distillation to make a BERT model 40% smaller and 60% faster while keeping 97% of its language-understanding performance.</p></div>
+<p>Today, distillation is also done by having a strong model <strong>generate training data</strong> (answers, explanations, reasoning steps) for a smaller model. Many small, fast models you can use are distilled from larger ones.</p>
+
+</div>
+<div class="section">
+<h2 id="10-quantization-making-models-smaller">10. Quantization: Making Models Smaller</h2>
+<p>Each weight is stored as a number, and the <strong>format</strong> of that number decides how much memory it takes. <strong>Quantization</strong> stores weights with fewer bits — like saving a photo at lower quality to make the file smaller.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Format</th>
+<th>Bits per weight</th>
+<th>Bytes per weight</th>
+<th>7B model (weights only)</th>
+<th>70B model (weights only)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FP32 (full precision)</td>
+<td>32</td>
+<td>4</td>
+<td>~28 GB</td>
+<td>~280 GB</td>
+</tr>
+<tr>
+<td>FP16 / BF16 (half precision)</td>
+<td>16</td>
+<td>2</td>
+<td>~14 GB</td>
+<td>~140 GB</td>
+</tr>
+<tr>
+<td>INT8</td>
+<td>8</td>
+<td>1</td>
+<td>~7 GB</td>
+<td>~70 GB</td>
+</tr>
+<tr>
+<td>INT4</td>
+<td>4</td>
+<td>0.5</td>
+<td>~3.5 GB</td>
+<td>~35 GB</td>
+</tr>
+</tbody></table></div>
+<p>The formula is simple:</p>
+<div class="code-block">memory for weights ≈ number of parameters × bytes per weight</div>
+<div class="callout tip"><p><strong>💡 Example:</strong> A 7-billion-parameter model in INT4: 7,000,000,000 × 0.5 bytes = 3.5 billion bytes ≈ <strong>3.5 GB</strong>. That fits on a laptop GPU or even a phone, while the FP32 version (28 GB) would not. Running the model also needs extra memory for the KV cache and activations, so real needs are somewhat higher.</p></div>
+<ul>
+<li><strong>FP16</strong> and <strong>BF16</strong> both use 16 bits. <strong>BF16</strong> (&quot;brain float&quot;) keeps FP32&#39;s range of very large and very small numbers but with less precision, which makes training more stable. Most models today are trained and released in BF16.</li>
+<li><strong>INT8</strong> and <strong>INT4</strong> store weights as small integers plus scaling factors. Quality usually drops only a little at 8-bit and somewhat more at 4-bit; very low bit-widths (below 4) can hurt quality noticeably, especially on harder tasks.</li>
+</ul>
+<p>Common names you will see when downloading open models:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Name</th>
+<th>What it is</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>GGUF</strong></td>
+<td>a file format from the llama.cpp project, popular for running quantized models locally on CPUs and Macs (e.g. via Ollama or LM Studio)</td>
+</tr>
+<tr>
+<td><strong>GPTQ</strong></td>
+<td>a post-training quantization method for GPUs (<a href="https://arxiv.org/abs/2210.17323" target="_blank" rel="noopener">Frantar et al., 2022</a>)</td>
+</tr>
+<tr>
+<td><strong>AWQ</strong></td>
+<td>Activation-aware Weight Quantization, which protects the most important weights (<a href="https://arxiv.org/abs/2306.00978" target="_blank" rel="noopener">Lin et al., 2023</a>)</td>
+</tr>
+</tbody></table></div>
+<div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;A 4-bit model is just as good as the original.&quot; It is usually <em>close</em>, but not identical. Always test a quantized model on your own tasks before relying on it.</p></div>
+
+</div>
+<div class="section">
+<h2 id="11-mixture-of-experts-moe">11. Mixture of Experts (MoE)</h2>
+<p>In a normal (&quot;dense&quot;) transformer, every parameter is used for every token. A <strong>Mixture of Experts</strong> model replaces each feed-forward network with several smaller ones — the <strong>experts</strong> — plus a small <strong>router</strong> that picks which experts handle each token.</p>
+<p>This creates two different parameter counts:</p>
+<ul>
+<li><strong>Total parameters:</strong> all the experts added together. This decides how much memory you need to <em>store</em> the model.</li>
+<li><strong>Active parameters:</strong> only the experts actually used for one token. This decides how much computation (and time) each token costs.</li>
+</ul>
+<div class="callout tip"><p><strong>💡 Example:</strong> Mistral AI&#39;s Mixtral 8x7B (<a href="https://arxiv.org/abs/2401.04088" target="_blank" rel="noopener">paper</a>) has 8 experts per layer and the router picks <strong>2</strong> for each token. Each token therefore has access to about <strong>47 billion</strong> parameters but only uses about <strong>13 billion</strong> active parameters. It runs at roughly the speed of a 13B model while performing like a much larger one — though you still need memory for all 47B.</p></div>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> A hospital has many specialist doctors, but each patient sees only the two most relevant ones. The hospital is big (total parameters), but each visit is quick (active parameters).</p></div>
+<p>Several large modern models are believed or confirmed to use MoE designs, since it lets models grow in knowledge without growing the per-token cost at the same rate.</p>
+
+</div>
+<div class="section">
+<h2 id="12-evaluation-and-benchmarks">12. Evaluation and Benchmarks</h2>
+<p>How do we know if a model is good? Labs publish scores on <strong>benchmarks</strong> — standard test sets. Some well-known ones:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Benchmark</th>
+<th>What it tests</th>
+<th>How</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>MMLU</strong> (<a href="https://arxiv.org/abs/2009.03300" target="_blank" rel="noopener">Hendrycks et al.</a>)</td>
+<td>broad knowledge</td>
+<td>multiple-choice questions across 57 subjects, from math to law</td>
+</tr>
+<tr>
+<td><strong>HumanEval</strong> (<a href="https://arxiv.org/abs/2107.03374" target="_blank" rel="noopener">Chen et al.</a>)</td>
+<td>basic coding</td>
+<td>164 hand-written Python problems checked by unit tests</td>
+</tr>
+<tr>
+<td><strong>SWE-bench</strong> (<a href="https://arxiv.org/abs/2310.06770" target="_blank" rel="noopener">Jimenez et al.</a>)</td>
+<td>real software engineering</td>
+<td>fix real GitHub issues from popular Python projects so the project&#39;s tests pass</td>
+</tr>
+<tr>
+<td><strong>LMArena</strong> (<a href="https://lmarena.ai" target="_blank" rel="noopener">lmarena.ai</a>)</td>
+<td>overall human preference</td>
+<td>people chat with two anonymous models side by side and vote for the better answer; votes become a leaderboard rating</td>
+</tr>
+</tbody></table></div>
+<h3 id="the-limits-of-benchmarks">The limits of benchmarks</h3>
+<ul>
+<li><strong>Contamination:</strong> benchmark questions are published online, so they can leak into the pretraining data. A model may then partly <em>remember</em> answers instead of solving them — like a student who saw the exam beforehand.</li>
+<li><strong>Saturation:</strong> top models now score very high on older tests. Llama 3.1 405B Instruct, for example, reports 87.3% on MMLU. When everyone scores near the top, the test stops telling models apart, so harder benchmarks keep appearing.</li>
+<li><strong>Narrowness:</strong> a benchmark measures one thing in one format. A high coding score says little about how well a model writes your marketing emails.</li>
+<li><strong>Teaching to the test:</strong> once a number becomes a target, labs optimize for it, and it can stop reflecting real-world quality.</li>
+<li><strong>Human-vote leaderboards</strong> capture what people <em>like</em>, which can reward style (length, formatting, confidence) as well as correctness.</li>
+</ul>
+<div class="callout success"><p><strong>✅ Key takeaway:</strong> Treat benchmarks as a rough first filter. The best evaluation is your own: a small set of real examples from <strong>your</strong> task, scored the same way for every model you try. See <a href="best-practices.html">Chapter 8</a>.</p></div>
+
+</div>
+<div class="section">
+<h2 id="13-knowledge-cutoff">13. Knowledge Cutoff</h2>
+<p>A model only knows what was in its training data, and that data stops at some date — the <strong>knowledge cutoff</strong> (or training cutoff). For example, Meta lists Llama 3.1&#39;s pretraining data cutoff as <strong>December 2023</strong> (<a href="https://github.com/meta-llama/llama-models/blob/main/models/llama3_1/MODEL_CARD.md" target="_blank" rel="noopener">model card</a>). Models are often released months after their cutoff, and then used for a long time after that.</p>
+<div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;The model knows today&#39;s news.&quot; Unless the app gives it a <strong>search tool</strong> or you paste in current information, the model only knows the world up to its cutoff — and it may not even realize time has passed, confidently describing outdated &quot;latest&quot; versions.</p></div>
+<p>Facts close to the cutoff are often weaker too, because less had been written about them yet. Provider documentation usually lists each model&#39;s cutoff date.</p>
+
+</div>
+<div class="section">
+<h2 id="14-safety-and-alignment-basics">14. Safety and Alignment Basics</h2>
+<p><strong>Alignment</strong> means making a model&#39;s behavior match what its developers and users intend — commonly summarized as <strong>helpful, honest, and harmless</strong>. It is built in at several layers:</p>
+<ul>
+<li><strong>Data filtering</strong> removes some harmful content before pretraining.</li>
+<li><strong>Post-training</strong> (SFT, RLHF, DPO, Constitutional AI) teaches the model to refuse clearly dangerous requests, admit uncertainty, and avoid toxic output.</li>
+<li><strong>Red teaming:</strong> experts deliberately try to make the model misbehave — extracting dangerous information, bypassing its rules — and the findings feed back into training and testing.</li>
+<li><strong>Safety evaluations</strong> check high-risk areas (for example cyberattack assistance or chemical/biological weapons uplift) before release. Labs often publish the results in a <strong>model card</strong> or <strong>system card</strong>.</li>
+<li><strong>System-level safeguards:</strong> outside the model, apps add input and output filters, content classifiers (for example Meta&#39;s Llama Guard), rate limits, and monitoring.</li>
+</ul>
+<p>There are real trade-offs. A model tuned to refuse too much becomes unhelpful (&quot;over-refusal&quot;); one that refuses too little can be misused. And no training is perfect: <strong>jailbreaks</strong> (cleverly worded prompts) and <strong>prompt injection</strong> (malicious instructions hidden in documents or web pages the model reads) can still get through, which is why safety is layered rather than left to the model alone.</p>
+<div class="callout success"><p><strong>✅ Key takeaway:</strong> Safety comes from many layers working together — careful data, alignment training, testing, and safeguards in the application. When you build with models, you are responsible for the application layer. See <a href="best-practices.html">Chapter 8</a>.</p></div>
+
+</div>
+<div class="section">
+<h2 id="recap">Recap</h2>
+<ul>
+<li>Training runs in stages: <strong>data → pretraining → base model → SFT → preference tuning → safety evals → deployment</strong>.</li>
+<li><strong>Pretraining</strong> is self-supervised next-token prediction over trillions of tokens; it takes most of the compute (millions of GPU-hours for frontier models).</li>
+<li><strong>Scaling laws</strong> show quality improves predictably with parameters, data, and compute; <strong>Chinchilla</strong> showed size and data should grow together (~20 tokens per parameter for compute-optimal training).</li>
+<li>A <strong>base model</strong> continues text; an <strong>instruct model</strong> has been fine-tuned to follow instructions.</li>
+<li><strong>SFT</strong> learns from example answers; <strong>RLHF</strong> uses human rankings, a reward model, and RL; <strong>DPO</strong> learns from chosen/rejected pairs without a reward model; <strong>Constitutional AI</strong> uses AI feedback guided by written principles.</li>
+<li><strong>LoRA/QLoRA</strong> fine-tune by training small add-on matrices; try <strong>prompting, then RAG, then fine-tuning</strong>.</li>
+<li><strong>Distillation</strong> trains a small student to imitate a big teacher; <strong>quantization</strong> shrinks memory by storing weights in fewer bits (FP32 → BF16 → INT8 → INT4).</li>
+<li><strong>Mixture of Experts</strong> models have many total parameters but only a fraction active per token.</li>
+<li><strong>Benchmarks</strong> (MMLU, HumanEval, SWE-bench, LMArena) are useful but limited by contamination, saturation, and narrowness.</li>
+<li>Models have a <strong>knowledge cutoff</strong>, and <strong>safety</strong> comes from layers of training, testing, and application safeguards.</li>
+</ul>
+
+</div>
+<div class="section">
+<h2 id="check-your-understanding">Check Your Understanding</h2>
+<p><strong>1. Why is pretraining called &quot;self-supervised&quot;?</strong></p>
+<ul>
+<li>A) The model labels its own mistakes with a separate AI judge</li>
+<li>B) The text provides its own labels — the next token is the answer to predict</li>
+<li>C) Humans supervise every training example</li>
+<li>D) The model chooses its own training data from the internet</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> B — Each next token in the text acts as the label, so no human labeling is needed. That is what makes training on trillions of tokens possible.</p></div>
+<p><strong>2. What was the main finding of the Chinchilla paper?</strong></p>
+<ul>
+<li>A) Bigger models always beat smaller ones, regardless of data</li>
+<li>B) For a fixed compute budget, model size and training data should be scaled up together</li>
+<li>C) Training data quality has no effect on results</li>
+<li>D) Models should be trained on fewer tokens to avoid overfitting</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> B — Chinchilla found many models were undertrained and showed that doubling model size should come with doubling training tokens. Its 70B model beat the 280B Gopher using the same compute.</p></div>
+<p><strong>3. In RLHF, what is the reward model&#39;s job?</strong></p>
+<ul>
+<li>A) It writes the example answers for supervised fine-tuning</li>
+<li>B) It predicts how much a human would prefer an answer, so the chat model can be optimized toward higher scores</li>
+<li>C) It compresses the model to 4-bit</li>
+<li>D) It removes duplicate web pages from the training data</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> B — The reward model is trained on human rankings of answers, then used to score the chat model&#39;s outputs during reinforcement learning. DPO skips this separate model.</p></div>
+<p><strong>4. A company wants its chatbot to answer questions using its product manuals, which are updated every month. What should it try first?</strong></p>
+<ul>
+<li>A) Pretrain a new model from scratch</li>
+<li>B) Fully fine-tune a large model on the manuals every month</li>
+<li>C) Use retrieval-augmented generation (RAG) to put relevant manual sections into the prompt</li>
+<li>D) Raise the temperature</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> C — RAG keeps changing facts up to date and lets the model cite the source. Fine-tuning is better for style and format, and pretraining from scratch is far too costly.</p></div>
+<p><strong>5. Roughly how much memory do the weights of a 7-billion-parameter model need in INT4?</strong></p>
+<ul>
+<li>A) About 3.5 GB</li>
+<li>B) About 7 GB</li>
+<li>C) About 14 GB</li>
+<li>D) About 28 GB</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> A — INT4 uses 0.5 bytes per weight: 7 billion × 0.5 = 3.5 GB. INT8 would be ~7 GB, BF16 ~14 GB, and FP32 ~28 GB.</p></div>
+<div class="nav-links"><a href="transformers.html">← Chapter 3: Transformers &amp; LLMs</a><a href="models.html">Chapter 5: Model Landscape →</a></div>
+</div>
+</main>
+
+<footer class="site-footer">AI Learn · A beginner's guide to how AI models work · Based on official docs and open course material · Not affiliated with any model provider</footer>
+</body>
+</html>

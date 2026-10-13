@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400" width="900" height="400" font-family="Inter,sans-serif" role="img" aria-label="Retrieval-augmented generation: documents are chunked, embedded and stored in a vector database ahead of time; each question is embedded, similar chunks are retrieved, added to the prompt, and the model answers with citations">
+  <defs>
+    <marker id="rag-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="900" height="400" fill="#ffffff"/>
+
+  <text x="20" y="30" font-size="14" font-weight="700" fill="#4338ca">INDEXING: done once, ahead of time</text>
+  <rect x="20" y="44" width="150" height="62" rx="10" fill="#eef2ff" stroke="#6366f1" stroke-width="2"/>
+  <text x="95" y="70" text-anchor="middle" font-size="14" font-weight="700" fill="#1e1b4b">1. Documents</text>
+  <text x="95" y="90" text-anchor="middle" font-size="12" fill="#3730a3">handbook, wiki, PDFs</text>
+
+  <rect x="200" y="44" width="150" height="62" rx="10" fill="#eef2ff" stroke="#6366f1" stroke-width="2"/>
+  <text x="275" y="70" text-anchor="middle" font-size="14" font-weight="700" fill="#1e1b4b">2. Split into chunks</text>
+  <text x="275" y="90" text-anchor="middle" font-size="12" fill="#3730a3">a few paragraphs each</text>
+
+  <rect x="380" y="44" width="150" height="62" rx="10" fill="#eef2ff" stroke="#6366f1" stroke-width="2"/>
+  <text x="455" y="70" text-anchor="middle" font-size="14" font-weight="700" fill="#1e1b4b">3. Embed chunks</text>
+  <text x="455" y="90" text-anchor="middle" font-size="12" fill="#3730a3">text to vectors</text>
+
+  <line x1="170" y1="75" x2="198" y2="75" stroke="#475569" stroke-width="2" marker-end="url(#rag-arrow)"/>
+  <line x1="350" y1="75" x2="378" y2="75" stroke="#475569" stroke-width="2" marker-end="url(#rag-arrow)"/>
+  <line x1="455" y1="106" x2="455" y2="142" stroke="#475569" stroke-width="2" marker-end="url(#rag-arrow)"/>
+
+  <rect x="370" y="144" width="170" height="66" rx="12" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="455" y="172" text-anchor="middle" font-size="14" font-weight="700" fill="#78350f">4. Vector database</text>
+  <text x="455" y="192" text-anchor="middle" font-size="12" fill="#92400e">vectors + original text</text>
+
+  <text x="580" y="172" font-size="12" fill="#64748b">Stores every chunk with its vector,</text>
+  <text x="580" y="190" font-size="12" fill="#64748b">source file and section for citations</text>
+
+  <line x1="455" y1="210" x2="455" y2="270" stroke="#475569" stroke-width="2" marker-end="url(#rag-arrow)"/>
+  <text x="465" y="246" font-size="12" fill="#64748b">top-k most similar chunks</text>
+
+  <text x="20" y="258" font-size="14" font-weight="700" fill="#047857">ANSWERING: every question</text>
+  <rect x="20" y="272" width="150" height="70" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+  <text x="95" y="300" text-anchor="middle" font-size="14" font-weight="700" fill="#064e3b">A. User question</text>
+  <text x="95" y="320" text-anchor="middle" font-size="12" fill="#065f46">"How many vacation</text>
+  <text x="95" y="335" text-anchor="middle" font-size="12" fill="#065f46">days do I get?"</text>
+
+  <rect x="200" y="272" width="150" height="70" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+  <text x="275" y="300" text-anchor="middle" font-size="14" font-weight="700" fill="#064e3b">B. Embed question</text>
+  <text x="275" y="320" text-anchor="middle" font-size="12" fill="#065f46">same embedding</text>
+  <text x="275" y="335" text-anchor="middle" font-size="12" fill="#065f46">model as step 3</text>
+
+  <rect x="380" y="272" width="150" height="70" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+  <text x="455" y="300" text-anchor="middle" font-size="14" font-weight="700" fill="#064e3b">C. Retrieve</text>
+  <text x="455" y="320" text-anchor="middle" font-size="12" fill="#065f46">vector search finds</text>
+  <text x="455" y="335" text-anchor="middle" font-size="12" fill="#065f46">closest chunks</text>
+
+  <rect x="560" y="272" width="150" height="70" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+  <text x="635" y="300" text-anchor="middle" font-size="14" font-weight="700" fill="#064e3b">D. Augment prompt</text>
+  <text x="635" y="320" text-anchor="middle" font-size="12" fill="#065f46">instructions + chunks</text>
+  <text x="635" y="335" text-anchor="middle" font-size="12" fill="#065f46">+ question</text>
+
+  <rect x="740" y="272" width="150" height="70" rx="10" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+  <text x="815" y="300" text-anchor="middle" font-size="14" font-weight="700" fill="#0c4a6e">E. LLM answers</text>
+  <text x="815" y="320" text-anchor="middle" font-size="12" fill="#075985">grounded answer</text>
+  <text x="815" y="335" text-anchor="middle" font-size="12" fill="#075985">with citations</text>
+
+  <line x1="170" y1="307" x2="198" y2="307" stroke="#475569" stroke-width="2" marker-end="url(#rag-arrow)"/>
+  <line x1="350" y1="307" x2="378" y2="307" stroke="#475569" stroke-width="2" marker-end="url(#rag-arrow)"/>
+  <line x1="530" y1="307" x2="558" y2="307" stroke="#475569" stroke-width="2" marker-end="url(#rag-arrow)"/>
+  <line x1="710" y1="307" x2="738" y2="307" stroke="#475569" stroke-width="2" marker-end="url(#rag-arrow)"/>
+
+  <text x="450" y="382" text-anchor="middle" font-size="13" fill="#334155">The model's weights never change. It reads fresh, relevant text in its context window for each question.</text>
+</svg>

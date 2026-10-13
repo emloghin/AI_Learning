@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GH-600 Glossary of Terms — GH-600 Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>.section td code,.callout code,.diagram-caption code{background:var(--primary-light);color:var(--primary);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:13px}.callout p+p{margin-top:8px}.callout ul{margin:8px 0 0 20px}</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-logo"><span>GH-</span>600</div>
+    <nav class="header-nav">
+      <a href="index.html">Home</a>
+      <a href="basics.html">Start Here</a>
+      <a href="domain-1.html">D1: Architecture</a>
+      <a href="domain-2.html">D2: Tooling &amp; MCP</a>
+      <a href="domain-3.html">D3: Memory &amp; State</a>
+      <a href="domain-4.html">D4: Evaluation</a>
+      <a href="domain-5.html">D5: Multi-Agent</a>
+      <a href="domain-6.html">D6: Guardrails</a>
+      <a href="glossary.html" class="active">Glossary</a>
+      <a href="resources.html">Resources</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-badge">GH-600 · Corrected study guide</div>
+  <h1>GH-600 Glossary of Terms</h1>
+  <p>Every exam-critical term defined in context. Each entry includes exam context, related file paths, and domain tags.</p>
+</section>
+
+<main class="main">
+<div class="section">
+<p>46 terms. Navigation: <a href="index.html">Home</a> · <a href="domain-1.html">D1</a> · <a href="domain-2.html">D2</a> · <a href="domain-3.html">D3</a> · <a href="domain-4.html">D4</a> · <a href="domain-5.html">D5</a> · <a href="domain-6.html">D6</a> · <a href="resources.html">Resources</a></p>
+
+</div>
+<div class="section">
+<h2 id="a">A</h2>
+<h3 id="agent">Agent</h3>
+<p><em>Domain 1</em></p>
+<p>An <strong>autonomous AI system</strong> that takes actions against real infrastructure within the SDLC (Software Development Lifecycle). Unlike chatbots that only answer questions, agents execute tool calls — reading, editing, running commands, delegating sub-tasks, and persisting results. The exam defines agents by their <strong>autonomy level</strong> and <strong>tool set</strong>.</p>
+<h3 id="agent-firewall">Agent Firewall</h3>
+<p><em>Domain 2</em></p>
+<p>The configurable <strong>network firewall</strong> of Copilot cloud agent that limits which external domains/URLs the agent can reach at runtime (org and repo settings, recommended allowlist on by default). It does not cover MCP server processes or <code>copilot-setup-steps</code> and doesn&#39;t apply to self-hosted runners. See <a href="https://docs.github.com/en/copilot/how-tos/use-copilot-agents/cloud-agent/customize-the-agent-firewall" target="_blank" rel="noopener">Customize the agent firewall</a>.</p>
+<h3 id="agent-skill">Agent Skill</h3>
+<p><em>Domain 2</em></p>
+<p>A packaged capability in <code>.github/skills/&lt;skill&gt;/SKILL.md</code> (frontmatter <code>name</code> + <code>description</code>, plus instructions and optional resources). Loaded on demand when invoked (<code>/skill-name</code>) or when the agent decides it is relevant — unlike custom instructions, which always apply.</p>
+<p><code>.github/skills/&lt;skill&gt;/SKILL.md</code></p>
+<h3 id="agents-secrets">Agents Secrets</h3>
+<p><em>Domain 6</em></p>
+<p>Secrets and variables stored in the repository&#39;s <strong>Agents</strong> secrets settings. These are the only secrets exposed to Copilot cloud agent (e.g. for MCP servers via <code>COPILOT_MCP_*</code>); regular Actions secrets are not passed to it.</p>
+<h3 id="agent-profile">Agent Profile</h3>
+<p><em>Domain 2</em></p>
+<p>A Markdown file with YAML frontmatter that defines a custom agent. Repository-level profiles live in <code>.github/agents/*.agent.md</code>; organization/enterprise-level profiles live in the <code>agents/</code> directory of the org&#39;s <code>.github</code> or <code>.github-private</code> repository. Frontmatter properties: <strong><code>description</code></strong> (the <strong>only required</strong> field), <code>name</code>, <code>target</code> (<code>vscode</code> or <code>github-copilot</code>; both if unset), <code>tools</code>, <code>model</code>, <code>disable-model-invocation</code>, <code>user-invocable</code>, <code>mcp-servers</code>, and <code>metadata</code>. <code>mcp-servers</code> and <code>metadata</code> are ignored by VS Code/IDE custom agents. <code>infer</code> is <strong>retired</strong> — use <code>disable-model-invocation</code> / <code>user-invocable</code> instead. The Markdown body (the agent prompt) can be up to 30,000 characters.</p>
+<p><code>.github/agents/*.agent.md</code></p>
+<h3 id="autonomy-level">Autonomy Level</h3>
+<p><em>Domain 1</em></p>
+<p>Microsoft Learn&#39;s four levels: <strong>1. Read-only</strong> (inspect, summarize, recommend), <strong>2. Propose-only</strong> (create branches/PRs, no merge or deploy), <strong>3. Execute with guardrails</strong> (run pre-approved workflows within limits), <strong>4. Human-authorized execution</strong> (high-impact actions only after human approval). Map risk to autonomy: <em>higher risk = lower autonomy</em>; start low and expand progressively. See <a href="domain-6.html#autonomy-levels">Domain 6</a>.</p>
+<h3 id="autonomy-mismatch">Autonomy Mismatch</h3>
+<p><em>Domain 1</em></p>
+<p>An <strong>anti-pattern</strong> where an agent is granted more autonomy than a task requires (over-privileged) or less than it needs (under-privileged). Over-privileged agents create unnecessary risk; under-privileged agents can&#39;t complete their work. Fix: <strong>match the minimum autonomy level to the task&#39;s actual requirements</strong>.</p>
+
+</div>
+<div class="section">
+<h2 id="b">B</h2>
+<h3 id="branch-protection">Branch Protection</h3>
+<p><em>Domain 6</em></p>
+<p>GitHub rules that <strong>prevent direct pushes</strong> to protected branches (typically <code>main</code> or <code>production</code>). Requirements include: pull request reviews, passing status checks, up-to-date branches, and no force pushes. <strong>Essential for agent governance</strong> — agents should never bypass branch protection. (Copilot cloud agent is already blocked from pushing to the default branch and from merging PRs.)</p>
+<h3 id="bypass-list">Bypass List</h3>
+<p><em>Domain 6</em></p>
+<p>A configured list of <strong>actors exempt</strong> from a ruleset&#39;s rules. Eligible actors are <strong>roles</strong> (repository admin, organization/enterprise owner, maintain, write or custom write-based roles), <strong>teams</strong> (not secret teams), <strong>GitHub Apps</strong>, and <strong>Dependabot</strong> — not arbitrary individual users. In agent contexts, a bypass list might allow a specific CI app to merge without human review while requiring it for all other agents. <strong>Use sparingly</strong> — bypass lists reduce governance.</p>
+
+</div>
+<div class="section">
+<h2 id="c">C</h2>
+<h3 id="case-study">Case Study</h3>
+<p><em>Domain 1</em></p>
+<p>A <strong>scenario-based exam question format</strong>. Each case study presents a realistic agent system scenario with multiple sub-questions. You must analyze the situation, identify problems, and choose the correct architectural decisions. The original site states there are <strong>2 case studies</strong> (56 questions total) — <em>this is not stated in official Microsoft Learn/GitHub sources; treat as unverified</em>.</p>
+<h3 id="ci-integration">CI Integration</h3>
+<p><em>Domain 2</em></p>
+<p>Running agents within GitHub Actions. For <strong>Copilot cloud agent</strong>, the environment is customized by <code>.github/workflows/copilot-setup-steps.yml</code>: a workflow with a single job that <strong>must be named <code>copilot-setup-steps</code></strong>, whose steps run in GitHub Actions before Copilot starts working. Only <code>steps</code>, <code>permissions</code>, <code>runs-on</code>, <code>services</code>, <code>snapshot</code>, and <code>timeout-minutes</code> (max 59) can be customized, and the file must be on the default branch. Copilot receives its own token for its session; the <code>GITHUB_TOKEN</code> is only used by the setup steps. Each Actions run is ephemeral; cross-session context comes from durable artifacts and, for Copilot cloud agent, <strong>Copilot Memory</strong>.</p>
+<p><code>.github/workflows/copilot-setup-steps.yml</code></p>
+<h3 id="concurrency">Concurrency</h3>
+<p><em>Domain 6</em></p>
+<p>The ability of multiple agents to <strong>operate simultaneously</strong> on the same repository or workflow. Concurrency introduces risks of conflict (two agents editing the same file), race conditions, and coordination failures. Managed through <strong>isolation strategies</strong>, <strong>branch strategies</strong>, and <strong>GitHub Actions concurrency groups</strong>.</p>
+<h3 id="context-drift">Context Drift</h3>
+<p><em>Domain 3</em></p>
+<p>When an agent&#39;s <strong>internal model of the world diverges from reality</strong>. Caused by stale memory, external state changes, concurrent modifications, or erroneous assumptions. Detection strategies include <strong>re-read confirmation</strong>, <strong>timestamp checking</strong>, and <strong>consistency validation</strong>. Correction: <em>re-read → re-validate → re-plan</em>.</p>
+<h3 id="control-plane">Control Plane</h3>
+<p><em>Domain 1</em></p>
+<p>The <strong>central management layer</strong> that governs all agent activity. GitHub serves as the control plane for agentic AI systems — it manages agent registration, authentication, authorization, audit logging, and governance policies. The control plane is <strong>distinct from the data plane</strong> (where agents execute actions).</p>
+<h3 id="copilot-memory">Copilot Memory</h3>
+<p><em>Domain 3</em></p>
+<p>GitHub&#39;s <strong>long-term memory</strong> feature (public preview), used by Copilot cloud agent, Copilot code review, Copilot CLI, and agentic autofix. Stores <strong>repository-level facts</strong> (coding conventions, architectural decisions, build commands) and <strong>user-level preferences</strong> (personal coding style/workflow). Repository facts are stored with code citations and <strong>validated against the current branch</strong> before use. Any fact or preference that goes <strong>unused for 28 days is automatically deleted</strong>; the timer may reset when Copilot successfully validates and uses an entry. Code review uses repository facts only.</p>
+
+</div>
+<div class="section">
+<h2 id="d">D</h2>
+<h3 id="durable-artifact">Durable Artifact</h3>
+<p><em>Domain 3</em></p>
+<p>A <strong>permanent record</strong> of agent activity that survives session termination. Includes <strong>commits</strong> (Git history), <strong>PRs</strong> (change proposals with reviews), <strong>workflow logs</strong> (CI execution records, 90-day retention by default, configurable), and <strong>issues/comments</strong> (persistent threads). Durable artifacts are the <strong>system of record</strong> for agent actions.</p>
+
+</div>
+<div class="section">
+<h2 id="e">E</h2>
+<h3 id="environment-protection">Environment Protection</h3>
+<p><em>Domain 6</em></p>
+<p>GitHub <strong>deployment protection rules</strong> that gate deployments to specific environments (e.g., production, staging). Rules include: required reviewers, wait timers, and deployment branch/tag restrictions. <strong>Critical for agent governance</strong> — prevents agents from deploying without human approval.</p>
+<h3 id="error-handling">Error Handling</h3>
+<p><em>Domain 2</em></p>
+<p>The <strong>retry, rollback, and escalation patterns</strong> that govern what an agent does when a tool call fails. Best practices: implement <strong>exponential backoff</strong> for transient errors, <strong>rollback changes</strong> on critical failures, and <strong>escalate to a human</strong> when retries are exhausted. <strong>Silent failure</strong> (agent fails without notification) is a key anti-pattern.</p>
+<h3 id="evaluation">Evaluation</h3>
+<p><em>Domain 4</em></p>
+<p>The process of <strong>measuring agent output against defined success criteria</strong>. Core to the <strong>Plan-Act-Evaluate (PAE)</strong> loop. Uses <strong>evaluation signals</strong> (functional, quality, compliance, process) to determine if an agent performed correctly. Includes automated scanning (CodeQL, Dependabot, Secret Scanning) and human review (PR review).</p>
+<h3 id="execute-tool">execute (Tool)</h3>
+<p><em>Domain 2</em></p>
+<p>The tool alias that allows the agent to <strong>run shell commands, scripts, tests, and build commands</strong>. Compatible aliases: <code>shell</code>, <code>Bash</code>, <code>powershell</code> (maps to the <code>bash</code>/<code>powershell</code> shell tools in cloud agent). Permission level: <strong>Write + Execute</strong> (orange). Used when the agent needs to <em>run</em> code. <strong>Not</strong> for editing files — that&#39;s the <strong>edit</strong> tool. <strong>Exam tip:</strong> Never choose <code>execute</code> when <code>edit</code> will do — that&#39;s privilege creep.</p>
+<h3 id="edit-tool">edit (Tool)</h3>
+<p><em>Domain 2</em></p>
+<p>The tool alias that allows the agent to <strong>create, modify, or delete files</strong> in the workspace (compatible aliases: <code>Edit</code>, <code>MultiEdit</code>, <code>Write</code>, <code>NotebookEdit</code>). Permission level: <strong>Write</strong> (yellow). Used when the agent needs to <em>change</em> code but doesn&#39;t need to run anything. Part of the five core agent tools in the least-privilege hierarchy.</p>
+<h3 id="agent-tool">agent (Tool)</h3>
+<p><em>Domain 2</em></p>
+<p>The tool alias (compatible: <code>custom-agent</code>, <code>Task</code>) that allows an agent to <strong>invoke a different custom agent as a sub-agent</strong> to accomplish a task. Permission level: <strong>Highest autonomy</strong> (red). Used to parallelize complex multi-step work or use specialized sub-agents. <strong>Highest-risk tool</strong> — requires strong governance.</p>
+<h3 id="read-tool">read (Tool)</h3>
+<p><em>Domain 2</em></p>
+<p>The tool alias that allows the agent to <strong>read file contents</strong> (maps to <code>view</code> in cloud agent). Permission level: <strong>Read-only</strong> (green). Used when the agent needs to <em>see</em> code but not change it. The <strong>lowest-privilege</strong> tool in the hierarchy — always prefer <code>read</code> when the task only requires information gathering.</p>
+<h3 id="search-tool">search (Tool)</h3>
+<p><em>Domain 2</em></p>
+<p>The tool alias (compatible: <code>Grep</code>, <code>Glob</code>) that allows the agent to <strong>search for files or text in files</strong>. Permission level: <strong>Read-only</strong> (green). Used when the agent needs to <em>find</em> something before it can read it. Unlike <code>read</code> which requires a known path, <code>search</code> discovers content across the repository.</p>
+
+</div>
+<div class="section">
+<h2 id="f">F</h2>
+<h3 id="fleet-fleet">Fleet (/fleet)</h3>
+<p><em>Domain 5</em></p>
+<p>A <strong>Copilot CLI</strong> feature: the <code>/fleet</code> slash command (or the <code>--fleet</code> command-line option) makes the main agent act as an <strong>orchestrator</strong> that breaks a request/implementation plan into independent subtasks and runs them <strong>in parallel via subagents</strong>, each with its own context window (optionally using custom agents, e.g. <code>@test-writer</code>). Often combined with autopilot mode, but independent of it. More subagents can mean more AI-credit consumption.</p>
+<p><code>/fleet</code> (Copilot CLI slash command) · <code>copilot --fleet</code></p>
+
+</div>
+<div class="section">
+<h2 id="g">G</h2>
+<h3 id="guardrails">Guardrails</h3>
+<p><em>Domain 6</em></p>
+<p>The <strong>safety boundaries and governance controls</strong> that constrain agent behavior. Include: <strong>rulesets</strong> (repo-level policies), <strong>branch protection</strong> (prevent direct pushes), <strong>environment protection</strong> (deployment gates), <strong>CODEOWNERS</strong> (required reviewers), and <strong>autonomy levels</strong> (capability limits). Guardrails are the <strong>primary mechanism for safe agent deployment</strong>.</p>
+
+</div>
+<div class="section">
+<h2 id="h">H</h2>
+<h3 id="handoff">Handoff</h3>
+<p><em>Domain 5</em></p>
+<p>A custom-agent feature (VS Code) that suggests moving to the next agent with prepared context — e.g. planner → implementer → reviewer — defined in the profile&#39;s <code>handoffs</code> property (<code>label</code>, <code>agent</code>, <code>prompt</code>, optional <code>send</code>). Ignored by Copilot cloud agent on GitHub.com. In GitHub-native workflows, handoffs are made through durable artifacts (issues, PRs, workflow artifacts).</p>
+<h3 id="human-in-the-loop-hitl">Human-in-the-Loop (HITL)</h3>
+<p><em>Domain 6</em></p>
+<p>A design where a human must approve before an agent performs a high-risk or irreversible action. Implemented with required PR reviews, CODEOWNERS, environment required reviewers, and &quot;Approve and run workflows&quot; for Copilot PRs. Apply only where it materially reduces risk to preserve delivery speed.</p>
+
+</div>
+<div class="section">
+<h2 id="l">L</h2>
+<h3 id="least-privilege">Least Privilege</h3>
+<p><em>Domain 2</em></p>
+<p>The <strong>security principle</strong> that an agent should be granted only the minimum permissions necessary to complete its task. Applied through tool selection (choose <code>read</code> over <code>edit</code>, <code>edit</code> over <code>execute</code>), tool configuration (restrict commands and directories), and autonomy levels. <strong>The single most tested concept in Domain 2.</strong></p>
+<h3 id="long-term-memory">Long-Term Memory</h3>
+<p><em>Domain 3</em></p>
+<p><strong>Tier 2</strong> of the three-tier memory hierarchy. Persists <strong>across sessions</strong> via <strong>Copilot Memory</strong>. Stores repository-level facts and user-level preferences. Unused entries are <strong>auto-deleted after 28 days</strong>. Distinguished from <strong>short-term memory</strong> (session-scoped, volatile) and <strong>durable artifacts</strong> (permanent records).</p>
+
+</div>
+<div class="section">
+<h2 id="m">M</h2>
+<h3 id="matrix-strategy">Matrix Strategy</h3>
+<p><em>Domain 2</em></p>
+<p>A <strong>GitHub Actions feature</strong> that allows running a job across multiple combinations of variables (e.g., different OS, runtime versions, environments). In agent contexts, a matrix strategy enables testing agent behavior across <strong>multiple configurations</strong> simultaneously, providing <strong>comprehensive evaluation signals</strong> in a single workflow run.</p>
+<h3 id="mcp">MCP</h3>
+<p><em>Domain 2</em></p>
+<p><strong>Model Context Protocol</strong> — an open standard that lets AI agents connect to external tools, data sources, and services through a standardized interface. Described as <strong>&quot;USB-C for AI agents&quot;</strong>. MCP architecture: Agent → MCP Client → MCP Server → External Service. Where it is configured depends on the surface:</p>
+<ul>
+<li><strong>Copilot cloud agent / code review:</strong> repository <strong>Settings → Copilot → MCP servers</strong> (JSON with an <code>mcpServers</code> object), plus <code>mcp-servers</code> in a custom agent profile. GitHub and Playwright MCP servers are enabled by default.</li>
+<li><strong>Copilot CLI:</strong> <code>~/.copilot/mcp-config.json</code> (user), and workspace <code>.mcp.json</code> / <code>.github/mcp.json</code>.</li>
+<li><strong>VS Code:</strong> <code>.vscode/mcp.json</code> (uses a <code>servers</code> key).</li>
+</ul>
+<p><code>.mcp.json</code> · <code>.github/mcp.json</code> · <code>.vscode/mcp.json</code> · <code>~/.copilot/mcp-config.json</code></p>
+<h3 id="mcp-allow-list">MCP Allow List</h3>
+<p><em>Domain 2</em></p>
+<p>A <strong>security control</strong> that limits which MCP servers/tools an agent may use. Mechanisms:</p>
+<ul>
+<li><strong>Per-server <code>tools</code> list</strong> in the MCP JSON configuration (required key; GitHub recommends allowlisting specific read-only tools rather than <code>*</code>).</li>
+<li><strong>Agent profile <code>tools</code></strong> property: <code>server-name/tool-name</code> or <code>server-name/*</code> to enable specific MCP tools; <code>tools: []</code> disables all tools.</li>
+<li><strong>Enterprise MCP allowlist</strong> (generally available, via <code>managed-settings.json</code>) or <strong>registry-based restriction</strong> (public preview) to block non-approved servers across the company.</li>
+</ul>
+<p>The agent profile&#39;s <code>mcp-servers</code> field <em>adds</em> servers; it is not itself an allow list. Least privilege: agents should only connect to servers/tools they actually need.</p>
+<h3 id="mcp-registry">MCP Registry</h3>
+<p><em>Domain 2</em></p>
+<p>A <strong>catalog of MCP servers</strong> (HTTPS endpoints following the v0.1 MCP registry spec, e.g. <code>GET /v0.1/servers</code>) that an organization or enterprise can self-host or run in Azure API Center, and then use to <strong>restrict which MCP servers developers can access</strong>. Provides server metadata and connection details. Public preview; the private MCP registry policy does <strong>not</strong> apply to Copilot cloud agent.</p>
+<h3 id="mcp-server">MCP Server</h3>
+<p><em>Domain 2</em></p>
+<p>A <strong>service that implements the Model Context Protocol</strong>, exposing tools, data, or capabilities that agents can consume. A server entry has a name and a <code>type</code> (<code>local</code>/<code>stdio</code>, <code>http</code>, or <code>sse</code>); local servers specify <code>command</code>, <code>args</code>, and optional <code>env</code>; remote servers specify <code>url</code> and optional <code>headers</code>; and a <code>tools</code> list selects which tools are enabled. Defined in MCP configuration (repository MCP settings, <code>.mcp.json</code>, etc.) and/or in agent profiles via the <code>mcp-servers</code> field.</p>
+
+</div>
+<div class="section">
+<h2 id="n">N</h2>
+<h3 id="needs">needs</h3>
+<p><em>Domain 2</em></p>
+<p>A <strong>GitHub Actions keyword</strong> that defines job dependencies. In agent workflows, <code>needs</code> is used to <strong>separate planning from execution</strong> — a plan job runs first, then the execution job runs <code>if: needs.plan.result == &#39;success&#39;</code>. <code>needs</code> only orders jobs; the <strong>human review pause</strong> comes from targeting an <strong>environment with required reviewers</strong> on the execution job. Together they enforce the <strong>plan-review-execution gate</strong> pattern.</p>
+
+</div>
+<div class="section">
+<h2 id="p">P</h2>
+<h3 id="plan-act-evaluate-pae">Plan-Act-Evaluate (PAE)</h3>
+<p><em>Domain 4</em></p>
+<p>The <strong>core feedback loop</strong> for all agentic AI systems. <strong>Plan:</strong> Agent generates a proposed approach. <strong>Act:</strong> Agent executes the plan (with human review gate). <strong>Evaluate:</strong> Agent&#39;s output is measured against success criteria. The loop repeats iteratively to improve agent quality. <strong>The foundational model for Domain 4.</strong></p>
+<h3 id="plan-as-checklist">Plan-as-Checklist</h3>
+<p><em>Domain 1</em></p>
+<p>An <strong>anti-pattern</strong> where an agent treats its plan as a <strong>rigid checklist</strong> rather than a set of intended outcomes. The agent generates a plan, the human approves it, and then the agent executes <em>exactly</em> what it said — even if conditions change. Fix: treat plans as <strong>reviewable intent</strong>, not fixed contracts. Agents should re-evaluate against current state.</p>
+
+</div>
+<div class="section">
+<h2 id="r">R</h2>
+<h3 id="responsible-ai-rai">Responsible AI (RAI)</h3>
+<p><em>Domain 6</em></p>
+<p>Microsoft&#39;s principles — <strong>fairness, reliability and safety, privacy and security, inclusiveness, transparency, accountability</strong>. The exam expects autonomy levels and guardrails to stay compliant with organizational security and RAI standards, enforced by platform controls (not just written policy). See <a href="domain-6.html#responsible-ai-standards-in-agent-governance">Domain 6</a>.</p>
+<h3 id="root-cause-analysis">Root Cause Analysis</h3>
+<p><em>Domain 4</em></p>
+<p>The process of tracing agent failures from <strong>symptom → root cause → fix</strong>. Uses a structured decision framework: Is the <strong>configuration</strong> correct? Are the <strong>instructions</strong> complete? Are <strong>evaluation signals</strong> catching the right things? The exam tests your ability to match symptoms (e.g., &quot;agent produces wrong code&quot;) to root causes (&quot;instructions too vague&quot;) and fixes (&quot;add detailed instructions&quot;).</p>
+<h3 id="ruleset">Ruleset</h3>
+<p><em>Domain 6</em></p>
+<p>A <strong>named list of rules</strong> enforced at the repository or organization level. <strong>Branch/tag rulesets</strong> target branches or tags (via <code>fnmatch</code> patterns) and control merge requirements, required checks, signed commits, commit metadata, force pushes, etc. <strong>Push rulesets</strong> block pushes by file path, file extension, path length, or file size. More flexible than traditional branch protection — multiple rulesets layer (most restrictive rule wins) and can be set to Evaluate mode. A <strong>bypass list</strong> exempts specific roles, teams, or GitHub Apps (useful for agent contexts).</p>
+
+</div>
+<div class="section">
+<h2 id="s">S</h2>
+<h3 id="session-logs">Session Logs</h3>
+<p><em>Domain 4</em></p>
+<p>The <strong>complete timestamped record</strong> of an agent&#39;s interaction — every prompt, every tool call, every output, every error. Used for <strong>post-mortem analysis</strong>, debugging failures, and auditing agent decisions. The <strong>first diagnostic step</strong> when an agent produces unexpected output is always: check the session logs.</p>
+<h3 id="short-term-memory">Short-Term Memory</h3>
+<p><em>Domain 3</em></p>
+<p><strong>Tier 1</strong> of the three-tier memory hierarchy. The agent&#39;s <strong>working memory</strong> for the current conversation or session. Includes conversation history, in-session decisions, intermediate results, and temporary state. <strong>Volatile</strong> — disappears when the session ends. Also called <strong>session memory</strong>. Do not confuse with <strong>Copilot Memory</strong> (long-term).</p>
+<h3 id="system-of-record">System of Record</h3>
+<p><em>Domain 1</em></p>
+<p>The <strong>authoritative data source</strong> for agent activity. GitHub serves as the system of record — all agent actions (commits, PRs, issues, workflow runs, comments) are recorded permanently. The control plane governs the system of record. <strong>Durable artifacts</strong> are the evidence stored in the system of record.</p>
+
+</div>
+<div class="section">
+<h2 id="t">T</h2>
+<h3 id="tool">Tool</h3>
+<p><em>Domain 2</em></p>
+<p>A <strong>capability</strong> that an agent can use to interact with the outside world. The five core tool aliases are <strong>read</strong>, <strong>search</strong>, <strong>edit</strong>, <strong>execute</strong>, and <strong>agent</strong>. Additional aliases are <strong>web</strong> (<code>WebSearch</code>/<code>WebFetch</code>: fetch URLs and web search) and <strong>todo</strong> (<code>TodoWrite</code>: structured task lists); both are <strong>currently not applicable to Copilot cloud agent</strong> but are supported in VS Code. If <code>tools</code> is omitted, all tools are enabled; <code>tools: []</code> disables all. Tools form a <strong>permission hierarchy</strong> from read-only (lowest) to agent (highest).</p>
+<h3 id="tool-tuning">Tool Tuning</h3>
+<p><em>Domain 4</em></p>
+<p>One of the <strong>four tuning levers</strong> for improving agent performance. Involves adjusting which tools an agent has access to, adding tool-specific constraints (restricted commands, allowed directories), enabling/disabling the <strong>web</strong> tool, or adding/removing the <strong>agent</strong> tool. <strong>Second priority lever</strong> after instructions — lower risk than environment or MCP changes.</p>
+<div class="nav-links"><a href="domain-6.html">← D6: Guardrails</a><a href="resources.html">Resources →</a></div>
+</div>
+</main>
+
+<footer class="site-footer">GH-600 Study Guide (corrected) · Based on official Microsoft Learn modules and GitHub Docs · Not affiliated with GitHub or Microsoft</footer>
+</body>
+</html>

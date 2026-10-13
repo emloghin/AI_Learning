@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transformers & Large Language Models — AI Learn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>.section td code,.callout code,.diagram-caption code{background:var(--primary-light);color:var(--primary);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:13px}.callout p+p{margin-top:8px}.callout ul{margin:8px 0 0 20px}</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-logo"><span>AI&nbsp;</span>Learn</div>
+    <nav class="header-nav">
+      <a href="index.html">Home</a>
+      <a href="foundations.html">1. Foundations</a>
+      <a href="neural-networks.html">2. Neural Networks</a>
+      <a href="transformers.html" class="active">3. Transformers &amp; LLMs</a>
+      <a href="training.html">4. Training &amp; Tuning</a>
+      <a href="models.html">5. Model Landscape</a>
+      <a href="using-ai.html">6. Using Models</a>
+      <a href="tokens.html">7. Tokens &amp; Cost</a>
+      <a href="best-practices.html">8. Best Practices</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="resources.html">Resources</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-badge">Chapter 3 · Transformers & LLMs</div>
+  <h1>Transformers &amp; Large Language Models</h1>
+  <p>A large language model (LLM) like ChatGPT, Claude, or Gemini looks like magic, but underneath it does one surprisingly simple job over and over: it guesses the next small piece of text. This chapter opens the box. You will see how text becomes numbers, how &quot;attention&quot; lets words look at each other, how the transformer architecture stacks these ideas together, and how the model writes a whole answer one token at a time. No math background needed — every formula comes with plain words and a tiny worked example.</p>
+</section>
+
+<main class="main">
+<div class="section">
+<h2 id="1-what-a-language-model-actually-does">1. What a Language Model Actually Does</h2>
+<p>A <strong>language model</strong> is a program that, given some text, predicts what text is likely to come next. That is the whole job. Everything else — answering questions, writing code, translating, summarizing — emerges from doing this one job extremely well.</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> An LLM is a super-powered autocomplete. Your phone suggests the next word from a few options; an LLM scores <em>every</em> possible next piece of text, using everything written so far, and has learned those scores from a huge amount of reading.</p></div>
+<h3 id="next-token-prediction">Next-token prediction</h3>
+<p>The model does not output one answer directly. It outputs a <strong>probability</strong> for every possible next token (a token is a word or a piece of a word — see section 2). Then one token is picked, added to the text, and the process repeats.</p>
+<div class="callout tip"><p><strong>💡 Example:</strong> Give the model the text <code>The cat sat on the</code>. Internally it produces a score for each of the tens of thousands of tokens it knows. After converting the scores to probabilities, the top of the list might look like this (illustrative numbers):</p></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Next token</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code> mat</code></td>
+<td>40%</td>
+</tr>
+<tr>
+<td><code> floor</code></td>
+<td>20%</td>
+</tr>
+<tr>
+<td><code> sofa</code></td>
+<td>15%</td>
+</tr>
+<tr>
+<td><code> bed</code></td>
+<td>10%</td>
+</tr>
+<tr>
+<td><code> roof</code></td>
+<td>8%</td>
+</tr>
+<tr>
+<td>everything else</td>
+<td>7%</td>
+</tr>
+</tbody></table></div>
+<p>All the probabilities add up to 100%. &quot;Mat&quot; is most likely because the model has seen &quot;the cat sat on the mat&quot; many times; &quot;roof&quot; is possible but less common. The model never &quot;looks up&quot; an answer — it only knows which continuations are likely given what it learned in training (covered in <a href="training.html">Chapter 4</a>).</p>
+<div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;The model searches a database of facts.&quot; It does not. A plain LLM has no database. Its knowledge is stored indirectly in its <strong>parameters</strong> (the billions of weights you met in <a href="neural-networks.html">Chapter 2</a>), and it reconstructs answers from patterns. That is why it can be fluent and still wrong.</p></div>
+<div class="callout success"><p><strong>✅ Key takeaway:</strong> An LLM is a next-token predictor. Long, smart-looking answers are built from many single next-token guesses chained together.</p></div>
+
+</div>
+<div class="section">
+<h2 id="2-tokens-how-text-becomes-numbers">2. Tokens: How Text Becomes Numbers</h2>
+<p>Neural networks only work with numbers. So the first step is to chop text into pieces called <strong>tokens</strong> and give each piece an ID number. The tool that does this is the <strong>tokenizer</strong>, and its list of known pieces is the <strong>vocabulary</strong>. For example, GPT-2&#39;s vocabulary had 50,257 tokens; newer models often use larger vocabularies (Meta&#39;s Llama 3 uses about 128,000).</p>
+<h3 id="why-not-just-use-whole-words-or-single-letters">Why not just use whole words or single letters?</h3>
+<ul>
+<li><strong>Whole words:</strong> the vocabulary would be enormous (every name, typo, and new word), and unknown words would break the model.</li>
+<li><strong>Single letters:</strong> every text becomes very long, which makes the model slow and makes learning meaning harder.</li>
+<li><strong>Sub-word pieces (the winner):</strong> common words get one token, rare words are built from a few pieces. Nothing is ever &quot;unknown&quot;, because in the worst case a word can be spelled out from tiny pieces.</li>
+</ul>
+<h3 id="byte-pair-encoding-bpe-the-intuition">Byte Pair Encoding (BPE) — the intuition</h3>
+<p>Most modern tokenizers use a method called <strong>Byte Pair Encoding (BPE)</strong> or a close relative. The idea:</p>
+<ol>
+<li>Start with single characters (or bytes) as the vocabulary.</li>
+<li>Look through a giant pile of training text and find the pair of neighbors that appears most often, for example <code>t</code> + <code>h</code>.</li>
+<li>Merge that pair into a new token <code>th</code> and add it to the vocabulary.</li>
+<li>Repeat thousands of times: <code>th</code> + <code>e</code> → <code>the</code>, <code>ing</code>, <code> the</code>, and so on.</li>
+</ol>
+<p>Frequent chunks end up as single tokens; rare words stay split into several pieces.</p>
+<div class="callout tip"><p><strong>💡 Example:</strong> A tokenizer <em>might</em> split the sentence <code>Tokenization isn&#39;t magic!</code> like this (the exact split depends on the specific tokenizer):</p>
+<p><code>Token</code> · <code>ization</code> · <code> isn</code> · <code>&#39;t</code> · <code> magic</code> · <code>!</code></p>
+<p>That is 6 tokens for 25 characters. Notice that spaces usually attach to the <em>start</em> of the following word (<code> magic</code>), and that a long word like &quot;Tokenization&quot; becomes two pieces.</p></div>
+<h3 id="rules-of-thumb">Rules of thumb</h3>
+<p>OpenAI&#39;s help center gives these rough estimates for <strong>English</strong> text (<a href="https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them" target="_blank" rel="noopener">source</a>):</p>
+<ul>
+<li>1 token ≈ 4 characters</li>
+<li>1 token ≈ ¾ of a word</li>
+<li>100 tokens ≈ 75 words</li>
+</ul>
+<p>So a 1,500-word article is roughly 1,500 ÷ 0.75 ≈ 2,000 tokens.</p>
+<p><strong>Other languages and code usually differ.</strong> Tokenizers are trained mostly on English-heavy text, so English words tend to be stored as whole tokens. Text in many other languages (especially ones with non-Latin scripts) is often split into more, smaller pieces — the same sentence can cost noticeably more tokens. Code is also different: indentation, brackets, and unusual variable names can all become separate tokens.</p>
+<div class="callout tip"><p><strong>🎯 Try it:</strong> Paste a sentence into the <a href="https://platform.openai.com/tokenizer" target="_blank" rel="noopener">OpenAI Tokenizer</a> and watch it get colored into tokens. Then try the same sentence in another language, a long URL, and a few lines of code. Compare the token counts.</p></div>
+<div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;The model sees letters.&quot; It sees token IDs. That is why LLMs sometimes struggle with letter-level tasks like counting the <code>r</code>s in &quot;strawberry&quot; — the word may be just one or two tokens, and the individual letters are not directly visible to the model.</p></div>
+<p>Tokens matter in everyday use because <strong>models are priced and limited in tokens</strong>. See <a href="tokens.html">Chapter 7: Tokens &amp; Cost</a> for the practical side.</p>
+
+</div>
+<div class="section">
+<h2 id="3-embeddings-words-as-points-in-space">3. Embeddings: Words as Points in Space</h2>
+<p>A token ID like <code>4523</code> is just a label — the number itself means nothing. The model&#39;s first layer swaps each ID for an <strong>embedding</strong>: a long list of numbers (a <strong>vector</strong>) that represents the token&#39;s meaning. The original transformer used 512 numbers per token; large modern models use thousands.</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Imagine a giant map where every word has a location. Words with similar meanings are placed close together: &quot;cat&quot; near &quot;dog&quot;, &quot;Paris&quot; near &quot;London&quot;. An embedding is a word&#39;s coordinates on that map — only the map has hundreds or thousands of directions instead of two.</p></div>
+<p>The model is not told where to put words. It <strong>learns</strong> the positions during training, because placing similar words near each other helps it predict the next token.</p>
+<h3 id="measuring-similarity">Measuring similarity</h3>
+<p>To check whether two embeddings are &quot;close&quot;, a common measure is <strong>cosine similarity</strong>: it compares the <em>direction</em> two vectors point in. A value near 1 means &quot;very similar direction&quot;, near 0 means &quot;unrelated&quot;.</p>
+<div class="code-block">cosine_similarity(a, b) = (a · b) / (|a| × |b|)
+
+a · b  = multiply matching numbers and add them up (the &quot;dot product&quot;)
+|a|    = the length of vector a = square root of (sum of each number squared)</div>
+<div class="callout tip"><p><strong>💡 Example:</strong> Use a toy 2-number embedding where the first number means &quot;animal-ness&quot; and the second means &quot;machine-ness&quot;:</p>
+<p><code>cat = [0.9, 0.1]</code>, <code>dog = [0.8, 0.2]</code>, <code>car = [0.1, 0.9]</code></p>
+<p><strong>cat vs dog:</strong> dot product = 0.9×0.8 + 0.1×0.2 = 0.74. Lengths: |cat| = √(0.81 + 0.01) ≈ 0.906, |dog| = √(0.64 + 0.04) ≈ 0.825. Similarity = 0.74 ÷ (0.906 × 0.825) ≈ <strong>0.99</strong> — nearly identical direction.</p>
+<p><strong>cat vs car:</strong> dot product = 0.9×0.1 + 0.1×0.9 = 0.18. Similarity = 0.18 ÷ (0.906 × 0.906) ≈ <strong>0.22</strong> — mostly unrelated.</p></div>
+<p>Real embeddings have no human-readable labels like &quot;animal-ness&quot;; the directions are learned and usually mix many ideas at once. But the &quot;closeness&quot; idea is exactly the same, and it powers features like semantic search (see <a href="using-ai.html">Chapter 6</a>).</p>
+<h3 id="the-famous-king-man-woman-example">The famous king − man + woman example</h3>
+<p>Researchers working on earlier word embeddings (word2vec, <a href="https://arxiv.org/abs/1301.3781" target="_blank" rel="noopener">Mikolov et al., 2013</a>) found that directions in the space can capture relationships. Taking the vector for <strong>king</strong>, subtracting <strong>man</strong>, and adding <strong>woman</strong> lands close to <strong>queen</strong>.</p>
+<div class="code-block">king − man + woman ≈ queen</div>
+<p>In words: &quot;the difference between king and man&quot; is roughly a &quot;royalty&quot; direction; adding it to &quot;woman&quot; points at a royal woman.</p>
+<div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;Embedding arithmetic always works this neatly.&quot; The king/queen example is a famous best case from older word-level embeddings. Real embedding spaces are messier, and many analogies only <em>roughly</em> work.</p></div>
+
+</div>
+<div class="section">
+<h2 id="4-keeping-track-of-word-order">4. Keeping Track of Word Order</h2>
+<p>&quot;Dog bites man&quot; and &quot;man bites dog&quot; contain the same tokens but mean very different things. As you will see in the next section, attention compares every token with every other token at once — on its own it has no idea which token came first. So transformers add <strong>positional information</strong> to each embedding.</p>
+<ul>
+<li>The original transformer added a fixed wave-like pattern (sine and cosine values) to each position&#39;s embedding, so position 1, position 2, and so on each get a unique &quot;stamp&quot;.</li>
+<li>Many modern models use <strong>RoPE (rotary position embedding)</strong>, which encodes position by slightly <em>rotating</em> the vectors depending on where the token sits (<a href="https://arxiv.org/abs/2104.09864" target="_blank" rel="noopener">Su et al.</a>). It helps the model reason about <em>relative</em> distance (&quot;these two words are 3 apart&quot;).</li>
+</ul>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Before the words enter the main network, each one gets a seat number. Without seat numbers, the model would see a bag of words instead of a sentence.</p></div>
+
+</div>
+<div class="section">
+<h2 id="5-attention-how-words-look-at-each-other">5. Attention: How Words Look at Each Other</h2>
+<p>This is the key idea that made modern LLMs possible, introduced in the 2017 paper <a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener">&quot;Attention Is All You Need&quot;</a>.</p>
+<p>The meaning of a word depends on its neighbors. &quot;Bank&quot; means something different in &quot;river bank&quot; and &quot;bank account&quot;. <strong>Attention</strong> lets each token gather information from the other tokens in the text, so its numbers can be updated with context.</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Picture a stage with every word as an actor. When it is one word&#39;s turn, it shines a <strong>spotlight</strong> on the other words — brightly on the ones that matter for understanding it, dimly on the rest — and then blends in what it sees. That spotlight is attention.</p></div>
+<h3 id="a-worked-example-what-does-it-refer-to">A worked example: what does &quot;it&quot; refer to?</h3>
+<p>Take the sentence:</p>
+<p><strong>&quot;The animal didn&#39;t cross the street because it was tired.&quot;</strong></p>
+<p>To understand &quot;it&quot;, the model must work out that &quot;it&quot; means <strong>the animal</strong>, not the street (streets do not get tired). In a trained model, when processing &quot;it&quot;, the attention spotlight shines brightly on &quot;animal&quot;. Change one word — &quot;...because <strong>it</strong> was too wide&quot; — and the spotlight shifts toward &quot;street&quot;. This exact example is visualized in Jay Alammar&#39;s <a href="https://jalammar.github.io/illustrated-transformer/" target="_blank" rel="noopener">Illustrated Transformer</a>.</p>
+<p><strong>Self-attention</strong> simply means the words attend to other words in the <em>same</em> text (as opposed to attending to a separate text, like a source sentence during translation).</p>
+<h3 id="queries-keys-and-values">Queries, keys, and values</h3>
+<p>How does a token decide where to point its spotlight? Each token&#39;s embedding is turned into three new vectors, using weights learned in training:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Vector</th>
+<th>Plain-words role</th>
+<th>Library analogy</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Query (Q)</strong></td>
+<td>&quot;What am I looking for?&quot;</td>
+<td>the question you type into a library search</td>
+</tr>
+<tr>
+<td><strong>Key (K)</strong></td>
+<td>&quot;What do I contain?&quot;</td>
+<td>the label on each book&#39;s spine</td>
+</tr>
+<tr>
+<td><strong>Value (V)</strong></td>
+<td>&quot;What information do I hand over?&quot;</td>
+<td>the actual content of the book</td>
+</tr>
+</tbody></table></div>
+<p>Each token compares its <strong>query</strong> with every other token&#39;s <strong>key</strong>. A good match means &quot;pay attention to this one&quot;. Then it takes a weighted blend of the matching tokens&#39; <strong>values</strong>.</p>
+<p>The formula from the paper:</p>
+<div class="code-block">Attention(Q, K, V) = softmax( Q · Kᵀ / √d ) · V</div>
+<p>In words:</p>
+<ol>
+<li><strong>Q · Kᵀ</strong> — score how well my query matches each key (a dot product: multiply and add).</li>
+<li><strong>÷ √d</strong> — divide by the square root of the vector size <code>d</code>, which keeps the scores from getting too large.</li>
+<li><strong>softmax</strong> — turn the scores into percentages that add up to 100% (the spotlight brightness).</li>
+<li><strong>· V</strong> — blend the values using those percentages.</li>
+</ol>
+<div class="callout tip"><p><strong>💡 Example:</strong> A tiny version with 2-number vectors (d = 2, so √d ≈ 1.41). The query for &quot;it&quot; is <code>[2, 1]</code>. Three keys:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Token</th>
+<th>Key</th>
+<th>Query · Key</th>
+<th>÷ 1.41</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>animal</td>
+<td><code>[2, 1]</code></td>
+<td>2×2 + 1×1 = 5</td>
+<td>3.54</td>
+</tr>
+<tr>
+<td>street</td>
+<td><code>[0, 1]</code></td>
+<td>2×0 + 1×1 = 1</td>
+<td>0.71</td>
+</tr>
+<tr>
+<td>tired</td>
+<td><code>[1, 1]</code></td>
+<td>2×1 + 1×1 = 3</td>
+<td>2.12</td>
+</tr>
+</tbody></table></div>
+<p>Softmax turns <code>3.54, 0.71, 2.12</code> into roughly <strong>77% animal, 4.5% street, 18.5% tired</strong>. So the new vector for &quot;it&quot; is built mostly from the value of &quot;animal&quot; — the model has linked &quot;it&quot; to &quot;the animal&quot;.</p></div>
+<p><strong>Softmax</strong> itself just means: raise <em>e</em> (≈ 2.718) to the power of each score, then divide each result by their total. Bigger scores grow much bigger, so the best match dominates.</p>
+<div class="callout tip"><p><strong>🎬 Watch:</strong> 3Blue1Brown&#39;s video series on <a href="https://www.3blue1brown.com/topics/neural-networks" target="_blank" rel="noopener">transformers and attention</a> animates queries, keys, and values beautifully.</p></div>
+<h3 id="masking-no-peeking-at-the-future">Masking: no peeking at the future</h3>
+<p>When a model like GPT is trained to predict the next token, a token is only allowed to attend to tokens <strong>before</strong> it. Otherwise it could just &quot;look ahead&quot; at the answer. This is called <strong>causal masking</strong>.</p>
+
+</div>
+<div class="section">
+<h2 id="6-multi-head-attention">6. Multi-Head Attention</h2>
+<p>One spotlight can only focus on one kind of relationship at a time. So transformers run several attention operations in parallel, called <strong>heads</strong>. The original transformer used 8 heads; large models use dozens.</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Instead of one reader, you have a team of readers going over the same sentence at once. One tracks &quot;who did what&quot;, another tracks &quot;which noun does this pronoun mean&quot;, another tracks grammar or nearby words. Their notes are then combined.</p></div>
+<p>Researchers have found heads that appear to specialize (for example, heads that track the previous token or copy patterns), but most heads do not map cleanly onto human concepts. Each head learns whatever turns out to be useful for predicting the next token.</p>
+
+</div>
+<div class="section">
+<h2 id="7-the-transformer-block">7. The Transformer Block</h2>
+<p>A transformer is built from one repeating unit — the <strong>transformer block</strong> — stacked many times (the original paper used 6; large modern models use around 30 to over 100). Each block has four parts:</p>
+<ol>
+<li><strong>Multi-head self-attention</strong> — tokens gather context from each other.</li>
+<li><strong>Add &amp; Norm</strong> — add the block&#39;s input back to the attention output (a <strong>residual</strong> or <strong>skip connection</strong>), then <strong>layer normalization</strong> rescales the numbers to a steady range.</li>
+<li><strong>Feed-forward network</strong> — a small neural network (exactly like the ones in <a href="neural-networks.html">Chapter 2</a>) applied to each token separately. This is where much of the model&#39;s stored knowledge appears to live.</li>
+<li><strong>Add &amp; Norm</strong> again.</li>
+</ol>
+<div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 600" font-family="Inter,sans-serif" role="img" aria-label="A transformer block: token embeddings flow up through self-attention, add and norm, feed-forward, add and norm, repeated N times, then an output layer gives next-token probabilities">
+  <defs>
+    <marker id="tfArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="660" height="600" fill="#ffffff"/>
+
+  <!-- Output layer -->
+  <rect x="200" y="30" width="240" height="54" rx="10" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+  <text x="320" y="53" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">Output layer + softmax</text>
+  <text x="320" y="72" text-anchor="middle" font-size="12" fill="#5b21b6">probabilities for the next token</text>
+  <text x="470" y="62" font-size="12" fill="#334155">e.g. "mat" 40%, "floor" 20% …</text>
+
+  <!-- Repeated block outline -->
+  <rect x="120" y="120" width="340" height="320" rx="16" fill="#f8fafc" stroke="#94a3b8" stroke-width="2" stroke-dasharray="8 6"/>
+  <text x="136" y="144" font-size="13" font-weight="700" fill="#334155">Transformer block  × N</text>
+  <text x="136" y="162" font-size="11" fill="#64748b">(stacked many times)</text>
+
+  <!-- Add & Norm 2 -->
+  <rect x="200" y="176" width="240" height="36" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="320" y="199" text-anchor="middle" font-size="13" font-weight="600" fill="#78350f">Add &amp; Norm</text>
+
+  <!-- Feed-forward -->
+  <rect x="200" y="236" width="240" height="44" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="320" y="263" text-anchor="middle" font-size="14" font-weight="700" fill="#14532d">Feed-forward network</text>
+  <text x="470" y="256" font-size="12" fill="#334155">each token is processed</text>
+  <text x="470" y="272" font-size="12" fill="#334155">on its own ("thinking")</text>
+
+  <!-- Add & Norm 1 -->
+  <rect x="200" y="304" width="240" height="36" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="320" y="327" text-anchor="middle" font-size="13" font-weight="600" fill="#78350f">Add &amp; Norm</text>
+  <text x="470" y="320" font-size="12" fill="#334155">add the input back,</text>
+  <text x="470" y="336" font-size="12" fill="#334155">then rescale the numbers</text>
+
+  <!-- Attention -->
+  <rect x="200" y="364" width="240" height="48" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="320" y="386" text-anchor="middle" font-size="14" font-weight="700" fill="#1e3a8a">Multi-head self-attention</text>
+  <text x="320" y="403" text-anchor="middle" font-size="11" fill="#1e40af">tokens look at each other</text>
+  <text x="470" y="384" font-size="12" fill="#334155">mixes in context from</text>
+  <text x="470" y="400" font-size="12" fill="#334155">earlier tokens</text>
+
+  <!-- Embeddings -->
+  <rect x="200" y="466" width="240" height="44" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+  <text x="320" y="486" text-anchor="middle" font-size="14" font-weight="700" fill="#0c4a6e">Embeddings + position</text>
+  <text x="320" y="502" text-anchor="middle" font-size="11" fill="#075985">each token becomes a list of numbers</text>
+
+  <!-- Input tokens -->
+  <rect x="200" y="540" width="240" height="40" rx="8" fill="#f1f5f9" stroke="#475569" stroke-width="2"/>
+  <text x="320" y="566" text-anchor="middle" font-size="14" font-weight="600" fill="#0f172a">"The" "cat" "sat" "on" "the"</text>
+  <text x="470" y="566" font-size="12" fill="#334155">input tokens</text>
+
+  <!-- Main upward flow -->
+  <line x1="320" y1="540" x2="320" y2="512" stroke="#475569" stroke-width="2" marker-end="url(#tfArrow)"/>
+  <line x1="320" y1="466" x2="320" y2="414" stroke="#475569" stroke-width="2" marker-end="url(#tfArrow)"/>
+  <line x1="320" y1="364" x2="320" y2="342" stroke="#475569" stroke-width="2" marker-end="url(#tfArrow)"/>
+  <line x1="320" y1="304" x2="320" y2="282" stroke="#475569" stroke-width="2" marker-end="url(#tfArrow)"/>
+  <line x1="320" y1="236" x2="320" y2="214" stroke="#475569" stroke-width="2" marker-end="url(#tfArrow)"/>
+  <line x1="320" y1="176" x2="320" y2="86" stroke="#475569" stroke-width="2" marker-end="url(#tfArrow)"/>
+
+  <!-- Residual (skip) connections -->
+  <path d="M320 440 H160 V322 H198" fill="none" stroke="#d97706" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#tfArrow)"/>
+  <path d="M320 292 H160 V194 H198" fill="none" stroke="#d97706" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#tfArrow)"/>
+  <text x="146" y="380" font-size="11" fill="#92400e" transform="rotate(-90 146 380)" text-anchor="middle">skip connection</text>
+  <text x="146" y="243" font-size="11" fill="#92400e" transform="rotate(-90 146 243)" text-anchor="middle">skip connection</text>
+</svg>
+<div class="diagram-caption">Figure 1 — A decoder-style transformer. Each block lets tokens share context (attention), then thinks about each token on its own (feed-forward). Dashed lines are skip connections.</div></div>
+<h3 id="why-the-skip-connections">Why the skip connections?</h3>
+<p>A skip connection means each block only needs to learn a <em>change</em> to add to its input, instead of rebuilding everything from scratch. This keeps the signal (and the gradients during <a href="neural-networks.html">backpropagation</a>) flowing cleanly through very deep stacks. Without them, deep networks are much harder to train.</p>
+<h3 id="the-output-layer">The output layer</h3>
+<p>After the last block, an output layer turns the final vector of the <strong>last</strong> token into a score for every token in the vocabulary, and softmax turns those scores into the probabilities you saw in section 1.</p>
+<div class="callout success"><p><strong>✅ Key takeaway:</strong> Attention = &quot;look around and gather context&quot;. Feed-forward = &quot;think about what you gathered&quot;. Repeat dozens of times, and each layer builds a richer understanding than the last.</p></div>
+
+</div>
+<div class="section">
+<h2 id="8-three-shapes-of-transformer">8. Three Shapes of Transformer</h2>
+<p>The original 2017 transformer had two halves: an <strong>encoder</strong> that reads the input and a <strong>decoder</strong> that writes the output (it was built for translation). Later models kept one or both halves.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Shape</th>
+<th>Sees</th>
+<th>Good at</th>
+<th>Famous example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Decoder-only</strong></td>
+<td>only earlier tokens (causal mask)</td>
+<td>generating text, chat, code</td>
+<td>GPT series (OpenAI), Llama, Claude, Gemini</td>
+</tr>
+<tr>
+<td><strong>Encoder-only</strong></td>
+<td>the whole text in both directions</td>
+<td>understanding: classification, search embeddings</td>
+<td>BERT (<a href="https://arxiv.org/abs/1810.04805" target="_blank" rel="noopener">Google, 2018</a>)</td>
+</tr>
+<tr>
+<td><strong>Encoder-decoder</strong></td>
+<td>encoder sees all input; decoder writes output</td>
+<td>text-to-text: translation, summarization</td>
+<td>T5 (<a href="https://arxiv.org/abs/1910.10683" target="_blank" rel="noopener">Google, 2019</a>)</td>
+</tr>
+</tbody></table></div>
+<ul>
+<li><strong>BERT</strong> was trained by hiding random words and asking the model to fill in the blanks using words on <em>both</em> sides. Great for understanding, but not built to write long text.</li>
+<li><strong>GPT</strong>-style models only predict the next token from the left. That simple setup scales extremely well and is what nearly all chat assistants use today.</li>
+<li><strong>T5</strong> framed every task as &quot;text in, text out&quot;, e.g. <code>translate English to German: Hello</code> → <code>Hallo</code>.</li>
+</ul>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Encoder = a careful reader. Decoder = a writer. Encoder-decoder = a reader who hands notes to a writer. Today&#39;s chatbots are writers that have read a <em>lot</em>.</p></div>
+<p>The Hugging Face <a href="https://huggingface.co/learn/llm-course" target="_blank" rel="noopener">LLM course</a> has a clear chapter comparing these three families.</p>
+
+</div>
+<div class="section">
+<h2 id="9-the-generation-loop">9. The Generation Loop</h2>
+<p>An LLM writes its answer <strong>one token at a time</strong>. Each new token requires a full pass through the whole network.</p>
+<ol>
+<li>Start with the context (your prompt plus anything already written).</li>
+<li>Run it through the model → get probabilities for the next token.</li>
+<li><strong>Pick</strong> one token (see sampling in the next section).</li>
+<li>Append it to the context.</li>
+<li>Go back to step 2. Stop when the model produces a special <strong>end-of-text token</strong> or hits the maximum output length.</li>
+</ol>
+<div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 320" font-family="Inter,sans-serif" role="img" aria-label="The generation loop: the context goes into the model, the model outputs probabilities, one token is picked, appended to the context, and the loop repeats">
+  <defs>
+    <marker id="glArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="800" height="320" fill="#ffffff"/>
+  <text x="400" y="36" text-anchor="middle" font-size="13" fill="#475569">Repeats once per token, and stops at an end-of-text token or the output length limit</text>
+
+  <!-- 1 Context -->
+  <rect x="20" y="100" width="190" height="80" rx="10" fill="#f1f5f9" stroke="#475569" stroke-width="2"/>
+  <text x="115" y="124" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">1 · Context so far</text>
+  <text x="115" y="150" text-anchor="middle" font-size="13" fill="#334155">"The cat sat on the"</text>
+  <text x="115" y="168" text-anchor="middle" font-size="11" fill="#64748b">prompt + tokens written so far</text>
+
+  <!-- 2 Model -->
+  <rect x="260" y="100" width="150" height="80" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="335" y="132" text-anchor="middle" font-size="13" font-weight="700" fill="#1e3a8a">2 · Model</text>
+  <text x="335" y="152" text-anchor="middle" font-size="12" fill="#1e40af">one forward pass</text>
+  <text x="335" y="168" text-anchor="middle" font-size="11" fill="#1e40af">through all layers</text>
+
+  <!-- 3 Probabilities -->
+  <rect x="460" y="86" width="150" height="108" rx="10" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+  <text x="535" y="108" text-anchor="middle" font-size="13" font-weight="700" fill="#4c1d95">3 · Probabilities</text>
+  <text x="480" y="132" font-size="12" fill="#3b0764">mat</text><text x="590" y="132" text-anchor="end" font-size="12" fill="#3b0764">40%</text>
+  <text x="480" y="150" font-size="12" fill="#3b0764">floor</text><text x="590" y="150" text-anchor="end" font-size="12" fill="#3b0764">20%</text>
+  <text x="480" y="168" font-size="12" fill="#3b0764">sofa</text><text x="590" y="168" text-anchor="end" font-size="12" fill="#3b0764">15%</text>
+  <text x="480" y="186" font-size="12" fill="#3b0764">…</text><text x="590" y="186" text-anchor="end" font-size="12" fill="#3b0764">25%</text>
+
+  <!-- 4 Pick -->
+  <rect x="660" y="100" width="120" height="80" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="720" y="128" text-anchor="middle" font-size="13" font-weight="700" fill="#14532d">4 · Pick one</text>
+  <text x="720" y="150" text-anchor="middle" font-size="14" font-weight="600" fill="#166534">"mat"</text>
+  <text x="720" y="168" text-anchor="middle" font-size="11" fill="#15803d">via sampling</text>
+
+  <line x1="210" y1="140" x2="258" y2="140" stroke="#475569" stroke-width="2" marker-end="url(#glArrow)"/>
+  <line x1="410" y1="140" x2="458" y2="140" stroke="#475569" stroke-width="2" marker-end="url(#glArrow)"/>
+  <line x1="610" y1="140" x2="658" y2="140" stroke="#475569" stroke-width="2" marker-end="url(#glArrow)"/>
+
+  <!-- Loop back -->
+  <path d="M720 180 V256 H115 V182" fill="none" stroke="#16a34a" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#glArrow)"/>
+  <text x="418" y="282" text-anchor="middle" font-size="13" font-weight="600" fill="#166534">5 · Append "mat" → "The cat sat on the mat" → go again</text>
+</svg>
+<div class="diagram-caption">Figure 2 — Generation is a loop. A 500-token answer means 500 trips around this loop.</div></div>
+<p>This is why answers appear word-by-word when <strong>streaming</strong> is on: you are literally watching the loop run. It also explains why output tokens are usually priced higher than input tokens — each output token needs its own pass, while the prompt can be processed in one go.</p>
+<div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;The model plans the whole answer, then types it out.&quot; There is no hidden finished draft. Each token is chosen based only on the tokens before it. (Models do develop internal representations that look ahead somewhat, but the text is still committed one token at a time.)</p></div>
+
+</div>
+<div class="section">
+<h2 id="10-sampling-choosing-the-next-token">10. Sampling: Choosing the Next Token</h2>
+<p>The model gives probabilities; a <strong>sampling strategy</strong> decides which token actually gets picked. These are the settings you see in many APIs.</p>
+<h3 id="greedy-decoding">Greedy decoding</h3>
+<p>Always pick the single most likely token. With the &quot;cat sat on the&quot; example, greedy always picks <code> mat</code>. It is predictable, but on long texts it can become repetitive and dull.</p>
+<h3 id="temperature">Temperature</h3>
+<p><strong>Temperature</strong> reshapes the probabilities before picking. The model&#39;s raw scores (called <strong>logits</strong>) are divided by the temperature <code>T</code> before softmax:</p>
+<div class="code-block">p(token) = e^(score / T) / sum over all tokens of e^(score / T)</div>
+<ul>
+<li><code>T</code> below 1 → sharper: the favorite becomes even more likely (more focused, more repeatable).</li>
+<li><code>T</code> = 1 → the model&#39;s original probabilities.</li>
+<li><code>T</code> above 1 → flatter: unlikely tokens get more chances (more varied, more random).</li>
+<li><code>T</code> near 0 → effectively greedy.</li>
+</ul>
+<div class="callout tip"><p><strong>💡 Example:</strong> Three candidate tokens with raw scores <code>mat = 2.0</code>, <code>floor = 1.0</code>, <code>sofa = 0.5</code>.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Temperature</th>
+<th>mat</th>
+<th>floor</th>
+<th>sofa</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>T = 0.5 (scores become 4, 2, 1)</td>
+<td><strong>84%</strong></td>
+<td>11%</td>
+<td>4%</td>
+</tr>
+<tr>
+<td>T = 1.0 (scores stay 2, 1, 0.5)</td>
+<td><strong>63%</strong></td>
+<td>23%</td>
+<td>14%</td>
+</tr>
+<tr>
+<td>T = 2.0 (scores become 1, 0.5, 0.25)</td>
+<td><strong>48%</strong></td>
+<td>29%</td>
+<td>23%</td>
+</tr>
+</tbody></table></div>
+<p>Check T = 1: e² ≈ 7.39, e¹ ≈ 2.72, e^0.5 ≈ 1.65; total ≈ 11.76; so mat = 7.39 ÷ 11.76 ≈ 63%. Lower temperature makes &quot;mat&quot; dominate; higher temperature spreads the chances out.</p></div>
+<h3 id="top-k">Top-k</h3>
+<p>Keep only the <strong>k</strong> most likely tokens, throw the rest away, rescale to 100%, then pick randomly among them.</p>
+<div class="callout tip"><p><strong>💡 Example:</strong> With the section 1 probabilities (mat 40%, floor 20%, sofa 15%, bed 10%, roof 8%, other 7%) and <strong>top-k = 2</strong>, only mat and floor survive. Rescaled: mat = 40 ÷ 60 ≈ <strong>67%</strong>, floor = 20 ÷ 60 ≈ <strong>33%</strong>.</p></div>
+<h3 id="top-p-nucleus-sampling">Top-p (nucleus sampling)</h3>
+<p>Keep the smallest group of top tokens whose probabilities <strong>add up to at least p</strong>, then rescale and pick. Unlike top-k, the group size adapts: when the model is confident, only one or two tokens qualify; when it is unsure, more do.</p>
+<div class="callout tip"><p><strong>💡 Example:</strong> Same probabilities, <strong>top-p = 0.75</strong>. Add from the top: mat 40% → 60% with floor → 75% with sofa. That reaches 0.75, so keep {mat, floor, sofa}. Rescaled: mat ≈ <strong>53%</strong>, floor ≈ <strong>27%</strong>, sofa = <strong>20%</strong>. &quot;Bed&quot;, &quot;roof&quot;, and the long tail can no longer be picked.</p></div>
+<h3 id="which-to-use">Which to use?</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Goal</th>
+<th>Typical setting</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Facts, extraction, code, classification</td>
+<td>low temperature (around 0–0.3)</td>
+</tr>
+<tr>
+<td>Everyday chat and writing</td>
+<td>default settings (often temperature around 0.7–1)</td>
+</tr>
+<tr>
+<td>Brainstorming, creative variety</td>
+<td>higher temperature, top-p around 0.9–1</td>
+</tr>
+</tbody></table></div>
+<p>Provider docs usually recommend adjusting temperature <strong>or</strong> top-p, not both at once. Some newer models (especially reasoning models) ignore or restrict these settings, so check the model&#39;s documentation.</p>
+<div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;Temperature 0 makes the model always correct.&quot; It only makes the choice of token less random. A confident wrong answer is still wrong — and even at temperature 0, outputs are not always perfectly identical between runs because of tiny numerical differences on the servers.</p></div>
+
+</div>
+<div class="section">
+<h2 id="11-the-context-window">11. The Context Window</h2>
+<p>The <strong>context window</strong> is the maximum number of tokens the model can consider at once — your instructions, the conversation history, any pasted documents, <strong>and</strong> the answer it is writing all count. Current models range from a few thousand tokens to over a million; for example, Meta&#39;s Llama 3.1 supports 128,000 tokens (<a href="https://github.com/meta-llama/llama-models/blob/main/models/llama3_1/MODEL_CARD.md" target="_blank" rel="noopener">model card</a>).</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> The context window is the model&#39;s desk. Everything it can &quot;see&quot; right now has to fit on the desk. Anything that falls off the edge (for example, very old messages in a long chat) is simply gone for that request.</p></div>
+<h3 id="why-is-it-limited">Why is it limited?</h3>
+<ul>
+<li><strong>Attention compares every token with every other token.</strong> With <code>n</code> tokens that is about <code>n × n</code> comparisons. 1,000 tokens → about 1 million pairs; 10,000 tokens → about 100 million pairs. Ten times the text means roughly a hundred times the attention work (engineering tricks reduce this, but long contexts stay expensive).</li>
+<li><strong>Memory grows with length</strong> (see the KV cache below).</li>
+<li><strong>Training:</strong> a model only handles lengths it has been trained or adapted to handle well.</li>
+</ul>
+<h3 id="cost-grows-with-length">Cost grows with length</h3>
+<p>You pay for every input token on <strong>every</strong> request. In a chat, the whole conversation is usually re-sent each turn, so turn 20 costs much more than turn 1. Long contexts are also slower to start answering.</p>
+<h3 id="lost-in-the-middle">&quot;Lost in the middle&quot;</h3>
+<p>A bigger window does not mean the model uses all of it equally well. The study <a href="https://arxiv.org/abs/2307.03172" target="_blank" rel="noopener">&quot;Lost in the Middle&quot;</a> (Liu et al., 2023) found that models were often best at using information near the <strong>beginning or end</strong> of a long context, and performance dropped significantly when the key information sat in the <strong>middle</strong>. Newer models have improved, but it is still wise to put the most important instructions and facts at the start or end.</p>
+<div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;The model remembers our earlier chats.&quot; A plain model has no memory between requests. Chat apps create the <em>feeling</em> of memory by re-sending the conversation (and sometimes saved notes) inside the context window every time.</p></div>
+
+</div>
+<div class="section">
+<h2 id="12-the-kv-cache">12. The KV Cache</h2>
+<p>Recall the generation loop: every new token needs a pass through the model, and attention needs the <strong>keys</strong> and <strong>values</strong> of all earlier tokens. Recomputing those for the whole text at every step would be wasteful — the earlier tokens have not changed.</p>
+<p>The <strong>KV cache</strong> (key-value cache) stores the keys and values of tokens already processed. Each new step only computes them for the <strong>one new token</strong> and reuses the rest.</p>
+<div class="callout tip"><p><strong>💡 Example:</strong> Writing token number 1,001 <em>without</em> a cache means recomputing keys and values for all 1,000 earlier tokens again. <em>With</em> a cache, it computes them for just 1 token and reads the other 1,000 from memory.</p></div>
+<p>The trade-off: the cache uses GPU memory that grows with context length (and with the number of users served at once), which is one reason long contexts are expensive to serve. A related idea, <strong>prompt caching</strong>, lets providers reuse the processed start of a prompt across requests and often charge less for those cached tokens — see <a href="tokens.html">Chapter 7</a>.</p>
+
+</div>
+<div class="section">
+<h2 id="13-why-llms-hallucinate">13. Why LLMs Hallucinate</h2>
+<p>A <strong>hallucination</strong> is when a model states something false or made-up with full confidence — a fake citation, a wrong date, a non-existent function name. It is a natural side-effect of how LLMs work:</p>
+<ol>
+<li><strong>Trained for plausible, not verified, text.</strong> Pretraining rewards predicting text that <em>looks</em> like the training data. A fluent, plausible-sounding answer scores well whether or not it is true.</li>
+<li><strong>Guessing is often rewarded.</strong> OpenAI&#39;s research on <a href="https://openai.com/index/why-language-models-hallucinate/" target="_blank" rel="noopener">why language models hallucinate</a> argues that common training and evaluation setups reward a confident guess over saying &quot;I&#39;m not sure&quot;, much like a multiple-choice test with no penalty for wrong answers.</li>
+<li><strong>Rare facts are fuzzy.</strong> Facts seen thousands of times in training are reproduced reliably; facts seen once or twice (a small company&#39;s founding date, a niche paper&#39;s authors) are stored weakly, so the model fills gaps with likely-sounding details.</li>
+<li><strong>No built-in fact check.</strong> The model has no internal database to verify against — only the patterns in its weights and whatever is in the context window.</li>
+<li><strong>Knowledge cutoff.</strong> The model knows nothing after its training data ends (see <a href="training.html">Chapter 4</a>), but it may still answer as if it does.</li>
+<li><strong>Sampling randomness</strong> can occasionally pick a less likely — and wrong — token, and the following tokens then build on that mistake.</li>
+</ol>
+<div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;If it sounds confident, it is probably right.&quot; Confidence of tone is not evidence. LLMs sound equally confident when right and wrong.</p></div>
+<div class="callout success"><p><strong>✅ Key takeaway:</strong> Reduce hallucinations by <strong>grounding</strong> the model — give it the source material in the prompt (or via retrieval, RAG), ask it to quote or cite that material, explicitly allow it to admit uncertainty, and verify important facts. See <a href="using-ai.html">Chapter 6</a> and <a href="best-practices.html">Chapter 8</a>.</p></div>
+
+</div>
+<div class="section">
+<h2 id="14-multimodal-models">14. Multimodal Models</h2>
+<p>A <strong>multimodal</strong> model can take in (and sometimes produce) more than text: images, audio, even video. The trick is to turn every kind of input into token-like vectors that the same transformer can process.</p>
+<ul>
+<li><strong>Images:</strong> the picture is cut into small square <strong>patches</strong> (the Vision Transformer paper, <a href="https://arxiv.org/abs/2010.11929" target="_blank" rel="noopener">&quot;An Image is Worth 16x16 Words&quot;</a>, used 16×16-pixel patches). Each patch is converted into an embedding and treated like a token. A larger or more detailed image produces more tokens.</li>
+<li><strong>Audio:</strong> sound is turned into a picture-like representation of frequencies over time (a spectrogram), then chopped into chunks that become embeddings — the approach used by OpenAI&#39;s <a href="https://arxiv.org/abs/2212.04356" target="_blank" rel="noopener">Whisper</a> speech model.</li>
+<li><strong>Output:</strong> some models can also generate images or speech, either directly as tokens or by handing off to a specialized generator.</li>
+</ul>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> To a multimodal model, a photo is just another &quot;sentence&quot; — made of image patches instead of word pieces. Once everything is a sequence of vectors, attention can relate a word in your question to a region of the picture.</p></div>
+<p>Because images and audio become tokens, they <strong>count against the context window and cost</strong> just like text.</p>
+
+</div>
+<div class="section">
+<h2 id="15-reasoning-models">15. Reasoning Models</h2>
+<p>Some recent models — for example OpenAI&#39;s o-series (<a href="https://openai.com/index/learning-to-reason-with-llms/" target="_blank" rel="noopener">Learning to reason with LLMs</a>), DeepSeek-R1 (<a href="https://arxiv.org/abs/2501.12948" target="_blank" rel="noopener">paper</a>), and Claude or Gemini models with &quot;thinking&quot; modes — are trained to <strong>think before they answer</strong>.</p>
+<p>Conceptually, a reasoning model is still a next-token predictor. The difference is that before writing the final answer, it generates a long stream of extra <strong>reasoning tokens</strong>: breaking the problem down, trying an approach, checking it, backtracking. These models are typically trained with <strong>reinforcement learning</strong> on problems whose answers can be checked (math, code tests, logic puzzles), so the model is rewarded for reasoning paths that actually reach correct answers.</p>
+<div class="callout tip"><p><strong>💡 Example:</strong> Asked &quot;A bat and a ball cost $1.10 in total; the bat costs $1.00 more than the ball. How much is the ball?&quot;, a fast model may blurt the intuitive &quot;10 cents&quot;. A reasoning model&#39;s hidden thinking might go: <em>&quot;If the ball is 0.10, the bat is 1.10, total 1.20 — too much. Let ball = x, bat = x + 1.00, so 2x + 1.00 = 1.10, x = 0.05.&quot;</em> Then it answers <strong>5 cents</strong>.</p></div>
+<p>Trade-offs to know:</p>
+<ul>
+<li><strong>Better</strong> at multi-step math, coding, planning, and tricky logic.</li>
+<li><strong>Slower and more expensive:</strong> reasoning tokens are generated just like normal tokens. OpenAI and Anthropic both bill reasoning (thinking) tokens as <strong>output tokens</strong>, even when they are hidden or summarized (<a href="https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them" target="_blank" rel="noopener">OpenAI tokens guide</a>, <a href="https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking" target="_blank" rel="noopener">Anthropic extended thinking</a>).</li>
+<li><strong>Overkill</strong> for simple tasks like rewording a sentence or extracting a name.</li>
+</ul>
+<div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;The thinking text is exactly how the model reached its answer.&quot; The visible reasoning (when shown) is helpful, but research shows it is not always a faithful record of the computation inside the network. Treat it as a useful explanation, not a guaranteed one.</p></div>
+
+</div>
+<div class="section">
+<h2 id="recap">Recap</h2>
+<ul>
+<li>An LLM predicts the <strong>next token</strong> from probabilities over its whole vocabulary; long answers are many single predictions chained together.</li>
+<li><strong>Tokens</strong> are sub-word pieces (often built with BPE). In English, 1 token ≈ 4 characters ≈ ¾ word; other languages and code often need more tokens.</li>
+<li><strong>Embeddings</strong> place tokens as points in a high-dimensional space where similar meanings sit close together.</li>
+<li><strong>Positional information</strong> tells the model word order.</li>
+<li><strong>Self-attention</strong> lets each token gather context from others using <strong>queries, keys, and values</strong>; <strong>multi-head</strong> attention runs many of these in parallel.</li>
+<li>A <strong>transformer block</strong> = attention + feed-forward, each with a skip connection and layer norm, stacked many times.</li>
+<li><strong>Decoder-only</strong> (GPT) models generate; <strong>encoder-only</strong> (BERT) models understand; <strong>encoder-decoder</strong> (T5) models transform text to text.</li>
+<li>Generation is a <strong>loop</strong>, one token per pass. <strong>Temperature, top-k, and top-p</strong> control how the next token is picked.</li>
+<li>The <strong>context window</strong> limits how much the model sees; cost grows with length, and information in the middle can be used less well. The <strong>KV cache</strong> avoids recomputing earlier tokens.</li>
+<li><strong>Hallucinations</strong> come from training for plausible text, rewarded guessing, weakly stored facts, and no built-in fact check.</li>
+<li><strong>Multimodal</strong> models turn images and audio into tokens; <strong>reasoning</strong> models spend extra thinking tokens to solve harder problems.</li>
+</ul>
+
+</div>
+<div class="section">
+<h2 id="check-your-understanding">Check Your Understanding</h2>
+<p><strong>1. What is the basic job a large language model performs over and over?</strong></p>
+<ul>
+<li>A) Looking up answers in a database of facts</li>
+<li>B) Predicting the probabilities of the next token</li>
+<li>C) Translating text into a fixed set of commands</li>
+<li>D) Searching the internet for matching pages</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> B — An LLM predicts a probability for every possible next token, picks one, and repeats. A plain LLM has no fact database or live internet access.</p></div>
+<p><strong>2. Roughly how many tokens is a 750-word English text?</strong></p>
+<ul>
+<li>A) About 250</li>
+<li>B) About 560</li>
+<li>C) About 1,000</li>
+<li>D) About 3,000</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> C — Using the rule of thumb 1 token ≈ ¾ of a word, 750 ÷ 0.75 ≈ 1,000 tokens. Other languages or code would usually need more.</p></div>
+<p><strong>3. In self-attention, what does a token&#39;s <em>query</em> do?</strong></p>
+<ul>
+<li>A) It stores the token&#39;s final output text</li>
+<li>B) It describes what the token is looking for, and is compared with other tokens&#39; keys</li>
+<li>C) It records the token&#39;s position in the sentence</li>
+<li>D) It decides the temperature for sampling</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> B — The query is &quot;what am I looking for?&quot;. It is matched against each token&#39;s key to decide how much attention to pay, and the matching tokens&#39; values are blended in.</p></div>
+<p><strong>4. With probabilities mat 40%, floor 20%, sofa 15%, bed 10%, roof 8%, other 7%, which tokens remain under top-p = 0.75?</strong></p>
+<ul>
+<li>A) Only mat</li>
+<li>B) Mat and floor</li>
+<li>C) Mat, floor, and sofa</li>
+<li>D) All of them</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> C — Adding from the top: 40% + 20% + 15% = 75%, which reaches p = 0.75. Those three are kept and rescaled; the rest are removed.</p></div>
+<p><strong>5. Why do long prompts cost more and run slower?</strong></p>
+<ul>
+<li>A) Every input token is processed and billed, and attention work grows roughly with the square of the length</li>
+<li>B) Long prompts switch the model to a larger version</li>
+<li>C) The model must download each document from the web</li>
+<li>D) Long prompts always use a higher temperature</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> A — Each token in the context is billed and processed, attention compares tokens pairwise (about n × n comparisons), and the KV cache memory grows with length.</p></div>
+<div class="nav-links"><a href="neural-networks.html">← Chapter 2: Neural Networks</a><a href="training.html">Chapter 4: Training &amp; Tuning →</a></div>
+</div>
+</main>
+
+<footer class="site-footer">AI Learn · A beginner's guide to how AI models work · Based on official docs and open course material · Not affiliated with any model provider</footer>
+</body>
+</html>

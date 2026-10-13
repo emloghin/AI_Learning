@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Foundations: What AI Models Are — AI Learn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>.section td code,.callout code,.diagram-caption code{background:var(--primary-light);color:var(--primary);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:13px}.callout p+p{margin-top:8px}.callout ul{margin:8px 0 0 20px}</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-logo"><span>AI&nbsp;</span>Learn</div>
+    <nav class="header-nav">
+      <a href="index.html">Home</a>
+      <a href="foundations.html" class="active">1. Foundations</a>
+      <a href="neural-networks.html">2. Neural Networks</a>
+      <a href="transformers.html">3. Transformers &amp; LLMs</a>
+      <a href="training.html">4. Training &amp; Tuning</a>
+      <a href="models.html">5. Model Landscape</a>
+      <a href="using-ai.html">6. Using Models</a>
+      <a href="tokens.html">7. Tokens &amp; Cost</a>
+      <a href="best-practices.html">8. Best Practices</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="resources.html">Resources</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-badge">Chapter 1 · Foundations</div>
+  <h1>Foundations: What AI Models Are</h1>
+  <p>Before looking inside an AI model, you need a clear map: what &quot;AI&quot;, &quot;machine learning&quot;, &quot;deep learning&quot; and &quot;generative AI&quot; mean, how a computer can learn from examples instead of rules, and what a &quot;model&quot; physically is.</p>
+</section>
+
+<main class="main">
+<div class="section">
+<h2 id="1-ai-machine-learning-deep-learning-and-generative-ai">1. AI, machine learning, deep learning and generative AI</h2>
+<p>These four terms are often used as if they mean the same thing. They do not — each one sits inside the one before it.</p>
+<ul>
+<li><strong>Artificial intelligence (AI)</strong> is the broad goal: getting computers to do tasks that normally need human intelligence, such as understanding language, recognizing images, or making decisions. The term dates back to the 1956 Dartmouth workshop. AI includes old-fashioned approaches where humans write all the rules by hand.</li>
+<li><strong>Machine learning (ML)</strong> is a subset of AI where the computer <em>learns the rules from data</em> instead of being told them. You give it examples; it finds the pattern.</li>
+<li><strong>Deep learning (DL)</strong> is a subset of machine learning that uses <em>neural networks with many layers</em> (&quot;deep&quot; means many layers). It is what made modern speech recognition, image recognition and chatbots possible.</li>
+<li><strong>Generative AI</strong> is the part of deep learning focused on <em>creating new content</em> — text, images, audio, video, code — rather than just labelling or predicting. Large language models (LLMs) such as GPT, Claude, Gemini and Llama are generative AI.</li>
+</ul>
+<div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 450" role="img" aria-label="Nested circles: artificial intelligence contains machine learning, which contains deep learning, which contains generative AI">
+  <rect x="0" y="0" width="760" height="450" rx="16" fill="#f8fafc"/>
+  <ellipse cx="380" cy="230" rx="360" ry="210" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <ellipse cx="380" cy="270" rx="290" ry="165" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+  <ellipse cx="380" cy="310" rx="215" ry="120" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <ellipse cx="380" cy="350" rx="130" ry="68" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+
+  <text x="380" y="50" text-anchor="middle" font-family="Inter,sans-serif" font-size="18" font-weight="700" fill="#1e3a8a">Artificial Intelligence</text>
+  <text x="380" y="70" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#1e3a8a">Any technique that makes computers act smart.</text>
+  <text x="380" y="86" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#1e3a8a">Includes hand-written rules (chess engines, route planners).</text>
+
+  <text x="380" y="135" text-anchor="middle" font-family="Inter,sans-serif" font-size="17" font-weight="700" fill="#4c1d95">Machine Learning</text>
+  <text x="380" y="153" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#4c1d95">Learns patterns from data instead of rules.</text>
+  <text x="380" y="169" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#4c1d95">e.g. spam filters, price predictors.</text>
+
+  <text x="380" y="220" text-anchor="middle" font-family="Inter,sans-serif" font-size="16" font-weight="700" fill="#78350f">Deep Learning</text>
+  <text x="380" y="238" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#78350f">ML with many-layer neural networks.</text>
+  <text x="380" y="254" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#78350f">e.g. face unlock, speech recognition.</text>
+
+  <text x="380" y="322" text-anchor="middle" font-family="Inter,sans-serif" font-size="15" font-weight="700" fill="#064e3b">Generative AI</text>
+  <text x="380" y="341" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#064e3b">Creates new text, images,</text>
+  <text x="380" y="357" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#064e3b">audio and code (e.g. LLMs)</text>
+</svg>
+<div class="diagram-caption">Figure 1 — Each field is a subset of the one around it. All generative AI is deep learning, but not all AI is generative.</div></div>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> AI is the whole kitchen. Machine learning is cooking by tasting and adjusting rather than following a fixed recipe. Deep learning is a particularly powerful oven. Generative AI is the set of dishes that oven is famous for.</p></div>
+<p>Microsoft Learn&#39;s <a href="https://learn.microsoft.com/training/modules/get-started-ai-fundamentals/" target="_blank" rel="noopener">Introduction to AI concepts</a> and <a href="https://learn.microsoft.com/training/modules/fundamentals-machine-learning/" target="_blank" rel="noopener">Introduction to machine learning concepts</a> modules cover the same map if you want a second explanation.</p>
+
+</div>
+<div class="section">
+<h2 id="2-writing-rules-vs-learning-from-data">2. Writing rules vs learning from data</h2>
+<h3 id="21-the-traditional-way-a-programmer-writes-the-rules">2.1 The traditional way: a programmer writes the rules</h3>
+<p>Suppose you want to filter spam email. The classic approach is to write rules by hand:</p>
+<div class="code-block">IF subject contains &quot;FREE MONEY&quot;      THEN spam
+IF sender is not in contacts
+   AND body contains &quot;click here&quot;      THEN spam
+OTHERWISE                              not spam</div>
+<p>This works for a week. Then spammers write &quot;FR3E M0NEY&quot;, and you add another rule. And another. Soon you have thousands of fragile rules, and legitimate emails (&quot;Click here to see your receipt&quot;) get blocked.</p>
+<h3 id="22-the-machine-learning-way-the-computer-finds-the-rules">2.2 The machine learning way: the computer finds the rules</h3>
+<p>Instead, you collect 100,000 emails that people have already marked as &quot;spam&quot; or &quot;not spam&quot;, and give them to a learning algorithm. The algorithm discovers, on its own, which combinations of words, senders, links and formatting tend to indicate spam — including patterns no human would think to write down. When spammers change tactics, you retrain on fresh examples.</p>
+<div class="callout tip"><p><strong>💡 Example:</strong> Your email provider&#39;s spam folder is a machine learning model. Every time you click &quot;Report spam&quot; or &quot;Not spam&quot;, you are creating a new labelled example that can help train the next version.</p></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>Rules-based programming</th>
+<th>Machine learning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Who writes the logic</td>
+<td>A programmer</td>
+<td>The algorithm, from data</td>
+</tr>
+<tr>
+<td>Input to build it</td>
+<td>Rules</td>
+<td>Examples (data)</td>
+</tr>
+<tr>
+<td>Handles new tricks</td>
+<td>Only if someone writes a new rule</td>
+<td>Often, if the new tricks resemble the training examples</td>
+</tr>
+<tr>
+<td>Explainability</td>
+<td>Easy — read the rules</td>
+<td>Harder — the logic is spread across many numbers</td>
+</tr>
+<tr>
+<td>Best for</td>
+<td>Clear, stable logic (tax calculation, sorting)</td>
+<td>Fuzzy patterns (language, images, fraud)</td>
+</tr>
+</tbody></table></div>
+<div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;Machine learning replaces normal programming.&quot; It does not. A real AI product is mostly ordinary code (user interface, databases, security) with a learned model inside for the fuzzy part.</p></div>
+
+</div>
+<div class="section">
+<h2 id="3-types-of-learning">3. Types of learning</h2>
+<p>Machine learning methods are usually grouped by <em>what kind of feedback</em> the model gets while learning. The <a href="https://developers.google.com/machine-learning/crash-course" target="_blank" rel="noopener">Google Machine Learning Crash Course</a> introduces the first three in detail.</p>
+<h3 id="31-supervised-learning-learning-with-an-answer-key">3.1 Supervised learning — learning with an answer key</h3>
+<p>Every training example comes with the correct answer, called a <strong>label</strong>. The model learns to map inputs to labels.</p>
+<ul>
+<li>Emails labelled spam / not spam → a spam filter.</li>
+<li>Photos labelled &quot;cat&quot; / &quot;dog&quot; → an image classifier.</li>
+<li>Houses with their sale prices → a price predictor.</li>
+</ul>
+<p><em>Everyday analogy:</em> practising with flashcards that have the answer on the back.</p>
+<h3 id="32-unsupervised-learning-finding-structure-with-no-answer-key">3.2 Unsupervised learning — finding structure with no answer key</h3>
+<p>The data has no labels. The model looks for groups or patterns by itself.</p>
+<ul>
+<li>A shop groups customers into segments (&quot;weekend bargain hunters&quot;, &quot;weekday premium buyers&quot;) from purchase history.</li>
+<li>A bank flags transactions that look unlike anything normal (anomaly detection).</li>
+</ul>
+<p><em>Everyday analogy:</em> sorting a box of mixed buttons into piles by colour and size without being told what the piles should be.</p>
+<h3 id="33-reinforcement-learning-learning-by-trial-error-and-reward">3.3 Reinforcement learning — learning by trial, error and reward</h3>
+<p>An <em>agent</em> takes actions in an environment and receives rewards or penalties. Over many attempts it learns which actions lead to the most reward.</p>
+<ul>
+<li>DeepMind&#39;s AlphaGo learned to play Go partly by playing against itself, and beat world champion Lee Sedol in 2016.</li>
+<li>Robots learning to walk.</li>
+<li>Chat assistants are refined with <em>reinforcement learning from human feedback (RLHF)</em>: people rate answers, and the model is nudged toward the highly rated ones (covered in <a href="training.html">Training &amp; Tuning</a>).</li>
+</ul>
+<p><em>Everyday analogy:</em> training a dog with treats.</p>
+<h3 id="34-self-supervised-learning-the-data-labels-itself">3.4 Self-supervised learning — the data labels itself</h3>
+<p>The model creates its own &quot;answer key&quot; by hiding part of the data and predicting it. No human labelling is needed, so it scales to enormous datasets.</p>
+<ul>
+<li>Take the sentence &quot;The cat sat on the mat.&quot; Hide the last word; the model must predict &quot;mat&quot;. The correct answer was already in the text.</li>
+<li>This <em>next-word (next-token) prediction</em> is exactly how large language models are pre-trained on trillions of words.</li>
+</ul>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Supervised = a teacher gives answers. Unsupervised = no answers, find patterns. Reinforcement = rewards for good actions. Self-supervised = the data hides its own answers, like a fill-in-the-blank exercise you can make from any book.</p></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Feedback</th>
+<th>Everyday example</th>
+<th>AI example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Supervised</td>
+<td>Correct label for every example</td>
+<td>Flashcards</td>
+<td>Spam filter, medical image diagnosis</td>
+</tr>
+<tr>
+<td>Unsupervised</td>
+<td>None</td>
+<td>Sorting buttons into piles</td>
+<td>Customer segments, anomaly detection</td>
+</tr>
+<tr>
+<td>Reinforcement</td>
+<td>Rewards and penalties</td>
+<td>Training a dog</td>
+<td>Game-playing AI, RLHF for chatbots</td>
+</tr>
+<tr>
+<td>Self-supervised</td>
+<td>Hidden parts of the data itself</td>
+<td>Fill-in-the-blank exercise</td>
+<td>LLM pre-training (predict the next token)</td>
+</tr>
+</tbody></table></div>
+
+</div>
+<div class="section">
+<h2 id="4-data-features-and-labels">4. Data, features and labels</h2>
+<p>Machine learning starts with a table of examples. Here is a tiny dataset for predicting house prices:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Size (m²)</th>
+<th>Bedrooms</th>
+<th>Age (years)</th>
+<th><strong>Price (thousands)</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>50</td>
+<td>1</td>
+<td>30</td>
+<td><strong>150</strong></td>
+</tr>
+<tr>
+<td>80</td>
+<td>2</td>
+<td>10</td>
+<td><strong>240</strong></td>
+</tr>
+<tr>
+<td>120</td>
+<td>3</td>
+<td>5</td>
+<td><strong>350</strong></td>
+</tr>
+<tr>
+<td>100</td>
+<td>3</td>
+<td>40</td>
+<td><strong>260</strong></td>
+</tr>
+</tbody></table></div>
+<ul>
+<li>Each <strong>row</strong> is one <em>example</em> (one house).</li>
+<li>The input columns — size, bedrooms, age — are <strong>features</strong>: the facts the model is allowed to look at.</li>
+<li>The column we want to predict — price — is the <strong>label</strong> (also called the <em>target</em>).</li>
+</ul>
+<p>For text models, the &quot;features&quot; are the tokens of the text so far, and the &quot;label&quot; is the next token. For image models, the features are pixel values.</p>
+<div class="callout tip"><p><strong>💡 Example:</strong> In a spam filter, features might be &quot;number of links&quot;, &quot;sender in contacts (yes/no)&quot; and &quot;contains the word <em>winner</em>&quot;. The label is &quot;spam&quot; or &quot;not spam&quot;.</p></div>
+<div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;More data always fixes everything.&quot; Quality matters as much as quantity. If the labels are wrong, or the data does not represent the real world (for example, only houses from one city), the model learns the wrong lesson. This is the root of many AI bias problems.</p></div>
+
+</div>
+<div class="section">
+<h2 id="5-what-a-model-actually-is">5. What a &quot;model&quot; actually is</h2>
+<p>A <strong>model</strong> is a <em>function with learned numbers</em>. A function is simply a rule that turns an input into an output.</p>
+<p>Here is the simplest possible model for our house prices:</p>
+<div class="code-block">price = w × size + b</div>
+<ul>
+<li><code>size</code> is the input (a feature).</li>
+<li><code>w</code> and <code>b</code> are <strong>parameters</strong> — numbers the model learns. <code>w</code> is called a <em>weight</em>, <code>b</code> a <em>bias</em>.</li>
+<li>Before training, <code>w</code> and <code>b</code> are just guesses. Training finds values that make the predictions close to the real prices.</li>
+</ul>
+<p>Suppose training finds <code>w = 2.8</code> and <code>b = 10</code>. Then for a 90 m² house:</p>
+<div class="code-block">price = 2.8 × 90 + 10 = 252 + 10 = 262   (thousand)</div>
+<p>That is a complete, working (if simple) machine learning model: one formula and two learned numbers.</p>
+<p>A large language model is the same idea at a vastly bigger scale. Instead of one formula with 2 numbers, it is a deep stack of formulas with <em>billions</em> of learned numbers, and instead of predicting a price, it predicts the next token. When you download an open model such as Llama or Mistral, the big file you get is mostly those numbers.</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> A model is a recipe (the structure of the formula) plus a long list of learned ingredient amounts (the parameters). The recipe is written by engineers; the amounts are learned from data.</p></div>
+<div class="callout success"><p><strong>✅ Key takeaway:</strong> &quot;Training a model&quot; means finding good values for its parameters. &quot;Running a model&quot; means plugging new inputs into the formula with those values fixed.</p></div>
+
+</div>
+<div class="section">
+<h2 id="6-training-vs-inference">6. Training vs inference</h2>
+<p>Every model has two phases in its life.</p>
+<ul>
+<li><strong>Training</strong> is the learning phase. The model sees many examples, compares its guesses to the right answers, and its parameters are adjusted again and again.</li>
+<li><strong>Inference</strong> is the using phase. The parameters are frozen, and the model simply computes an output for each new input.</li>
+</ul>
+<p><em>Analogy:</em> Training is like a chef spending years in culinary school, tasting and adjusting thousands of dishes. Inference is the chef cooking your dinner tonight — fast, using skills already learned. The chef does not go back to school every time you order.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>Training</th>
+<th>Inference</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>What happens</td>
+<td>Parameters are adjusted to reduce errors</td>
+<td>Parameters are fixed; the model produces outputs</td>
+</tr>
+<tr>
+<td>Who does it</td>
+<td>The model builder (OpenAI, Anthropic, Google, Meta, Mistral AI, a company&#39;s data science team)</td>
+<td>Anyone using the model — you, an app, a business</td>
+</tr>
+<tr>
+<td>How often</td>
+<td>Rarely — once per model version, plus occasional fine-tuning</td>
+<td>Constantly — every question, every request</td>
+</tr>
+<tr>
+<td>Cost</td>
+<td>Very high for large models: thousands of GPUs for weeks or months; frontier models are reported to cost tens of millions of dollars or more</td>
+<td>Low per request (fractions of a cent to a few cents), but adds up at scale</td>
+</tr>
+<tr>
+<td>Hardware</td>
+<td>Large clusters of data-centre GPUs or other AI accelerators</td>
+<td>Anything from a data-centre GPU to a laptop or phone, depending on model size</td>
+</tr>
+<tr>
+<td>Does the model change?</td>
+<td>Yes</td>
+<td>No — chatting does not retrain the model</td>
+</tr>
+</tbody></table></div>
+<div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;The chatbot is learning from our conversation right now.&quot; During a conversation, the model&#39;s weights do not change. It only &quot;remembers&quot; what is in the current conversation text. Some providers may use conversations as training data for <em>future</em> model versions, depending on their policies and your settings — which is a privacy question, not live learning.</p></div>
+
+</div>
+<div class="section">
+<h2 id="7-generalization-overfitting-and-underfitting">7. Generalization, overfitting and underfitting</h2>
+<p>The whole point of training is <strong>generalization</strong>: doing well on <em>new</em> data the model has never seen, not just the examples it trained on.</p>
+<p><em>Analogy:</em> Two students prepare for an exam using past papers.</p>
+<ul>
+<li>Student A <strong>memorizes</strong> the past answers word for word. She scores 100% on the past papers but fails the real exam, because the questions are different. This is <strong>overfitting</strong>: the model learned the noise and quirks of its training data instead of the real pattern.</li>
+<li>Student B barely studies and learns only &quot;the answer is usually C&quot;. He does badly on both past papers and the real exam. This is <strong>underfitting</strong>: the model is too simple, or trained too little, to capture the pattern.</li>
+<li>Student C learns the underlying concepts. She does well on past papers <em>and</em> on the new exam. That is <strong>good generalization</strong>.</li>
+</ul>
+<p>To check which student your model is, you split your data:</p>
+<ul>
+<li><strong>Training set</strong> (e.g. 80%): used to adjust the parameters.</li>
+<li><strong>Validation set</strong> (e.g. 10%): used during development to compare versions and decide when to stop.</li>
+<li><strong>Test set</strong> (e.g. 10%): kept locked away and used once at the end for an honest score.</li>
+</ul>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Training error</th>
+<th>Error on new data</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Underfitting</td>
+<td>High</td>
+<td>High</td>
+<td>Bigger model, better features, train longer</td>
+</tr>
+<tr>
+<td>Good fit</td>
+<td>Low</td>
+<td>Low (close to training)</td>
+<td>Ship it</td>
+</tr>
+<tr>
+<td>Overfitting</td>
+<td>Very low</td>
+<td>High</td>
+<td>More data, simpler model, regularization, stop earlier</td>
+</tr>
+</tbody></table></div>
+<p>Google&#39;s crash course has an excellent interactive section on <a href="https://developers.google.com/machine-learning/crash-course/overfitting" target="_blank" rel="noopener">overfitting</a>. Chapter 2 shows the specific techniques used to fight it.</p>
+<div class="callout success"><p><strong>✅ Key takeaway:</strong> A model is only as good as its performance on data it has <em>not</em> seen. A perfect score on the training data can be a bad sign.</p></div>
+
+</div>
+<div class="section">
+<h2 id="8-types-of-models-by-task">8. Types of models by task</h2>
+<p>Models are also grouped by <em>what kind of output</em> they produce.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Task type</th>
+<th>Output</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Classification</strong></td>
+<td>A category from a fixed list</td>
+<td>Spam / not spam; which animal is in the photo; positive / negative review</td>
+</tr>
+<tr>
+<td><strong>Regression</strong></td>
+<td>A number</td>
+<td>House price; tomorrow&#39;s temperature; delivery time in minutes</td>
+</tr>
+<tr>
+<td><strong>Generative</strong></td>
+<td>New content</td>
+<td>Chat replies, essays and code (LLMs); images from a description (image generators); synthetic speech</td>
+</tr>
+</tbody></table></div>
+<p>Others you will meet: <strong>clustering</strong> (grouping without labels), <strong>recommendation</strong> (what to watch next), and <strong>embedding</strong> models, which turn text or images into lists of numbers that capture meaning (used for search — see <a href="transformers.html">Transformers &amp; LLMs</a>).</p>
+<div class="callout tip"><p><strong>💡 Example:</strong> An LLM is, underneath, a classifier repeated many times: at each step it &quot;classifies&quot; which token should come next out of a vocabulary of tens of thousands of possible tokens. Chaining those choices together produces generated text.</p></div>
+
+</div>
+<div class="section">
+<h2 id="9-where-models-run">9. Where models run</h2>
+<p>A trained model is a file of numbers plus code to run it. Where that code runs changes cost, privacy and speed.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Where</th>
+<th>How it works</th>
+<th>Typical models</th>
+<th>Good for</th>
+<th>Trade-offs</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Cloud API</strong></td>
+<td>Your app sends text over the internet to the provider&#39;s servers and gets the answer back</td>
+<td>Proprietary models such as OpenAI GPT, Anthropic Claude, Google Gemini; also hosted open models</td>
+<td>The most capable models, no hardware to manage</td>
+<td>Pay per token; data leaves your device; needs internet</td>
+</tr>
+<tr>
+<td><strong>Local (your computer or server)</strong></td>
+<td>You download the model weights and run them yourself, e.g. with tools such as Ollama or LM Studio</td>
+<td>Open-weight models such as Meta Llama, Mistral, Google Gemma, Microsoft Phi, Alibaba Qwen</td>
+<td>Privacy, offline use, no per-token fees</td>
+<td>Needs enough memory (RAM/GPU); smaller models are usually less capable</td>
+</tr>
+<tr>
+<td><strong>Edge / on-device</strong></td>
+<td>A small model runs directly on a phone, car, camera or sensor</td>
+<td>Small, compressed models built for phones and devices</td>
+<td>Instant response, works offline, data stays on device</td>
+<td>Strict size and power limits</td>
+</tr>
+</tbody></table></div>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Cloud = renting a genius over the phone. Local = owning a smart assistant who lives in your house. Edge = a pocket-sized helper that is always with you but knows less.</p></div>
+<p>The difference between <em>proprietary</em> and <em>open-weight</em> models — and what &quot;open source&quot; really means for AI — is covered in <a href="models.html">Model Landscape</a>.</p>
+
+</div>
+<div class="section">
+<h2 id="recap">Recap</h2>
+<ul>
+<li>AI ⊃ machine learning ⊃ deep learning ⊃ generative AI. Each is a subset of the one before.</li>
+<li>Traditional programs follow rules written by people; machine learning finds the rules from examples.</li>
+<li>Four kinds of learning: supervised (labels), unsupervised (no labels), reinforcement (rewards), self-supervised (the data hides its own answers — how LLMs are pre-trained).</li>
+<li>Data is made of examples; features are the inputs; labels are the answers to predict.</li>
+<li>A model is a function with learned numbers called parameters. Training finds the numbers; inference uses them.</li>
+<li>Training is rare and expensive; inference is constant and cheap per request. Chatting does not change the model&#39;s weights.</li>
+<li>The goal is generalization. Overfitting = memorizing; underfitting = too simple.</li>
+<li>Models classify, predict numbers (regression) or generate new content, and run in the cloud, locally, or on-device.</li>
+</ul>
+
+</div>
+<div class="section">
+<h2 id="check-your-understanding">Check Your Understanding</h2>
+<p><strong>1. Which statement about AI, machine learning and deep learning is correct?</strong></p>
+<ul>
+<li>A) Deep learning is broader than machine learning.</li>
+<li>B) All machine learning is deep learning.</li>
+<li>C) Deep learning is a subset of machine learning, which is a subset of AI.</li>
+<li>D) Generative AI is unrelated to deep learning.</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> C — The fields are nested: AI contains machine learning, which contains deep learning, which contains generative AI.</p></div>
+<p><strong>2. An LLM is pre-trained by repeatedly predicting the next word of real text. What type of learning is this?</strong></p>
+<ul>
+<li>A) Supervised learning with human-written labels</li>
+<li>B) Self-supervised learning</li>
+<li>C) Unsupervised clustering</li>
+<li>D) Rules-based programming</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> B — The &quot;label&quot; (the next word) already exists in the text, so no human needs to label anything. That is self-supervised learning.</p></div>
+<p><strong>3. In a dataset for predicting house prices, what is the &quot;label&quot;?</strong></p>
+<ul>
+<li>A) The size of the house</li>
+<li>B) The number of bedrooms</li>
+<li>C) The sale price</li>
+<li>D) The row number</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> C — The label is the value you want the model to predict. Size and bedrooms are features (inputs).</p></div>
+<p><strong>4. You chat with an AI assistant and correct one of its mistakes. What happens to the model&#39;s weights during that conversation?</strong></p>
+<ul>
+<li>A) They are updated instantly so it never makes the mistake again.</li>
+<li>B) They do not change; the model only sees the correction as part of the conversation text.</li>
+<li>C) They are deleted and retrained from scratch.</li>
+<li>D) They are copied to your device.</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> B — Inference uses frozen weights. The correction helps only within the current conversation (its context). Changing weights requires a separate training step.</p></div>
+<p><strong>5. A model scores 99% on its training data but 60% on new data. What is most likely happening?</strong></p>
+<ul>
+<li>A) Underfitting</li>
+<li>B) Overfitting</li>
+<li>C) Perfect generalization</li>
+<li>D) The model is too small</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> B — A big gap between training performance and new-data performance means the model memorized its training examples instead of learning the general pattern.</p></div>
+<p><strong>6. A company must keep customer data on its own servers and avoid per-token fees. Which option fits best?</strong></p>
+<ul>
+<li>A) A proprietary cloud API</li>
+<li>B) Running an open-weight model locally on its own hardware</li>
+<li>C) A rules-based spam filter</li>
+<li>D) An unsupervised clustering model</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> B — Downloading open weights and running them on your own hardware keeps data in-house and avoids per-token API charges, at the cost of buying and managing the hardware.</p></div>
+<div class="nav-links"><a href="index.html">← Home</a><a href="neural-networks.html">Chapter 2: Neural Networks →</a></div>
+</div>
+</main>
+
+<footer class="site-footer">AI Learn · A beginner's guide to how AI models work · Based on official docs and open course material · Not affiliated with any model provider</footer>
+</body>
+</html>

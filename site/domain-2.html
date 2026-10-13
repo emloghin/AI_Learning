@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Domain 2: Tool Use, MCP & Environment Interaction — GH-600 Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>.section td code,.callout code,.diagram-caption code{background:var(--primary-light);color:var(--primary);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:13px}.callout p+p{margin-top:8px}.callout ul{margin:8px 0 0 20px}</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-logo"><span>GH-</span>600</div>
+    <nav class="header-nav">
+      <a href="index.html">Home</a>
+      <a href="basics.html">Start Here</a>
+      <a href="domain-1.html">D1: Architecture</a>
+      <a href="domain-2.html" class="active">D2: Tooling &amp; MCP</a>
+      <a href="domain-3.html">D3: Memory &amp; State</a>
+      <a href="domain-4.html">D4: Evaluation</a>
+      <a href="domain-5.html">D5: Multi-Agent</a>
+      <a href="domain-6.html">D6: Guardrails</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="resources.html">Resources</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-badge">Domain 2 · Weight: 20–25% ★ Heaviest</div>
+  <h1>Domain 2: Tool Use, MCP &amp; Environment Interaction</h1>
+  <p>(official name: <em>Implement tool use and environment interaction</em>)</p>
+</section>
+
+<main class="main">
+<div class="section">
+<p>This is the single most important domain on the exam: up to a quarter of your score. Master the core tool aliases, MCP architecture, agent profile configuration, execution contexts, and safe execution patterns. Most scenario questions in this domain test whether you can choose the <em>right tool with the right permission</em> for the job.</p>
+<p>Official module: <a href="https://learn.microsoft.com/en-us/training/modules/agent-tooling-mcp-execution-environments/" target="_blank" rel="noopener">Tooling, MCP, and Agent Execution Environments</a></p>
+
+</div>
+<div class="section">
+<h2 id="what-youll-learn-why-it-matters">What You&#39;ll Learn &amp; Why It Matters</h2>
+<ul>
+<li><strong>What &quot;tools&quot; are and how to pick the fewest an agent needs</strong> — the difference between letting an agent look, change, run, or delegate.</li>
+<li><strong>How to write an agent profile</strong> (<code>.agent.md</code>) that sets an agent&#39;s purpose, tools, and extra connections.</li>
+<li><strong>What MCP is</strong> — a standard plug that connects agents to outside systems — and how organizations control which plugs are allowed.</li>
+<li><strong>How to run an agent inside a CI pipeline</strong> with Copilot CLI, the right token, and pre-approved commands.</li>
+<li><strong>Where an agent runs and what it can reach</strong> — repository, branch, runner, firewall, secrets.</li>
+<li><strong>What to do when things go wrong</strong> — bounded retries, rollbacks, escalation to a human, and a traceable record.</li>
+</ul>
+<p>Why it matters: this is the heaviest domain (20–25%), and most of its questions are &quot;pick the right tool/config with the least permission&quot; scenarios you can reason through once the building blocks are clear.</p>
+<p><strong>Prerequisites:</strong> basic Git (branches, commits, pull requests), what a GitHub Actions workflow is, and the Copilot surfaces (VS Code, Copilot CLI, Copilot cloud agent on GitHub.com). If any are unfamiliar, start with <a href="basics.html">Fundamentals</a>. Domain 1&#39;s ideas on autonomy and governance (<a href="domain-1.html">Domain 1</a>) are assumed here.</p>
+
+</div>
+<div class="section">
+<h2 id="official-skills-measured">Official Skills Measured</h2>
+<p>From the <a href="https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/gh-600" target="_blank" rel="noopener">GH-600 study guide</a> — <em>Implement tool use and environment interaction (20–25%)</em>:</p>
+<p><strong>Select and configure agent tools</strong></p>
+<ul>
+<li>Identify required tools → see <a href="#1-the-five-core-tools-web-todo-tools">1. The Five Core Tools + Web &amp; Todo Tools</a></li>
+<li>Configure agent tools → see <a href="#2-agent-profile-configuration">2. Agent Profile Configuration</a></li>
+<li>Configure agent tool permissions → see <a href="#tools-in-the-profile-granular-control">Tools in the Profile: Granular Control</a></li>
+</ul>
+<p><strong>Configure MCP servers</strong></p>
+<ul>
+<li>Add an MCP server as a tool to an agent → see <a href="#adding-an-mcp-server-as-a-tool-to-an-agent">Adding an MCP Server as a Tool to an Agent</a></li>
+<li>Configure a GitHub remote MCP server → see <a href="#github-remote-mcp-server">GitHub Remote MCP Server</a></li>
+<li>Configure the MCP registries → see <a href="#mcp-registries-allow-lists">MCP Registries &amp; Allow Lists</a></li>
+<li>Configure MCP allow lists → see <a href="#mcp-registries-allow-lists">MCP Registries &amp; Allow Lists</a></li>
+</ul>
+<p><strong>Integrate agents within development environments</strong></p>
+<ul>
+<li>Evaluate the execution context for an agent → see <a href="#6-execution-contexts">6. Execution Contexts</a></li>
+<li>Configure an agent&#39;s scope to a specific repository → see <a href="#repository-scope">Repository Scope</a></li>
+<li>Configure an agent to be invoked in a CI workflow → see <a href="#5-ci-integration-copilot-cli-in-pipelines">5. CI Integration: Copilot CLI in Pipelines</a></li>
+<li>Configure an agent to use branch-based scope → see <a href="#branch-based-scope">Branch-Based Scope</a></li>
+<li>Enable an agent to perform autonomous actions, including creating branches and pull requests → see <a href="#8-autonomous-actions-creating-branches-prs">8. Autonomous Actions: Creating Branches &amp; PRs</a></li>
+<li>Configure an agent to handle environment-specific constraints → see <a href="#environment-specific-constraints">Environment-Specific Constraints</a></li>
+</ul>
+<p><strong>Operate agents with safe execution paths and robust error handling</strong></p>
+<ul>
+<li>Implement error handling → see <a href="#error-handling">Error Handling</a></li>
+<li>Implement retries → see <a href="#retries">Retries</a></li>
+<li>Implement rollbacks → see <a href="#rollbacks">Rollbacks</a></li>
+<li>Implement escalation paths → see <a href="#escalation-paths">Escalation Paths</a></li>
+<li>Implement traceability and accountability for agent actions → see <a href="#traceability-and-accountability">Traceability and Accountability</a></li>
+</ul>
+
+</div>
+<div class="section">
+<h2 id="0-why-domain-2-matters-most">0. Why Domain 2 Matters Most</h2>
+<p>Welcome, student. If you only have time to master one domain on the GH-600, make it this one. Domain 2 is weighted at <strong>20–25%</strong>, the heaviest of all six domains. That works out to roughly <strong>11–14 questions</strong> if the exam has about 56 questions (unverified community info: Microsoft doesn&#39;t publish a fixed question count).</p>
+<p>The official skills measured for this domain are mapped in <a href="#official-skills-measured">Official Skills Measured</a> above.</p>
+<p>By the time you finish this lesson, you&#39;ll know:</p>
+<ul>
+<li>Which tool to use in every scenario, and why <em>least privilege</em> is the deciding factor</li>
+<li>How MCP servers extend agent capabilities and how to configure them</li>
+<li>Every exam-critical file path (you <strong>must</strong> memorize these)</li>
+<li>How CI integration works with the Copilot CLI and token-based authentication</li>
+<li>Safe execution patterns: retries, rollbacks, escalation paths</li>
+</ul>
+<p>Let&#39;s dive in.</p>
+
+</div>
+<div class="section">
+<h2 id="1-the-five-core-tools-web-todo-tools">1. The Five Core Tools + Web &amp; Todo Tools</h2>
+<p>Every GitHub Copilot agent (on GitHub.com, in the IDE, or in the CLI) gets access to a set of <strong>tools</strong>. Tools are how the agent interacts with the outside world: reading files, searching code, editing source, running commands, and invoking other agents. In a custom agent profile you refer to them by <strong>tool aliases</strong>. The exam expects you to know the five core aliases cold, plus two context-specific ones.</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> The model is the brain; tools are its hands. A <strong>tool alias</strong> is just the short, standard name for a group of hands — <code>read</code> means &quot;can open files&quot;, <code>execute</code> means &quot;can type commands into a terminal&quot;. Giving an agent tools is like handing a contractor keys: give the key to the room they&#39;re working in, not the master key.</p></div>
+<h3 id="the-five-core-tools-ranked-by-permission-level">The Five Core Tools (Ranked by Permission Level)</h3>
+<p>These tools form a <strong>permission hierarchy</strong>. The rule is simple: <em>always use the least privileged tool that can accomplish the task.</em> This is called <strong>least-privilege tool selection</strong>, and it&#39;s one of the most tested concepts in Domain 2.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Tool alias</th>
+<th>Compatible aliases</th>
+<th>Permission level</th>
+<th>What it does</th>
+<th>When to use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>read</strong></td>
+<td><code>Read</code>, <code>NotebookRead</code></td>
+<td>🟢 Read-only</td>
+<td>Read file contents (<code>view</code> in cloud agent)</td>
+<td>You need to <em>see</em> code but not change it</td>
+</tr>
+<tr>
+<td><strong>search</strong></td>
+<td><code>Grep</code>, <code>Glob</code></td>
+<td>🟢 Read-only</td>
+<td>Search for files or for text in files</td>
+<td>You need to <em>find</em> something before you can read it</td>
+</tr>
+<tr>
+<td><strong>edit</strong></td>
+<td><code>Edit</code>, <code>MultiEdit</code>, <code>Write</code>, <code>NotebookEdit</code></td>
+<td>🟡 Write (local files)</td>
+<td>Create or modify files in the workspace</td>
+<td>You need to <em>change</em> code, but don&#39;t need to run anything</td>
+</tr>
+<tr>
+<td><strong>execute</strong></td>
+<td><code>shell</code>, <code>Bash</code>, <code>powershell</code></td>
+<td>🟠 Write + Execute</td>
+<td>Run commands in the OS shell (<code>bash</code> or <code>powershell</code>): scripts, tests, builds</td>
+<td>You need to <em>run</em> code: build, test, lint, install dependencies</td>
+</tr>
+<tr>
+<td><strong>agent</strong></td>
+<td><code>custom-agent</code>, <code>Task</code></td>
+<td>🔴 Highest autonomy</td>
+<td>Invoke a different custom agent to accomplish a task</td>
+<td>You need to <em>delegate</em> part of the work to a specialized agent</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p>Searching issues and pull requests isn&#39;t done by the <code>search</code> alias. That comes from the built-in <strong>GitHub MCP server</strong> tools (for example <code>github/search_issues</code>).</p></div>
+<h3 id="the-web-tool">The Web Tool</h3>
+<p>The <strong>web</strong> alias (compatible aliases <code>WebSearch</code>, <code>WebFetch</code>) lets the agent fetch content from URLs and run web searches. <em>Critical exam note:</em> it&#39;s <strong>currently not applicable to Copilot cloud agent</strong>. It works in VS Code and similar surfaces (Copilot CLI has a <code>web_fetch</code> tool, subject to URL permissions such as <code>--allow-url</code>). A web grant doesn&#39;t depend on <code>execute</code>. And if you omit <code>tools</code>, the agent gets all available tools, not a reduced default set.</p>
+<h3 id="the-todo-tool">The Todo Tool</h3>
+<p>The <strong>todo</strong> alias (compatible alias <code>TodoWrite</code>) creates and manages structured task lists. It&#39;s <strong>not supported in Copilot cloud agent today</strong> but is supported by VS Code. It doesn&#39;t depend on Codespaces.</p>
+<div class="callout"><p><strong>🎓 Teaching Tip: The Decision Tree.</strong> When the exam asks &quot;which tool should the agent use?&quot;, walk through this: <em>Can I just look at the data?</em> → <strong>read</strong>. <em>Do I need to find something first?</em> → <strong>search</strong>. <em>Do I need to change a file?</em> → <strong>edit</strong>. <em>Do I need to run a command?</em> → <strong>execute</strong>. <em>Do I need another specialized agent to handle part of the task?</em> → <strong>agent</strong>. Never choose execute when edit will do. That privilege creep is a classic wrong answer.</p></div>
+<h3 id="tool-permission-decision-tree">Tool Permission Decision Tree</h3>
+<p>Here&#39;s the mental model. Follow the arrows from top to bottom. The answer is the <em>first</em> tool that matches your task&#39;s requirements:</p>
+<div class="diagram-wrap"><svg viewBox="0 0 760 580" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Tool permission decision tree">
+        <defs>
+          <linearGradient id="bgGrad2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f0f9ff" />
+            <stop offset="100%" stop-color="#e0f2fe" />
+          </linearGradient>
+          <linearGradient id="greenGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#059669" />
+            <stop offset="100%" stop-color="#10b981" />
+          </linearGradient>
+          <linearGradient id="yellowGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#d97706" />
+            <stop offset="100%" stop-color="#f59e0b" />
+          </linearGradient>
+          <linearGradient id="orangeGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ea580c" />
+            <stop offset="100%" stop-color="#f97316" />
+          </linearGradient>
+          <linearGradient id="redGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#dc2626" />
+            <stop offset="100%" stop-color="#ef4444" />
+          </linearGradient>
+          <filter id="shadow2">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity=".15" />
+          </filter>
+        </defs>
+        <rect x="0" y="0" width="760" height="580" rx="10" fill="url(#bgGrad2)" />
+
+        <!-- Start / Question -->
+        <ellipse cx="380" cy="40" rx="100" ry="22" fill="#1e293b" filter="url(#shadow2)" />
+        <text x="380" y="45" text-anchor="middle" fill="#fff" font-size="13" font-weight="700" font-family="Inter,sans-serif">What does the task need?</text>
+
+        <!-- Arrow down -->
+        <line x1="380" y1="62" x2="380" y2="82" stroke="#94a3b8" stroke-width="2" />
+        <polygon points="375,78 380,88 385,78" fill="#94a3b8" />
+
+        <!-- Decision diamond: Read only? -->
+        <polygon points="380,85 460,120 380,155 300,120" fill="#fff" stroke="#059669" stroke-width="2.5" filter="url(#shadow2)" />
+        <text x="380" y="117" text-anchor="middle" fill="#059669" font-size="12" font-weight="700" font-family="Inter,sans-serif">Read only?</text>
+        <text x="380" y="132" text-anchor="middle" fill="#059669" font-size="11" font-family="Inter,sans-serif">Just need to see code?</text>
+
+        <!-- YES -> Read -->
+        <line x1="460" y1="120" x2="530" y2="120" stroke="#059669" stroke-width="2" />
+        <polygon points="526,115 536,120 526,125" fill="#059669" />
+        <text x="495" y="112" text-anchor="middle" fill="#059669" font-size="11" font-weight="700" font-family="Inter,sans-serif">YES</text>
+
+        <rect x="540" y="105" width="80" height="30" rx="15" fill="url(#greenGrad)" filter="url(#shadow2)" />
+        <text x="580" y="124" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="Inter,sans-serif">read</text>
+
+        <!-- NO -> down to search -->
+        <line x1="300" y1="120" x2="230" y2="120" stroke="#94a3b8" stroke-width="2" />
+        <polygon points="234,115 224,120 234,125" fill="#94a3b8" />
+        <text x="265" y="112" text-anchor="middle" fill="#94a3b8" font-size="11" font-weight="700" font-family="Inter,sans-serif">NO</text>
+
+        <line x1="224" y1="120" x2="224" y2="215" stroke="#94a3b8" stroke-width="2" />
+        <polygon points="219,211 224,221 229,211" fill="#94a3b8" />
+
+        <!-- Decision diamond: Need to find? -->
+        <polygon points="224,218 304,253 224,288 144,253" fill="#fff" stroke="#059669" stroke-width="2.5" filter="url(#shadow2)" />
+        <text x="224" y="250" text-anchor="middle" fill="#059669" font-size="12" font-weight="700" font-family="Inter,sans-serif">Need to find?</text>
+        <text x="224" y="265" text-anchor="middle" fill="#059669" font-size="11" font-family="Inter,sans-serif">Search files or text?</text>
+
+        <!-- YES -> Search -->
+        <line x1="304" y1="253" x2="374" y2="253" stroke="#059669" stroke-width="2" />
+        <polygon points="370,248 380,253 370,258" fill="#059669" />
+        <text x="339" y="245" text-anchor="middle" fill="#059669" font-size="11" font-weight="700" font-family="Inter,sans-serif">YES</text>
+
+        <rect x="384" y="238" width="80" height="30" rx="15" fill="url(#greenGrad)" filter="url(#shadow2)" />
+        <text x="424" y="257" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="Inter,sans-serif">search</text>
+
+        <!-- NO -> down to edit -->
+        <line x1="144" y1="253" x2="144" y2="315" stroke="#94a3b8" stroke-width="2" />
+        <line x1="144" y1="315" x2="144" y2="345" stroke="#94a3b8" stroke-width="2" />
+        <polygon points="139,341 144,351 149,341" fill="#94a3b8" />
+        <text x="144" y="308" text-anchor="middle" fill="#94a3b8" font-size="11" font-weight="700" font-family="Inter,sans-serif">NO</text>
+
+        <!-- Decision diamond: Need to change? -->
+        <polygon points="144,348 224,383 144,418 64,383" fill="#fff" stroke="#d97706" stroke-width="2.5" filter="url(#shadow2)" />
+        <text x="144" y="380" text-anchor="middle" fill="#d97706" font-size="12" font-weight="700" font-family="Inter,sans-serif">Need to change?</text>
+        <text x="144" y="395" text-anchor="middle" fill="#d97706" font-size="11" font-family="Inter,sans-serif">Modify files?</text>
+
+        <!-- YES -> Edit -->
+        <line x1="224" y1="383" x2="294" y2="383" stroke="#d97706" stroke-width="2" />
+        <polygon points="290,378 300,383 290,388" fill="#d97706" />
+        <text x="259" y="375" text-anchor="middle" fill="#d97706" font-size="11" font-weight="700" font-family="Inter,sans-serif">YES</text>
+
+        <rect x="304" y="368" width="75" height="30" rx="15" fill="url(#yellowGrad)" filter="url(#shadow2)" />
+        <text x="341" y="387" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="Inter,sans-serif">edit</text>
+
+        <!-- NO -> down to execute -->
+        <line x1="144" y1="418" x2="144" y2="432" stroke="#94a3b8" stroke-width="2" />
+        <polygon points="139,428 144,438 149,428" fill="#94a3b8" />
+        <text x="124" y="432" text-anchor="middle" fill="#94a3b8" font-size="11" font-weight="700" font-family="Inter,sans-serif">NO</text>
+
+        <!-- Decision diamond: Need to run? -->
+        <polygon points="144,438 224,473 144,508 64,473" fill="#fff" stroke="#ea580c" stroke-width="2.5" filter="url(#shadow2)" />
+        <text x="144" y="470" text-anchor="middle" fill="#ea580c" font-size="12" font-weight="700" font-family="Inter,sans-serif">Need to run?</text>
+        <text x="144" y="485" text-anchor="middle" fill="#ea580c" font-size="11" font-family="Inter,sans-serif">Execute commands?</text>
+
+        <!-- YES -> Execute -->
+        <line x1="224" y1="473" x2="294" y2="473" stroke="#ea580c" stroke-width="2" />
+        <polygon points="290,468 300,473 290,478" fill="#ea580c" />
+        <text x="259" y="465" text-anchor="middle" fill="#ea580c" font-size="11" font-weight="700" font-family="Inter,sans-serif">YES</text>
+
+        <rect x="304" y="458" width="95" height="30" rx="15" fill="url(#orangeGrad)" filter="url(#shadow2)" />
+        <text x="351" y="477" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="Inter,sans-serif">execute</text>
+
+        <!-- NO -> Agent -->
+        <line x1="64" y1="473" x2="64" y2="473" stroke="#94a3b8" stroke-width="0" />
+        <!-- NO arrow from execute diamond -->
+        <line x1="144" y1="508" x2="144" y2="530" stroke="#94a3b8" stroke-width="2" />
+        <polygon points="139,526 144,536 149,526" fill="#94a3b8" />
+        <text x="124" y="525" text-anchor="middle" fill="#94a3b8" font-size="11" font-weight="700" font-family="Inter,sans-serif">NO</text>
+
+        <rect x="104" y="538" width="80" height="30" rx="15" fill="url(#redGrad)" filter="url(#shadow2)" />
+        <text x="144" y="557" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="Inter,sans-serif">agent</text>
+        <text x="194" y="557" fill="#dc2626" font-size="10" font-weight="600" font-family="Inter,sans-serif">(delegate to another custom agent)</text>
+      </svg>
+<div class="diagram-caption">Figure 2.1: Tool Permission Decision Tree. Follow the arrows from top to bottom and pick the least-privileged tool that meets your task&#39;s needs.</div></div>
+<div class="callout warning"><p><strong>⚠️ Exam Alert:</strong> The exam will present scenarios where you must choose between <strong>execute</strong> and <strong>edit</strong>. Example: &quot;The agent needs to add a new function to auth.py.&quot; The correct answer is <strong>edit</strong>, not execute, because you only need to write a file, not run a shell command. If the answer says &quot;use execute to create the file,&quot; that&#39;s a trap. Execute is for running commands, not editing files.</p></div>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Assuming <code>search</code> lets the agent search GitHub issues or PRs. <code>search</code> only looks through files in the workspace; issues and PRs come from GitHub MCP server tools such as <code>github/search_issues</code>.</p></div>
+
+</div>
+<div class="section">
+<h2 id="2-agent-profile-configuration">2. Agent Profile Configuration</h2>
+<p>A custom agent is defined by an <strong>agent profile</strong>: a Markdown file with YAML frontmatter. At repository level it&#39;s stored at <code>.github/agents/*.agent.md</code>. Profiles can also be defined at organization and enterprise level; on name conflicts, the lowest level wins (repository over organization over enterprise). The profile declares which tools the agent can use, any extra MCP servers, the model, and more. The Markdown body (max 30,000 characters) holds the agent&#39;s instructions.</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> An agent profile is a job description card. The top section (the <strong>YAML frontmatter</strong>, between two <code>---</code> lines, written as <code>key: value</code> pairs) is the HR form: title, role summary, which keys they get. The body underneath is the free-text briefing on how to do the job.</p></div>
+<p>Here&#39;s the anatomy of an agent profile:</p>
+<div class="code-block">---
+description: &gt;
+  My code review assistant that checks for security
+  vulnerabilities and suggests fixes.
+name: security-reviewer
+tools:
+  - read
+  - search
+  - edit
+  - vulnerability-db/*      # all tools from the MCP server below
+mcp-servers:
+  vulnerability-db:
+    type: local
+    command: node
+    args: [&quot;mcp-servers/vuln-db-server.js&quot;]
+    tools: [&quot;*&quot;]
+    env:
+      API_KEY: ${{ secrets.COPILOT_MCP_VULN_DB_API_KEY }}
+target: github-copilot
+model: gpt-5.4
+disable-model-invocation: false
+---
+
+# Security Reviewer Agent
+
+This agent reviews pull requests for security issues.
+It checks for OWASP Top 10 patterns and suggests fixes.</div>
+<ul>
+<li><code>description</code> (required) and <code>name</code> identify the agent.</li>
+<li><code>tools</code> lists three built-in aliases plus <code>vulnerability-db/*</code> — every tool from the MCP server defined just below.</li>
+<li><code>mcp-servers</code> defines that server inline: <code>type: local</code> means Copilot starts it as a local process with <code>command</code> + <code>args</code>; <code>env</code> passes an API key from an Agents secret (names must start with <code>COPILOT_MCP_</code>).</li>
+<li><code>target: github-copilot</code> limits the agent to GitHub&#39;s Copilot surfaces (cloud agent, CLI) rather than VS Code.</li>
+<li><code>model</code> pins a model; <code>disable-model-invocation: false</code> lets cloud agent pick this agent automatically when a task fits.</li>
+</ul>
+<h3 id="worked-example-an-annotated-beginner-profile">Worked Example: An Annotated Beginner Profile</h3>
+<p>This is a complete, minimal profile for a documentation helper you could use in VS Code. YAML comments (<code>#</code>) explain each field and are ignored by Copilot:</p>
+<div class="code-block">---
+# Required. Shown in the agent picker; Copilot also reads it to decide when the agent fits.
+description: Updates Markdown docs under docs/ to match code changes. Never edits code.
+# Optional. Display name; if omitted, the filename (docs-writer) is used.
+name: docs-writer
+# Least privilege: look, find, and change files. No execute, so it can&#39;t run commands.
+tools: [&quot;read&quot;, &quot;search&quot;, &quot;edit&quot;]
+# Optional. vscode = only in VS Code; github-copilot = only on GitHub; omit for both.
+target: vscode
+# Optional. true = Copilot won&#39;t auto-select this agent; users must pick it.
+disable-model-invocation: true
+---
+
+You update documentation in docs/ so it matches the current code.
+- Read the relevant source files before editing any doc.
+- Only edit files under docs/.
+- Keep the existing heading structure and tone.</div>
+<ul>
+<li>Save it as <code>.github/agents/docs-writer.agent.md</code>; VS Code detects agents in that folder (<a href="https://code.visualstudio.com/docs/copilot/customization/custom-agents" target="_blank" rel="noopener">VS Code docs</a>).</li>
+<li><code>tools</code> is the enforced limit; &quot;Only edit files under docs/&quot; in the body is guidance (enforce paths with hooks or rulesets).</li>
+<li>No <code>mcp-servers</code> here: that key isn&#39;t used by VS Code custom agents (<a href="https://docs.github.com/en/copilot/reference/custom-agents-configuration" target="_blank" rel="noopener">Docs</a>).</li>
+<li>Profiles are versioned by Git commit: a task uses the profile from the latest commit on that repository and branch (<a href="https://docs.github.com/en/copilot/reference/custom-agents-configuration" target="_blank" rel="noopener">Docs</a>).</li>
+</ul>
+<h3 id="frontmatter-keys-what-each-one-does">Frontmatter Keys: What Each One Does</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Required?</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>description</strong></td>
+<td>✅ <strong>Required</strong></td>
+<td>Description of the agent&#39;s purpose and capabilities. Shown in the agent list and used when Copilot decides whether to use the agent.</td>
+</tr>
+<tr>
+<td><strong>name</strong></td>
+<td>Optional</td>
+<td>Display name for the agent. The filename (minus <code>.md</code> / <code>.agent.md</code>) identifies the agent and is used for deduplication between levels.</td>
+</tr>
+<tr>
+<td><strong>tools</strong></td>
+<td>Optional</td>
+<td>List (or comma-separated string) of tool names/aliases the agent can use, including MCP tools as <code>server/tool</code> or <code>server/*</code>. <strong>If omitted (or <code>[&quot;*&quot;]</code>), all available tools are enabled.</strong> <code>tools: []</code> disables all tools. Unrecognized names are ignored. <strong>This is the primary way you enforce least privilege.</strong></td>
+</tr>
+<tr>
+<td><strong>mcp-servers</strong></td>
+<td>Optional</td>
+<td>An <strong>object</strong> with inline MCP server definitions (YAML version of the repository MCP JSON format). Not used by VS Code/IDE custom agents. The agent can also use the out-of-the-box servers (<code>github</code>, <code>playwright</code>) and any servers configured in repository settings, even without this key.</td>
+</tr>
+<tr>
+<td><strong>target</strong></td>
+<td>Optional</td>
+<td>Target environment: <code>vscode</code> or <code>github-copilot</code>. If unset, the agent applies to both.</td>
+</tr>
+<tr>
+<td><strong>model</strong></td>
+<td>Optional</td>
+<td>Which model powers this agent. If omitted, the agent inherits the default model. Available model names change over time, so check the current supported-models list.</td>
+</tr>
+<tr>
+<td><strong>disable-model-invocation</strong></td>
+<td>Optional</td>
+<td>Boolean (default <code>false</code>). When <code>true</code>, Copilot cloud agent <strong>won&#39;t automatically pick this agent based on task context</strong>. It must be selected manually. Replaces the retired <code>infer: false</code>.</td>
+</tr>
+<tr>
+<td><strong>user-invocable</strong></td>
+<td>Optional</td>
+<td>Boolean (default <code>true</code>). When <code>false</code>, users can&#39;t select the agent manually; it can only be used programmatically.</td>
+</tr>
+<tr>
+<td><strong>metadata</strong></td>
+<td>Optional</td>
+<td>Name/value string pairs for annotation. Not used by IDE custom agents.</td>
+</tr>
+</tbody></table></div>
+<div class="callout tip"><p><strong>📘 Teaching Tip: The description field.</strong> The exam loves to test that <code>description</code> is the <strong>only required</strong> field in frontmatter. Everything else is optional. If you see an agent profile missing <code>name</code>, <code>tools</code>, or <code>model</code>, that&#39;s fine. If it&#39;s missing <code>description</code>, it&#39;s invalid. Remember: <em>description is mandatory, everything else is gravy.</em></p></div>
+<h3 id="tools-in-the-profile-granular-control">Tools in the Profile: Granular Control</h3>
+<p>The <code>tools</code> property is a <strong>flat list of tool names</strong>. It doesn&#39;t accept per-tool sub-options such as allowed commands or directories. You get granularity in other ways:</p>
+<ul>
+<li><strong>Pick only the aliases you need</strong> (for example <code>read</code>, <code>search</code>, <code>edit</code>, and no <code>execute</code>).</li>
+<li><strong>Scope MCP tools individually:</strong> <code>github/get_file_contents</code> instead of <code>github/*</code>, or set the server&#39;s own <code>tools</code> list.</li>
+<li><strong>Restrict specific shell commands at run time:</strong> in Copilot CLI use <code>--allow-tool=&#39;shell(npm test)&#39;</code> / <code>--deny-tool=&#39;shell(git push)&#39;</code> (deny always wins). In Copilot cloud agent, where tool calls are pre-approved, use a <code>preToolUse</code> hook in <code>.github/hooks/*.json</code> to deny unwanted commands.</li>
+</ul>
+<p>For example, this profile grants <code>execute</code> but can only <em>ask</em> the agent to limit itself to two commands:</p>
+<div class="code-block">---
+description: Build and test agent for CI pipelines
+name: ci-builder
+tools: [&quot;read&quot;, &quot;edit&quot;, &quot;execute&quot;]
+---
+
+Only run `npm test` and `npm run build`. Only modify files under src/ and tests/.</div>
+<p>The enforcement happens when you launch it. This Copilot CLI command turns those wishes into rules:</p>
+<div class="code-block"># Enforce the command allow-list when running the agent with Copilot CLI
+copilot -p &quot;Fix the failing build&quot; --agent ci-builder \
+  --allow-tool=&#39;shell(npm test)&#39; --allow-tool=&#39;shell(npm run build)&#39; \
+  --allow-tool=&#39;write(src/*.ts)&#39; --allow-tool=&#39;write(tests/*.ts)&#39; \
+  --no-ask-user</div>
+<ul>
+<li><code>-p &quot;...&quot;</code> runs one prompt non-interactively and exits; <code>--agent ci-builder</code> selects the profile above.</li>
+<li>Each <code>--allow-tool=&#39;shell(...)&#39;</code> pre-approves one exact command; anything else is denied in <code>-p</code> mode.</li>
+<li><code>--allow-tool=&#39;write(...)&#39;</code> pre-approves file writes only for matching paths.</li>
+<li><code>--no-ask-user</code> stops the agent from pausing to ask questions nobody can answer.</li>
+</ul>
+<div class="callout warning"><p><strong>⚠️ Exam Trap:</strong> Some questions will describe an agent profile with <code>tools: [read, search, edit, execute, agent]</code> (all five tools) and ask if this is appropriate. Unless the agent needs all five (rare), this is an over-privileged profile. The same goes for <strong>omitting</strong> <code>tools</code>, which grants <em>every</em> available tool. The correct approach is to grant <strong>only the tools the agent actually needs</strong>.</p></div>
+<div class="callout tip"><p><strong>📘 Note on the Learn module:</strong> The Learn unit &quot;Execution context and boundaries&quot; shows a custom agent with <code>applyTo</code> and tool names like <code>read_file</code> / <code>search_files</code>. The GitHub Docs agent-profile reference doesn&#39;t list <code>applyTo</code> as an agent property (it belongs to <code>*.instructions.md</code> files). Unrecognized tool names are silently ignored, so prefer the documented aliases (<code>read</code>, <code>search</code>, ...).</p></div>
+<div class="callout tip"><p><strong>🎯 Exam angle:</strong> Profile questions usually test one of three facts: <code>description</code> is the only required key; omitting <code>tools</code> means <em>all</em> tools (not none, not a safe default); and <code>target</code> accepts only <code>vscode</code> or <code>github-copilot</code>. If an option adds a key that doesn&#39;t exist (<code>branch:</code>, <code>allowedCommands:</code>, <code>applyTo:</code> on an agent), eliminate it.</p></div>
+<h3 id="organization-level-custom-agents">Organization-Level Custom Agents</h3>
+<p>To share custom agents across an organization, store profiles in the <code>/agents</code> directory of the organization&#39;s <strong><code>.github</code></strong> or <strong><code>.github-private</code></strong> repository. Both work the same way and make the agents available to <strong>all organization members, even without access to that repository</strong> (<a href="https://docs.github.com/copilot/how-tos/administer-copilot/manage-for-organization/prepare-for-custom-agents" target="_blank" rel="noopener">prepare for custom agents</a>). GitHub suggests keeping <code>.github-private</code> private (members can still use its agents); use <code>.github</code> if you want members to view and collaborate on the profiles. Enterprise owners can configure a ruleset that restricts custom agents. Custom agents are in public preview.</p>
+<h3 id="custom-agents-in-the-copilot-sdk">Custom Agents in the Copilot SDK</h3>
+<p>The <a href="https://docs.github.com/copilot/how-tos/copilot-sdk/use-copilot-sdk/custom-agents" target="_blank" rel="noopener">Copilot SDK</a> defines custom agents in code (<code>customAgents</code> on the session) rather than in <code>.agent.md</code> files. Differences worth memorizing:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>Agent profile (<code>.agent.md</code>)</th>
+<th>SDK <code>customAgents</code> entry</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Required fields</td>
+<td><code>description</code></td>
+<td><code>name</code> and <code>prompt</code></td>
+</tr>
+<tr>
+<td>Omit <code>tools</code></td>
+<td>All tools</td>
+<td>All session tools (<code>tools: null</code> too)</td>
+</tr>
+<tr>
+<td>Block auto-selection</td>
+<td><code>disable-model-invocation: true</code></td>
+<td><code>infer: false</code> (default <code>true</code>)</td>
+</tr>
+<tr>
+<td>Per-agent MCP</td>
+<td><code>mcp-servers</code></td>
+<td><code>mcpServers</code></td>
+</tr>
+</tbody></table></div>
+<p>The runtime matches the prompt against each agent&#39;s <code>name</code> and <code>description</code>, runs the selected sub-agent in an <strong>isolated context</strong> with its own restricted tools, and streams <code>subagent.selected</code> / <code>started</code> / <code>completed</code> / <code>failed</code> events to the parent session. Session-level <code>availableTools</code> (allowlist) and <code>excludedTools</code> (blocklist) apply to everyone first; <code>defaultAgent.excludedTools</code> hides tools only from the main agent so it must delegate.</p>
+
+</div>
+<div class="section">
+<h2 id="3-exam-critical-artifact-paths-memorize-these">3. Exam-Critical Artifact Paths (Memorize These)</h2>
+<p>Now we come to one of the most <strong>memorization-heavy</strong> parts of the exam. A set of file paths in the GitHub ecosystem each serve a specific purpose, and the exam will ask you to match the path to its purpose. Let me break them down into logical groups.</p>
+<div class="callout"><p><strong>🎓 Instructor&#39;s Note:</strong> I recommend studying these in groups rather than as a flat list. Notice the pattern: many live under <code>.github/</code> because that&#39;s GitHub&#39;s convention directory for repository configuration.</p></div>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> These paths are the agent&#39;s address book. GitHub and Copilot don&#39;t scan your whole repository for settings; they look in specific places. Put a file in the wrong folder and it&#39;s simply not read — no error, no warning.</p></div>
+<h3 id="group-1-agent-instructions-who-the-agent-is">Group 1: Agent &amp; Instructions (Who the Agent Is)</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>File path</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.github/copilot-instructions.md</code></td>
+<td><strong>Repository-wide custom instructions.</strong> Apply to all requests made in the context of the repository (Copilot on GitHub.com, cloud agent, code review, IDE, CLI). Think of this as the &quot;constitution&quot; for how Copilot behaves in this repository.</td>
+</tr>
+<tr>
+<td><code>.github/instructions/**/*.instructions.md</code></td>
+<td><strong>Path-specific instructions.</strong> Each file has an <code>applyTo</code> glob in its frontmatter and applies when Copilot works on matching files (combined with the repository-wide file). Optional <code>excludeAgent: &quot;code-review&quot;</code> or <code>&quot;cloud-agent&quot;</code> hides a file from one of those agents.</td>
+</tr>
+<tr>
+<td><code>.github/agents/*.agent.md</code></td>
+<td><strong>Agent profile definitions.</strong> Each file defines one custom agent: its description, tools, MCP servers, and model. We covered the anatomy of these files in Section 2.</td>
+</tr>
+<tr>
+<td><code>AGENTS.md</code></td>
+<td><strong>Agent instructions</strong> (not an agent registry). Natural-language guidance for AI agents. You can have one or more <code>AGENTS.md</code> files anywhere in the repo, and the <strong>nearest one in the directory tree takes precedence</strong>. Alternatives: a single <code>CLAUDE.md</code> or <code>GEMINI.md</code> at the repository root. Custom agents are discovered from <code>.github/agents/</code>, not from <code>AGENTS.md</code>.</td>
+</tr>
+</tbody></table></div>
+<h3 id="group-2-prompts-skills-what-the-agent-does">Group 2: Prompts &amp; Skills (What the Agent Does)</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>File path</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.github/prompts/*.prompt.md</code></td>
+<td><strong>Reusable prompt files</strong> (VS Code). Standalone prompts that a <strong>user invokes manually</strong> in chat by typing <code>/</code> plus the prompt name. Frontmatter can set <code>description</code>, <code>agent</code>, <code>model</code>, and <code>tools</code>. Note: VS Code now marks prompt files as deprecated for Agent Host sessions and recommends migrating them to agent skills.</td>
+</tr>
+<tr>
+<td><code>.github/skills/&lt;skill&gt;/SKILL.md</code></td>
+<td><strong>Skill definition.</strong> A skill is a packaged capability. Each skill lives in its own subdirectory and has a <code>SKILL.md</code> file with <code>name</code> and <code>description</code> frontmatter and instructions. It&#39;s loaded when invoked (<code>/skill-name</code>) or picked automatically by the agent.</td>
+</tr>
+</tbody></table></div>
+<h3 id="group-3-hooks-workflows-how-the-agent-gets-triggered">Group 3: Hooks &amp; Workflows (How the Agent Gets Triggered)</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>File path</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.github/hooks/*.json</code></td>
+<td><strong>Agent lifecycle hooks</strong> (Copilot CLI and Copilot cloud agent). JSON files (<code>&quot;version&quot;: 1</code>) that run commands at lifecycle events such as <code>sessionStart</code>, <code>sessionEnd</code>, <code>userPromptSubmitted</code>, <code>preToolUse</code>, <code>postToolUse</code>, <code>postToolUseFailure</code>, <code>agentStop</code>, <code>subagentStart</code>/<code>subagentStop</code>, and <code>errorOccurred</code>. <code>preToolUse</code> can allow, deny, or modify a tool call.</td>
+</tr>
+<tr>
+<td><code>.github/workflows/copilot-setup-steps.yml</code></td>
+<td><strong>Copilot cloud agent environment setup.</strong> A special Actions workflow that must contain a single job named <code>copilot-setup-steps</code>. Its steps run in the agent&#39;s ephemeral GitHub Actions environment <strong>before Copilot cloud agent starts working</strong> (preinstall tools/dependencies, pick larger or self-hosted runners). Only <code>steps</code>, <code>permissions</code>, <code>runs-on</code>, <code>services</code>, <code>snapshot</code>, and <code>timeout-minutes</code> (max 59) are honored, and the file must be on the default branch. Copilot gets its own token. This file isn&#39;t a reusable step for your own CI workflows.</td>
+</tr>
+</tbody></table></div>
+<h3 id="group-4-mcp-configuration-how-the-agent-connects-to-servers">Group 4: MCP Configuration (How the Agent Connects to Servers)</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Location</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Repository <strong>Settings → Copilot → MCP servers</strong> (JSON entered on GitHub.com, no file)</td>
+<td><strong>Repository-level MCP configuration for Copilot cloud agent and Copilot code review.</strong> The JSON contains an <code>mcpServers</code> object. The GitHub and Playwright MCP servers are enabled by default.</td>
+</tr>
+<tr>
+<td><code>mcp-servers</code> in <code>.github/agents/*.agent.md</code></td>
+<td><strong>Per-agent MCP servers</strong> (YAML version of the same format), used by custom agents on GitHub.com and in Copilot CLI.</td>
+</tr>
+<tr>
+<td><code>.mcp.json</code></td>
+<td><strong>Copilot CLI workspace config.</strong> Read from any directory between the working directory and the repo root. Takes precedence over <code>.github/mcp.json</code> in the same directory. Loaded only in trusted folders.</td>
+</tr>
+<tr>
+<td><code>.github/mcp.json</code></td>
+<td><strong>Copilot CLI shared, committed project config.</strong> Same format as <code>.mcp.json</code> (<code>mcpServers</code> object or bare server map).</td>
+</tr>
+<tr>
+<td><code>.vscode/mcp.json</code></td>
+<td><strong>VS Code workspace MCP config</strong> (also used by Codespaces running VS Code). Uses a top-level <code>servers</code> key, and <strong>Copilot CLI doesn&#39;t read it</strong>.</td>
+</tr>
+<tr>
+<td><code>~/.copilot/mcp-config.json</code></td>
+<td>Copilot CLI <strong>user-level</strong> MCP config (where <code>copilot mcp add</code> writes).</td>
+</tr>
+</tbody></table></div>
+<div class="callout warning"><p><strong>⚠️ Critical Path Memorization:</strong> The exam will give you scenarios like &quot;Where do you define reusable prompts?&quot; The answer is <code>.github/prompts/*.prompt.md</code>. Or &quot;Where do you configure MCP servers?&quot; The answer depends on the surface: repository settings (cloud agent / code review), <code>mcp-servers</code> in an agent profile, <code>.mcp.json</code> / <code>.github/mcp.json</code> (Copilot CLI), or <code>.vscode/mcp.json</code> (VS Code). Know the difference between all of them.</p></div>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Putting a custom agent definition in <code>AGENTS.md</code>, or MCP servers for Copilot CLI in <code>.vscode/mcp.json</code>. <code>AGENTS.md</code> holds instructions, not agent definitions (those go in <code>.github/agents/</code>), and Copilot CLI doesn&#39;t read <code>.vscode/mcp.json</code>.</p></div>
+
+</div>
+<div class="section">
+<h2 id="4-mcp-architecture-servers">4. MCP Architecture &amp; Servers</h2>
+<p><strong>MCP</strong> stands for <strong>Model Context Protocol</strong>. It&#39;s an open standard that lets AI clients connect to external tools, data sources, and services through MCP servers that expose tools in a structured format. Think of MCP as the <strong>USB-C for AI agents</strong>: a universal protocol that any agent can use to talk to any service.</p>
+<p>The moving parts, in plain terms:</p>
+<ul>
+<li><strong>Host:</strong> the app the agent lives in — VS Code, Copilot CLI, or Copilot cloud agent.</li>
+<li><strong>MCP client:</strong> a connector inside the host; there&#39;s one per server.</li>
+<li><strong>MCP server:</strong> a small program that wraps a service (GitHub, a database, a ticket system) and offers its abilities as named <strong>tools</strong>.</li>
+<li><strong>Transport:</strong> how client and server talk. <strong>stdio</strong> means the host starts the server as a local process and they exchange messages over standard input/output; <strong>HTTP</strong> means the server runs somewhere else and is reached by URL. Messages use <strong>JSON-RPC 2.0</strong>, a simple &quot;call this method with these arguments&quot; format in JSON.</li>
+</ul>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Before USB, every printer needed its own cable and driver. MCP is the shared socket: build one MCP server for your ticket system, and every MCP-capable agent can use it. The organization&#39;s <strong>allow list</strong> is the IT policy saying which devices you&#39;re allowed to plug in.</p></div>
+<h3 id="mcp-architecture-diagram">MCP Architecture Diagram</h3>
+<p>Here&#39;s the architecture you need to understand for the exam. The agent sends a request through the MCP client, which routes it to the correct MCP server, which in turn calls the external service:</p>
+<div class="diagram-wrap"><svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MCP Architecture: Agent to MCP Client to MCP Server to External Service">
+        <defs>
+          <linearGradient id="bgGradMcp" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f5f3ff" />
+            <stop offset="100%" stop-color="#ede9fe" />
+          </linearGradient>
+          <linearGradient id="agentGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#2563eb" />
+            <stop offset="100%" stop-color="#3b82f6" />
+          </linearGradient>
+          <linearGradient id="clientGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#7c3aed" />
+            <stop offset="100%" stop-color="#8b5cf6" />
+          </linearGradient>
+          <linearGradient id="serverGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#059669" />
+            <stop offset="100%" stop-color="#10b981" />
+          </linearGradient>
+          <linearGradient id="extGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#d97706" />
+            <stop offset="100%" stop-color="#f59e0b" />
+          </linearGradient>
+          <filter id="shadow3">
+            <feDropShadow dx="0" dy="3" stdDeviation="4" flood-opacity=".15" />
+          </filter>
+        </defs>
+        <rect x="0" y="0" width="760" height="340" rx="10" fill="url(#bgGradMcp)" />
+
+        <!-- Title -->
+        <text x="380" y="32" text-anchor="middle" fill="#4c1d95" font-size="15" font-weight="800" font-family="Inter,sans-serif">MCP Architecture — Model Context Protocol</text>
+
+        <!-- Agent box -->
+        <rect x="30" y="55" width="140" height="80" rx="12" fill="url(#agentGrad)" filter="url(#shadow3)" />
+        <text x="100" y="85" text-anchor="middle" fill="#fff" font-size="13" font-weight="700" font-family="Inter,sans-serif">🤖 Host / Agent</text>
+        <text x="100" y="105" text-anchor="middle" fill="#dbeafe" font-size="10" font-family="Inter,sans-serif">(Copilot cloud agent,</text>
+        <text x="100" y="120" text-anchor="middle" fill="#dbeafe" font-size="10" font-family="Inter,sans-serif">CLI, VS Code)</text>
+
+        <!-- Arrow Agent -> MCP Client -->
+        <line x1="170" y1="95" x2="260" y2="95" stroke="#7c3aed" stroke-width="2.5" />
+        <polygon points="256,90 266,95 256,100" fill="#7c3aed" />
+        <text x="215" y="85" text-anchor="middle" fill="#7c3aed" font-size="10" font-weight="700" font-family="Inter,sans-serif">tool call</text>
+
+        <!-- MCP Client box -->
+        <rect x="270" y="55" width="140" height="80" rx="12" fill="url(#clientGrad)" filter="url(#shadow3)" />
+        <text x="340" y="85" text-anchor="middle" fill="#fff" font-size="13" font-weight="700" font-family="Inter,sans-serif">🔌 MCP Client</text>
+        <text x="340" y="105" text-anchor="middle" fill="#e9d5ff" font-size="10" font-family="Inter,sans-serif">(inside the host,</text>
+        <text x="340" y="120" text-anchor="middle" fill="#e9d5ff" font-size="10" font-family="Inter,sans-serif">1 client per server)</text>
+
+        <!-- Arrow MCP Client -> MCP Server -->
+        <line x1="410" y1="95" x2="500" y2="95" stroke="#059669" stroke-width="2.5" />
+        <polygon points="496,90 506,95 496,100" fill="#059669" />
+        <text x="455" y="85" text-anchor="middle" fill="#059669" font-size="10" font-weight="700" font-family="Inter,sans-serif">JSON-RPC 2.0</text>
+        <text x="455" y="108" text-anchor="middle" fill="#059669" font-size="10" font-weight="700" font-family="Inter,sans-serif">stdio / HTTP</text>
+
+        <!-- MCP Server box -->
+        <rect x="510" y="55" width="140" height="80" rx="12" fill="url(#serverGrad)" filter="url(#shadow3)" />
+        <text x="580" y="85" text-anchor="middle" fill="#fff" font-size="13" font-weight="700" font-family="Inter,sans-serif">⚙️ MCP Server</text>
+        <text x="580" y="105" text-anchor="middle" fill="#d1fae5" font-size="10" font-family="Inter,sans-serif">(exposes tools,</text>
+        <text x="580" y="120" text-anchor="middle" fill="#d1fae5" font-size="10" font-family="Inter,sans-serif">resources, prompts)</text>
+
+        <!-- Arrow MCP Server -> External Service -->
+        <line x1="580" y1="135" x2="580" y2="190" stroke="#d97706" stroke-width="2.5" />
+        <polygon points="575,186 580,196 585,186" fill="#d97706" />
+        <text x="590" y="168" fill="#d97706" font-size="10" font-weight="700" font-family="Inter,sans-serif">API call</text>
+
+        <!-- External Service box -->
+        <rect x="510" y="200" width="140" height="80" rx="12" fill="url(#extGrad)" filter="url(#shadow3)" />
+        <text x="580" y="230" text-anchor="middle" fill="#fff" font-size="13" font-weight="700" font-family="Inter,sans-serif">🌐 External Service</text>
+        <text x="580" y="250" text-anchor="middle" fill="#fef3c7" font-size="10" font-family="Inter,sans-serif">(GitHub API, Sentry,</text>
+        <text x="580" y="265" text-anchor="middle" fill="#fef3c7" font-size="10" font-family="Inter,sans-serif">Azure, DB, ...)</text>
+        </svg>
+<div class="diagram-caption">Figure 2.2: MCP Architecture. The host (Copilot cloud agent, CLI, VS Code) runs one MCP client per server; client and server talk JSON-RPC 2.0 over stdio or HTTP; the server exposes tools, resources, and prompts and calls the external service.</div></div>
+<h3 id="how-mcp-servers-work-in-github">How MCP Servers Work in GitHub</h3>
+<p>Each server entry specifies how to connect. Local servers use a <strong>command</strong> (<code>type</code>: <code>local</code> or <code>stdio</code>, with <code>command</code> and <code>args</code>). Remote servers use a <strong>URL</strong> (<code>type</code>: <code>http</code> for Streamable HTTP, or the legacy <code>sse</code>). For Copilot cloud agent, every server also needs a <code>tools</code> list. Secrets must be Agents secrets/variables whose names start with <code>COPILOT_MCP_</code>.</p>
+<p>This JSON, pasted into repository <strong>Settings → Copilot → MCP servers</strong>, defines one local and one remote server:</p>
+<div class="code-block">{
+  &quot;mcpServers&quot;: {
+    &quot;vulnerability-db&quot;: {
+      &quot;type&quot;: &quot;local&quot;,
+      &quot;command&quot;: &quot;node&quot;,
+      &quot;args&quot;: [&quot;mcp-servers/vuln-db-server.js&quot;],
+      &quot;env&quot;: {
+        &quot;API_KEY&quot;: &quot;$COPILOT_MCP_VULN_DB_API_KEY&quot;
+      },
+      &quot;tools&quot;: [&quot;*&quot;]
+    },
+    &quot;github-remote&quot;: {
+      &quot;type&quot;: &quot;http&quot;,
+      &quot;url&quot;: &quot;https://api.githubcopilot.com/mcp/readonly&quot;,
+      &quot;headers&quot;: {
+        &quot;X-MCP-Toolsets&quot;: &quot;repos,issues,pull_requests&quot;
+      },
+      &quot;tools&quot;: [&quot;*&quot;]
+    }
+  }
+}</div>
+<p>Line by line:</p>
+<ul>
+<li><code>&quot;mcpServers&quot;</code> — the top-level object; each key inside is a server name you choose. That name becomes the prefix in tool references (<code>vulnerability-db/&lt;tool&gt;</code>).</li>
+<li><code>&quot;type&quot;: &quot;local&quot;</code> + <code>&quot;command&quot;</code> + <code>&quot;args&quot;</code> — Copilot starts <code>node mcp-servers/vuln-db-server.js</code> as a process on the agent&#39;s machine (stdio transport).</li>
+<li><code>&quot;env&quot;</code> — environment variables for that process. <code>$COPILOT_MCP_VULN_DB_API_KEY</code> is replaced at run time with the Agents secret of that name, so the key never appears in the config.</li>
+<li><code>&quot;type&quot;: &quot;http&quot;</code> + <code>&quot;url&quot;</code> — a remote server reached over HTTP. The <code>/mcp/readonly</code> path limits GitHub&#39;s server to read-only tools.</li>
+<li><code>&quot;headers&quot;</code> — extra HTTP headers; <code>X-MCP-Toolsets</code> picks which groups of GitHub tools are exposed.</li>
+<li><code>&quot;tools&quot;: [&quot;*&quot;]</code> — which of the server&#39;s tools the agent may call. <code>*</code> is all of them; in production, list specific read-only tools instead.</li>
+</ul>
+<div class="callout"><p>Once an MCP server is configured, Copilot cloud agent uses its tools <strong>autonomously, without asking for approval</strong>. GitHub recommends allowlisting specific read-only tools instead of <code>*</code>. Cloud agent supports MCP <strong>tools</strong> only (not resources or prompts) and doesn&#39;t support remote servers that use OAuth.</p></div>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Thinking an MCP tool will prompt for approval each time in cloud agent. It won&#39;t — configured MCP tools are used autonomously, so the <code>tools</code> list on the server entry is your real permission control.</p></div>
+<h3 id="github-remote-mcp-server">GitHub Remote MCP Server</h3>
+<p>GitHub provides its own <strong>remote MCP server</strong> that exposes GitHub capabilities (repositories, issues, pull requests, Actions, code security, and more) as MCP tools. The hosted endpoint is <strong><code>https://api.githubcopilot.com/mcp/</code></strong>. In VS Code you add it as an <strong>HTTP</strong> server with that URL and authenticate with GitHub. Key facts:</p>
+<ul>
+<li><strong>Copilot cloud agent</strong> has the GitHub MCP server enabled by default, with a token that has <strong>read-only access scoped to the current repository</strong>. For wider access, override it in repository MCP settings with a fine-grained PAT (secret <code>COPILOT_MCP_GITHUB_PERSONAL_ACCESS_TOKEN</code>) or a GitHub App.</li>
+<li><strong>Toolsets:</strong> select tool groups with the <code>X-MCP-Toolsets</code> header (for example <code>repos,issues,users,pull_requests,code_security,secret_protection,actions,web_search</code>). The <code>/mcp/readonly</code> URL restricts the server to read-only tools.</li>
+<li><strong>Copilot CLI</strong> has the GitHub MCP server built in (<code>github-mcp-server</code>). Use <code>--add-github-mcp-toolset</code>, <code>--add-github-mcp-tool</code>, or <code>--enable-all-github-mcp-tools</code> to widen the default subset.</li>
+<li>GitHub Enterprise Server supports only the local (Docker image <code>ghcr.io/github/github-mcp-server</code>) configuration. GHE.com with data residency supports local and remote.</li>
+</ul>
+<h3 id="adding-an-mcp-server-as-a-tool-to-an-agent">Adding an MCP Server as a Tool to an Agent</h3>
+<p>How you add a server depends on the surface:</p>
+<ul>
+<li><strong>VS Code (Learn&#39;s walkthrough):</strong> open Copilot Chat in <strong>Agent</strong> mode → <strong>Tools</strong> icon → <strong>Configure tools</strong> → <strong>Add MCP server</strong> → choose <strong>HTTP</strong> → enter the URL (for example <code>https://api.githubcopilot.com/mcp/</code>) → accept the generated name → choose scope (<strong>current workspace</strong> or <strong>all workspaces</strong>) → <strong>Authenticate</strong> with GitHub → save. A local server is added the same way with a local endpoint (Learn&#39;s example: <code>http://localhost:3000</code>); local servers can reach local resources and typically need no external authentication (<a href="https://learn.microsoft.com/en-us/training/modules/agent-tooling-mcp-execution-environments/3-model-context-protocol-servers-registries-allow-lists" target="_blank" rel="noopener">Learn</a>).</li>
+<li><strong>A custom agent on GitHub.com or Copilot CLI:</strong> declare it under <code>mcp-servers</code> in the profile and allow its tools in <code>tools</code> (<code>server/tool</code> or <code>server/*</code>), as in section 2.</li>
+<li><strong>Copilot cloud agent for the whole repository:</strong> paste <code>mcpServers</code> JSON in <strong>Settings → Copilot → MCP servers</strong>.</li>
+<li><strong>Copilot CLI:</strong> <code>copilot mcp add</code> (user config) or a committed <code>.mcp.json</code> / <code>.github/mcp.json</code>.</li>
+</ul>
+<p>Learn positions the <strong>remote</strong> GitHub MCP server as the recommended setup for most users in supported IDEs.</p>
+<h3 id="mcp-registries-allow-lists">MCP Registries &amp; Allow Lists</h3>
+<p>An <strong>MCP registry</strong> is a catalog of MCP servers that compatible clients use for discovery. By default, supported IDEs and Copilot CLI use the <strong>GitHub MCP Registry</strong> (<code>github.com/mcp</code>). Organizations and enterprises can point Copilot at a <strong>custom registry</strong>. It must follow the MCP registry v0.1 spec (<code>GET /v0.1/servers</code>, <code>.../versions/latest</code>, <code>.../versions/{version}</code>, with CORS headers), or you can use <strong>Azure API Center</strong> as a managed registry.</p>
+<p>Per <a href="https://learn.microsoft.com/en-us/training/modules/agent-tooling-mcp-execution-environments/3-model-context-protocol-servers-registries-allow-lists" target="_blank" rel="noopener">Learn</a>, you can host a custom registry by forking and self-hosting the open-source MCP Registry, running it locally with Docker, or building your own implementation. Required CORS headers: <code>Access-Control-Allow-Origin: *</code>, <code>Access-Control-Allow-Methods: GET, OPTIONS</code>, <code>Access-Control-Allow-Headers: Authorization, Content-Type</code>. With Azure API Center, enable <strong>anonymous access</strong> and enter only the <strong>base URL</strong> in the policy (don&#39;t append <code>/v0.1/servers</code>).</p>
+<p>An <strong>allow list</strong> decides which MCP servers are permitted. It&#39;s configured at <strong>enterprise</strong> level (<strong>AI controls → MCP</strong>) or <strong>organization</strong> level (<strong>Settings → Copilot → Policies</strong>):</p>
+<ul>
+<li><strong>MCP servers in Copilot</strong> policy: enabled or disabled</li>
+<li><strong>MCP Registry URL:</strong> your registry&#39;s base URL</li>
+<li><strong>Restrict MCP access to registry servers:</strong> <strong>Allow all</strong> (any server) or <strong>Registry only</strong> (only servers in the registry; local servers must also be listed, with exactly matching IDs)</li>
+</ul>
+<p>Copilot CLI enforces the enterprise allow list fail-closed (it blocks non-default servers if the policy can&#39;t be verified). Built-in default servers are exempt. Just like tools, MCP servers follow the principle of least privilege.</p>
+<p>Allow list enforcement is tied to the <strong>Copilot seat that governs the user</strong>, and a newly selected policy <strong>applies immediately</strong> to all developers. Remember the division of labor: the <strong>server</strong> exposes tools, the <strong>registry</strong> makes approved servers discoverable, the <strong>allow list</strong> decides which servers are permitted.</p>
+<div class="callout tip"><p><strong>🎯 Exam angle:</strong> MCP governance questions are usually &quot;which knob?&quot; questions. &quot;Developers should <em>find</em> approved servers&quot; → registry. &quot;Developers must <em>only use</em> approved servers&quot; → registry <strong>plus</strong> the <em>Registry only</em> allow list policy. &quot;This one agent needs one extra server&quot; → <code>mcp-servers</code> in its profile. &quot;Cloud agent in this repo needs a server&quot; → repository MCP settings.</p></div>
+<div class="callout tip"><p><strong>📘 Teaching Tip: MCP vs. Direct API.</strong> Why use MCP instead of having the agent call the API directly? Three reasons. (1) <strong>Standardization:</strong> any MCP client can talk to any MCP server, with no custom integration code. (2) <strong>Security:</strong> MCP servers can enforce authentication, rate-limiting, and audit logging, and registries plus allow lists let the organization govern which servers are used. (3) <strong>Discoverability:</strong> agents discover available tools from the server in a structured format. The exam will expect you to know these benefits.</p></div>
+
+</div>
+<div class="section">
+<h2 id="5-ci-integration-copilot-cli-in-pipelines">5. CI Integration: Copilot CLI in Pipelines</h2>
+<p>GitHub Copilot agents can run in CI/CD pipelines. The <strong>Copilot CLI</strong> (<code>copilot</code> command, npm package <code>@github/copilot</code>) can be installed and invoked inside GitHub Actions workflows, making agents a first-class part of your automated SDLC (Software Development Lifecycle). For most automation, GitHub now recommends <strong>GitHub Agentic Workflows</strong> (<code>gh-aw</code>), which use <code>GITHUB_TOKEN</code> by default and add guardrails such as read-only tokens, safe outputs, and sandboxed execution.</p>
+<p>Terms for this section:</p>
+<ul>
+<li><strong>Runner:</strong> the fresh virtual machine GitHub Actions starts for a job and throws away afterwards.</li>
+<li><strong>Token:</strong> a credential string that proves who is calling GitHub and what they may do. <code>GITHUB_TOKEN</code> is created automatically per workflow run; a <strong>PAT (personal access token)</strong> is one you create yourself and store as a secret.</li>
+<li><strong>Non-interactive (<code>-p</code>) mode:</strong> the CLI runs one prompt and exits, with no human at the keyboard to approve anything.</li>
+</ul>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Running Copilot CLI in CI is like leaving a contractor alone in the building overnight. Before you leave, you write down exactly which rooms they may enter (<code>--allow-tool</code>), tell them not to wait for you to answer questions (<code>--no-ask-user</code>), and give them a visitor badge that expires when the shift ends (<code>GITHUB_TOKEN</code>).</p></div>
+<h3 id="the-copilot-cli-command">The copilot CLI Command</h3>
+<p>The command you&#39;ll use in CI is:</p>
+<div class="code-block">copilot -p &quot;Review this PR for security vulnerabilities&quot; \
+  --agent security-reviewer \
+  --allow-tool=&#39;shell(git:*)&#39; \
+  --no-ask-user</div>
+<p>It runs the <code>security-reviewer</code> agent once, pre-approves any <code>git</code> subcommand (<code>git:*</code>), and never stops to ask questions. Each flag is explained below.</p>
+<h3 id="key-command-line-flags">Key Command-Line Flags</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-p &quot;&lt;prompt&gt;&quot;</code> / <code>--prompt</code></td>
+<td>Runs a prompt <strong>programmatically</strong> and exits when done.</td>
+</tr>
+<tr>
+<td><code>--agent &lt;name&gt;</code></td>
+<td>Specifies <strong>which custom agent</strong> to use (matches the agent ID/filename or its <code>name</code>). Agents are loaded from <code>.github/agents/</code>, <code>~/.copilot/agents/</code>, and other locations. If omitted, the default agent is used.</td>
+</tr>
+<tr>
+<td><code>--no-ask-user</code></td>
+<td>Disables the <code>ask_user</code> tool, so the agent works autonomously without asking questions. Important in CI, where nobody can answer.</td>
+</tr>
+<tr>
+<td><code>--allow-tool=...</code> / <code>--deny-tool=...</code></td>
+<td>Pre-approves (or blocks) tool kinds such as <code>shell(npm test)</code>, <code>write</code>, or <code>MyMCP(tool)</code>. In <code>-p</code> mode, <strong>any action that isn&#39;t pre-approved is denied automatically</strong> because no approval prompt can be shown. <code>--allow-all-tools</code> (or <code>COPILOT_ALLOW_ALL</code>) approves everything, so avoid it unless the environment is fully sandboxed.</td>
+</tr>
+</tbody></table></div>
+<h3 id="authentication-copilot_github_token-or-github_token">Authentication: COPILOT_GITHUB_TOKEN or GITHUB_TOKEN</h3>
+<p>Copilot CLI reads an auth token from environment variables in this order of precedence: <strong><code>COPILOT_GITHUB_TOKEN</code></strong>, then <code>GH_TOKEN</code>, then <code>GITHUB_TOKEN</code>. You have two options in Actions:</p>
+<ul>
+<li><strong><code>GITHUB_TOKEN</code></strong> (recommended for organization-owned repos): grant <code>permissions: copilot-requests: write</code> and pass <code>GITHUB_TOKEN: ${{ github.token }}</code>. This requires the org policy <em>Allow use of Copilot CLI billed to the organization</em> (enabled by default when Copilot CLI is on).</li>
+<li><strong>A fine-grained PAT with the &quot;Copilot Requests&quot; permission</strong>, stored as a secret and passed as <code>COPILOT_GITHUB_TOKEN</code>. This separates Copilot&#39;s permissions from the job&#39;s <code>GITHUB_TOKEN</code> and bills a specific user&#39;s seat. <strong>Classic PATs (<code>ghp_</code>) aren&#39;t supported.</strong></li>
+</ul>
+<p>Here&#39;s a complete workflow that reviews every PR with a custom agent:</p>
+<div class="code-block">name: Agent Review
+on: [pull_request]
+
+permissions:
+  contents: read
+  copilot-requests: write
+
+jobs:
+  agent-review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install Copilot CLI
+        run: npm install -g @github/copilot
+
+      - name: Run Agent
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          # or: COPILOT_GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        run: |
+          copilot -p &quot;Review this PR for security issues&quot; \
+            --agent security-reviewer \
+            --allow-tool=&#39;shell(git:*)&#39; \
+            --no-ask-user</div>
+<p>Annotated:</p>
+<ul>
+<li><code>on: [pull_request]</code> — runs on every PR event (opened, new commits, reopened).</li>
+<li><code>permissions: contents: read</code> — the job can read code but not push; <code>copilot-requests: write</code> lets <code>GITHUB_TOKEN</code> make Copilot requests.</li>
+<li><code>actions/checkout</code> — puts the repository (including <code>.github/agents/security-reviewer.agent.md</code>) on the runner.</li>
+<li><code>npm install -g @github/copilot</code> — installs the CLI on the runner each run (runners start empty).</li>
+<li><code>env: GITHUB_TOKEN: ${{ github.token }}</code> — hands the CLI the run&#39;s short-lived token; the commented line shows the PAT alternative.</li>
+<li>The <code>copilot</code> command — one prompt, one named agent, only <code>git</code> commands pre-approved, no questions asked.</li>
+</ul>
+<div class="callout warning"><p><strong>⚠️ Exam Trap: Token Confusion.</strong> Know the difference. <code>GITHUB_TOKEN</code> is the automatic, short-lived token GitHub creates for each workflow run, scoped by the workflow&#39;s <code>permissions</code> block. It <strong>can</strong> authenticate Copilot CLI when the workflow grants <code>copilot-requests: write</code> and the org policy allows it. <code>COPILOT_GITHUB_TOKEN</code> is a <strong>CLI-specific variable</strong> (usually holding a fine-grained PAT with &quot;Copilot Requests&quot;) that takes precedence over <code>GH_TOKEN</code>/<code>GITHUB_TOKEN</code>, so Copilot can have different permissions from the rest of the job. Also note that Copilot CLI isn&#39;t a reusable workflow: <code>copilot-setup-steps.yml</code> configures <strong>Copilot cloud agent&#39;s</strong> environment and isn&#39;t called from your own CI jobs.</p></div>
+<div class="callout"><p>The Learn module&#39;s example uses <code>npx @github/copilot-cli</code>, while GitHub Docs install the CLI with <code>npm install -g @github/copilot</code>.</p></div>
+<h3 id="traditional-workflows-vs-github-agentic-workflows">Traditional Workflows vs GitHub Agentic Workflows</h3>
+<p><a href="https://learn.microsoft.com/en-us/training/modules/agent-tooling-mcp-execution-environments/2-interact-github-apis-workflows" target="_blank" rel="noopener">Learn</a> contrasts the two:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>Traditional GitHub Actions workflow</th>
+<th>GitHub Agentic Workflow (<code>gh-aw</code>)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Defined as</td>
+<td>YAML with every step, trigger, and condition explicit</td>
+<td><strong>Markdown</strong> instructions (intent) + <strong>frontmatter</strong> (triggers, permissions, tools, safe outputs)</td>
+</tr>
+<tr>
+<td>Executed as</td>
+<td>The YAML itself</td>
+<td>Compiled into a <strong>lock file</strong> that GitHub Actions runs</td>
+</tr>
+<tr>
+<td>Best for</td>
+<td>Deterministic CI/CD</td>
+<td>Open-ended but bounded tasks: triage, reports, docs maintenance, CI failure analysis, code improvement</td>
+</tr>
+</tbody></table></div>
+<p>Agentic workflows <strong>extend</strong> CI/CD (&quot;Continuous AI&quot;), they don&#39;t replace it. Their <a href="https://learn.microsoft.com/en-us/training/modules/agent-tooling-mcp-execution-environments/4-execution-context-boundaries" target="_blank" rel="noopener">guardrails</a>: read-only tokens by default, <strong>safe outputs</strong> (the agent proposes; a separate gated step decides what&#39;s written), zero secrets in the agent process, sandboxed containerized execution, network isolation with allowlisted egress, and threat detection that scans proposed outputs before any write.</p>
+<p>A minimal agentic workflow file looks like this:</p>
+<div class="code-block">---
+on:
+  schedule: daily
+permissions:
+  contents: read
+  issues: read
+safe-outputs:
+  create-issue:
+    title-prefix: &quot;[repo-status] &quot;
+tools:
+  github:
+---
+
+Create a concise daily status report of recent issues, PRs, and commits.</div>
+<ul>
+<li><code>on: schedule: daily</code> — runs once a day.</li>
+<li><code>permissions</code> — read-only: the agent itself can&#39;t write anything.</li>
+<li><code>safe-outputs: create-issue</code> — the <em>only</em> write allowed, performed by a separate step after the agent proposes it; issue titles get a fixed prefix.</li>
+<li><code>tools: github:</code> — gives the agent the GitHub tools it needs to read issues, PRs, and commits.</li>
+<li>The body is the instruction in plain language; it gets compiled into a lock file that Actions runs.</li>
+</ul>
+
+</div>
+<div class="section">
+<h2 id="6-execution-contexts">6. Execution Contexts</h2>
+<p>Where and how an agent runs matters enormously for security and governance. Execution context is the set of constraints that define where an agent operates and what it can access: the <strong>repository</strong>, the <strong>branch</strong>, the <strong>workflow</strong>, and the <strong>permissions</strong> granted to that workflow. The exam tests three contexts you must understand:</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Execution context answers &quot;which building, which floor, which badge?&quot; The <strong>repository</strong> is the building, the <strong>branch</strong> is the floor the agent is allowed to work on, and the <strong>workflow permissions/token</strong> are the badge that decides which doors open.</p></div>
+<h3 id="repository-scope">Repository Scope</h3>
+<p>Agents always operate within a repository. They can read and modify code only in that repository and interact with its issues, pull requests, and workflows. They <strong>don&#39;t have access to other repositories</strong> unless explicitly granted (for example, a wider-scoped token for the GitHub MCP server). For Copilot cloud agent, you enable and configure this boundary at <strong>Settings → Copilot → Cloud agent</strong>. Custom agents then refine <em>what</em> the agent can do inside that boundary through <code>tools</code> and their instructions.</p>
+<p>GitHub Docs list the hard limits for cloud agent (<a href="https://docs.github.com/en/copilot/concepts/agents/cloud-agent/about-cloud-agent" target="_blank" rel="noopener">about cloud agent</a>): it can only change the <strong>one repository</strong> the task was started in, works on <strong>one branch at a time</strong> and opens <strong>one PR per task</strong>, and each session has a <strong>maximum of 59 minutes</strong> — so break big jobs into smaller tasks.</p>
+<h3 id="branch-based-scope">Branch-Based Scope</h3>
+<p>Agents don&#39;t work directly on the default branch. Copilot cloud agent <strong>creates a new branch</strong> from the base branch you select (default branch unless you choose another one when delegating the task), commits its changes there, and the changes reach the base branch only through a <strong>pull request</strong> and review. Branch scope is <strong>enforced by the execution context, not by the custom agent profile</strong>. Custom agents control files, tools, and behavior, but not branch creation, pull request behavior, or isolation. In CI workflows, the workflow run determines the branch the agent works on.</p>
+<p>GitHub Docs add the hard limits (<a href="https://docs.github.com/en/copilot/concepts/agents/cloud-agent/risks-and-mitigations" target="_blank" rel="noopener">risks and mitigations</a>): the agent can push to <strong>only one branch</strong> — a new <code>copilot/</code> branch, or the PR&#39;s own branch when you mention <code>@copilot</code> on an existing PR. It can only perform simple pushes (it can&#39;t run <code>git push</code> or other Git commands directly) and is subject to branch protections and required checks.</p>
+<p>The profile below shows what you <em>can&#39;t</em> do: there&#39;s no branch setting to add.</p>
+<div class="code-block">---
+description: Feature-specific refactoring agent
+name: feature-refactor
+tools: [&quot;read&quot;, &quot;edit&quot;]
+# No branch setting exists in the profile: the branch comes from the
+# execution context (cloud agent&#39;s base branch, or the workflow&#39;s ref)
+---</div>
+<ul>
+<li><code>tools: [&quot;read&quot;, &quot;edit&quot;]</code> controls what the agent can do once it&#39;s working.</li>
+<li>The comment is the lesson: to work against <code>release/2.0</code>, choose that base branch when you start the task (or check out that ref in your workflow).</li>
+</ul>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Expecting the custom agent profile to control <em>where</em> work lands. Branch, repository, and PR behavior come from the execution context; the profile controls tools and behavior.</p></div>
+<h3 id="ci-workflow-invocation">CI Workflow Invocation</h3>
+<p>When an agent is invoked from a <strong>CI workflow</strong>, it runs in a fresh, ephemeral runner environment. It has:</p>
+<ul>
+<li>A clean filesystem (checked-out repository)</li>
+<li>Only the credentials you pass in. <code>GITHUB_TOKEN</code> is short-lived and scoped by <code>permissions</code>, while a PAT in <code>COPILOT_GITHUB_TOKEN</code> is long-lived, so keep its scope minimal</li>
+<li>No access to the developer&#39;s local environment</li>
+<li>An audit trail in the workflow run logs</li>
+</ul>
+<p>This is generally the <strong>safest</strong> execution context for autonomous work, because the runner is isolated and discarded. GitHub still warns that invoking Copilot CLI directly in workflow steps gives it broad access to the workflow environment, so review triggers and permissions carefully. Fork-triggered pull request workflows are particularly at risk.</p>
+<h3 id="environment-specific-constraints">Environment-Specific Constraints</h3>
+<p>Copilot cloud agent runs in an ephemeral, GitHub Actions-powered environment. You adapt it to your environment&#39;s constraints in three places.</p>
+<p><strong>1. Setup steps</strong> (<code>.github/workflows/copilot-setup-steps.yml</code>, <a href="https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/customize-the-agent-environment" target="_blank" rel="noopener">Docs</a>):</p>
+<ul>
+<li>Deterministically <strong>preinstall tools and dependencies</strong>, especially private ones Copilot can&#39;t discover by trial and error.</li>
+<li>Switch <code>runs-on</code> to <strong>larger runners</strong> (more CPU/memory/disk, Azure private networking) or <strong>self-hosted runners</strong> (access to internal resources; GitHub recommends ephemeral single-use runners, e.g. via ARC).</li>
+<li>Use a <strong>Windows</strong> environment instead of the default Ubuntu. Only <strong>Ubuntu x64 and Windows 64-bit</strong> runners are supported; macOS isn&#39;t.</li>
+<li>Enable <strong>Git LFS</strong> with <code>actions/checkout</code> and <code>lfs: true</code>.</li>
+<li>Configure proxy variables (<code>https_proxy</code>, <code>http_proxy</code>, <code>no_proxy</code>, <code>ssl_cert_file</code>, <code>node_extra_ca_certs</code>) as Agents variables/secrets or on the runner image.</li>
+<li>If a setup step exits non-zero, Copilot <strong>skips the remaining setup steps and starts working anyway</strong> with the current environment. Any <code>fetch-depth</code> you set on checkout is overridden.</li>
+<li>Copilot code review reuses this file by default, or you can give it its own <code>copilot-code-review.yml</code>.</li>
+</ul>
+<p><strong>2. Firewall</strong> (Settings → Copilot → <strong>Internet access</strong>, <a href="https://docs.github.com/en/copilot/how-tos/use-copilot-agents/cloud-agent/customize-the-agent-firewall" target="_blank" rel="noopener">Docs</a>):</p>
+<ul>
+<li>On by default to limit data exfiltration. GitHub hosts Copilot needs are always allowed, and a <strong>recommended allowlist</strong> (OS package repos, container registries, language package registries, certificate authorities, Playwright browser hosts) is on by default.</li>
+<li>Org settings: <em>Enable firewall</em> and <em>Recommended allowlist</em> are <strong>Enabled / Disabled / Let repositories decide</strong> (default); <em>Allow repository custom rules</em> is Enabled by default. Org custom rules apply to all repos and can&#39;t be deleted at repo level; org and repo rules combine.</li>
+<li>Custom rules: a <strong>domain</strong> allows that domain and its subdomains; a <strong>URL</strong> allows only that scheme, host, and path (plus descendant paths).</li>
+<li>A blocked request adds a warning (blocked address + command) to the PR body or a comment.</li>
+<li>Limits: applies only to processes the agent starts through its Bash tool, <strong>not to MCP server processes or setup steps</strong>, and only inside the GitHub Actions appliance. It isn&#39;t compatible with <strong>self-hosted runners</strong> (you must disable it) or <strong>Windows</strong>; use your own network controls there.</li>
+</ul>
+<p><strong>3. Secrets and variables:</strong> MCP and environment secrets for the cloud agent are <strong>Agents secrets/variables</strong> (MCP ones prefixed <code>COPILOT_MCP_</code>), not inherited Actions secrets. For deployments, <strong>environments</strong> add approvals, restrict secrets, and control targets.</p>
+<div class="callout warning"><p><strong>⚠️ Exam Trap:</strong> &quot;Copilot needs a package from <code>packages.contoso.corp</code>&quot; → add a firewall <strong>custom allowlist</strong> rule (org or repo), don&#39;t disable the firewall. &quot;Copilot can&#39;t install a private dependency&quot; → preinstall it in <strong>copilot-setup-steps</strong>. &quot;Copilot must reach an internal network&quot; → <strong>self-hosted</strong> or private-networked larger runners, with the integrated firewall disabled and your own controls in place.</p></div>
+<div class="callout"><p><strong>🎓 Teaching Tip: Context Choice.</strong> When the exam asks which execution context is appropriate for a given task, think: <em>Does this agent need the whole repository or just one branch? Does it run in CI (isolated, auditable) or in the IDE (connected to a developer&#39;s local environment)?</em> CI or cloud-agent execution is generally preferred for autonomous actions because of its sandboxed, auditable nature.</p></div>
+
+</div>
+<div class="section">
+<h2 id="7-safe-execution-patterns">7. Safe Execution Patterns</h2>
+<p>Agents can make mistakes. The exam tests your knowledge of how to design agent systems that handle failures gracefully. Here are the patterns you need to know:</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> A good delivery driver who finds a road closed tries again in a minute (retry), takes a detour (fallback), and if the address truly doesn&#39;t exist, calls the office instead of driving in circles all night (escalation). If they delivered the wrong parcel, it can be collected back (rollback). Every stop is logged on the scanner (traceability).</p></div>
+<h3 id="error-handling">Error Handling</h3>
+<p>Every tool call can fail. Your agent system should have explicit error handling at every level:</p>
+<ul>
+<li><strong>Tool-level errors:</strong> file not found, permission denied, network timeout. The agent should catch these and decide whether to retry or escalate.</li>
+<li><strong>Application-level errors:</strong> tests fail, build breaks. The agent should stop and report rather than proceeding blindly. In workflows, fail fast (<code>continue-on-error: false</code>) and log meaningful errors.</li>
+<li><strong>System-level errors:</strong> environment crash, resource exhaustion. The CI runner or orchestration layer should handle these.</li>
+</ul>
+<h3 id="retries">Retries</h3>
+<p>Transient failures (network blips, rate limits, temporary service unavailability) should be retried a <strong>bounded</strong> number of times. The standard pattern is <strong>exponential backoff with jitter</strong>:</p>
+<div class="code-block"># Retry with exponential backoff (illustrative pseudocode)
+max_retries = 3
+for attempt in range(max_retries):
+    try:
+        result = tool_call(params)
+        break
+    except TransientError:
+        if attempt == max_retries - 1:
+            escalate_to_human(error)
+            break
+        sleep(2 ** attempt + random.uniform(0, 1))</div>
+<ul>
+<li><code>max_retries = 3</code> — the retry count is <strong>bounded</strong>; there&#39;s always an end.</li>
+<li>Only <code>TransientError</code> is retried; real failures (bad input, failing tests) shouldn&#39;t be.</li>
+<li>On the last attempt the loop calls <code>escalate_to_human</code> instead of failing silently.</li>
+<li><code>2 ** attempt</code> waits 1 s, 2 s, 4 s (exponential backoff); <code>random.uniform(0, 1)</code> adds <strong>jitter</strong> so many clients don&#39;t retry at the same instant.</li>
+</ul>
+<p>In a workflow step, the Learn module shows the same idea as a shell loop: <code>for i in 1 2 3; do copilot -p &quot;Run task&quot; &amp;&amp; break; sleep 5; done</code>.</p>
+<h3 id="rollbacks">Rollbacks</h3>
+<p>When an agent makes changes that turn out to be wrong, you need to be able to <strong>roll back</strong>. In the GitHub context, branch isolation and pull request review provide rollback naturally:</p>
+<ul>
+<li><strong>Git revert:</strong> if the changes were merged, create a revert commit.</li>
+<li><strong>Branch deletion:</strong> if the agent created a branch with bad changes, delete it.</li>
+<li><strong>PR close without merge:</strong> if the agent opened a PR that hasn&#39;t been merged, close it or discard the work.</li>
+</ul>
+<h3 id="escalation-paths">Escalation Paths</h3>
+<p>When an agent can&#39;t resolve an issue (after exhausting retries), a human must step in. The escalation path is typically:</p>
+<ol>
+<li><strong>Retry:</strong> try the operation again (up to N times)</li>
+<li><strong>Fallback:</strong> use an alternative approach or tool</li>
+<li><strong>File an issue:</strong> create a GitHub issue with full error details and assign it to the appropriate team</li>
+<li><strong>Notify maintainers:</strong> require PR review, assign reviewers automatically, or use workflow steps to alert the on-call engineer</li>
+</ol>
+<p>Hooks give you lifecycle visibility. They don&#39;t implement retries or escalation targets themselves. The <code>errorOccurred</code> event fires on errors (its output isn&#39;t processed), so use it for logging. Put the escalation in the workflow. First, the hook file that logs errors:</p>
+<div class="code-block">{
+  &quot;version&quot;: 1,
+  &quot;hooks&quot;: {
+    &quot;errorOccurred&quot;: [
+      { &quot;type&quot;: &quot;command&quot;, &quot;bash&quot;: &quot;./scripts/log-agent-error.sh&quot;, &quot;timeoutSec&quot;: 30 }
+    ]
+  }
+}</div>
+<ul>
+<li>On any agent error, the script runs (up to 30 seconds) and records what happened; it can&#39;t change what the agent does next.</li>
+</ul>
+<p>Then a workflow step that escalates when the job fails:</p>
+<div class="code-block">      - name: Escalate on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}   # job needs permissions: issues: write
+        run: |
+          gh issue create \
+            --title &quot;Agent run failed: ${{ github.workflow }} #${{ github.run_number }}&quot; \
+            --body &quot;Logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}&quot; \
+            --label agent-escalation --assignee my-oncall-user</div>
+<ul>
+<li><code>if: failure()</code> — runs only when an earlier step in the job failed.</li>
+<li><code>GH_TOKEN</code> — lets the <code>gh</code> CLI authenticate with the run&#39;s token (the job needs <code>issues: write</code>).</li>
+<li><code>gh issue create</code> — opens an issue whose body links straight to the failed run&#39;s logs, labelled and assigned so a person sees it.</li>
+</ul>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Setting <code>continue-on-error: true</code> to &quot;make the pipeline more reliable&quot;. It hides failures — the silent-failure anti-pattern. Reliability means failing visibly and escalating.</p></div>
+<div class="callout success"><p><strong>✅ Key Insight: The Exam Pattern.</strong> Whenever you see a scenario question involving an agent failure, the correct answer will almost always include an <strong>escalation path</strong>. Wrong answers will suggest &quot;retry indefinitely&quot; (infinite loops are bad) or &quot;ignore the error&quot; (silent failure is an anti-pattern). Choose the answer that includes logging, bounded retries, and escalation. Traceability comes from workflow logs, commit history, session logs, and pull request discussions.</p></div>
+<h3 id="traceability-and-accountability">Traceability and Accountability</h3>
+<p>Every agent action should be inspectable, understood, and <strong>attributable</strong> (<a href="https://learn.microsoft.com/en-us/training/modules/agent-tooling-mcp-execution-environments/5-agent-execution-limits-protections" target="_blank" rel="noopener">Learn</a>). GitHub provides this through workflow logs, commit history, and PR discussions; you strengthen it with clear commit messages, branch-scoped changes, and review of all actions through PRs. Every GitHub API call an agent makes is authenticated (PAT, GitHub App token, or <code>GITHUB_TOKEN</code>), so it&#39;s permission-controlled and auditable.</p>
+<p>For Copilot cloud agent (<a href="https://docs.github.com/en/copilot/concepts/agents/cloud-agent/risks-and-mitigations" target="_blank" rel="noopener">Docs</a>):</p>
+<ul>
+<li>Commits are authored by Copilot with the <strong>requesting developer as co-author</strong>, and are <strong>signed</strong> (&quot;Verified&quot;).</li>
+<li>Each commit message <strong>links to the session log</strong>; session logs and <strong>audit log events</strong> are available to administrators.</li>
+<li>Work started by an <strong>automation</strong> is attributed to the user who created the automation (who then can&#39;t approve it).</li>
+</ul>
+<p>Accountability stays with people: the agent prepares changes, but humans review and finalize them.</p>
+
+</div>
+<div class="section">
+<h2 id="8-autonomous-actions-creating-branches-prs">8. Autonomous Actions: Creating Branches &amp; PRs</h2>
+<p>The most autonomous thing a GitHub agent can do is <strong>create branches and pull requests</strong> without human intervention. This is where tool permissions, the agent profile, and the execution context all come together.</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> The agent may draft the contract and put it on your desk (branch + PR), but only a person signs it (review + merge).</p></div>
+<h3 id="creating-a-branch">Creating a Branch</h3>
+<p>With <strong>Copilot cloud agent</strong>, branch creation is done <strong>by the platform</strong>. You enable the agent (Settings → Copilot → Cloud agent) and assign a task from an issue, Copilot Chat, or the agents page. The agent then creates a branch, commits, and pushes, and you get a pull request to review. No <code>execute</code> grant in a custom agent is needed for that. When you drive the CLI yourself (for example in a workflow), the agent can use git through the <strong>execute</strong> tool:</p>
+<div class="code-block"># Agent creates a fix branch via the execute (shell) tool
+git checkout -b fix/auth-timeout
+git commit -am &quot;Fix auth timeout bug&quot;
+git push origin fix/auth-timeout</div>
+<ul>
+<li><code>git checkout -b</code> creates and switches to a new branch.</li>
+<li><code>git commit -am</code> commits all changes to tracked files with a message.</li>
+<li><code>git push origin ...</code> uploads the branch to GitHub — this needs a token with <code>contents: write</code>.</li>
+</ul>
+<p>The built-in GitHub MCP server in cloud agent is <strong>read-only and repository-scoped</strong> by default, so don&#39;t rely on it for writes unless you&#39;ve configured a wider-scoped token.</p>
+<h3 id="guardrails-built-into-copilot-cloud-agent-prs">Guardrails Built into Copilot Cloud Agent PRs</h3>
+<p>Per <a href="https://docs.github.com/en/copilot/concepts/agents/cloud-agent/risks-and-mitigations" target="_blank" rel="noopener">GitHub Docs</a>, only users with <strong>write access</strong> can trigger the agent. Its PRs are drafts that a human must review and merge — it <strong>can&#39;t mark them ready, approve, or merge</strong>, and the person who requested the PR can&#39;t approve it. GitHub Actions workflows on its changes wait for a write-access user to click <strong>Approve and run workflows</strong> (configurable). Hidden characters, such as HTML comments in issues, are filtered out before reaching the agent to reduce prompt injection.</p>
+<div class="callout tip"><p><strong>📘 Teaching Tip:</strong> The Learn unit words this as &quot;the agent prepares changes and you decide whether to create a pull request&quot;. Either way the exam point is the same: <strong>a human finalizes</strong> agent work.</p></div>
+<h3 id="creating-a-pull-request">Creating a Pull Request</h3>
+<p>After the agent has made changes on a branch, it can open a PR. Outside cloud agent, the agent can use the <code>gh</code> CLI (via the execute tool) or the GitHub REST API:</p>
+<div class="code-block"># Agent opens a PR via gh CLI
+gh pr create \
+  --title &quot;Fix auth timeout bug&quot; \
+  --body &quot;Automated fix by security-reviewer agent&quot; \
+  --base main \
+  --head fix/auth-timeout \
+  --label &quot;auto-pr&quot; \
+  --reviewer my-org/security-team</div>
+<ul>
+<li><code>--base main --head fix/auth-timeout</code> — propose merging the fix branch into <code>main</code>.</li>
+<li><code>--label</code> and <code>--reviewer</code> — tag the PR as agent-made and request review automatically; needs <code>pull-requests: write</code>.</li>
+</ul>
+<p>PRs created with <code>GITHUB_TOKEN</code> don&#39;t trigger further workflow runs (loop protection). PATs or GitHub App tokens can, so design carefully to avoid recursive automation.</p>
+<h3 id="autonomy-vs-safety-in-autonomous-actions">Autonomy vs. Safety in Autonomous Actions</h3>
+<p>Creating branches and PRs autonomously is powerful but requires guardrails:</p>
+<ul>
+<li><strong>Branch naming conventions:</strong> enforce patterns like <code>agent/&lt;agent-name&gt;/&lt;description&gt;</code> (for example with a <code>branch_name_pattern</code> ruleset rule) so agent-created branches are easy to identify.</li>
+<li><strong>PR templates:</strong> require agents to use PR templates (<code>.github/pull_request_template.md</code> or <code>.github/PULL_REQUEST_TEMPLATE/</code>) that include the agent name, tool list, and a summary of changes.</li>
+<li><strong>CODEOWNERS:</strong> set automatic reviewers for agent-created PRs.</li>
+<li><strong>Rulesets:</strong> apply branch rules that prevent agents from pushing directly to <code>main</code>. Agents must always go through PRs.</li>
+<li><strong>Environments:</strong> require approvals and restrict secrets before any deployment job runs.</li>
+</ul>
+<p>This repository ruleset protects the default branch:</p>
+<div class="code-block">{
+  &quot;name&quot;: &quot;protect-default-branch&quot;,
+  &quot;target&quot;: &quot;branch&quot;,
+  &quot;enforcement&quot;: &quot;active&quot;,
+  &quot;conditions&quot;: {
+    &quot;ref_name&quot;: { &quot;include&quot;: [&quot;~DEFAULT_BRANCH&quot;], &quot;exclude&quot;: [] }
+  },
+  &quot;rules&quot;: [
+    { &quot;type&quot;: &quot;non_fast_forward&quot; },
+    { &quot;type&quot;: &quot;deletion&quot; },
+    {
+      &quot;type&quot;: &quot;pull_request&quot;,
+      &quot;parameters&quot;: {
+        &quot;required_approving_review_count&quot;: 1,
+        &quot;dismiss_stale_reviews_on_push&quot;: true,
+        &quot;require_code_owner_review&quot;: true,
+        &quot;require_last_push_approval&quot;: true,
+        &quot;required_review_thread_resolution&quot;: false
+      }
+    }
+  ]
+}</div>
+<p><em>(Repository ruleset as sent to <code>POST /repos/{owner}/{repo}/rulesets</code>, or configured equivalently in <strong>Settings → Rules → Rulesets</strong>.)</em></p>
+<ul>
+<li><code>&quot;target&quot;: &quot;branch&quot;</code> + <code>&quot;~DEFAULT_BRANCH&quot;</code> — applies to whatever the default branch is.</li>
+<li><code>&quot;enforcement&quot;: &quot;active&quot;</code> — enforced, not just evaluated.</li>
+<li><code>non_fast_forward</code> blocks force pushes; <code>deletion</code> blocks deleting the branch.</li>
+<li><code>pull_request</code> — changes need a PR with one approval, Code Owner review, and approval of the latest push; new pushes dismiss stale approvals.</li>
+</ul>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Adding rules that Copilot can&#39;t satisfy and then wondering why the agent is blocked. If a ruleset or branch protection rule is incompatible with cloud agent (for example, one that only allows specific commit authors), access to the agent is blocked; with rulesets, an admin can add Copilot as a <strong>bypass actor</strong> (<a href="https://docs.github.com/en/copilot/concepts/agents/cloud-agent/about-cloud-agent" target="_blank" rel="noopener">Docs</a>).</p></div>
+<div class="callout warning"><p><strong>⚠️ Exam Critical: Autonomy Levels.</strong> A useful mnemonic maps autonomy to tool permissions (unverified community info, not an official GitHub taxonomy). <strong>read/search</strong> = advisory only, <strong>edit</strong> = can change files but not run them, <strong>execute</strong> = can run commands and make changes, <strong>agent</strong> = can delegate to other agents. Branch and PR creation isn&#39;t controlled by the custom agent&#39;s <code>tools</code> list. In <strong>Copilot cloud agent</strong> the platform creates the branch and the PR. When you run the CLI yourself, the agent needs <strong>execute</strong> (git/<code>gh</code>) plus a token with <code>contents: write</code> / <code>pull-requests: write</code>.</p></div>
+
+</div>
+<div class="section">
+<h2 id="9-putting-it-all-together-scenario-walkthrough">9. Putting It All Together: Scenario Walkthrough</h2>
+<p>Let&#39;s walk through an exam-style scenario to see how all these concepts connect.</p>
+<div class="callout"><p><strong>🎓 Scenario:</strong> Your team wants a &quot;dependency-updater&quot; agent that scans for outdated dependencies, updates them, runs tests, and creates a PR. How do you configure this agent?</p></div>
+<p><strong>Step 1: Create the agent profile</strong> at <code>.github/agents/dependency-updater.agent.md</code>:</p>
+<div class="code-block">---
+description: &gt;
+  Scans for outdated dependencies, updates them to latest
+  compatible versions, runs the test suite, and creates a PR.
+name: dependency-updater
+tools: [&quot;read&quot;, &quot;search&quot;, &quot;edit&quot;, &quot;execute&quot;, &quot;npm-registry/*&quot;]
+---
+
+Use `npm outdated` and `npm update`, then run `npm test`.
+Only open a pull request (`gh pr create`) when tests pass.</div>
+<ul>
+<li><code>npm-registry/*</code> in <code>tools</code> refers to the MCP server configured in Step 2.</li>
+<li><code>execute</code> is needed here because the agent runs <code>npm</code> and <code>gh</code> itself in a CLI-driven workflow.</li>
+</ul>
+<p>The <code>tools</code> list can&#39;t restrict commands. Enforce the allowed commands with <code>--allow-tool</code> at run time (Step 3) or with a <code>preToolUse</code> hook.</p>
+<p><strong>Step 2: Configure the MCP server.</strong> For Copilot CLI, use <code>.github/mcp.json</code> (for cloud agent you&#39;d put the same JSON in repository Settings → Copilot → MCP servers):</p>
+<div class="code-block">{
+  &quot;mcpServers&quot;: {
+    &quot;npm-registry&quot;: {
+      &quot;type&quot;: &quot;http&quot;,
+      &quot;url&quot;: &quot;https://mcp.example.com/npm&quot;,
+      &quot;tools&quot;: [&quot;*&quot;]
+    }
+  }
+}</div>
+<p><em>(The URL is a placeholder for whatever npm-registry MCP server your organization approves in its registry.)</em></p>
+<ul>
+<li>The server name <code>npm-registry</code> must match the prefix used in the profile&#39;s <code>tools</code> list.</li>
+</ul>
+<p><strong>Step 3: Create a CI workflow</strong> that runs the agent on a schedule:</p>
+<div class="code-block">name: Dependency Update
+on:
+  schedule:
+    - cron: &#39;0 6 * * 1&#39;  # Every Monday at 6 AM UTC
+  workflow_dispatch:       # Manual trigger too
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  copilot-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v7
+      - run: npm ci
+      - run: npm install -g @github/copilot
+
+      - name: Run Dependency Update Agent
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          # -p mode skips workspace MCP config unless the folder is trusted
+          GITHUB_COPILOT_PROMPT_MODE_WORKSPACE_MCP: &quot;true&quot;
+        run: |
+          copilot -p &quot;Check for outdated dependencies, update them, run tests, and create a PR&quot; \
+            --agent dependency-updater \
+            --allow-tool=&#39;shell(npm outdated)&#39; --allow-tool=&#39;shell(npm update:*)&#39; \
+            --allow-tool=&#39;shell(npm test)&#39; --allow-tool=&#39;shell(git:*)&#39; \
+            --allow-tool=&#39;shell(gh pr create:*)&#39; --allow-tool=write \
+            --allow-tool=&#39;npm-registry&#39; \
+            --deny-tool=&#39;shell(git push --force:*)&#39; \
+            --no-ask-user</div>
+<ul>
+<li><code>schedule</code> with <code>cron: &#39;0 6 * * 1&#39;</code> — every Monday 06:00 UTC; <code>workflow_dispatch</code> adds a manual button.</li>
+<li><code>permissions</code> — write access for contents, PRs, and issues because this agent pushes a branch, opens a PR, and may file an escalation issue.</li>
+<li><code>npm ci</code> — installs dependencies exactly as locked, so tests can run.</li>
+<li><code>GITHUB_COPILOT_PROMPT_MODE_WORKSPACE_MCP</code> — lets <code>-p</code> mode load <code>.github/mcp.json</code> from Step 2.</li>
+<li>The <code>--allow-tool</code> list pre-approves only the commands the job needs; <code>--deny-tool</code> blocks force pushes even if something else would allow them (deny wins).</li>
+</ul>
+<p><strong>Step 4: Add guardrails:</strong></p>
+<ul>
+<li>Add <code>.github/PULL_REQUEST_TEMPLATE/agent-pr.md</code> so agent-created PRs always include a summary</li>
+<li>Set up CODEOWNERS so agent PRs are reviewed by the platform team</li>
+<li>Use rulesets to prevent the agent from pushing directly to <code>main</code></li>
+</ul>
+<p><strong>Step 5: Error handling.</strong> Add the <code>if: failure()</code> escalation step from Section 7 to file an issue for the platform team. Optionally add <code>.github/hooks/on-error.json</code> with an <code>errorOccurred</code> hook for logging. In <code>-p</code> mode, repository hooks load only if the folder is trusted, <code>COPILOT_ALLOW_ALL</code> is set, or <code>GITHUB_COPILOT_PROMPT_MODE_REPO_HOOKS=true</code>. The escalation step for this workflow:</p>
+<div class="code-block">      - name: Escalate on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue create \
+            --title &quot;dependency-updater failed (run ${{ github.run_number }})&quot; \
+            --body &quot;Logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}&quot; \
+            --label dependency-update --label agent-failure</div>
+<ul>
+<li>Same pattern as Section 7: runs only on failure and opens a labelled issue that links to the run logs.</li>
+</ul>
+<div class="callout success"><p><strong>✅ Takeaway:</strong> This scenario touches every concept in Domain 2: tool selection, agent profiles, MCP servers, CI integration, execution context, safe patterns, and autonomous actions. If you can walk through this scenario confidently, you&#39;re well prepared for the exam questions.</p></div>
+
+</div>
+<div class="section">
+<h2 id="instructor-summary-domain-2-exam-checklist">Instructor Summary: Domain 2 Exam Checklist</h2>
+<div class="callout"><p><strong>🎓 Instructor Summary</strong></p>
+<p>Before moving on, make sure you can answer these ten questions. If any are fuzzy, review that section again:</p>
+<ol>
+<li>What are the five core tool aliases, ranked by permission level? When should each be used?</li>
+<li>What are the web and todo aliases, and where are they supported (VS Code: yes; cloud agent: not today)?</li>
+<li>What is the format and location of agent profile files?</li>
+<li>What are the frontmatter keys, and which one is <strong>required</strong>?</li>
+<li>Can you list the exam-critical artifact paths and their purposes from memory?</li>
+<li>How does MCP architecture work? What does each layer (Agent → Client → Server → External Service) do?</li>
+<li>How do you run agents in CI? Which flags (<code>-p</code>, <code>--agent</code>, <code>--allow-tool</code>, <code>--no-ask-user</code>) and which token options (<code>GITHUB_TOKEN</code> + <code>copilot-requests: write</code>, or <code>COPILOT_GITHUB_TOKEN</code> PAT) apply?</li>
+<li>What are the three execution contexts and when is each appropriate?</li>
+<li>What are the four safe execution patterns (error handling, retries, rollbacks, escalation)?</li>
+<li>Who creates branches and PRs in cloud agent versus a CLI-driven workflow, and what permissions are needed?</li>
+</ol>
+<p>If you can confidently answer all ten, you&#39;re ready for Domain 2 questions. This is the heaviest domain. Master it, and you&#39;re a quarter of the way to passing the exam.</p></div>
+<div class="callout"><p><strong>🎓 Video Insight: Read-only planning, scoped execution</strong> (unverified community info). Ari explicitly says: &quot;All of my agents when I&#39;m doing planning, they&#39;re just read.&quot; Planning agents need only read/search tools. Execution agents (coder, designer) get edit/execute. The exam tests whether you can pick the <strong>least privilege</strong> tool for each role. Also: &quot;I would spend a lot of time on this module.&quot; Domain 2 is the heaviest exam domain.</p></div>
+
+</div>
+<div class="section">
+<h2 id="recap-key-takeaways">Recap: Key Takeaways</h2>
+<ul>
+<li>Tools are the agent&#39;s hands; pick the <strong>least privileged</strong> alias: <code>read</code> → <code>search</code> → <code>edit</code> → <code>execute</code> → <code>agent</code>.</li>
+<li><code>web</code> and <code>todo</code> work in VS Code but are <strong>not applicable to Copilot cloud agent</strong> today.</li>
+<li>Agent profiles live in <code>.github/agents/*.agent.md</code>; <code>description</code> is the <strong>only required</strong> key.</li>
+<li>Omitting <code>tools</code> grants <strong>all</strong> tools; <code>tools: []</code> grants none. <code>target</code> is <code>vscode</code> or <code>github-copilot</code>.</li>
+<li><code>tools</code> can&#39;t restrict commands or paths — use <code>--allow-tool</code>/<code>--deny-tool</code> (CLI) or <code>preToolUse</code> hooks.</li>
+<li>MCP = a standard plug: host → client → server → service, over stdio or HTTP using JSON-RPC 2.0.</li>
+<li>MCP config location depends on the surface: repo settings (cloud agent), <code>mcp-servers</code> (profile), <code>.mcp.json</code>/<code>.github/mcp.json</code> (CLI), <code>.vscode/mcp.json</code> (VS Code, <code>servers</code> key).</li>
+<li>Registry = discovery; allow list (<em>Registry only</em>) = enforcement. MCP secrets start with <code>COPILOT_MCP_</code>.</li>
+<li>In CI: <code>copilot -p ... --agent ... --allow-tool ... --no-ask-user</code>, authenticated with <code>GITHUB_TOKEN</code> + <code>copilot-requests: write</code> or a fine-grained PAT in <code>COPILOT_GITHUB_TOKEN</code>.</li>
+<li>Branch, repository, and PR behavior come from the <strong>execution context</strong>, not the profile.</li>
+<li>Unblock cloud agent with a firewall allowlist rule and <code>copilot-setup-steps.yml</code> — don&#39;t disable protections.</li>
+<li>Failures: bounded retries → fallback → escalation issue with run links; never infinite retries or <code>continue-on-error</code> to hide them.</li>
+</ul>
+
+</div>
+<div class="section">
+<h2 id="hands-on-practice">Hands-On Practice</h2>
+<p>Use a personal repository and VS Code with GitHub Copilot signed in. Exercise 3 needs Copilot CLI (<code>npm install -g @github/copilot</code>).</p>
+<p><strong>Exercise 1 — Least-privilege custom agent</strong></p>
+<ol>
+<li>Create <code>.github/agents/docs-writer.agent.md</code> with the annotated profile from section 2.</li>
+<li>In VS Code Copilot Chat, select <strong>docs-writer</strong> from the agent dropdown.</li>
+<li>Ask it to update a doc — then ask it to &quot;run <code>npm test</code>&quot;.</li>
+</ol>
+<p><em>Expected result:</em> it can read and edit files, but it can&#39;t run the command because <code>execute</code> isn&#39;t in its <code>tools</code>. Now delete the <code>tools</code> line, retry, and see that all tools become available — the reason you always list tools explicitly.</p>
+<p><strong>Exercise 2 — Connect the GitHub remote MCP server in VS Code</strong></p>
+<ol>
+<li><p>Create <code>.vscode/mcp.json</code> in your repository with this content (note the VS Code-specific top-level <code>servers</code> key):</p>
+<div class="code-block">{
+  &quot;servers&quot;: {
+    &quot;github&quot;: {
+      &quot;type&quot;: &quot;http&quot;,
+      &quot;url&quot;: &quot;https://api.githubcopilot.com/mcp/&quot;
+    }
+  }
+}</div>
+<ul>
+<li><code>&quot;servers&quot;</code> — VS Code&#39;s key (Copilot CLI and cloud agent use <code>mcpServers</code> instead).</li>
+<li><code>&quot;github&quot;</code> — the name you&#39;ll see in the tools list.</li>
+<li><code>&quot;type&quot;: &quot;http&quot;</code> + <code>&quot;url&quot;</code> — the hosted GitHub MCP server.</li>
+</ul>
+</li>
+<li><p>Start the server from the editor prompt and <strong>Authenticate</strong> with GitHub when asked.</p>
+</li>
+<li><p>In Agent mode, open the <strong>Tools</strong> picker and confirm the GitHub tools appear; ask &quot;List the open issues in this repository&quot;.</p>
+</li>
+</ol>
+<p><em>Expected result:</em> the agent calls a GitHub MCP tool (shown in the chat) and returns your issues. Change the URL to <code>https://api.githubcopilot.com/mcp/readonly</code> and confirm write tools disappear.</p>
+<p><strong>Exercise 3 — See <code>-p</code> mode deny what isn&#39;t pre-approved</strong></p>
+<ol>
+<li><p>In a terminal at the repository root, run:</p>
+<div class="code-block">copilot -p &quot;Run &#39;git status&#39; and then &#39;npm --version&#39;, and report both outputs&quot; \
+  --allow-tool=&#39;shell(git status)&#39; --no-ask-user</div>
+<ul>
+<li><code>--allow-tool=&#39;shell(git status)&#39;</code> pre-approves exactly one command.</li>
+<li><code>--no-ask-user</code> removes the ability to ask you anything.</li>
+</ul>
+</li>
+</ol>
+<p><em>Expected result:</em> <code>git status</code> runs; <code>npm --version</code> is denied because it wasn&#39;t pre-approved, and the agent reports that it couldn&#39;t run it. This is the same behavior that keeps CI runs within bounds.</p>
+<p><strong>Related Microsoft Learn units:</strong></p>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/training/modules/agent-tooling-mcp-execution-environments/2-interact-github-apis-workflows" target="_blank" rel="noopener">How agents interact with GitHub APIs and workflows</a></li>
+<li><a href="https://learn.microsoft.com/en-us/training/modules/agent-tooling-mcp-execution-environments/3-model-context-protocol-servers-registries-allow-lists" target="_blank" rel="noopener">MCP servers, registries, and allow lists</a></li>
+<li><a href="https://learn.microsoft.com/en-us/training/modules/agent-tooling-mcp-execution-environments/4-execution-context-boundaries" target="_blank" rel="noopener">Execution context and boundaries</a></li>
+<li><a href="https://learn.microsoft.com/en-us/training/modules/agent-tooling-mcp-execution-environments/5-agent-execution-limits-protections" target="_blank" rel="noopener">Agent execution limits and protections</a></li>
+<li><a href="https://learn.microsoft.com/en-us/training/modules/agent-tooling-mcp-execution-environments/exercise" target="_blank" rel="noopener">Exercise — Automate repository updates with GitHub Agentic Workflows</a></li>
+</ul>
+
+</div>
+<div class="section">
+<h2 id="practice-questions">Practice Questions</h2>
+<p><strong>1.</strong> A custom agent must add a new function to <code>src/auth.py</code>. It will not build or test anything. Which <code>tools</code> list follows least privilege?</p>
+<ul>
+<li>A. <code>[&quot;read&quot;, &quot;search&quot;, &quot;edit&quot;, &quot;execute&quot;]</code></li>
+<li>B. <code>[&quot;read&quot;, &quot;search&quot;, &quot;edit&quot;]</code></li>
+<li>C. Omit <code>tools</code> so the agent picks what it needs</li>
+<li>D. <code>[&quot;execute&quot;]</code>, because it can write files with shell commands</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> B — changing a file needs <code>edit</code>, not <code>execute</code>; omitting <code>tools</code> grants every available tool.</p></div>
+<p><strong>2.</strong> Your enterprise wants developers to use only MCP servers that security has approved, including local servers. What do you configure?</p>
+<ul>
+<li>A. A <code>.vscode/mcp.json</code> file in every repository</li>
+<li>B. A custom MCP registry listing the approved servers (local ones with exactly matching IDs), its URL in AI controls → MCP, and &quot;Restrict MCP access to registry servers&quot; set to <strong>Registry only</strong></li>
+<li>C. The firewall custom allowlist for Copilot cloud agent</li>
+<li>D. <code>disable-model-invocation: true</code> on each custom agent</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> B — the registry makes approved servers discoverable and the Registry only allow list policy blocks everything else, including unlisted local servers.</p></div>
+<p><strong>3.</strong> Copilot cloud agent fails to install a private npm package from <code>packages.contoso.corp</code> and the PR shows a firewall warning. What is the best fix?</p>
+<ul>
+<li>A. Disable the firewall for the organization</li>
+<li>B. Add <code>packages.contoso.corp</code> to the firewall custom allowlist and preinstall the dependency in <code>copilot-setup-steps.yml</code></li>
+<li>C. Grant the agent the <code>web</code> tool</li>
+<li>D. Add the package to <code>AGENTS.md</code></li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> B — a targeted allowlist rule keeps exfiltration protection on, and setup steps install dependencies deterministically before the agent starts.</p></div>
+<p><strong>4.</strong> A nightly workflow runs Copilot CLI with <code>-p</code>. Occasionally the model call times out and the job fails silently. Which change best implements safe execution?</p>
+<ul>
+<li>A. Wrap the call in an infinite retry loop</li>
+<li>B. Set <code>continue-on-error: true</code> so the job always passes</li>
+<li>C. Bounded retries (for example three attempts with a delay), then an <code>if: failure()</code> step that opens an issue with a link to the run logs</li>
+<li>D. Remove <code>--no-ask-user</code> so the agent can ask for help</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> C — bounded retries handle transient failures and the failure step escalates to a human with traceable evidence.</p></div>
+<p><strong>5.</strong> A team asks why its custom agent profile can&#39;t force Copilot cloud agent to work on the <code>release/2.0</code> branch. What&#39;s the correct explanation?</p>
+<ul>
+<li>A. Add <code>branch: release/2.0</code> to the profile frontmatter</li>
+<li>B. Branch scope comes from the execution context: choose <code>release/2.0</code> as the base branch when delegating the task (or in CI, the workflow&#39;s ref)</li>
+<li>C. Use <code>applyTo: release/2.0</code> in the profile</li>
+<li>D. Cloud agent always works on the default branch</li>
+</ul>
+<div class="callout success"><p><strong>✅ Answer:</strong> B — custom agents control tools and behavior, not branch creation; the agent branches from the base branch selected at delegation.</p></div>
+<div class="nav-links"><a href="domain-1.html">← Domain 1: Architecture</a><a href="index.html">Home</a><a href="domain-3.html">Domain 3: Memory &amp; State →</a></div>
+</div>
+</main>
+
+<footer class="site-footer">GH-600 Study Guide (corrected) · Based on official Microsoft Learn modules and GitHub Docs · Not affiliated with GitHub or Microsoft</footer>
+</body>
+</html>

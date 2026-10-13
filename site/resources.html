@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GH-600 Resources & References — GH-600 Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>.section td code,.callout code,.diagram-caption code{background:var(--primary-light);color:var(--primary);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:13px}.callout p+p{margin-top:8px}.callout ul{margin:8px 0 0 20px}</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-logo"><span>GH-</span>600</div>
+    <nav class="header-nav">
+      <a href="index.html">Home</a>
+      <a href="basics.html">Start Here</a>
+      <a href="domain-1.html">D1: Architecture</a>
+      <a href="domain-2.html">D2: Tooling &amp; MCP</a>
+      <a href="domain-3.html">D3: Memory &amp; State</a>
+      <a href="domain-4.html">D4: Evaluation</a>
+      <a href="domain-5.html">D5: Multi-Agent</a>
+      <a href="domain-6.html">D6: Guardrails</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="resources.html" class="active">Resources</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-badge">GH-600 · Corrected study guide</div>
+  <h1>GH-600 Resources &amp; References</h1>
+  <p>A catalog of study materials for the GH-600 exam (GitHub Certified: Agentic AI Developer) — official modules, documentation, study guides, videos, and practice resources. Items marked <strong>(community, unofficial)</strong> are not published by GitHub or Microsoft.</p>
+</section>
+
+<main class="main">
+<div class="section">
+<p>Navigation: <a href="index.html">Home</a> · <a href="domain-1.html">D1</a> · <a href="domain-2.html">D2</a> · <a href="domain-3.html">D3</a> · <a href="domain-4.html">D4</a> · <a href="domain-5.html">D5</a> · <a href="domain-6.html">D6</a> · <a href="glossary.html">Glossary</a></p>
+
+</div>
+<div class="section">
+<h2 id="1-official-microsoft-learn-modules">1. Official Microsoft Learn Modules</h2>
+<p>These six modules form the official training for GH-600. <strong>Start here.</strong></p>
+<h3 id="foundations-of-agentic-ai-in-github">Foundations of Agentic AI in GitHub</h3>
+<p><em>Module · All domains</em></p>
+<p>Introductory module covering what agentic AI means in the GitHub ecosystem: how the developer role shifts to guiding, reviewing, and validating agents across the SDLC, and GitHub&#39;s role as system of record and control plane. Prerequisite reading before diving into individual domains.</p>
+<p><strong>Good for:</strong> Building foundational vocabulary and understanding the big picture.</p>
+<p><a href="https://learn.microsoft.com/en-us/training/modules/foundations-agentic-ai/" target="_blank" rel="noopener">https://learn.microsoft.com/en-us/training/modules/foundations-agentic-ai/</a></p>
+<h3 id="designing-agent-architecture-and-sdlc-integration">Designing Agent Architecture and SDLC Integration</h3>
+<p><em>Module · Domain 1</em></p>
+<p>Agent architecture patterns, SDLC integration points (branches, pull requests, checks, repository rules), planning vs execution boundaries, and observability. Maps to Domain 1.</p>
+<p><strong>Good for:</strong> Agent architecture patterns, SDLC integration, and planning/execution separation.</p>
+<p><a href="https://learn.microsoft.com/en-us/training/modules/design-agent-architecture-integration/" target="_blank" rel="noopener">https://learn.microsoft.com/en-us/training/modules/design-agent-architecture-integration/</a></p>
+<h3 id="tooling-mcp-and-agent-execution-environments">Tooling, MCP, and Agent Execution Environments</h3>
+<p><em>Module · Domain 2</em></p>
+<p>How agents interact with tools, APIs, and execution environments: MCP, GitHub Actions, agentic workflows, execution boundaries and safeguards. Domain 2 is the heaviest domain (20–25%).</p>
+<p><strong>Good for:</strong> Tool selection, MCP configuration, execution environments, error handling.</p>
+<p><a href="https://learn.microsoft.com/en-us/training/modules/agent-tooling-mcp-execution-environments/" target="_blank" rel="noopener">https://learn.microsoft.com/en-us/training/modules/agent-tooling-mcp-execution-environments/</a></p>
+<h3 id="memory-state-and-evaluation">Memory, State, and Evaluation</h3>
+<p><em>Module · Domains 3 &amp; 4</em></p>
+<p>Agent memory structure, persisting progress through GitHub artifacts, consistency across environments (Domain 3), and defining success signals, error analysis, and tuning (Domain 4).</p>
+<p><strong>Good for:</strong> Memory strategies, state management, evaluation criteria, and tuning levers.</p>
+<p><a href="https://learn.microsoft.com/en-us/training/modules/memory-state-evaluation/" target="_blank" rel="noopener">https://learn.microsoft.com/en-us/training/modules/memory-state-evaluation/</a></p>
+<h3 id="multi-agent-systems-and-orchestration">Multi-Agent Systems and Orchestration</h3>
+<p><em>Module · Domain 5</em></p>
+<p>Designing multi-agent systems that coordinate through GitHub-native artifacts, stay observable through logs and workflow outputs, and recover safely via retry, rollback, and human escalation.</p>
+<p><strong>Good for:</strong> Multi-agent design patterns, orchestration strategies, isolation mechanisms, and observability.</p>
+<p><a href="https://learn.microsoft.com/en-us/training/modules/multi-agent-systems-orchestration/" target="_blank" rel="noopener">https://learn.microsoft.com/en-us/training/modules/multi-agent-systems-orchestration/</a></p>
+<h3 id="governance-guardrails-and-operations">Governance, Guardrails, and Operations</h3>
+<p><em>Module · Domain 6</em></p>
+<p>Risk-based autonomy, GitHub-native controls (rulesets, checks, CODEOWNERS, environments), human-in-the-loop workflows, least-privilege permissions, and governance maintenance.</p>
+<p><strong>Good for:</strong> Governance frameworks, guardrail configuration, human-in-the-loop design, and auditability.</p>
+<p><a href="https://learn.microsoft.com/en-us/training/modules/governance-guardrails-operations/" target="_blank" rel="noopener">https://learn.microsoft.com/en-us/training/modules/governance-guardrails-operations/</a></p>
+
+</div>
+<div class="section">
+<h2 id="hands-on-labs">Hands-On Labs</h2>
+<p>Guided exercises verified to exist on Microsoft Learn and GitHub Skills (October 2026). GitHub Skills exercises copy a template repository into your account and a bot guides you step by step; use a <strong>public</strong> copy, as the exercises recommend. Copilot cloud agent requires a paid Copilot plan (Pro or higher). For a week-by-week order, see the study plan in <a href="basics.html#11-suggested-beginner-study-plan-24-weeks">Start Here: Fundamentals</a>.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Lab</th>
+<th>Platform</th>
+<th>Domain(s)</th>
+<th>What you practice</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Introduction to GitHub</td>
+<td>GitHub Skills</td>
+<td>Prerequisite (D1)</td>
+<td>Branch, commit, open and merge a pull request</td>
+<td><a href="https://github.com/skills/introduction-to-github" target="_blank" rel="noopener">skills/introduction-to-github</a></td>
+</tr>
+<tr>
+<td>Exercise – A guided tour of GitHub</td>
+<td>Microsoft Learn</td>
+<td>Prerequisite (D1)</td>
+<td>Repositories, GitHub flow, issues, notifications</td>
+<td><a href="https://learn.microsoft.com/en-us/training/modules/introduction-to-github/" target="_blank" rel="noopener">introduction-to-github</a></td>
+</tr>
+<tr>
+<td>Review pull requests</td>
+<td>GitHub Skills</td>
+<td>D1, D6</td>
+<td>Request, leave, suggest, and apply reviews before merging</td>
+<td><a href="https://github.com/skills/review-pull-requests" target="_blank" rel="noopener">skills/review-pull-requests</a></td>
+</tr>
+<tr>
+<td>Exercise – Reviewing pull requests</td>
+<td>Microsoft Learn</td>
+<td>D1, D6</td>
+<td>PR statuses, reviewing and merging into a base branch</td>
+<td><a href="https://learn.microsoft.com/en-us/training/modules/manage-changes-pull-requests-github/" target="_blank" rel="noopener">manage-changes-pull-requests-github</a></td>
+</tr>
+<tr>
+<td>Hello GitHub Actions</td>
+<td>GitHub Skills</td>
+<td>D2</td>
+<td>Workflow file, job, run step, watching a run</td>
+<td><a href="https://github.com/skills/hello-github-actions" target="_blank" rel="noopener">skills/hello-github-actions</a></td>
+</tr>
+<tr>
+<td>Exercise – Create and run a basic GitHub Actions workflow</td>
+<td>Microsoft Learn</td>
+<td>D2</td>
+<td>Workflow components, triggers, a container action</td>
+<td><a href="https://learn.microsoft.com/en-us/training/modules/github-actions-automate-tasks/" target="_blank" rel="noopener">github-actions-automate-tasks</a></td>
+</tr>
+<tr>
+<td>Getting Started with GitHub Copilot</td>
+<td>GitHub Skills</td>
+<td>D2</td>
+<td>Copilot interaction modes in a Codespace, plan agent, PR summary and review</td>
+<td><a href="https://github.com/skills/getting-started-with-github-copilot" target="_blank" rel="noopener">skills/getting-started-with-github-copilot</a></td>
+</tr>
+<tr>
+<td>Build applications with GitHub Copilot agent mode</td>
+<td>GitHub Skills</td>
+<td>D2, D4</td>
+<td>Prompting agent mode to build and iterate on a multi-tier app</td>
+<td><a href="https://github.com/skills/build-applications-w-copilot-agent-mode" target="_blank" rel="noopener">skills/build-applications-w-copilot-agent-mode</a></td>
+</tr>
+<tr>
+<td>GitHub skills exercise (agent mode module)</td>
+<td>Microsoft Learn</td>
+<td>D2, D4</td>
+<td>Agent mode in a Codespace: fix errors, refactor, add features</td>
+<td><a href="https://learn.microsoft.com/en-us/training/modules/github-copilot-agent-mode/" target="_blank" rel="noopener">github-copilot-agent-mode</a></td>
+</tr>
+<tr>
+<td>Customize Your GitHub Copilot Experience</td>
+<td>GitHub Skills</td>
+<td>D2, D4</td>
+<td>Repository and path-specific instructions, agent skills, custom agents</td>
+<td><a href="https://github.com/skills/customize-your-github-copilot-experience" target="_blank" rel="noopener">skills/customize-your-github-copilot-experience</a></td>
+</tr>
+<tr>
+<td>Integrate MCP with GitHub Copilot</td>
+<td>GitHub Skills</td>
+<td>D2</td>
+<td>GitHub MCP server setup, issue management from agent mode, idea to PR</td>
+<td><a href="https://github.com/skills/integrate-mcp-with-copilot" target="_blank" rel="noopener">skills/integrate-mcp-with-copilot</a></td>
+</tr>
+<tr>
+<td>Exercise – Automate repository updates with GitHub Agentic Workflows</td>
+<td>Microsoft Learn (GH-600 module)</td>
+<td>D2, D1, D6</td>
+<td><code>gh aw</code> setup, a Markdown agentic workflow, reviewing its PR</td>
+<td><a href="https://learn.microsoft.com/en-us/training/modules/agent-tooling-mcp-execution-environments/exercise" target="_blank" rel="noopener">agent-tooling-mcp-execution-environments/exercise</a></td>
+</tr>
+<tr>
+<td>Create applications with the Copilot CLI</td>
+<td>GitHub Skills</td>
+<td>D2, D5</td>
+<td>Standalone Copilot CLI: issues from templates, iterative development in the terminal</td>
+<td><a href="https://github.com/skills/create-applications-with-the-copilot-cli" target="_blank" rel="noopener">skills/create-applications-with-the-copilot-cli</a></td>
+</tr>
+<tr>
+<td>Expand your team with Copilot cloud agent</td>
+<td>GitHub Skills</td>
+<td>D1, D2, D3, D5</td>
+<td>Enable cloud agent, assign issues, review its PRs, customize its environment, parallel tasks</td>
+<td><a href="https://github.com/skills/expand-your-team-with-copilot" target="_blank" rel="noopener">skills/expand-your-team-with-copilot</a></td>
+</tr>
+<tr>
+<td>Enable CodeQL to secure your source code</td>
+<td>GitHub Skills</td>
+<td>D4, D6</td>
+<td>Enable code scanning, review alerts, fix vulnerabilities</td>
+<td><a href="https://github.com/skills/introduction-to-codeql" target="_blank" rel="noopener">skills/introduction-to-codeql</a></td>
+</tr>
+<tr>
+<td>Secure your repository&#39;s supply chain</td>
+<td>GitHub Skills</td>
+<td>D6, D4</td>
+<td>Dependency graph, Dependabot alerts, security and version updates</td>
+<td><a href="https://github.com/skills/secure-repository-supply-chain" target="_blank" rel="noopener">skills/secure-repository-supply-chain</a></td>
+</tr>
+<tr>
+<td>Exercise – Build an AI dream team with GitHub Copilot CLI custom agents</td>
+<td>Microsoft Learn (GH-600 module)</td>
+<td>D5, D1</td>
+<td>Orchestrator, planner, designer, and coder custom agents in <code>.github/agents/</code>; coordinated handoff</td>
+<td><a href="https://learn.microsoft.com/en-us/training/modules/multi-agent-systems-orchestration/exercise" target="_blank" rel="noopener">multi-agent-systems-orchestration/exercise</a></td>
+</tr>
+</tbody></table></div>
+<p>The other four GH-600 modules (Foundations, Architecture, Memory/State/Evaluation, Governance) have no exercise unit. No verified guided lab covers rulesets or branch protection; practice them in your own test repository using <a href="domain-6.html">Domain 6</a>.</p>
+
+</div>
+<div class="section">
+<h2 id="2-github-documentation">2. GitHub Documentation</h2>
+<p>Official GitHub Docs pages covering the implementation details the exam tests. The first six are the per-domain documentation links listed in the official study guide.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Domain (per study guide)</th>
+<th>Page</th>
+<th>What it covers</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>D1 – Agent architecture &amp; SDLC</td>
+<td><a href="https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-for-organization/prepare-for-custom-agents" target="_blank" rel="noopener">Preparing to use custom agents in your organization</a></td>
+<td>Org-level custom agents stored in <code>agents/</code> of the org <code>.github</code> / <code>.github-private</code> repo</td>
+</tr>
+<tr>
+<td>D2 – Tool use &amp; environment / D5 – Multi-agent</td>
+<td><a href="https://docs.github.com/en/copilot/how-tos/copilot-sdk/features/custom-agents" target="_blank" rel="noopener">Custom agents and sub-agent orchestration (Copilot SDK)</a></td>
+<td>Per-agent prompts, scoped <code>tools</code>, MCP servers, sub-agent delegation and lifecycle events</td>
+</tr>
+<tr>
+<td>D3 – Memory, state &amp; execution</td>
+<td><a href="https://docs.github.com/en/copilot/concepts/agents/copilot-memory" target="_blank" rel="noopener">About GitHub Copilot Memory</a></td>
+<td>Repository facts vs user preferences, citation validation, 28-day deletion of unused entries</td>
+</tr>
+<tr>
+<td>D4 – Evaluation, error analysis &amp; tuning</td>
+<td><a href="https://docs.github.com/en/copilot/tutorials/customization-library/custom-agents/implementation-planner" target="_blank" rel="noopener">Implementation planner (customization library)</a></td>
+<td>Example custom agent profile (<code>tools: [&quot;read&quot;, &quot;search&quot;, &quot;edit&quot;]</code>) that writes Markdown implementation plans</td>
+</tr>
+<tr>
+<td>D6 – Guardrails &amp; accountability</td>
+<td><a href="https://docs.github.com/en/copilot/tutorials/cloud-agent/build-guardrails" target="_blank" rel="noopener">Building guardrails for Copilot cloud agent</a></td>
+<td>Policies, rulesets, CODEOWNERS for Copilot/MCP config, runners, secrets</td>
+</tr>
+<tr>
+<td>D6 – Guardrails &amp; accountability</td>
+<td><a href="https://docs.github.com/en/copilot/concepts/security-governance-and-network-settings/risks-and-mitigations" target="_blank" rel="noopener">Risks and mitigations for Copilot cloud agent</a></td>
+<td>Built-in protections of Copilot cloud agent</td>
+</tr>
+</tbody></table></div>
+<p>Additional pages (replacing the original site&#39;s broken links):</p>
+<h3 id="copilot-memory-documentation">Copilot Memory documentation</h3>
+<p>How Copilot Memory stores, validates, and expires memories, and how to enable/manage it.</p>
+<p><strong>Good for:</strong> Domain 3 memory configuration details.</p>
+<p><a href="https://docs.github.com/en/copilot/concepts/agents/copilot-memory" target="_blank" rel="noopener">Concept</a> · <a href="https://docs.github.com/en/copilot/how-tos/use-copilot-agents/copilot-memory/manage-for-yourself" target="_blank" rel="noopener">Manage for yourself</a></p>
+<h3 id="custom-agent-configuration">Custom agent configuration</h3>
+<p>How to define custom agents in <code>.github/agents/*.agent.md</code> — frontmatter (<code>description</code> required, <code>name</code>, <code>target</code>, <code>tools</code>, <code>model</code>, <code>disable-model-invocation</code>, <code>user-invocable</code>, <code>mcp-servers</code>, <code>metadata</code>), tool aliases, and MCP server configuration. (Agent profiles have no &quot;autonomy level&quot; field; autonomy is controlled through tools, MCP, and repository controls.)</p>
+<p><strong>Good for:</strong> Hands-on agent profile creation and least-privilege configuration.</p>
+<p><a href="https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/create-custom-agents" target="_blank" rel="noopener">Creating custom agents for Copilot cloud agent</a> · <a href="https://docs.github.com/en/copilot/reference/custom-agents-configuration" target="_blank" rel="noopener">Custom agents configuration reference</a></p>
+<h3 id="implementation-planner">Implementation Planner</h3>
+<p>An <strong>example custom agent</strong> from GitHub&#39;s customization library (not a built-in GitHub planning tool) that breaks features into phases/tasks and writes Markdown implementation plans.</p>
+<p><strong>Good for:</strong> Understanding planning agents with limited tools and the planning-to-execution handoff.</p>
+<p><a href="https://docs.github.com/en/copilot/tutorials/customization-library/custom-agents/implementation-planner" target="_blank" rel="noopener">https://docs.github.com/en/copilot/tutorials/customization-library/custom-agents/implementation-planner</a></p>
+
+</div>
+<div class="section">
+<h2 id="3-community-study-materials">3. Community Study Materials</h2>
+<p>Created by the GH-600 study community. These go beyond the official modules with flashcards, mock exams, and labs.</p>
+<h3 id="jtur671gh-600-study-guide-community-unofficial">jtur671/gh-600-study-guide (community, unofficial)</h3>
+<p><em>All domains</em></p>
+<p>Community study repository. Contains <strong>67 flashcards</strong> (<code>flashcards.md</code>), a <strong>41-question mock exam</strong> with answer key (<code>mock-exam.md</code>), <strong>6 hands-on labs</strong> focused on the tool-use and custom-agent domains (<code>lab-guide.md</code>), Mermaid diagrams (<code>diagrams.md</code>), and <strong>Anki decks</strong> (<code>media/gh-600.apkg</code>, <code>media/nlm-flashcards.apkg</code>).</p>
+<p><strong>Good for:</strong> Flashcards for quick review, mock exam for practice, labs for hands-on learning, Anki for long-term retention.</p>
+<p><a href="https://github.com/jtur671/gh-600-study-guide" target="_blank" rel="noopener">Repository</a> · <a href="https://github.com/jtur671/gh-600-study-guide/blob/main/flashcards.md" target="_blank" rel="noopener">Flashcards</a> · <a href="https://github.com/jtur671/gh-600-study-guide/blob/main/mock-exam.md" target="_blank" rel="noopener">Mock exam</a> · <a href="https://github.com/jtur671/gh-600-study-guide/blob/main/lab-guide.md" target="_blank" rel="noopener">Labs</a></p>
+<h3 id="naim149-gh-600-public-study-guide-gist-community-unofficial">Naim149 &quot;GH-600 Public Study Guide&quot; gist (community, unofficial)</h3>
+<p><em>File paths</em></p>
+<p>A single-page GitHub Gist mapping exam-relevant file paths and concepts: agent profile paths (<code>.github/agents/*.agent.md</code>), instruction file locations (<code>.github/instructions/*.instructions.md</code>), MCP config paths, and workflow file patterns. Verify paths against the official docs above.</p>
+<p><strong>Good for:</strong> Quick lookup of file paths during study sessions.</p>
+<p><a href="https://gist.github.com/naim149/a8aa41c7468685b7d984822c38863aae" target="_blank" rel="noopener">https://gist.github.com/naim149/a8aa41c7468685b7d984822c38863aae</a></p>
+
+</div>
+<div class="section">
+<h2 id="4-video-resources">4. Video Resources</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Description</th>
+<th>Good for</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>PromptLab — &quot;GH-600 GitHub Agentic AI Developer Certification — Full Study Series&quot;</strong> (community, unofficial)</td>
+<td>Free YouTube playlist, one video per exam domain plus an overview (7 videos).</td>
+<td>Domain overviews, visual explanations.</td>
+<td><a href="https://www.youtube.com/playlist?list=PLxgUmxsBhjMhyjJhNM9dxSCdJj2yExS2Y" target="_blank" rel="noopener">Watch playlist</a></td>
+</tr>
+<tr>
+<td><strong>Microsoft Reactor — &quot;The Agentic AI Developer: Deep Dive into the GitHub GH-600 Certification&quot;</strong></td>
+<td>Walkthrough of the six exam domains with study tips, on the Microsoft Reactor channel.</td>
+<td>Domain overview, study strategy.</td>
+<td><a href="https://www.youtube.com/watch?v=bgj20o0kYKg" target="_blank" rel="noopener">Watch on YouTube</a></td>
+</tr>
+<tr>
+<td><strong>Agent Orchestration On-Demand</strong> (Microsoft Reactor session on multi-agent orchestration, attributed by the original site to Ari Levigny, May 7)</td>
+<td>Multi-agent teams with orchestrator, planner, coder, and designer agents.</td>
+<td>Multi-agent orchestration patterns.</td>
+<td>⚠️ <strong>Link not found</strong> — the original site linked the same video as the Deep Dive above; the session&#39;s own URL could not be verified.</td>
+</tr>
+</tbody></table></div>
+
+</div>
+<div class="section">
+<h2 id="5-practice-exam">5. Practice &amp; Exam</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Description</th>
+<th>Good for</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Exam sandbox</strong> (official)</td>
+<td>Demo of the exam <strong>user interface</strong> — try the different question types before test day. It is not a GitHub repository playground.</td>
+<td>Getting familiar with the exam UI and question formats.</td>
+<td><a href="https://ghcertdemo.starttest.com/" target="_blank" rel="noopener">https://ghcertdemo.starttest.com/</a></td>
+</tr>
+<tr>
+<td><strong>Community mock exam</strong> (community, unofficial)</td>
+<td>41-question mock exam in the jtur671 repo (Section 3). The original site also mentioned Quizlet/StudyBlue tests but gave no links — unverified.</td>
+<td>Self-assessment, identifying weak domains.</td>
+<td><a href="https://github.com/jtur671/gh-600-study-guide/blob/main/mock-exam.md" target="_blank" rel="noopener">mock-exam.md</a></td>
+</tr>
+<tr>
+<td><strong>LeetCode Discussion — GH-600</strong> (community, unofficial)</td>
+<td>⚠️ <strong>Dead link</strong> — <code>leetcode.com/discuss/gh-600</code> shows the generic Discuss feed, no GH-600 thread.</td>
+<td>—</td>
+<td><del><a href="https://leetcode.com/discuss/gh-600" target="_blank" rel="noopener">https://leetcode.com/discuss/gh-600</a></del></td>
+</tr>
+<tr>
+<td><strong>Udemy course</strong> (community, unofficial)</td>
+<td>⚠️ <strong>Dead link</strong> — returns HTTP 404.</td>
+<td>—</td>
+<td><del><a href="https://www.udemy.com/course/gh-600-gh600/" target="_blank" rel="noopener">https://www.udemy.com/course/gh-600-gh600/</a></del></td>
+</tr>
+</tbody></table></div>
+<p>For hands-on practice with real agent configuration, use your own test repository with Copilot cloud agent, or the labs in the jtur671 repo.</p>
+
+</div>
+<div class="section">
+<h2 id="6-registration-exam-details">6. Registration &amp; Exam Details</h2>
+<h3 id="github-certified-agentic-ai-developer-certification-page">GitHub Certified: Agentic AI Developer — certification page</h3>
+<p><em>Official</em></p>
+<p>Hosted on Microsoft Learn. Exam overview, skills measured, preparation resources, and registration. Key facts: <strong>120 minutes</strong>, proctored, scheduled <strong>through Pearson VUE</strong>, passing score <strong>700</strong>, offered in <strong>English</strong> only. GitHub certifications are <strong>valid for 2 years</strong> (GitHub is transitioning to Microsoft&#39;s recertification process). The number of questions and case studies is <strong>not published</strong> by Microsoft; &quot;56 questions + 2 case studies&quot; is unverified community info.</p>
+<p><strong>Good for:</strong> Exam registration, official details, skill domain breakdown.</p>
+<p><a href="https://learn.microsoft.com/en-us/credentials/certifications/agentic-ai-developer/" target="_blank" rel="noopener">https://learn.microsoft.com/en-us/credentials/certifications/agentic-ai-developer/</a> (short link <code>gh.io/gh-600</code> redirects here)</p>
+<h3 id="official-study-guide">Official study guide</h3>
+<p><em>Official</em></p>
+<p>Web page on Microsoft Learn (not a PDF). Contains the skills measured with domain weights, the audience profile, and links to training and GitHub Docs. For question formats, use the exam sandbox.</p>
+<p><strong>Good for:</strong> Exam blueprint reference, understanding what&#39;s tested, study planning.</p>
+<p><a href="https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/gh-600" target="_blank" rel="noopener">https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/gh-600</a></p>
+<h3 id="beta-discount-code-gh600flanders-expired-historical">Beta discount code GH600Flanders — expired (historical)</h3>
+<p><em>Discount · no longer applicable</em></p>
+<p>During the beta, the community reported code <strong>GH600Flanders</strong> for <strong>80% off</strong> for the first 100 candidates. The beta has ended (community sources: beta through <strong>May 31, 2026</strong>, GA <strong>July 2026</strong>; beta results took 8–12 weeks). Use current pricing on the certification page.</p>
+
+</div>
+<div class="section">
+<h2 id="quick-reference-which-resource-for-what">Quick-Reference: Which Resource for What?</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>If You Need...</th>
+<th>Use This Resource</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Official learning path</td>
+<td>Microsoft Learn Modules (Section 1)</td>
+</tr>
+<tr>
+<td>Quick domain overviews</td>
+<td>PromptLab 7-Video Series (Section 4)</td>
+</tr>
+<tr>
+<td>Deep hands-on practice</td>
+<td>jtur671 6 Labs (Section 3)</td>
+</tr>
+<tr>
+<td>Flashcard memorization</td>
+<td>jtur671 Anki Decks + 67 Flashcards (Section 3)</td>
+</tr>
+<tr>
+<td>Simulated exam experience</td>
+<td>jtur671 41-Question Mock Exam (Section 3) + Exam sandbox for the UI (Section 5)</td>
+</tr>
+<tr>
+<td>File path reference</td>
+<td>Naim149 Gist (Section 3), verified against GitHub Docs (Section 2)</td>
+</tr>
+<tr>
+<td>Implementation details</td>
+<td>GitHub Docs — Custom agents, Memory, MCP, Guardrails (Section 2)</td>
+</tr>
+<tr>
+<td>Exam logistics</td>
+<td>Certification page + Study guide (Section 6)</td>
+</tr>
+<tr>
+<td>Community tips &amp; Q&amp;A</td>
+<td>Reddit (see <a href="index.html">index</a>); the LeetCode link is dead</td>
+</tr>
+<tr>
+<td>Exam UI familiarization</td>
+<td>Exam sandbox (Section 5)</td>
+</tr>
+<tr>
+<td>Discounted exam registration</td>
+<td>No current beta discount — GH600Flanders expired (Section 6)</td>
+</tr>
+</tbody></table></div>
+
+</div>
+<div class="section">
+<h2 id="exam-tips-from-ari-levigny-microsoft-reactor">Exam Tips from Ari Levigny (Microsoft Reactor)</h2>
+<p>Key takeaways the original site attributes to Ari Levigny&#39;s (GitHub Sr. Developer Advocate) Microsoft Reactor sessions — useful for last-minute review and study prioritization.</p>
+<div class="callout warning"><ul>
+<li><strong>&quot;Trust but verify&quot;</strong> — evaluate work by workflow standards, not novelty of author</li>
+<li><strong>Plan → Act → Evaluate</strong> is the central cycle</li>
+<li><strong>Domain 2 (Tooling)</strong> is the heaviest (20–25%) — spend the most study time here</li>
+<li>Planning agents should be <strong>read-only</strong> (just read/search tools)</li>
+<li><strong>Context rot/drift</strong> happens when context windows get too full</li>
+<li>Agents never merge directly to main — always <strong>PR + checks + review</strong></li>
+<li><strong>Execution without validation</strong> is an anti-pattern</li>
+<li>Understand <strong>least privilege</strong> for tools, branches, environments</li>
+<li><em>(Historical)</em> <strong>Beta exam counts</strong> — passing the beta earned the same credential as GA; the beta has ended</li>
+<li>GitHub Actions knowledge needed at <strong>high level only</strong>, not deep YAML</li>
+</ul></div>
+<div class="nav-links"><a href="glossary.html">← Glossary</a><a href="index.html">Home →</a></div>
+</div>
+</main>
+
+<footer class="site-footer">GH-600 Study Guide (corrected) · Based on official Microsoft Learn modules and GitHub Docs · Not affiliated with GitHub or Microsoft</footer>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "logo": ["AI&nbsp;", "Learn"],
+  "badge": "AI Models · Beginner guide",
+  "titleSuffix": "AI Learn",
+  "footer": "AI Learn · A beginner's guide to how AI models work · Based on official docs and open course material · Not affiliated with any model provider",
+  "pages": [
+    ["index", "Home"],
+    ["foundations", "1. Foundations"],
+    ["neural-networks", "2. Neural Networks"],
+    ["transformers", "3. Transformers &amp; LLMs"],
+    ["training", "4. Training &amp; Tuning"],
+    ["models", "5. Model Landscape"],
+    ["using-ai", "6. Using Models"],
+    ["tokens", "7. Tokens &amp; Cost"],
+    ["best-practices", "8. Best Practices"],
+    ["glossary", "Glossary"],
+    ["resources", "Resources"]
+  ]
+}

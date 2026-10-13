@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 420" role="img" aria-label="A small neural network with 3 input neurons, 4 hidden neurons and 2 output neurons, every neuron connected to every neuron in the next layer">
+  <rect x="0" y="0" width="760" height="420" rx="16" fill="#f8fafc"/>
+  <g stroke="#94a3b8" stroke-width="1.5">
+    <line x1="150" y1="110" x2="380" y2="70"/>
+    <line x1="150" y1="110" x2="380" y2="150"/>
+    <line x1="150" y1="110" x2="380" y2="230"/>
+    <line x1="150" y1="110" x2="380" y2="310"/>
+    <line x1="150" y1="190" x2="380" y2="70"/>
+    <line x1="150" y1="190" x2="380" y2="150"/>
+    <line x1="150" y1="190" x2="380" y2="230"/>
+    <line x1="150" y1="190" x2="380" y2="310"/>
+    <line x1="150" y1="270" x2="380" y2="70"/>
+    <line x1="150" y1="270" x2="380" y2="150"/>
+    <line x1="150" y1="270" x2="380" y2="230"/>
+    <line x1="150" y1="270" x2="380" y2="310"/>
+    <line x1="380" y1="70" x2="610" y2="150"/>
+    <line x1="380" y1="70" x2="610" y2="230"/>
+    <line x1="380" y1="150" x2="610" y2="150"/>
+    <line x1="380" y1="150" x2="610" y2="230"/>
+    <line x1="380" y1="230" x2="610" y2="150"/>
+    <line x1="380" y1="230" x2="610" y2="230"/>
+    <line x1="380" y1="310" x2="610" y2="150"/>
+    <line x1="380" y1="310" x2="610" y2="230"/>
+  </g>
+
+  <g stroke-width="2">
+    <circle cx="150" cy="110" r="24" fill="#dbeafe" stroke="#2563eb"/>
+    <circle cx="150" cy="190" r="24" fill="#dbeafe" stroke="#2563eb"/>
+    <circle cx="150" cy="270" r="24" fill="#dbeafe" stroke="#2563eb"/>
+    <circle cx="380" cy="70" r="24" fill="#ede9fe" stroke="#7c3aed"/>
+    <circle cx="380" cy="150" r="24" fill="#ede9fe" stroke="#7c3aed"/>
+    <circle cx="380" cy="230" r="24" fill="#ede9fe" stroke="#7c3aed"/>
+    <circle cx="380" cy="310" r="24" fill="#ede9fe" stroke="#7c3aed"/>
+    <circle cx="610" cy="150" r="24" fill="#d1fae5" stroke="#059669"/>
+    <circle cx="610" cy="230" r="24" fill="#d1fae5" stroke="#059669"/>
+  </g>
+
+  <text x="60" y="115" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#334155">size</text>
+  <text x="60" y="195" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#334155">rooms</text>
+  <text x="60" y="275" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#334155">age</text>
+  <text x="700" y="155" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#334155">cheap</text>
+  <text x="700" y="235" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#334155">expensive</text>
+
+  <text x="150" y="350" text-anchor="middle" font-family="Inter,sans-serif" font-size="14" font-weight="700" fill="#1e3a8a">Input layer</text>
+  <text x="150" y="368" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#475569">3 neurons (the data)</text>
+  <text x="380" y="360" text-anchor="middle" font-family="Inter,sans-serif" font-size="14" font-weight="700" fill="#4c1d95">Hidden layer</text>
+  <text x="380" y="378" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#475569">4 neurons (learned features)</text>
+  <text x="610" y="350" text-anchor="middle" font-family="Inter,sans-serif" font-size="14" font-weight="700" fill="#064e3b">Output layer</text>
+  <text x="610" y="368" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#475569">2 neurons (the answer)</text>
+
+  <text x="265" y="405" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="600" fill="#7c3aed">3 × 4 = 12 weights + 4 biases</text>
+  <text x="495" y="405" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="600" fill="#7c3aed">4 × 2 = 8 weights + 2 biases</text>
+</svg>

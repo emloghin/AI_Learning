@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Start Here: Fundamentals for GH-600 — GH-600 Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>.section td code,.callout code,.diagram-caption code{background:var(--primary-light);color:var(--primary);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:13px}.callout p+p{margin-top:8px}.callout ul{margin:8px 0 0 20px}</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-logo"><span>GH-</span>600</div>
+    <nav class="header-nav">
+      <a href="index.html">Home</a>
+      <a href="basics.html" class="active">Start Here</a>
+      <a href="domain-1.html">D1: Architecture</a>
+      <a href="domain-2.html">D2: Tooling &amp; MCP</a>
+      <a href="domain-3.html">D3: Memory &amp; State</a>
+      <a href="domain-4.html">D4: Evaluation</a>
+      <a href="domain-5.html">D5: Multi-Agent</a>
+      <a href="domain-6.html">D6: Guardrails</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="resources.html">Resources</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-badge">Beginner primer · Read this first</div>
+  <h1>Start Here: Fundamentals for GH-600</h1>
+  <p>The six domain pages assume you already speak the language of AI agents, Git, GitHub Actions, and Copilot. This page teaches that language from zero. Each section is short, uses plain words and small examples, and links to the official source. Read it once end to end, then come back to any section when a domain page uses a term you don&#39;t recognize. Section 11 gives you a 2–4 week study plan with hands-on labs.</p>
+</section>
+
+<main class="main">
+<div class="section">
+<h2 id="1-llms-prompts-tokens-and-the-context-window">1. LLMs, Prompts, Tokens, and the Context Window</h2>
+<p>A <strong>large language model (LLM)</strong> is the &quot;brain&quot; behind Copilot. It reads text and predicts the most likely text that comes next. When you ask a question, the model isn&#39;t looking up an answer in a database; it produces the response that best continues your input (<a href="https://learn.microsoft.com/en-us/azure/ai-foundry/openai/concepts/prompt-engineering" target="_blank" rel="noopener">Microsoft Learn: prompt engineering basics</a>).</p>
+<p>A <strong>prompt</strong> is everything the model receives for one request: your question, plus instructions, chat history, file contents, and tool results that the app adds behind the scenes.</p>
+<p>Models read text as <strong>tokens</strong>, small chunks of text. A common word is often one token; rare words get split into several pieces (<a href="https://learn.microsoft.com/en-us/azure/ai-foundry/openai/concepts/prompt-engineering#space-efficiency" target="_blank" rel="noopener">Microsoft Learn</a>). Tokens matter because limits and cost are counted in tokens.</p>
+<p>The <strong>context window</strong> is the maximum number of tokens the model can look at in one request. Think of it as the model&#39;s desk: everything it needs must fit on the desk at once. Anything that falls off the desk is simply not seen.</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> The model has no memory between requests. Each time, the app re-sends the important parts of the conversation. &quot;Memory&quot; in an AI tool is really &quot;what the tool chooses to put back on the desk&quot;.</p></div>
+<div class="callout tip"><p><strong>💡 Example:</strong> A Copilot CLI session keeps growing as you chat and as it reads files. When it reaches about 95% of the token limit, Copilot CLI automatically compresses older history; <code>/context</code> shows how the window is being used and <code>/compact</code> compresses on demand (<a href="https://docs.github.com/en/copilot/concepts/agents/about-copilot-cli#automatic-context-management" target="_blank" rel="noopener">GitHub Docs: Copilot CLI</a>).</p></div>
+<p><strong>Context drift</strong> is what happens in long sessions: the original goal and early instructions get buried or summarized away, so the agent slowly wanders off-task. The fixes you will meet in <a href="domain-3.html">Domain 3</a> all come from this section: keep tasks short, write plans and progress into files or pull requests (so they can be re-read), and put rules that must always apply into instruction files instead of chat.</p>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Assuming that something you told the agent an hour ago is still &quot;remembered&quot;. If it matters, write it into a file the agent re-reads (instructions, a plan, an issue).</p></div>
+
+</div>
+<div class="section">
+<h2 id="2-assistant-vs-agent-and-the-plan-act-evaluate-loop">2. Assistant vs Agent, and the Plan → Act → Evaluate Loop</h2>
+<p>An <strong>assistant</strong> answers or suggests; you do the work. Code completion and &quot;explain this code&quot; in chat are assistant behavior.</p>
+<p>An <strong>agent</strong> is given a goal and takes actions to reach it: it reads files, edits code, runs commands, calls tools, and checks results, repeating until done or until it needs a human.</p>
+<p>Agents work in a loop, not a straight line (<a href="https://learn.microsoft.com/en-us/training/modules/foundations-agentic-ai/3-explain-agent-lifecycle-plan-act-evaluate" target="_blank" rel="noopener">Microsoft Learn: plan, act, evaluate</a>):</p>
+<ol>
+<li><strong>Plan</strong> — interpret the goal and decide the steps. Good plans are visible artifacts, such as a checklist in an issue or the pull request description, with scope, success criteria, and a rollback or escalation path.</li>
+<li><strong>Act</strong> — execute in the repository: create a branch, change files, push commits, open or update a pull request, respond to review feedback.</li>
+<li><strong>Evaluate</strong> — judge the result with system signals: workflow runs and status checks, review feedback, and security signals such as code scanning and secret scanning.</li>
+</ol>
+<p>If evaluation fails, the loop continues: revise the plan, adjust the change, re-evaluate, or hand off to a human.</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> An assistant is a calculator; an agent is an intern with a to-do list. You check the intern&#39;s work with tests and reviews, not by asking &quot;are you sure?&quot;</p></div>
+<div class="callout tip"><p><strong>💡 Example:</strong> Goal: &quot;Upgrade the <code>lodash</code> package to fix a vulnerability.&quot; Plan: issue checklist says which package, which version, and &quot;CI green + alert closed&quot; as success. Act: the agent edits <code>package.json</code>, commits on a branch, opens a PR. Evaluate: CI fails on one test, so the agent fixes the test and pushes again; the alert closes and checks turn green.</p></div>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Treating the agent&#39;s confidence (&quot;All done, everything works!&quot;) as evaluation. The Learn module is explicit: evaluation must be grounded in system signals, not in the agent&#39;s confidence.</p></div>
+
+</div>
+<div class="section">
+<h2 id="3-git-and-github-basics">3. Git and GitHub Basics</h2>
+<ul>
+<li><strong>Repository (repo):</strong> a project folder plus its full history, hosted on GitHub.</li>
+<li><strong>Commit:</strong> a saved snapshot of changes with a message, an author, and a unique ID.</li>
+<li><strong>Branch:</strong> a separate line of work. You change files on a branch without touching the main line.</li>
+<li><strong>Default branch:</strong> the main line of the repo, usually <code>main</code>. What is on it is &quot;the real code&quot;.</li>
+<li><strong>Pull request (PR):</strong> a request to merge a branch into another (usually the default branch). It shows the diff, runs checks, and collects review comments.</li>
+<li><strong>Review:</strong> a teammate reads the PR and comments, requests changes, or approves.</li>
+<li><strong>Merge:</strong> applies the PR&#39;s commits to the target branch. After merging, the change is part of <code>main</code>.</li>
+</ul>
+<div class="callout tip"><p><strong>💡 Example:</strong> A tiny flow from your terminal:</p>
+<div class="code-block">git switch -c fix-typo          # create and switch to a new branch
+# ...edit README.md...
+git add README.md               # stage the change
+git commit -m &quot;Fix typo in README&quot;  # save a snapshot
+git push -u origin fix-typo     # upload the branch to GitHub</div>
+<p>Then on GitHub: open a PR from <code>fix-typo</code> into <code>main</code>, wait for checks, get one approval, and merge.</p></div>
+<p><strong>Why the PR is the unit of change agents produce.</strong> An agent works on its own branch and proposes its work as a pull request. That gives you one place to see exactly what changed, run automated checks, require human review, and keep a permanent record of who (or what) changed what and why. Copilot cloud agent works exactly this way: it pushes to a <code>copilot/</code> branch and opens a PR for a human to review; it can&#39;t approve or merge its own work (<a href="https://docs.github.com/en/copilot/concepts/agents/cloud-agent/risks-and-mitigations" target="_blank" rel="noopener">GitHub Docs: risks and mitigations</a>).</p>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Agents propose; humans and policy accept. The PR is the &quot;proposal form&quot;.</p></div>
+
+</div>
+<div class="section">
+<h2 id="4-github-actions-basics">4. GitHub Actions Basics</h2>
+<p><strong>GitHub Actions</strong> runs automation in response to things that happen in your repo. Agents interact with Actions constantly: their PRs trigger checks, and Copilot cloud agent itself runs in an Actions-powered environment.</p>
+<ul>
+<li><strong>Workflow:</strong> a YAML file in <code>.github/workflows/</code> (for example <code>.github/workflows/ci.yml</code>).</li>
+<li><strong>Event (trigger):</strong> what starts the workflow, set with <code>on:</code> — for example <code>push</code>, <code>pull_request</code>, <code>workflow_dispatch</code> (manual button), or <code>schedule</code>.</li>
+<li><strong>Job:</strong> a group of steps that runs on one machine. Jobs run in parallel by default.</li>
+<li><strong>Step:</strong> one command (<code>run:</code>) or one reusable action (<code>uses:</code>), executed in order inside a job.</li>
+<li><strong>Runner:</strong> the machine that runs a job — GitHub-hosted (like <code>ubuntu-latest</code>) or self-hosted.</li>
+<li><strong><code>needs</code>:</strong> makes one job wait for another to succeed (creates an order).</li>
+<li><strong><code>permissions</code>:</strong> what the job&#39;s <code>GITHUB_TOKEN</code> is allowed to do. Setting any scope sets every unlisted scope to <code>none</code> (<a href="https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#permissions" target="_blank" rel="noopener">workflow syntax</a>).</li>
+<li><strong><code>GITHUB_TOKEN</code>:</strong> a token GitHub creates automatically at the start of each job, limited to this repository, that expires when the job finishes (<a href="https://docs.github.com/en/actions/concepts/security/github_token" target="_blank" rel="noopener">GitHub Docs: GITHUB_TOKEN</a>).</li>
+<li><strong>Secrets:</strong> encrypted values (API keys, passwords) stored in settings and read as <code>${{ secrets.NAME }}</code>. They are masked in logs.</li>
+<li><strong>Environments:</strong> named deployment targets (like <code>production</code>) that can require a human approval before a job runs and can hold their own secrets.</li>
+<li><strong>Artifacts:</strong> files a run saves (test reports, build outputs) so you or later jobs can download them.</li>
+<li><strong>Logs:</strong> every run has step-by-step logs on the repo&#39;s <strong>Actions</strong> tab — the first place to look when a check fails.</li>
+</ul>
+<div class="callout tip"><p><strong>💡 Example:</strong> A minimal workflow, one comment per line:</p>
+<div class="code-block">name: CI                                   # Name shown on the Actions tab
+on:                                        # Events that start this workflow
+  push:                                    # Run on pushes...
+    branches: [main]                       # ...to main (that is, after a merge)
+  pull_request:                            # Also run on every PR...
+    branches: [main]                       # ...that targets main
+permissions:                               # Default GITHUB_TOKEN scopes for all jobs
+  contents: read                           # Read-only code access (least privilege)
+jobs:                                      # The work, split into jobs
+  test:                                    # Job ID; also the check name on PRs
+    runs-on: ubuntu-latest                 # Runner: fresh GitHub-hosted Linux VM
+    steps:                                 # Steps run in order on that runner
+      - uses: actions/checkout@v4          # Reusable action: clone the repo
+      - run: npm ci &amp;&amp; npm test            # Shell command; a non-zero exit fails the check
+      - uses: actions/upload-artifact@v4   # Reusable action: save files from this run
+        with:                              # Inputs for that action
+          name: test-report                # Artifact name on the run page
+          path: report/                    # Folder to upload
+  deploy:                                  # Second job
+    needs: test                            # Start only if &quot;test&quot; succeeded
+    if: github.event_name == &#39;push&#39;        # Deploy after merge only, never from a PR
+    runs-on: ubuntu-latest                 # Its own fresh runner
+    environment: production                # Waits here for a required reviewer
+    steps:                                 # Deploy steps
+      - uses: actions/checkout@v4          # Clone the repo again (new machine)
+      - run: ./deploy.sh                   # Run the deploy script
+        env:                               # Environment variables for this step
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}  # Secret injected and masked in logs</div></div>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Writing <code>permissions: write-all</code> &quot;to make it work&quot;. Grant only the scopes a job needs; <a href="domain-6.html">Domain 6</a> tests least privilege heavily.</p></div>
+
+</div>
+<div class="section">
+<h2 id="5-yaml-and-markdown-front-matter">5. YAML and Markdown Front Matter</h2>
+<p><strong>YAML</strong> is a plain-text format for settings. You need to read it for workflows and for agent profiles.</p>
+<div class="code-block">name: planner                 # key: value
+tools: [&quot;read&quot;, &quot;search&quot;]     # a list, inline style
+labels:                       # a list, block style (each item starts with &quot;- &quot;)
+  - docs
+  - agent
+timeout-minutes: 30           # a number
+enabled: true                 # a boolean
+description: |                # &quot;|&quot; keeps the following lines as multi-line text
+  Line one.
+  Line two.</div>
+<p>Rules that matter: indentation uses <strong>spaces</strong> (never tabs) and shows nesting; <code>#</code> starts a comment; strings usually need no quotes, but quote them if they contain <code>:</code> or start with special characters.</p>
+<p><strong>Front matter</strong> is a YAML block at the very top of a Markdown file, between two <code>---</code> lines. The tool reads the YAML as settings and the Markdown below as instructions. This is how <code>.agent.md</code>, <code>.instructions.md</code>, <code>.prompt.md</code>, and <code>SKILL.md</code> files work.</p>
+<div class="callout tip"><p><strong>💡 Example:</strong> A custom agent profile, <code>.github/agents/planner.agent.md</code>:</p>
+<div class="code-block">---
+name: planner
+description: Researches the codebase and writes an implementation plan. Never edits code.
+tools: [&quot;read&quot;, &quot;search&quot;]
+---
+
+You are a planning agent. Read the relevant files, then write a step-by-step
+plan with scope, success criteria, and risks. Stop after the plan.</div>
+<p><code>description</code> is the only required key; <code>tools</code> is the enforced limit; the Markdown body is guidance (<a href="https://docs.github.com/en/copilot/reference/custom-agents-configuration" target="_blank" rel="noopener">custom agents configuration</a>).</p></div>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Leaving out <code>tools</code> to be &quot;safe&quot;. Omitting <code>tools</code> gives the agent <strong>all</strong> tools; use <code>tools: []</code> for none. See <a href="domain-2.html">Domain 2</a>.</p></div>
+
+</div>
+<div class="section">
+<h2 id="6-governance-building-blocks">6. Governance Building Blocks</h2>
+<p>These are the GitHub controls that keep agents (and people) in check no matter what an agent &quot;decides&quot;. <a href="domain-6.html">Domain 6</a> goes deep; here is the one-paragraph version of each.</p>
+<h3 id="branch-protection-vs-rulesets">Branch protection vs rulesets</h3>
+<p>Both protect branches, for example &quot;no direct pushes to <code>main</code>&quot; or &quot;PRs need one approval&quot;. A <strong>branch protection rule</strong> is the older mechanism: one rule per branch pattern, managed by admins. A <strong>ruleset</strong> is the newer, more flexible one: several rulesets can apply to the same branch, you can turn a ruleset off (or, on GitHub Enterprise, to &quot;evaluate&quot; test mode) without deleting it, anyone with read access can see which rulesets apply, and a <strong>bypass list</strong> names who may skip the rules. When both exist, all rules apply and the strictest version wins (<a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets" target="_blank" rel="noopener">GitHub Docs: about rulesets</a>).</p>
+<div class="callout tip"><p><strong>💡 Example:</strong> Ruleset &quot;protect-main&quot; targets the default branch: block force pushes, require a pull request with 1 approval, require the <code>test</code> check to pass. Bypass list: repository admins only.</p></div>
+<h3 id="required-status-checks">Required status checks</h3>
+<p>A required status check is a CI job that must pass before a PR can merge. It turns &quot;tests should pass&quot; into &quot;tests must pass&quot;.</p>
+<div class="callout tip"><p><strong>💡 Example:</strong> Require the <code>test</code> job from the workflow in section 4. A PR with a failing test shows a red ❌ and the merge button stays disabled.</p></div>
+<h3 id="required-reviews">Required reviews</h3>
+<p>A required review means a set number of approvals before merge. You can also dismiss old approvals when new commits arrive and require approval of the most recent push. For PRs that Copilot authors, the person who asked Copilot to create the PR can&#39;t approve it (<a href="https://docs.github.com/en/copilot/concepts/agents/cloud-agent/risks-and-mitigations" target="_blank" rel="noopener">risks and mitigations</a>).</p>
+<div class="callout tip"><p><strong>💡 Example:</strong> &quot;Require 1 approval&quot; + &quot;Dismiss stale approvals&quot;. An agent pushes a fix after approval, so a human must look again.</p></div>
+<h3 id="codeowners">CODEOWNERS</h3>
+<p>A <code>CODEOWNERS</code> file (in <code>.github/</code>, the repo root, or <code>docs/</code>) maps paths to people or teams who are automatically requested as reviewers when those paths change. It only <strong>blocks</strong> merges when &quot;Require review from Code Owners&quot; is turned on in branch protection or a ruleset (<a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners" target="_blank" rel="noopener">GitHub Docs: about code owners</a>).</p>
+<div class="callout tip"><p><strong>💡 Example:</strong></p>
+<div class="code-block"># .github/CODEOWNERS
+*                     @org/developers
+/.github/workflows/   @org/platform-team
+/.github/agents/      @org/ai-governance
+/.github/CODEOWNERS   @org/repo-admins</div></div>
+<h3 id="environments-with-required-reviewers">Environments with required reviewers</h3>
+<p>An environment (like <code>production</code>) can list required reviewers. A job that uses <code>environment: production</code> pauses until one of them approves. It is the &quot;second key&quot; for irreversible actions such as deploying (<a href="https://docs.github.com/en/actions/reference/workflows-and-actions/deployments-and-environments" target="_blank" rel="noopener">Deployments and environments</a>).</p>
+<div class="callout tip"><p><strong>💡 Example:</strong> The <code>deploy</code> job in section 4 waits with the status &quot;Waiting for review&quot;. A release manager clicks <strong>Approve and deploy</strong>, and only then does <code>deploy.sh</code> run.</p></div>
+<h3 id="audit-log">Audit log</h3>
+<p>The audit log records who did what in an organization or enterprise: settings changes, permission changes, and agent activity. Filtering with <code>actor:Copilot</code> shows Copilot agent events, and each one links back to the person who started the session (<a href="https://docs.github.com/en/copilot/reference/enterprise-administrators/agentic-audit-log-events" target="_blank" rel="noopener">agentic audit log events</a>).</p>
+<div class="callout tip"><p><strong>💡 Example:</strong> After an unexpected change, an admin filters the audit log by <code>actor:Copilot</code> and finds the <code>pull_request.create</code> event, the agent session ID, and the user who triggered it.</p></div>
+
+</div>
+<div class="section">
+<h2 id="7-the-copilot-surfaces">7. The Copilot Surfaces</h2>
+<p>GitHub Copilot shows up in several places. The exam expects you to know where each one runs and what it is allowed to do.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Surface</th>
+<th>Where it runs</th>
+<th>Who triggers it</th>
+<th>What it can change</th>
+<th>Where config lives</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>IDE — VS Code agent mode</strong></td>
+<td>On your machine, inside the editor</td>
+<td>You, in Copilot Chat (choose Agent)</td>
+<td>Files in your workspace; runs terminal commands after your approval</td>
+<td><code>.github/copilot-instructions.md</code>, <code>.github/instructions/</code>, <code>.github/agents/</code>, <code>.github/prompts/</code>, <code>.vscode/mcp.json</code></td>
+</tr>
+<tr>
+<td><strong>Copilot CLI</strong></td>
+<td>On your machine, in the terminal (<code>copilot</code>)</td>
+<td>You, interactively or with <code>copilot -p &quot;...&quot;</code></td>
+<td>Files and shell commands in trusted directories; can create issues and PRs as you (<a href="https://docs.github.com/en/copilot/concepts/agents/about-copilot-cli" target="_blank" rel="noopener">about Copilot CLI</a>)</td>
+<td>Custom instructions, <code>.github/agents/</code>, skills, hooks in <code>.github/hooks/</code>, MCP servers via <code>/mcp</code></td>
+</tr>
+<tr>
+<td><strong>Copilot cloud agent</strong> (formerly &quot;coding agent&quot;)</td>
+<td>On GitHub, in an ephemeral GitHub Actions–powered environment</td>
+<td>A user with write access: assign an issue, use the agents panel, chat, or <code>@copilot</code> on a PR</td>
+<td>Only its own <code>copilot/</code> branch (or the PR branch when mentioned) in one repo; opens a PR for human review; max 59 minutes per session (<a href="https://docs.github.com/en/copilot/concepts/agents/cloud-agent/about-cloud-agent" target="_blank" rel="noopener">about cloud agent</a>)</td>
+<td>Instructions, <code>AGENTS.md</code>, <code>.github/agents/</code>, skills, hooks, <code>.github/workflows/copilot-setup-steps.yml</code>, repository settings (MCP, firewall)</td>
+</tr>
+<tr>
+<td><strong>Copilot code review</strong></td>
+<td>On GitHub.com PRs (agentic parts run on Actions) and in IDEs</td>
+<td>Requesting Copilot as a reviewer, or automatic reviews set by a user, repo, or ruleset</td>
+<td>Leaves review comments and suggested changes; it doesn&#39;t push to your branch, but it can hand suggestions to cloud agent, which opens a separate PR (<a href="https://docs.github.com/en/copilot/concepts/agents/code-review" target="_blank" rel="noopener">about code review</a>)</td>
+<td><code>.github/copilot-instructions.md</code>, <code>.github/instructions/</code>, <code>AGENTS.md</code>, skills (read from the PR&#39;s head branch), repository MCP settings</td>
+</tr>
+</tbody></table></div>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> IDE and CLI are &quot;agent at your desk&quot; — you watch it work live. Cloud agent is &quot;agent in the office down the hall&quot; — you hand it an issue and get a PR back. Code review is &quot;a reviewer who comments&quot; rather than an author.</p></div>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Assuming Copilot&#39;s review counts as the required approval. By default, Copilot&#39;s reviews don&#39;t count toward required approvals.</p></div>
+
+</div>
+<div class="section">
+<h2 id="8-customization-map">8. Customization Map</h2>
+<p>Every way to shape Copilot&#39;s behavior, in one table. <a href="domain-2.html">Domain 2</a> and <a href="domain-4.html">Domain 4</a> build on this.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>What</th>
+<th>Path</th>
+<th>When it applies</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Repository custom instructions</strong></td>
+<td><code>.github/copilot-instructions.md</code></td>
+<td>Always, for every Copilot request in that repo (<a href="https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/add-custom-instructions/add-repository-instructions" target="_blank" rel="noopener">add repository instructions</a>)</td>
+</tr>
+<tr>
+<td><strong>Path-specific instructions</strong></td>
+<td><code>.github/instructions/*.instructions.md</code> with <code>applyTo: &quot;glob&quot;</code> in front matter</td>
+<td>Automatically when Copilot works on files that match the glob (added on top of the repo-wide file)</td>
+</tr>
+<tr>
+<td><strong>Agent instructions</strong></td>
+<td><code>AGENTS.md</code> (root or any folder; nearest one wins)</td>
+<td>Always; shared with other AI tools, not only Copilot</td>
+</tr>
+<tr>
+<td><strong>Custom agents</strong></td>
+<td><code>.github/agents/*.agent.md</code></td>
+<td>When you pick that agent (or another agent delegates to it); its <code>tools</code> list limits what it can do</td>
+</tr>
+<tr>
+<td><strong>Agent skills</strong></td>
+<td><code>.github/skills/&lt;name&gt;/SKILL.md</code></td>
+<td>On demand: when invoked (<code>/skill-name</code>) or when the agent decides the skill is relevant</td>
+</tr>
+<tr>
+<td><strong>Prompt files</strong></td>
+<td><code>.github/prompts/*.prompt.md</code></td>
+<td>Only when a user runs it manually in VS Code chat by typing <code>/</code> + its name</td>
+</tr>
+<tr>
+<td><strong>Hooks</strong></td>
+<td><code>.github/hooks/*.json</code></td>
+<td>At lifecycle events in Copilot CLI and cloud agent (for example <code>preToolUse</code> can allow or deny a tool call); must be on the default branch for cloud agent (<a href="https://docs.github.com/en/copilot/how-tos/use-copilot-agents/cloud-agent/use-hooks" target="_blank" rel="noopener">use hooks</a>)</td>
+</tr>
+<tr>
+<td><strong>MCP servers</strong></td>
+<td>Repository settings (cloud agent and code review), <code>mcp-servers</code> in an agent profile, <code>.vscode/mcp.json</code> (VS Code), CLI config via <code>/mcp</code></td>
+<td>Whenever the agent decides to call one of the server&#39;s tools</td>
+</tr>
+<tr>
+<td><strong>Cloud agent setup steps</strong></td>
+<td><code>.github/workflows/copilot-setup-steps.yml</code> (one job named <code>copilot-setup-steps</code>)</td>
+<td>Before Copilot cloud agent starts working, to preinstall tools and dependencies</td>
+</tr>
+<tr>
+<td><strong>Copilot Memory</strong></td>
+<td>Stored by GitHub, managed in settings (no file)</td>
+<td>Learned automatically as Copilot works; each memory is checked against the current code before use and deleted after 28 days unused (<a href="https://docs.github.com/en/copilot/concepts/agents/copilot-memory" target="_blank" rel="noopener">about Copilot Memory</a>)</td>
+</tr>
+</tbody></table></div>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Instructions are the house rules (always on). Agents are job descriptions (who does what, with which tools). Skills are recipes (used when needed). Prompt files are saved requests (you press the button). Hooks are security guards (they check actions as they happen). Memory is notes Copilot takes on its own.</p></div>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Putting a custom agent definition in <code>AGENTS.md</code>. <code>AGENTS.md</code> holds instructions; agent definitions go in <code>.github/agents/</code>.</p></div>
+
+</div>
+<div class="section">
+<h2 id="9-mcp-in-one-minute">9. MCP in One Minute</h2>
+<p>The <strong>Model Context Protocol (MCP)</strong> is an open standard that lets AI apps plug into external tools and data in one consistent way — like USB for AI tools (<a href="https://modelcontextprotocol.io/docs/learn/architecture" target="_blank" rel="noopener">MCP architecture</a>).</p>
+<ul>
+<li><strong>Host:</strong> the AI app (VS Code, Copilot CLI, Copilot cloud agent).</li>
+<li><strong>Client:</strong> a connector the host creates, one per server.</li>
+<li><strong>Server:</strong> a program that offers capabilities, for example the GitHub MCP server or a database server.</li>
+</ul>
+<p>A server can offer three kinds of things:</p>
+<ul>
+<li><strong>Tools</strong> — actions the model can call (<code>create_issue</code>, <code>run_query</code>).</li>
+<li><strong>Resources</strong> — data to read (file contents, records, schemas).</li>
+<li><strong>Prompts</strong> — reusable templates.</li>
+</ul>
+<p>Messages use <strong>JSON-RPC 2.0</strong> (&quot;call this method with these arguments&quot;). They travel over <strong>stdio</strong> (the host starts the server as a local process) or <strong>HTTP</strong> (Streamable HTTP, for remote servers reached by URL).</p>
+<div class="callout tip"><p><strong>💡 Example:</strong> You ask Copilot &quot;find good first issues in this repo&quot;. The host sees that the GitHub MCP server offers a search tool, the client sends a <code>tools/call</code> JSON-RPC request, the server queries GitHub, and the result goes back into the model&#39;s context.</p></div>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Enabling every tool a server offers. Each tool is a capability the agent can use; allow only the ones the task needs.</p></div>
+
+</div>
+<div class="section">
+<h2 id="10-how-the-six-domains-fit-together">10. How the Six Domains Fit Together</h2>
+<p>Follow one feature request from idea to production. Each step maps to the domain that tests it.</p>
+<ol>
+<li><strong>Issue.</strong> A product owner opens an issue: &quot;Add CSV export to the reports page&quot;, with acceptance criteria. → <a href="domain-1.html">Domain 1: Architecture</a> (structured tasks with inputs, outputs, success criteria).</li>
+<li><strong>Plan.</strong> A planning agent with read-only tools writes a step-by-step plan into the issue. → <a href="domain-1.html">Domain 1</a> (separating planning from execution).</li>
+<li><strong>Agent works on a branch.</strong> The issue is assigned to Copilot cloud agent. It runs with scoped tools and MCP servers, in an environment prepared by <code>copilot-setup-steps.yml</code>, and pushes to a <code>copilot/</code> branch. → <a href="domain-2.html">Domain 2: Tools &amp; Environment</a>.</li>
+<li><strong>State and memory.</strong> The agent records progress in the PR description and commits, so a later session can resume without drifting. → <a href="domain-3.html">Domain 3: Memory &amp; State</a>.</li>
+<li><strong>Pull request.</strong> The agent opens a PR that links the issue and summarizes the change. → <a href="domain-1.html">Domain 1</a> (the PR as the unit of change).</li>
+<li><strong>Checks and scans.</strong> Required status checks run tests; CodeQL code scanning and secret scanning look for security problems. Failures send the agent back to fix them. → <a href="domain-4.html">Domain 4: Evaluation &amp; Tuning</a>.</li>
+<li><strong>Parallel work (optional).</strong> A second agent writes docs on its own branch at the same time; conflicts are caught by checks and review. → <a href="domain-5.html">Domain 5: Multi-Agent</a>.</li>
+<li><strong>Review.</strong> CODEOWNERS request the right humans; a ruleset requires an approval from someone other than the person who triggered the agent. → <a href="domain-6.html">Domain 6: Guardrails</a>.</li>
+<li><strong>Merge.</strong> Rulesets enforce that nothing reaches <code>main</code> without passing checks and review. → <a href="domain-6.html">Domain 6</a>.</li>
+<li><strong>Deploy with approval.</strong> The deploy job targets the <code>production</code> environment and waits for a required reviewer. The audit log records every step. → <a href="domain-6.html">Domain 6</a>.</li>
+</ol>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Domains 1–2 set up the work, Domain 3 keeps it on track, Domain 4 checks it, Domain 5 scales it to many agents, and Domain 6 makes sure nothing unsafe gets through.</p></div>
+
+</div>
+<div class="section">
+<h2 id="11-suggested-beginner-study-plan-24-weeks">11. Suggested Beginner Study Plan (2–4 Weeks)</h2>
+<p>Do the weeks in order. On a tight schedule, combine weeks 1–2 and 3–4 for a 2-week plan. Labs marked <strong>Skills</strong> are GitHub Skills exercises: you copy a template repo and a bot guides you step by step. Use <strong>public</strong> repo copies, as the exercises recommend. Copilot cloud agent needs a paid Copilot plan (Pro or higher). All labs are listed with platform and domain in <a href="resources.html#hands-on-labs">Resources → Hands-On Labs</a>.</p>
+<p><strong>Week 1 — GitHub foundations</strong></p>
+<ul>
+<li>Read: this page, then <a href="domain-1.html">Domain 1</a>.</li>
+<li>Learn module: <a href="https://learn.microsoft.com/en-us/training/modules/foundations-agentic-ai/" target="_blank" rel="noopener">Foundations of Agentic AI in GitHub</a>.</li>
+<li>Labs:<ol>
+<li>Skills: <a href="https://github.com/skills/introduction-to-github" target="_blank" rel="noopener">Introduction to GitHub</a> — branch, commit, PR, merge.</li>
+<li>Skills: <a href="https://github.com/skills/review-pull-requests" target="_blank" rel="noopener">Review pull requests</a> — request, leave, and apply reviews.</li>
+<li>Skills: <a href="https://github.com/skills/hello-github-actions" target="_blank" rel="noopener">Hello GitHub Actions</a> — your first workflow.</li>
+<li>Optional (Learn): <a href="https://learn.microsoft.com/en-us/training/modules/github-actions-automate-tasks/" target="_blank" rel="noopener">Automate development tasks by using GitHub Actions</a> — exercise unit included.</li>
+</ol>
+</li>
+</ul>
+<p><strong>Week 2 — Copilot, customization, tools, and MCP</strong></p>
+<ul>
+<li>Read: <a href="domain-2.html">Domain 2</a> (the heaviest domain).</li>
+<li>Learn module: <a href="https://learn.microsoft.com/en-us/training/modules/design-agent-architecture-integration/" target="_blank" rel="noopener">Designing Agent Architecture and SDLC Integration</a> and <a href="https://learn.microsoft.com/en-us/training/modules/agent-tooling-mcp-execution-environments/" target="_blank" rel="noopener">Tooling, MCP, and Agent Execution Environments</a>.</li>
+<li>Labs:<ol>
+<li>Skills: <a href="https://github.com/skills/getting-started-with-github-copilot" target="_blank" rel="noopener">Getting Started with GitHub Copilot</a>.</li>
+<li>Skills: <a href="https://github.com/skills/build-applications-w-copilot-agent-mode" target="_blank" rel="noopener">Build applications with GitHub Copilot agent mode</a>.</li>
+<li>Skills: <a href="https://github.com/skills/customize-your-github-copilot-experience" target="_blank" rel="noopener">Customize Your GitHub Copilot Experience</a> — instructions, agent skills, custom agents.</li>
+<li>Skills: <a href="https://github.com/skills/integrate-mcp-with-copilot" target="_blank" rel="noopener">Integrate MCP with GitHub Copilot</a>.</li>
+<li>Learn exercise: <a href="https://learn.microsoft.com/en-us/training/modules/agent-tooling-mcp-execution-environments/exercise" target="_blank" rel="noopener">Automate repository updates with GitHub Agentic Workflows</a>.</li>
+</ol>
+</li>
+</ul>
+<p><strong>Week 3 — Cloud agent, memory, evaluation</strong></p>
+<ul>
+<li>Read: <a href="domain-3.html">Domain 3</a> and <a href="domain-4.html">Domain 4</a>.</li>
+<li>Learn module: <a href="https://learn.microsoft.com/en-us/training/modules/memory-state-evaluation/" target="_blank" rel="noopener">Memory, State, and Evaluation</a>.</li>
+<li>Labs:<ol>
+<li>Skills: <a href="https://github.com/skills/expand-your-team-with-copilot" target="_blank" rel="noopener">Expand your team with Copilot cloud agent</a> — assign issues, review its PRs, customize its environment.</li>
+<li>Skills: <a href="https://github.com/skills/create-applications-with-the-copilot-cli" target="_blank" rel="noopener">Create applications with the Copilot CLI</a>.</li>
+<li>Skills: <a href="https://github.com/skills/introduction-to-codeql" target="_blank" rel="noopener">Enable CodeQL to secure your source code</a> — code scanning as an evaluation signal.</li>
+</ol>
+</li>
+</ul>
+<p><strong>Week 4 — Multi-agent, governance, and practice</strong></p>
+<ul>
+<li>Read: <a href="domain-5.html">Domain 5</a>, <a href="domain-6.html">Domain 6</a>, and the <a href="glossary.html">Glossary</a>.</li>
+<li>Learn modules: <a href="https://learn.microsoft.com/en-us/training/modules/multi-agent-systems-orchestration/" target="_blank" rel="noopener">Multi-Agent Systems and Orchestration</a> and <a href="https://learn.microsoft.com/en-us/training/modules/governance-guardrails-operations/" target="_blank" rel="noopener">Governance, Guardrails, and Operations</a>.</li>
+<li>Labs:<ol>
+<li>Learn exercise: <a href="https://learn.microsoft.com/en-us/training/modules/multi-agent-systems-orchestration/exercise" target="_blank" rel="noopener">Build an AI dream team with GitHub Copilot CLI custom agents</a>.</li>
+<li>Skills: <a href="https://github.com/skills/secure-repository-supply-chain" target="_blank" rel="noopener">Secure your repository&#39;s supply chain</a> (optional).</li>
+<li>In a test repo of your own: create a ruleset for <code>main</code> (require a PR, 1 approval, a required check), add a <code>CODEOWNERS</code> file, and add a <code>production</code> environment with a required reviewer. No verified guided lab covers rulesets, so build this one yourself using section 6.</li>
+</ol>
+</li>
+<li>Practice: the community <a href="https://github.com/jtur671/gh-600-study-guide/blob/main/mock-exam.md" target="_blank" rel="noopener">mock exam</a> and <a href="https://github.com/jtur671/gh-600-study-guide/blob/main/flashcards.md" target="_blank" rel="noopener">flashcards</a> (unofficial), each Learn module&#39;s knowledge check, and the official <a href="https://ghcertdemo.starttest.com/" target="_blank" rel="noopener">exam sandbox</a> to get used to the exam interface.</li>
+</ul>
+<div class="callout tip"><p><strong>💡 Example:</strong> A 30-minute daily routine: 15 minutes reading one section of a domain page, 15 minutes in a lab. At the end of each week, take that week&#39;s Learn knowledge checks and note every term you couldn&#39;t explain in your own words.</p></div>
+<div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Only reading. The exam is scenario-based; you remember &quot;which control stops this?&quot; much better after you have watched a required check block your own PR.</p></div>
+<div class="nav-links"><a href="index.html">← Home</a><a href="domain-1.html">Domain 1: Architecture →</a></div>
+</div>
+</main>
+
+<footer class="site-footer">GH-600 Study Guide (corrected) · Based on official Microsoft Learn modules and GitHub Docs · Not affiliated with GitHub or Microsoft</footer>
+</body>
+</html>
