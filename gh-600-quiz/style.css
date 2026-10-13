@@ -123,3 +123,9 @@ tr:hover td{background:var(--primary-light)}
   .code-block{font-size:11px;padding:10px 12px}
   .nav-links{flex-direction:column;gap:8px}
 }
+
+.ans .atbl td b{color:var(--text)}
+.ans .acode{background:#1e293b;color:#e2e8f0;border-radius:var(--radius-sm);padding:12px 14px;margin:6px 0;overflow-x:auto;font-family:var(--mono);font-size:13px;line-height:1.6}
+.ans .acode mark{background:#2563eb;color:#fff;display:block;padding:0 4px}
+.ans .note{font-size:13px;color:var(--text-secondary);margin-top:10px}
+.ans .learnbox{background:rgba(255,255,255,.65);border-radius:6px;padding:8px 12px;margin-top:10px}
