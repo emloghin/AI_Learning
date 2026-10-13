@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GH-600 Practice Quiz — AI Learn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.quiz-bar{position:sticky;top:57px;z-index:50;background:var(--bg);padding:12px 20px;border-bottom:1px solid var(--border)}
+.quiz-bar-inner{max-width:var(--max-w);margin:0 auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{border:1px solid var(--border);background:var(--surface);color:var(--text-secondary);border-radius:20px;padding:5px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font)}
+.chip:hover{border-color:var(--primary);color:var(--primary)}
+.chip.active{background:var(--primary);border-color:var(--primary);color:#fff}
+.quiz-count{margin-left:auto;font-size:13px;font-weight:600;color:var(--text-secondary)}
+.link-btn{background:none;border:none;color:var(--primary);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);padding:5px 8px}
+.link-btn:hover{text-decoration:underline}
+.qcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden}
+.qcard-head{display:flex;gap:10px;align-items:center;padding:12px 18px;border-bottom:1px solid var(--border-light);background:var(--bg)}
+.qnum{font-family:var(--mono);font-weight:700;font-size:13px;background:var(--primary);color:#fff;border-radius:6px;padding:2px 10px}
+.qtopic{font-size:12px;font-weight:600;color:var(--text-secondary)}
+.q-body{padding:16px 18px;font-size:15px;color:var(--text-secondary);line-height:1.8}
+.q-body img{max-width:100%;height:auto;border:1px solid var(--border);border-radius:var(--radius-sm);margin:10px 0;display:block}
+.q-actions{padding:0 18px 16px}
+.btn-reveal{background:var(--primary);color:#fff;border:none;border-radius:var(--radius-sm);padding:9px 20px;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font)}
+.btn-reveal:hover{background:var(--primary-dark)}
+.btn-reveal.hide{background:var(--surface);color:var(--text-secondary);border:1px solid var(--border)}
+.ans{display:none;margin:0 18px 18px;background:var(--success-light);border-left:4px solid var(--success);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:14px 18px;font-size:15px;color:var(--text);line-height:1.8}
+.ans.open{display:block}
+.ans b{color:#065f46}
+.ans .why{color:var(--text-secondary);font-size:14px}
+.ans img{max-width:100%;height:auto;background:#fff;border:1px solid var(--border);border-radius:var(--radius-sm);margin:6px 0;display:block}
+.ans .whead{font-weight:700;margin-top:10px;display:block;font-size:14px}
+.ans ul{margin:6px 0 0 18px;font-size:14px}
+.ans li{margin-bottom:4px;color:var(--text-secondary)}
+.ans li b{color:var(--text)}
+table.yn{width:100%;border-collapse:collapse;font-size:14px;margin-top:6px}
+table.yn th{text-align:left;padding:6px 8px;border-bottom:2px solid var(--success)}
+table.yn td{padding:6px 8px;border-bottom:1px solid var(--border);vertical-align:top}
+.ynv{font-weight:700;white-space:nowrap}
+.ynv.yes{color:var(--success)} .ynv.no{color:var(--error)}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-logo"><span>AI&nbsp;</span>Learn</div>
+    <nav class="header-nav">
+      <a href="index.html" class="active">GH-600 Quiz</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-badge">58 questions · Topics 2–7</div>
+  <h1>GH-600 Practice Quiz</h1>
+  <p>GitHub Copilot &amp; agentic AI exam prep. Read each question, then reveal the verified answer.</p>
+</section>
+
+<div class="quiz-bar"><div class="quiz-bar-inner" id="chips"></div></div>
+
+<main class="main">
+  <div style="display:flex;gap:4px;align-items:center;margin-bottom:16px">
+    <span class="quiz-count" id="count" style="margin:0"></span>
+    <span style="flex:1"></span>
+    <button class="link-btn" id="showAll">Reveal all</button>
+    <button class="link-btn" id="hideAll">Hide all</button>
+  </div>
+  <div id="cards"></div>
+</main>
+
+<script src="quiz.js"></script>
+<script>
+const cards = document.getElementById('cards');
+const chips = document.getElementById('chips');
+const count = document.getElementById('count');
+let topic = 0;
+const topics = [...new Set(QUESTIONS.map(q => q.topic))].sort((a,b) => a-b);
+
+function revealedCount(){ return document.querySelectorAll('.ans.open').length; }
+function updateCount(){ count.textContent = `Revealed ${revealedCount()} of ${document.querySelectorAll('.qcard').length}`; }
+
+function card(q){
+  const d = document.createElement('div');
+  d.className = 'qcard';
+  d.innerHTML = `<div class="qcard-head"><span class="qnum">Q${q.n}</span><span class="qtopic">Topic ${q.topic} · Question ${q.q}</span></div>
+    <div class="q-body">${q.html}</div>
+    <div class="q-actions"><button class="btn-reveal">Reveal answer</button></div>
+    <div class="ans">${q.ans}</div>`;
+  const btn = d.querySelector('button'), ans = d.querySelector('.ans');
+  btn.onclick = () => {
+    const open = ans.classList.toggle('open');
+    btn.textContent = open ? 'Hide answer' : 'Reveal answer';
+    btn.classList.toggle('hide', open);
+    updateCount();
+  };
+  return d;
+}
+
+function render(){
+  cards.innerHTML = '';
+  QUESTIONS.filter(q => !topic || q.topic === topic).forEach(q => cards.appendChild(card(q)));
+  updateCount();
+}
+
+chips.innerHTML = '';
+[['All',0],...topics.map(t => [`Topic ${t}`, t])].forEach(([label,t]) => {
+  const b = document.createElement('button');
+  b.className = 'chip' + (t === 0 ? ' active' : '');
+  b.textContent = label;
+  b.onclick = () => { topic = t; chips.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); b.classList.add('active'); render(); };
+  chips.appendChild(b);
+});
+const cc = document.createElement('span'); cc.className = 'quiz-count'; cc.id = 'count2';
+document.getElementById('showAll').onclick = () => { document.querySelectorAll('.qcard').forEach(c => { c.querySelector('.ans').classList.add('open'); const b = c.querySelector('button'); b.textContent = 'Hide answer'; b.classList.add('hide'); }); updateCount(); };
+document.getElementById('hideAll').onclick = () => { document.querySelectorAll('.qcard').forEach(c => { c.querySelector('.ans').classList.remove('open'); const b = c.querySelector('button'); b.textContent = 'Reveal answer'; b.classList.remove('hide'); }); updateCount(); };
+render();
+</script>
+</body>
+</html>
