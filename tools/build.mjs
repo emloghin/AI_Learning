@@ -88,6 +88,10 @@ function transform(html) {
     return `<div class="callout${cls}">${inner}</div>`;
   });
 
+  // Practice-question answers hide behind a native <details> reveal.
+  html = html.replace(/<div class="callout success"><p><strong>✅ Answer:<\/strong>([\s\S]*?)<\/p><\/div>/g,
+    (_, body) => `<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong>${body}</p></div></details>`);
+
   html = html.replace(/href="([\w-]+)\.md(#[^"]*)?"/g, 'href="$1.html$2"');
   html = html.replace(/<a href="(https?:[^"]+)"/g, '<a href="$1" target="_blank" rel="noopener"');
 

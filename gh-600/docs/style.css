@@ -67,6 +67,14 @@ a:hover{color:var(--primary-dark);text-decoration:underline}
 .callout.warning{background:#fee2e2;border-left-color:#dc2626}
 .callout.success{background:var(--success-light);border-left-color:var(--success)}
 
+/* ===== REVEAL ANSWER ===== */
+.reveal-answer{margin:16px 0}
+.reveal-answer summary{display:inline-block;cursor:pointer;user-select:none;font-family:var(--font);font-weight:600;font-size:13px;color:var(--success);background:var(--surface);border:1px solid var(--success);border-radius:999px;padding:6px 16px;list-style:none;transition:background .15s,color .15s}
+.reveal-answer summary::-webkit-details-marker{display:none}
+.reveal-answer summary:hover{background:var(--success);color:#fff}
+.reveal-answer[open] summary{background:var(--success);color:#fff}
+.reveal-answer .callout{margin:12px 0 0}
+
 /* ===== CODE ===== */
 .code-block{background:#1e293b;border-radius:var(--radius-sm);padding:16px 18px;margin:14px 0;overflow-x:auto;font-family:var(--mono);font-size:13px;line-height:1.6;color:#e2e8f0;white-space:pre}
 

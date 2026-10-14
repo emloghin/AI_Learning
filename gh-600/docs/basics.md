@@ -128,6 +128,30 @@ If evaluation fails, the loop continues: revise the plan, adjust the change, re-
 
 > **⚠️ Common mistake:** Writing `permissions: write-all` "to make it work". Grant only the scopes a job needs; [Domain 6](domain-6.md) tests least privilege heavily.
 
+### GitHub Actions vs Azure DevOps
+
+If you know Azure DevOps, its CI/CD service is **Azure Pipelines**; GitHub's equivalent is **Actions**. The concepts map almost one-to-one, but the YAML vocabulary differs:
+
+| Azure DevOps | GitHub Actions |
+|---|---|
+| Azure Pipelines (the CI/CD service) | GitHub Actions |
+| Pipeline — one YAML file | Workflow — one YAML file in `.github/workflows/` |
+| Stage | No stages: order jobs with `needs:` (or split into reusable workflows) |
+| Job | Job (`runs-on` picks the machine) |
+| Task (prebuilt, versioned, GUID-addressed) | Action (`uses:` — from GitHub Marketplace, a repo, or Docker) |
+| Script step (`bash`/`pwsh:`) | `run:` step |
+| Agent — Microsoft-hosted or self-hosted, from agent pools | Runner — GitHub-hosted (e.g. `ubuntu-latest`) or self-hosted |
+| Trigger with branch filters | `on:` — `push`, `pull_request`, `schedule`, `workflow_dispatch`, etc. |
+| Environment with approvals and checks | Environment with required reviewers (nearly identical concept) |
+| Variable groups / secure files | Secrets and configuration variables (repo or environment scope) |
+| Service connection | `GITHUB_TOKEN` with scoped `permissions:`, a GitHub App, PAT, or OIDC federation |
+| YAML templates | Reusable workflows (`workflow_call`) and composite actions |
+| Full ALM suite: Boards, Repos, Test Plans | Lighter: Issues and Projects; no built-in test-management equivalent |
+
+The muscle memory that transfers: YAML jobs on fresh hosted machines, environments with human approvals, least-privilege credentials, and artifacts for passing files between jobs. The syntax you must relearn: `on:` triggers, `needs:` ordering, `permissions:` scoping, and `uses:` actions.
+
+> **🎯 Exam angle:** GH-600 tests **GitHub Actions only** — never Azure Pipelines syntax. If you come from Azure DevOps, use the mapping above to translate concepts, then drill the Actions-specific keywords (`on:`, `needs:`, `permissions:`, `uses:`, `environment:`) that the exam expects.
+
 ---
 
 ## 5. YAML and Markdown Front Matter

@@ -1539,7 +1539,7 @@ jobs:
 <li>C. Grant the agent the <code>execute</code> tool so it can run more commands</li>
 <li>D. Ask the agent to double-check its work in the instructions</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> B — success criteria must reflect the real intent; &quot;CI passed&quot; is necessary but not sufficient.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — success criteria must reflect the real intent; &quot;CI passed&quot; is necessary but not sufficient.</p></div></details>
 <p><strong>2.</strong> Your organization wants agents to propose changes to <code>.github/workflows/</code> and <code>infra/</code>. Reviewers must agree on the approach before any code is written. Which design fits?</p>
 <ul>
 <li>A. Plan + execution in the same PR with auto-merge after checks</li>
@@ -1547,7 +1547,7 @@ jobs:
 <li>C. Let the agent push directly to a feature branch and merge when tests pass</li>
 <li>D. Put &quot;do not edit files until approved&quot; in the agent&#39;s instructions</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> B — plan-first validates intent before code exists and is recommended for high-risk, hard-to-reverse changes; instructions alone are guidance, not enforcement.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — plan-first validates intent before code exists and is recommended for high-risk, hard-to-reverse changes; instructions alone are guidance, not enforcement.</p></div></details>
 <p><strong>3.</strong> Agent PRs keep arriving with an empty &quot;Plan&quot; section from the PR template, and some get merged. What is the most reliable fix?</p>
 <ul>
 <li>A. Rewrite the PR template with bolder headings</li>
@@ -1555,7 +1555,7 @@ jobs:
 <li>C. Move the template to <code>.github/PULL_REQUEST_TEMPLATE/</code></li>
 <li>D. Remind the agent in <code>AGENTS.md</code> to fill in the plan</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> B — a required plan check plus required reviews turns the expectation into a system guarantee; a template alone can be left blank.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — a required plan check plus required reviews turns the expectation into a system guarantee; a template alone can be left blank.</p></div></details>
 <p><strong>4.</strong> Leadership wants agent changes to <code>docs/</code> to ship quickly, while production deployments always need a person&#39;s sign-off. Which configuration best meets both goals?</p>
 <ul>
 <li>A. Require two reviewers on every PR, including docs</li>
@@ -1563,7 +1563,7 @@ jobs:
 <li>C. Auto-merge low-risk <code>docs/</code> PRs after required checks pass, and gate production deployment jobs with an environment that has required reviewers</li>
 <li>D. Give the agent read-only tools everywhere</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> C — risk-based autonomy keeps low-risk work fast while environments with required reviewers protect critical actions.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> C — risk-based autonomy keeps low-risk work fast while environments with required reviewers protect critical actions.</p></div></details>
 <p><strong>5.</strong> An auditor asks you to prove which agent session produced a merged commit and who started the task. Copilot cloud agent did the work. Where do you look?</p>
 <ul>
 <li>A. Only the CI logs, since agents don&#39;t create commit metadata</li>
@@ -1571,7 +1571,7 @@ jobs:
 <li>C. The agent&#39;s private reasoning, which is stored in the repository</li>
 <li>D. Nowhere — agent work isn&#39;t attributable</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> B — cloud agent commits are co-authored by the requester, signed (&quot;Verified&quot;), and link to the session log; admins also get session logs and audit log events.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — cloud agent commits are co-authored by the requester, signed (&quot;Verified&quot;), and link to the session log; admins also get session logs and audit log events.</p></div></details>
 <div class="nav-links"><a href="index.html">← Home</a><a href="domain-2.html">Domain 2: Tooling &amp; MCP →</a></div>
 </div>
 </main>

@@ -1022,7 +1022,7 @@ jobs:
 <li>C. A <code>workflow_run</code> trigger on each agent&#39;s workflow</li>
 <li>D. Job-level <code>concurrency</code> on the plan-merger job</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> B — fan-out/fan-in: parallel jobs, then a downstream job that lists both in <code>needs</code>.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — fan-out/fan-in: parallel jobs, then a downstream job that lists both in <code>needs</code>.</p></div></details>
 <p><strong>2.</strong> You edit a custom agent&#39;s profile on the default branch while that agent is still iterating on an open PR. What happens to the open PR?</p>
 <ul>
 <li>A. The PR session restarts with the new profile</li>
@@ -1030,7 +1030,7 @@ jobs:
 <li>C. Interactions in that PR keep using the profile version it started with</li>
 <li>D. The agent switches to the organization-level profile</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> C — versioning is by commit SHA, and a PR keeps using the same agent version for consistency.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> C — versioning is by commit SHA, and a PR keeps using the same agent version for consistency.</p></div></details>
 <p><strong>3.</strong> After a weekend of automated runs, the <code>agent-report</code> artifact from one workflow run is missing. What is the fastest way to find out what happened?</p>
 <ul>
 <li>A. Re-run the workflow and compare outputs</li>
@@ -1038,7 +1038,7 @@ jobs:
 <li>C. Increase the workflow&#39;s <code>cancel-in-progress</code> setting</li>
 <li>D. Check the Copilot CLI local session history</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> B — that audit event shows who deleted the artifact, when, and in which repository.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — that audit event shows who deleted the artifact, when, and in which repository.</p></div></details>
 <p><strong>4.</strong> A planner agent fails every time it tries to delegate to a <code>reviewer</code> agent, while users can still select <code>reviewer</code> manually. What is the most likely cause?</p>
 <ul>
 <li>A. <code>reviewer</code> has <code>user-invocable: false</code></li>
@@ -1046,7 +1046,7 @@ jobs:
 <li>C. <code>reviewer</code> omits the <code>tools</code> property</li>
 <li>D. <code>reviewer</code> is defined at the organization level</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> B — an agent with <code>disable-model-invocation: true</code> can&#39;t be invoked as a subagent, though users can still pick it.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — an agent with <code>disable-model-invocation: true</code> can&#39;t be invoked as a subagent, though users can still pick it.</p></div></details>
 <p><strong>5.</strong> Your team wants to retire a dependency agent while keeping the ability to explain its past changes to auditors next year. Which approach fits best?</p>
 <ul>
 <li>A. Force-push to remove the agent profile from history</li>
@@ -1054,7 +1054,7 @@ jobs:
 <li>C. Disable invocation, remove it from orchestrator handoffs, delete the profile via a reviewed PR, and stream the audit log to a SIEM</li>
 <li>D. Rename the profile so its name no longer matches any handoff</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> C — stop new invocations, keep Git history and evidence, and extend audit retention beyond 180 days.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> C — stop new invocations, keep Git history and evidence, and extend audit retention beyond 180 days.</p></div></details>
 <div class="nav-links"><a href="domain-4.html">← D4: Evaluation</a><a href="domain-6.html">D6: Guardrails →</a></div>
 </div>
 </main>

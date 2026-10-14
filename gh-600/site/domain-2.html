@@ -1458,7 +1458,7 @@ handoffs:
 <li>C. Omit <code>tools</code> so the agent picks what it needs</li>
 <li>D. <code>[&quot;execute&quot;]</code>, because it can write files with shell commands</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> B — changing a file needs <code>edit</code>, not <code>execute</code>; omitting <code>tools</code> grants every available tool.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — changing a file needs <code>edit</code>, not <code>execute</code>; omitting <code>tools</code> grants every available tool.</p></div></details>
 <p><strong>2.</strong> Your enterprise wants developers to use only MCP servers that security has approved, including local servers. What do you configure?</p>
 <ul>
 <li>A. A <code>.vscode/mcp.json</code> file in every repository</li>
@@ -1466,7 +1466,7 @@ handoffs:
 <li>C. The firewall custom allowlist for Copilot cloud agent</li>
 <li>D. <code>disable-model-invocation: true</code> on each custom agent</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> B — the registry makes approved servers discoverable and the Registry only allow list policy blocks everything else, including unlisted local servers.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — the registry makes approved servers discoverable and the Registry only allow list policy blocks everything else, including unlisted local servers.</p></div></details>
 <p><strong>3.</strong> Copilot cloud agent fails to install a private npm package from <code>packages.contoso.corp</code> and the PR shows a firewall warning. What is the best fix?</p>
 <ul>
 <li>A. Disable the firewall for the organization</li>
@@ -1474,7 +1474,7 @@ handoffs:
 <li>C. Grant the agent the <code>web</code> tool</li>
 <li>D. Add the package to <code>AGENTS.md</code></li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> B — a targeted allowlist rule keeps exfiltration protection on, and setup steps install dependencies deterministically before the agent starts.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — a targeted allowlist rule keeps exfiltration protection on, and setup steps install dependencies deterministically before the agent starts.</p></div></details>
 <p><strong>4.</strong> A nightly workflow runs Copilot CLI with <code>-p</code>. Occasionally the model call times out and the job fails silently. Which change best implements safe execution?</p>
 <ul>
 <li>A. Wrap the call in an infinite retry loop</li>
@@ -1482,7 +1482,7 @@ handoffs:
 <li>C. Bounded retries (for example three attempts with a delay), then an <code>if: failure()</code> step that opens an issue with a link to the run logs</li>
 <li>D. Remove <code>--no-ask-user</code> so the agent can ask for help</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> C — bounded retries handle transient failures and the failure step escalates to a human with traceable evidence.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> C — bounded retries handle transient failures and the failure step escalates to a human with traceable evidence.</p></div></details>
 <p><strong>5.</strong> A team asks why its custom agent profile can&#39;t force Copilot cloud agent to work on the <code>release/2.0</code> branch. What&#39;s the correct explanation?</p>
 <ul>
 <li>A. Add <code>branch: release/2.0</code> to the profile frontmatter</li>
@@ -1490,7 +1490,7 @@ handoffs:
 <li>C. Use <code>applyTo: release/2.0</code> in the profile</li>
 <li>D. Cloud agent always works on the default branch</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> B — custom agents control tools and behavior, not branch creation; the agent branches from the base branch selected at delegation.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — custom agents control tools and behavior, not branch creation; the agent branches from the base branch selected at delegation.</p></div></details>
 <div class="nav-links"><a href="domain-1.html">← Domain 1: Architecture</a><a href="index.html">Home</a><a href="domain-3.html">Domain 3: Memory &amp; State →</a></div>
 </div>
 </main>

@@ -886,7 +886,7 @@ then re-run the tests and update the Progress block.</div>
 <li>C. In repository instructions or a reusable skill</li>
 <li>D. In Copilot Memory, by asking Copilot to remember it</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> C — Repeatable processes belong in instructions or reusable skills; Copilot Memory is learned (and expires when unused), and copying text creates conflicting context.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> C — Repeatable processes belong in instructions or reusable skills; Copilot Memory is learned (and expires when unused), and copying text creates conflicting context.</p></div></details>
 <p><strong>2.</strong> A cloud agent session is clearly implementing the wrong approach, but its first commits are useful. You want it to switch to the team&#39;s existing <code>ErrorHandler</code> utility without losing progress. What is the best action?</p>
 <ul>
 <li>A. Stop the session and delete the branch</li>
@@ -894,7 +894,7 @@ then re-run the tests and update the Progress block.</div>
 <li>C. Close the PR and reassign the issue</li>
 <li>D. Wait for the 59-minute timeout and start a new session</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> B — Steering redirects a running session after its current tool call, without stopping it or discarding pushed commits.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — Steering redirects a running session after its current tool call, without stopping it or discarding pushed commits.</p></div></details>
 <p><strong>3.</strong> A developer continues an agent&#39;s work in the CLI and finds that acceptance criteria in their prompt differ from those in the issue. Which practice prevents this?</p>
 <ul>
 <li>A. Keep both versions and let the agent pick the newest</li>
@@ -902,7 +902,7 @@ then re-run the tests and update the Progress block.</div>
 <li>C. Store the criteria in Copilot Memory</li>
 <li>D. Keep the issue as the single source of truth and update it instead of restating criteria elsewhere</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> D — Conflicting context is prevented by one source of truth per information type and updating the original source.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> D — Conflicting context is prevented by one source of truth per information type and updating the original source.</p></div></details>
 <p><strong>4.</strong> An agent resumes a PR from last week. Its last green check run predates several commits merged into <code>main</code>. What should happen before it continues?</p>
 <ul>
 <li>A. Bring the branch up to date with the base branch and review the latest commits and workflow runs</li>
@@ -910,7 +910,7 @@ then re-run the tests and update the Progress block.</div>
 <li>C. Retry the last failing step without changes</li>
 <li>D. Reset Copilot Memory for the repository</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> A — That&#39;s stale context; refresh from the base branch and latest workflow results (required status checks can enforce up-to-date branches).</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> A — That&#39;s stale context; refresh from the base branch and latest workflow results (required status checks can enforce up-to-date branches).</p></div></details>
 <p><strong>5.</strong> Copilot Memory stored a fact from a PR that was closed without merging, and the code it described was never added. What happens when Copilot later considers using that fact?</p>
 <ul>
 <li>A. It uses the fact because facts are only deleted after 28 days</li>
@@ -918,7 +918,7 @@ then re-run the tests and update the Progress block.</div>
 <li>C. It asks a repository owner to approve the fact</li>
 <li>D. It applies the fact only during Copilot code review</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> B — Repository facts are citation-validated against the current branch; only validated facts are used.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — Repository facts are citation-validated against the current branch; only validated facts are used.</p></div></details>
 <div class="nav-links"><a href="domain-2.html">← D2: Tooling &amp; MCP</a><a href="index.html">Home</a><a href="glossary.html">Glossary</a><a href="domain-4.html">D4: Evaluation →</a></div>
 </div>
 </main>

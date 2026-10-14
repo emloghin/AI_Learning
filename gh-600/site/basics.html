@@ -133,6 +133,70 @@ jobs:                                      # The work, split into jobs
         env:                               # Environment variables for this step
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}  # Secret injected and masked in logs</div></div>
 <div class="callout warning"><p><strong>⚠️ Common mistake:</strong> Writing <code>permissions: write-all</code> &quot;to make it work&quot;. Grant only the scopes a job needs; <a href="domain-6.html">Domain 6</a> tests least privilege heavily.</p></div>
+<h3 id="github-actions-vs-azure-devops">GitHub Actions vs Azure DevOps</h3>
+<p>If you know Azure DevOps, its CI/CD service is <strong>Azure Pipelines</strong>; GitHub&#39;s equivalent is <strong>Actions</strong>. The concepts map almost one-to-one, but the YAML vocabulary differs:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Azure DevOps</th>
+<th>GitHub Actions</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Azure Pipelines (the CI/CD service)</td>
+<td>GitHub Actions</td>
+</tr>
+<tr>
+<td>Pipeline — one YAML file</td>
+<td>Workflow — one YAML file in <code>.github/workflows/</code></td>
+</tr>
+<tr>
+<td>Stage</td>
+<td>No stages: order jobs with <code>needs:</code> (or split into reusable workflows)</td>
+</tr>
+<tr>
+<td>Job</td>
+<td>Job (<code>runs-on</code> picks the machine)</td>
+</tr>
+<tr>
+<td>Task (prebuilt, versioned, GUID-addressed)</td>
+<td>Action (<code>uses:</code> — from GitHub Marketplace, a repo, or Docker)</td>
+</tr>
+<tr>
+<td>Script step (<code>bash</code>/<code>pwsh:</code>)</td>
+<td><code>run:</code> step</td>
+</tr>
+<tr>
+<td>Agent — Microsoft-hosted or self-hosted, from agent pools</td>
+<td>Runner — GitHub-hosted (e.g. <code>ubuntu-latest</code>) or self-hosted</td>
+</tr>
+<tr>
+<td>Trigger with branch filters</td>
+<td><code>on:</code> — <code>push</code>, <code>pull_request</code>, <code>schedule</code>, <code>workflow_dispatch</code>, etc.</td>
+</tr>
+<tr>
+<td>Environment with approvals and checks</td>
+<td>Environment with required reviewers (nearly identical concept)</td>
+</tr>
+<tr>
+<td>Variable groups / secure files</td>
+<td>Secrets and configuration variables (repo or environment scope)</td>
+</tr>
+<tr>
+<td>Service connection</td>
+<td><code>GITHUB_TOKEN</code> with scoped <code>permissions:</code>, a GitHub App, PAT, or OIDC federation</td>
+</tr>
+<tr>
+<td>YAML templates</td>
+<td>Reusable workflows (<code>workflow_call</code>) and composite actions</td>
+</tr>
+<tr>
+<td>Full ALM suite: Boards, Repos, Test Plans</td>
+<td>Lighter: Issues and Projects; no built-in test-management equivalent</td>
+</tr>
+</tbody></table></div>
+<p>The muscle memory that transfers: YAML jobs on fresh hosted machines, environments with human approvals, least-privilege credentials, and artifacts for passing files between jobs. The syntax you must relearn: <code>on:</code> triggers, <code>needs:</code> ordering, <code>permissions:</code> scoping, and <code>uses:</code> actions.</p>
+<div class="callout tip"><p><strong>🎯 Exam angle:</strong> GH-600 tests <strong>GitHub Actions only</strong> — never Azure Pipelines syntax. If you come from Azure DevOps, use the mapping above to translate concepts, then drill the Actions-specific keywords (<code>on:</code>, <code>needs:</code>, <code>permissions:</code>, <code>uses:</code>, <code>environment:</code>) that the exam expects.</p></div>
 
 </div>
 <div class="section">

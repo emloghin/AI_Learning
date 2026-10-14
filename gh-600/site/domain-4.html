@@ -1090,7 +1090,7 @@ jobs:
 <li>C. Disable Copilot code review to avoid noise</li>
 <li>D. Increase workflow log retention</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> B — Aligning evaluation with intent means every criterion becomes a verifiable signal; green checks only prove what they test.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — Aligning evaluation with intent means every criterion becomes a verifiable signal; green checks only prove what they test.</p></div></details>
 <p><strong>2.</strong> Copilot cloud agent opened a PR, but no workflow checks appear on it. Nothing is misconfigured in the workflow files. What is the most likely reason?</p>
 <ul>
 <li>A. Code scanning default setup is disabled</li>
@@ -1098,7 +1098,7 @@ jobs:
 <li>C. Workflows on Copilot&#39;s pushes require someone to click <strong>Approve and run workflows</strong> by default</li>
 <li>D. Agent PRs never run GitHub Actions</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> C — By default, Actions workflows don&#39;t run automatically on Copilot pushes until approved (an admin setting can change this).</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> C — By default, Actions workflows don&#39;t run automatically on Copilot pushes until approved (an admin setting can change this).</p></div></details>
 <p><strong>3.</strong> An organization wants every PR in every repository to fail if it introduces a dependency with a known high-severity vulnerability. What is the best approach?</p>
 <ul>
 <li>A. Enforce the dependency review action as a required workflow via repository rulesets, configured with a failure severity</li>
@@ -1106,7 +1106,7 @@ jobs:
 <li>C. Enable secret scanning push protection</li>
 <li>D. Add a CodeQL query for package versions</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> A — The dependency review action blocks vulnerable dependency changes on PRs and can be enforced org-wide through rulesets.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> A — The dependency review action blocks vulnerable dependency changes on PRs and can be enforced org-wide through rulesets.</p></div></details>
 <p><strong>4.</strong> An agent repeatedly runs the wrong test command; its plan and reasoning in the session logs are correct, but the workflow it triggers calls a script that no longer exists. How should this root cause be classified?</p>
 <ul>
 <li>A. Reasoning error</li>
@@ -1114,7 +1114,7 @@ jobs:
 <li>C. Tool misuse</li>
 <li>D. Model capacity issue</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> C — Incorrect commands/scripts and misconfigured workflows are tool misuse; fix the workflow or tool configuration.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> C — Incorrect commands/scripts and misconfigured workflows are tool misuse; fix the workflow or tool configuration.</p></div></details>
 <p><strong>5.</strong> Copilot keeps forgetting a mandatory license-header rule after a few quiet weeks in a repository. What is the best fix?</p>
 <ul>
 <li>A. Ask Copilot to remember the rule again each month</li>
@@ -1122,7 +1122,7 @@ jobs:
 <li>C. Extend workflow artifact retention to 400 days</li>
 <li>D. Enable user-level preferences for every developer</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> B — Copilot Memory entries unused for 28 days are deleted; rules that must always apply belong in authored instructions.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — Copilot Memory entries unused for 28 days are deleted; rules that must always apply belong in authored instructions.</p></div></details>
 <div class="nav-links"><a href="domain-3.html">← D3: Memory &amp; State</a><a href="index.html">Home</a><a href="glossary.html">Glossary</a><a href="domain-5.html">D5: Multi-Agent →</a></div>
 </div>
 </main>
