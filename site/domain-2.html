@@ -1205,79 +1205,162 @@ jobs:
 <div class="section">
 <h2 id="from-the-practice-exams-facts-to-know">From the Practice Exams: Facts to Know</h2>
 <p>Facts the practice questions lean on, grouped by topic. Each row gives the rule plus the distractor the exam likes to offer.</p>
-
-<h3 id="pe-agent-frontmatter">Agent Frontmatter &amp; Handoffs</h3>
+<h3 id="agent-frontmatter-handoffs">Agent Frontmatter &amp; Handoffs</h3>
 <div class="table-wrap"><table>
-<thead><tr><th>Scenario</th><th>Correct answer</th><th>Trap / distractor</th></tr></thead>
-<tbody>
-<tr><td>Planning-only agent (cannot edit or run commands)</td><td><code>tools: [search, read]</code> (plus <code>fetch</code> if it needs web pages). No <code>edit</code>, <code>execute</code>, <code>agent</code>.</td><td>Adding <code>execute</code>/<code>edit</code>/<code>commit</code>/<code>push</code> &ldquo;just in case&rdquo;. An unrestricted agent is created by <em>omitting</em> <code>tools</code> (delete the line), not by <code>tools: []</code>.</td></tr>
-<tr><td>Orchestrator must be able to call a new subagent</td><td>Add the subagent to the <strong>Orchestrator&rsquo;s</strong> <code>agents:</code> list.</td><td><code>handoffs</code> on another agent (those make chat buttons), <code>agents</code> on the Reviewer, or putting an agent in <code>tools</code>.</td></tr>
-<tr><td>Listed subagent still never runs while its siblings do</td><td>The subagent&rsquo;s own frontmatter has <code>disable-model-invocation: true</code>.</td><td><code>user-invocable: false</code> only hides it from <em>humans</em>; it does not stop the model calling it.</td></tr>
-<tr><td>Handoff to the implementer only after plan approval</td><td><code>send: false</code> (default): a button the human clicks. <code>send: true</code> auto-submits the prompt.</td><td><code>send: true</code> on a planner makes implementation start by itself.</td></tr>
-<tr><td>Handoff target resolves how?</td><td><code>agent:</code> is the target&rsquo;s identifier = the <strong>file-name stem</strong> (<code>implementer</code> &rarr; <code>implementer.agent.md</code>); <code>model:</code> takes the qualified form, e.g. <code>GPT-5.2 (copilot)</code>.</td><td>Using the <code>name:</code> display value (e.g. <code>code-review</code>) when the file is <code>review.agent.md</code>: it matches no file.</td></tr>
-<tr><td>Which agents does VS Code show?</td><td>Workspace agents come from the <strong>checked-out branch</strong> (<code>.github/agents/*.agent.md</code>): switch to a branch without the file and it disappears. A profile agent with <code>user-invokable: false</code> is hidden and overrides nothing.</td><td>Assuming agents follow you across branches.</td></tr>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Correct answer</th>
+<th>Trap / distractor</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Planning-only agent (cannot edit or run commands)</td>
+<td><code>tools: [search, read]</code> (plus <code>fetch</code> if it needs web pages). No <code>edit</code>, <code>execute</code>, <code>agent</code>.</td>
+<td>Adding <code>execute</code>/<code>edit</code>/<code>commit</code>/<code>push</code> &quot;just in case&quot;. An unrestricted agent is created by <em>omitting</em> <code>tools</code> (delete the line), not by <code>tools: []</code>.</td>
+</tr>
+<tr>
+<td>Orchestrator must be able to call a new subagent</td>
+<td>Add the subagent to the <strong>Orchestrator&#39;s</strong> <code>agents:</code> list.</td>
+<td><code>handoffs</code> on another agent (those make chat buttons), <code>agents</code> on the Reviewer, or putting an agent in <code>tools</code>.</td>
+</tr>
+<tr>
+<td>Listed subagent still never runs while its siblings do</td>
+<td>The subagent&#39;s own frontmatter has <code>disable-model-invocation: true</code>.</td>
+<td><code>user-invocable: false</code> only hides it from <em>humans</em>; it does not stop the model calling it.</td>
+</tr>
+<tr>
+<td>Handoff to the implementer only after plan approval</td>
+<td><code>send: false</code> (default): a button the human clicks. <code>send: true</code> auto-submits the prompt.</td>
+<td><code>send: true</code> on a planner makes implementation start by itself.</td>
+</tr>
+<tr>
+<td>Handoff target resolves how?</td>
+<td><code>agent:</code> is the target&#39;s identifier = the <strong>file-name stem</strong> (<code>implementer</code> → <code>implementer.agent.md</code>); <code>model:</code> takes the qualified form, e.g. <code>GPT-5.2 (copilot)</code>.</td>
+<td>Using the <code>name:</code> display value (e.g. <code>code-review</code>) when the file is <code>review.agent.md</code>: it matches no file.</td>
+</tr>
+<tr>
+<td>Which agents does VS Code show?</td>
+<td>Workspace agents come from the <strong>checked-out branch</strong> (<code>.github/agents/*.agent.md</code>): switch to a branch without the file and it disappears. A profile agent with <code>user-invokable: false</code> is hidden and overrides nothing.</td>
+<td>Assuming agents follow you across branches.</td>
+</tr>
 </tbody></table></div>
-<pre><code>---
+<div class="code-block">---
 description: Plans work, never edits
-tools: ['search', 'read', 'fetch']
+tools: [&#39;search&#39;, &#39;read&#39;, &#39;fetch&#39;]
 handoffs:
   - label: Start Implementation
     agent: implementer
     prompt: Now implement the plan outlined above
     send: false
----</code></pre>
-
-<h3 id="pe-mcp">MCP Configuration &amp; Secrets</h3>
+---</div>
+<h3 id="mcp-configuration-secrets">MCP Configuration &amp; Secrets</h3>
 <ul>
 <li><strong>Central, repo-wide MCP for every developer and agent in VS Code:</strong> commit <code>.vscode/mcp.json</code>. Not <code>.agent.md</code> (per-agent persona), not <code>settings.json</code> (per-user), not a <code>.mcp/server.json</code> project file.</li>
-<li><strong>Hosted remote server entry:</strong> <code>"type": "http"</code> with a <code>url</code> and an <code>Authorization</code> header whose value is <code>Bearer &lt;token&gt;</code>. <code>stdio</code> is for local processes only.</li>
+<li><strong>Hosted remote server entry:</strong> <code>&quot;type&quot;: &quot;http&quot;</code> with a <code>url</code> and an <code>Authorization</code> header whose value is <code>Bearer &lt;token&gt;</code>. <code>stdio</code> is for local processes only.</li>
 <li><strong>Token for the cloud agent</strong> (e.g. an internal scanning API) goes in a <strong><code>COPILOT_MCP_</code>-prefixed secret in the Copilot environment</strong>, referenced by name from the MCP config. Wrong: Actions secret (the agent cannot read it), Codespaces secret, or any plaintext in an instructions file, agent file or MCP JSON (committed to git).</li>
 <li><strong>Tools vs. resources vs. prompts:</strong> the coding agent consumes only the <em>tools</em> of a configured server (it can call them autonomously, and new tools a remote server adds appear automatically); MCP resources and prompts are not used.</li>
-<li><strong>Cross-device continuity</strong> (VS Code laptop &harr; github.com): use a <strong>GitHub-hosted MCP server</strong> and enable MCP servers in the org Copilot policy. Local/Docker servers and <code>/mcp add</code> exist on one machine only.</li>
+<li><strong>Cross-device continuity</strong> (VS Code laptop ↔ github.com): use a <strong>GitHub-hosted MCP server</strong> and enable MCP servers in the org Copilot policy. Local/Docker servers and <code>/mcp add</code> exist on one machine only.</li>
 <li><strong>Reading failures:</strong> a failed MCP search call with no result is <em>tool misuse</em> (classify it that way, not as reasoning, context or network). A log line like <code>Passing 1 MCP server(s) [github]</code> proves the server reached the session; <code>isolationEnabled: false</code> means no worktree isolation.</li>
 </ul>
-
-<h3 id="pe-cli">Copilot CLI: Slash Commands, Flags &amp; Hooks</h3>
+<h3 id="copilot-cli-slash-commands-flags-hooks">Copilot CLI: Slash Commands, Flags &amp; Hooks</h3>
 <div class="table-wrap"><table>
-<thead><tr><th>Need</th><th>Use</th><th>Not</th></tr></thead>
-<tbody>
-<tr><td>Agree on an approach before any change</td><td><strong>Plan mode</strong>. It writes the plan to <code>plan.md</code> and stops; nothing is implemented, branched or opened as a PR until you approve.</td><td><code>--allow-all</code> (removes approvals), <code>--agent=Task</code> (only picks an agent), <code>/compact</code>.</td></tr>
-<tr><td>Context window nearly full, keep progress</td><td><code>/compact</code> (summarize and continue)</td><td><code>/clear</code> discards history; <code>/context</code> only shows what is loaded; <code>/yolo</code> only auto-approves.</td></tr>
-<tr><td>See token consumption</td><td><code>/usage</code></td><td><code>/context</code>, <code>/diff</code>, <code>/compact</code>.</td></tr>
-<tr><td>Fast for reads, gated for writes (agent has edit+execute)</td><td><code>--allow-tool 'read,search'</code>; unlisted tools stay available but prompt.</td><td><code>--allow-all-tools</code> (pre-approves edit/execute), <code>--deny-tool</code> (removes access instead of gating).</td></tr>
-<tr><td>Unattended run with a runaway guard</td><td><code>--autopilot --yolo --max-autopilot-continues 10</code>: the cap stops endless loops and <code>--yolo</code> approves every tool, but there is <strong>no</strong> human checkpoint.</td><td>Assuming the combination allows targeted human intervention.</td></tr>
+<thead>
+<tr>
+<th>Need</th>
+<th>Use</th>
+<th>Not</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Agree on an approach before any change</td>
+<td><strong>Plan mode</strong>. It writes the plan to <code>plan.md</code> and stops; nothing is implemented, branched or opened as a PR until you approve.</td>
+<td><code>--allow-all</code> (removes approvals), <code>--agent=Task</code> (only picks an agent), <code>/compact</code>.</td>
+</tr>
+<tr>
+<td>Context window nearly full, keep progress</td>
+<td><code>/compact</code> (summarize and continue)</td>
+<td><code>/clear</code> discards history; <code>/context</code> only shows what is loaded; <code>/yolo</code> only auto-approves.</td>
+</tr>
+<tr>
+<td>See token consumption</td>
+<td><code>/usage</code></td>
+<td><code>/context</code>, <code>/diff</code>, <code>/compact</code>.</td>
+</tr>
+<tr>
+<td>Fast for reads, gated for writes (agent has edit+execute)</td>
+<td><code>--allow-tool &#39;read,search&#39;</code>; unlisted tools stay available but prompt.</td>
+<td><code>--allow-all-tools</code> (pre-approves edit/execute), <code>--deny-tool</code> (removes access instead of gating).</td>
+</tr>
+<tr>
+<td>Unattended run with a runaway guard</td>
+<td><code>--autopilot --yolo --max-autopilot-continues 10</code>: the cap stops endless loops and <code>--yolo</code> approves every tool, but there is <strong>no</strong> human checkpoint.</td>
+<td>Assuming the combination allows targeted human intervention.</td>
+</tr>
 </tbody></table></div>
 <h4>Hook events: match event to need</h4>
 <ul>
 <li><code>errorOccurred</code>: run a shell command only when an execution fails (not <code>postToolUse</code> = every tool call, not <code>sessionEnd</code> = always, not <code>agentStop</code>).</li>
-<li><code>preToolUse</code> returning <code>permissionDecision: "deny"</code>: auto-allow low-risk Bash but block <code>sudo</code>, <code>rm -rf /</code>, <code>curl ... | bash</code>. A tool call that dies mid-stream before any result in a live log is a likely <code>preToolUse</code> denial (firewall blocks look like network errors; <code>postToolUse</code> runs after the call).</li>
+<li><code>preToolUse</code> returning <code>permissionDecision: &quot;deny&quot;</code>: auto-allow low-risk Bash but block <code>sudo</code>, <code>rm -rf /</code>, <code>curl ... | bash</code>. A tool call that dies mid-stream before any result in a live log is a likely <code>preToolUse</code> denial (firewall blocks look like network errors; <code>postToolUse</code> runs after the call).</li>
 <li><code>userPromptSubmitted</code> only observes prompts; <code>sessionStart</code> runs once (a banner cannot block anything).</li>
 <li>Exam sample for a CLI harness that vets every generated command (e.g. block paths outside the repo): <code>event: pre-exec</code> in <code>.copilot/hooks.yaml</code>. It must be <em>pre</em>-exec (post-exec is too late) and the file is not an Actions workflow path. Repo hooks themselves normally live in <code>.github/hooks/*.json</code>.</li>
 </ul>
-
-<h3 id="pe-monitor">Monitoring &amp; Steering the Cloud Agent</h3>
+<h3 id="monitoring-steering-the-cloud-agent">Monitoring &amp; Steering the Cloud Agent</h3>
 <div class="table-wrap"><table>
-<thead><tr><th>Signal / goal</th><th>Meaning / action</th></tr></thead>
-<tbody>
-<tr><td>Eyes reaction on the issue</td><td>Agent accepted the assignment (no reaction = it never started; check assignment/permissions).</td></tr>
-<tr><td>Timeline updates / status in PR body</td><td>Actively working.</td></tr>
-<tr><td>Checks sit idle on the draft PR</td><td>Not a failure: a human must click <strong>Approve and run</strong> on workflows.</td></tr>
-<tr><td>Silent for ~55 min (still a live session)</td><td>Open <strong>View session</strong>, then comment <code>@copilot</code> on the PR: same session, no rework. Commenter needs <strong>write access</strong>.</td></tr>
-<tr><td>Session log stopped (~70 min), must restart from issue context</td><td><strong>Unassign and reassign</strong> the issue (new session). Not: wait, merge then mention, or Approve and run.</td></tr>
-<tr><td>Live-stream from the terminal</td><td><code>gh agent-task view &lt;task&gt; --log --follow</code> (<code>--jq</code> is a static query; <code>list --web</code> opens a browser).</td></tr>
-<tr><td>Why did a &ldquo;successful&rdquo; PR change nothing?</td><td>Only the <strong>agent session log</strong> records reasoning and decisions (not runner logs, token permissions or aggregate metrics).</td></tr>
-<tr><td>Thin or mis-scoped PR from a one-line issue</td><td>Write a clear problem description in the issue; memory, MCP limits or runner size do not supply missing scope.</td></tr>
-<tr><td>Agent edits <code>.github/workflows/*.yml</code> to silence failing checks</td><td>Fix the strategy in <code>.github/copilot-instructions.md</code> (fix underlying code, never touch CI). Not <code>--allow-all</code>, not disabling Actions.</td></tr>
-<tr><td>Agent reached repos it should not</td><td>Scope the credential: a fine-grained PAT limited to that one repository. Prose instructions are unenforceable.</td></tr>
+<thead>
+<tr>
+<th>Signal / goal</th>
+<th>Meaning / action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Eyes reaction on the issue</td>
+<td>Agent accepted the assignment (no reaction = it never started; check assignment/permissions).</td>
+</tr>
+<tr>
+<td>Timeline updates / status in PR body</td>
+<td>Actively working.</td>
+</tr>
+<tr>
+<td>Checks sit idle on the draft PR</td>
+<td>Not a failure: a human must click <strong>Approve and run</strong> on workflows.</td>
+</tr>
+<tr>
+<td>Silent for ~55 min (still a live session)</td>
+<td>Open <strong>View session</strong>, then comment <code>@copilot</code> on the PR: same session, no rework. Commenter needs <strong>write access</strong>.</td>
+</tr>
+<tr>
+<td>Session log stopped (~70 min), must restart from issue context</td>
+<td><strong>Unassign and reassign</strong> the issue (new session). Not: wait, merge then mention, or Approve and run.</td>
+</tr>
+<tr>
+<td>Live-stream from the terminal</td>
+<td><code>gh agent-task view &lt;task&gt; --log --follow</code> (<code>--jq</code> is a static query; <code>list --web</code> opens a browser).</td>
+</tr>
+<tr>
+<td>Why did a &quot;successful&quot; PR change nothing?</td>
+<td>Only the <strong>agent session log</strong> records reasoning and decisions (not runner logs, token permissions or aggregate metrics).</td>
+</tr>
+<tr>
+<td>Thin or mis-scoped PR from a one-line issue</td>
+<td>Write a clear problem description in the issue; memory, MCP limits or runner size do not supply missing scope.</td>
+</tr>
+<tr>
+<td>Agent edits <code>.github/workflows/*.yml</code> to silence failing checks</td>
+<td>Fix the strategy in <code>.github/copilot-instructions.md</code> (fix underlying code, never touch CI). Not <code>--allow-all</code>, not disabling Actions.</td>
+</tr>
+<tr>
+<td>Agent reached repos it should not</td>
+<td>Scope the credential: a fine-grained PAT limited to that one repository. Prose instructions are unenforceable.</td>
+</tr>
 </tbody></table></div>
-
-<h3 id="pe-workflows">Workflows, Artifacts &amp; Governance</h3>
+<h3 id="workflows-artifacts-governance">Workflows, Artifacts &amp; Governance</h3>
 <ul>
 <li><strong>Least-privilege token:</strong> top-level <code>permissions: contents: read</code>; grant <code>contents: write</code> only on the job that writes and <code>pull-requests: write</code> only where PRs are created/approved. Not <code>read-all</code>, not <code>issues: write</code>, not <code>pull-requests: read</code>.</li>
 <li><strong>Passing files between jobs</strong> (<code>trace.json</code>, <code>plan.md</code>): <code>actions/upload-artifact</code> in the producer, <code>download-artifact</code> in later jobs. Runners are ephemeral; caches, commits or network shares are wrong. Durable review evidence = artifacts (with <code>retention-days</code>) + PR body/timeline + View session.</li>
 <li><strong>Per-branch concurrency:</strong> workflow-level <code>concurrency: group: ${{ github.workflow }}-${{ github.ref }}</code>. Pushes to one PR branch queue; different PRs run in parallel. Anything with <code>run_id</code> in the key never groups; job-level scope and <code>strategy.matrix</code> do not solve it.</li>
 <li><strong>Fan-out / fan-in:</strong> parallel analyzer jobs, then a merger job with <code>needs: [analyzer1, analyzer2]</code>.</li>
-<li><strong>Human gate on a plan:</strong> job order is plan (upload artifact) &rarr; environment (e.g. <code>plan-review</code>) with the designated team as <em>required reviewers</em> &rarr; execute job with <code>needs: [plan]</code> and <code>environment: plan-review</code>.</li>
+<li><strong>Human gate on a plan:</strong> job order is plan (upload artifact) → environment (e.g. <code>plan-review</code>) with the designated team as <em>required reviewers</em> → execute job with <code>needs: [plan]</code> and <code>environment: plan-review</code>.</li>
 <li><strong>Rollback by reverting one commit:</strong> check out <code>ref: ${{ inputs.ref }}</code> (a <code>workflow_dispatch</code> input), not <code>github.ref</code>, and read the profile from <code>.github/agents/</code> at that ref.</li>
 <li><strong>Required reviewers on <code>.github/workflows/*</code> and <code>/infra/*</code>:</strong> branch protection (require PR review) + <code>CODEOWNERS</code>. <code>.copilotignore</code>, <code>agents.md</code> and <code>copilot-instructions.md</code> enforce nothing.</li>
 <li><strong>Trunk-based safety:</strong> branch protection enabled on <code>main</code> (PR + approval) and a validation workflow triggered by <code>on: pull_request</code> (not <code>push</code>/<code>schedule</code>); the agent can still create branches and open PRs. CodeQL in a workflow is the pair <code>github/codeql-action/init</code> then <code>analyze</code>.</li>
@@ -1287,10 +1370,11 @@ handoffs:
 <li><strong>Copilot Memory lifecycle:</strong> entries are deleted manually or automatically after <strong>28 days unused</strong>; citations are re-validated against the current branch before use and stale ones are ignored. Archiving, deleting code or merging PRs does not delete them.</li>
 <li><strong>Concurrent agents:</strong> separate branches plus a required overlap-detecting status check. A single concurrency group would serialize them; read-only tools would cripple them.</li>
 <li><strong>Repo-wide Copilot code review guidance:</strong> <code>.github/copilot-instructions.md</code>. <code>.github/instructions/*.instructions.md</code> is path-scoped (<code>applyTo</code>), agent profiles scope one agent, the PR template is for humans.</li>
-<li><strong>App-modernization files</strong> (under <code>.github/upgrades/&lt;scenario&gt;</code>): <code>assessment.md</code> (analysis, breaking changes) &rarr; <code>plan.md</code> (strategy) &rarr; <code>tasks.md</code> (live per-step status; the file to check step and test results; the official answer key was inconsistent on this one).</li>
+<li><strong>App-modernization files</strong> (under <code>.github/upgrades/&lt;scenario&gt;</code>): <code>assessment.md</code> (analysis, breaking changes) → <code>plan.md</code> (strategy) → <code>tasks.md</code> (live per-step status; the file to check step and test results; the official answer key was inconsistent on this one).</li>
 <li><strong>Chat context hygiene (VS Code):</strong> start a new chat to drop unrelated history; keep only relevant files open.</li>
 </ul>
-<div class="callout"><p><strong>Exam habit:</strong> when an option &ldquo;instructs&rdquo; the agent to behave (prose) and another <em>enforces</em> it (scoped token, hook, branch protection, environment reviewers, tools list), enforcement wins. Instructions teach goals; they never grant or deny access.</p></div>
+<div class="callout"><p><strong>Exam habit:</strong> when an option &quot;instructs&quot; the agent to behave (prose) and another <em>enforces</em> it (scoped token, hook, branch protection, environment reviewers, tools list), enforcement wins. Instructions teach goals; they never grant or deny access.</p></div>
+
 </div>
 <div class="section">
 <h2 id="recap-key-takeaways">Recap: Key Takeaways</h2>
@@ -1307,9 +1391,6 @@ handoffs:
 <li>Branch, repository, and PR behavior come from the <strong>execution context</strong>, not the profile.</li>
 <li>Unblock cloud agent with a firewall allowlist rule and <code>copilot-setup-steps.yml</code> — don&#39;t disable protections.</li>
 <li>Failures: bounded retries → fallback → escalation issue with run links; never infinite retries or <code>continue-on-error</code> to hide them.</li>
-<li>Enforcement beats instructions: scoped tokens, <code>preToolUse</code> hooks, branch protection + <code>CODEOWNERS</code>, and environment reviewers actually block; prose in instruction files never does.</li>
-<li>Subagents are callable only if listed in the caller&#39;s <code>agents:</code> and not <code>disable-model-invocation: true</code>; handoffs with <code>send: false</code> wait for a human click.</li>
-<li>Stalled cloud agent: View session + <code>@copilot</code> comment to resume; unassign/reassign to restart a dead session; <code>gh agent-task view --log --follow</code> to stream.</li>
 </ul>
 
 </div>

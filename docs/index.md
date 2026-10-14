@@ -20,7 +20,7 @@ Unlike feature-based certifications, GH-600 is **role-based and scenario-driven*
 | Duration | 120 minutes, proctored; schedule through Pearson VUE |
 | Passing score | 700 or greater (scale 1–1000) |
 | Languages | English only. If the exam isn't available in your preferred language, you can request an extra 30 minutes |
-| Validity / renewal | GitHub certifications are valid for **2 years**. GitHub is transitioning to Microsoft's recertification process |
+| Validity / renewal | GitHub certifications are valid for **2 years**. GitHub is transitioning to Microsoft's recertification process — certs expiring before the new process is available are **extended by 6 months**, and if yours already expired, email **learn@github.com** for a free first-renewal voucher |
 | Retake | Allowed 24 hours after the first failed attempt; later retakes follow the Microsoft retake policy |
 | Exam sandbox | [ghcertdemo.starttest.com](https://ghcertdemo.starttest.com/) (generic Microsoft sandbox: [aka.ms/examdemo](https://aka.ms/examdemo)) |
 | Beta discount | *(historical)* `GH600Flanders` — 80% off for the first 100 candidates during the May 2026 beta. Expired |
@@ -81,7 +81,7 @@ Define risk-based autonomy levels, implement guardrails and human-in-the-loop wo
 
 ## Official Learning Path
 
-The GH-600 exam is supported by six Microsoft Learn modules. This site follows the same structure:
+The official study guide's "Get trained" section links the first three modules below; three more Learn modules (live, but not linked from the study guide) cover Domains 3–6. This site follows the complete six-module structure:
 
 | Module | Covers Domain | Link |
 |---|---|---|
@@ -101,7 +101,7 @@ Official exam pages: [Study guide](https://learn.microsoft.com/en-us/credentials
 | | |
 |---|---|
 | 📚 **jtur671 Study Repo** | 67 flashcards, 41-question mock exam, 6 hands-on labs, Anki decks. [github.com/jtur671/gh-600-study-guide](https://github.com/jtur671/gh-600-study-guide) |
-| 📝 **Naim149 Public Study Guide** | Artifact mapping reference with exam-relevant file paths and concepts. [View on GitHub Gist](https://gist.github.com/naim149/a8aa41c7468685b7d984822c38863aae) |
+| 📝 **Naim149 Public Study Guide** | Full ~2,600-line study workbook organized by all six domains, including artifact/file-path mapping. [View on GitHub Gist](https://gist.github.com/naim149/a8aa41c7468685b7d984822c38863aae) |
 | 🎬 **7-Video PromptLab Series** | One video per exam domain plus overview. Free on YouTube. [Watch playlist](https://www.youtube.com/playlist?list=PLxgUmxsBhjMhyjJhNM9dxSCdJj2yExS2Y) |
 | ▶️ **Agent Orchestration On-Demand** | Ari's earlier Reactor session on building multi-agent teams (orchestrator, planner, coder, designer). |
 | ▶️ **Microsoft Reactor Deep Dive** | 1-hour walkthrough by Ari Levigny (GitHub Sr. Dev Advocate) covering all 6 domains, study tips, and a (now historical) Reactor discount code. [Watch on YouTube](https://www.youtube.com/watch?v=bgj20o0kYKg) |

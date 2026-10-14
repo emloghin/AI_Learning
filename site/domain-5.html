@@ -213,7 +213,7 @@
 <p>Triggers that keep coordination visible: <code>schedule</code> for periodic work, <code>pull_request</code> events for validation, and <code>workflow_run</code> when one step must follow another. Coordination that happens outside GitHub and leaves no trace in PRs or workflow runs makes failures impossible to diagnose.</p>
 <h3 id="subagents-handoffs-and-fleet-mode">Subagents, Handoffs, and Fleet Mode</h3>
 <ul>
-<li><strong>VS Code handoffs</strong> (<a href="https://learn.microsoft.com/en-us/training/modules/multi-agent-systems-orchestration/7-scale-failure-recovery" target="_blank" rel="noopener">Learn</a>): the parent profile lists allowed subagents in <code>agents: [...]</code>; each <code>handoffs</code> entry has a <code>label</code> and target <code>agent</code>, and can auto-submit a prompt (<code>send: true</code>) or set a <code>model</code>. Handoffs resolve to a subagent by its <code>name</code> attribute or by matching filename. <strong>Exam note:</strong> the practice exams treat the handoff <code>agent:</code> value as the <strong>file-name stem</strong> (<code>implementer.agent.md</code> → <code>implementer</code>); a frontmatter <code>name: code-review</code> inside <code>review.agent.md</code> does not make <code>agent: code-review</code> resolve. <code>send</code> defaults to <code>false</code> (a button a human clicks); <code>send: true</code> auto-submits the prompt.</li>
+<li><strong>VS Code handoffs</strong> (<a href="https://learn.microsoft.com/en-us/training/modules/multi-agent-systems-orchestration/7-scale-failure-recovery" target="_blank" rel="noopener">Learn</a>): the parent profile lists allowed subagents in <code>agents: [...]</code>; each <code>handoffs</code> entry has a <code>label</code> and target <code>agent</code>, and can auto-submit a prompt (<code>send: true</code>) or set a <code>model</code>. Handoffs resolve to a subagent by its <code>name</code> attribute or by matching filename.</li>
 <li><strong>Invocation flags</strong> (<a href="https://docs.github.com/en/copilot/reference/custom-agents-configuration" target="_blank" rel="noopener">GitHub Docs</a>): <code>disable-model-invocation: true</code> stops Copilot from picking the agent automatically (Learn: it then can&#39;t be invoked as a subagent, a common orchestration failure); <code>user-invocable: false</code> hides it from manual selection so it can only be reached programmatically. <code>infer</code> is retired.</li>
 <li><strong>Copilot CLI <code>/fleet</code></strong> (<a href="https://docs.github.com/en/copilot/concepts/agents/copilot-cli/fleet" target="_blank" rel="noopener">GitHub Docs</a>): the main agent splits a plan into independent subtasks and acts as orchestrator, running subagents in parallel where dependencies allow. Each subagent has <strong>its own context window</strong>, uses a low-cost model by default (unless the prompt or the custom agent profile names a model), and may pick a matching custom agent — or you force one with <code>@CUSTOM-AGENT-NAME</code>. Monitor subtasks with <code>/tasks</code> (Enter = details, <code>x</code> = kill). <code>--fleet</code> is the command-line equivalent (works with <code>-p</code>, <code>-i</code>, or piped input; not with <code>--acp</code>). <code>/fleet</code> and autopilot are separate features that are often combined.</li>
 </ul>
@@ -953,7 +953,8 @@ jobs:
     needs: [spec_analyzer, risk_reviewer]
     runs-on: ubuntu-latest
     steps: [ ... ]</div>
-<div class="callout warning"><p><strong>⚠️ Exam Trap:</strong> <code>needs</code> orders jobs <em>within</em> a run; <code>concurrency</code> orders <em>runs against each other</em>. A question asking for &quot;parallel and safe&quot; usually wants isolation plus detection, not serialization.</p></div>
+<div class="callout warning"><p>⚠️ <strong>Exam Trap:</strong> <code>needs</code> orders jobs <em>within</em> a run; <code>concurrency</code> orders <em>runs against each other</em>. A question asking for &quot;parallel and safe&quot; usually wants isolation plus detection, not serialization.</p></div>
+
 </div>
 <div class="section">
 <h2 id="recap-key-takeaways">Recap: Key Takeaways</h2>
@@ -970,9 +971,6 @@ jobs:
 <li>Re-run failed jobs only; <code>needs</code> keeps a failed pipeline from opening a PR.</li>
 <li>Agent profiles are versioned by commit SHA; in-flight PRs keep their version.</li>
 <li>Retire agents by disabling invocation, removing references, deleting via reviewed PR, and revoking access.</li>
-<li>Callable subagents live in the caller&#39;s <code>agents</code> list; <code>handoffs</code> are human buttons whose <code>agent</code> value is the file-name stem.</li>
-<li>Enforce limits at the credential or gate (scoped PAT, environment required reviewers), not with prose instructions; multi-year audit retention means streaming the audit log out.</li>
-<li>Quiet live session → <code>@copilot</code> on the PR; dead session → unassign and reassign the issue.</li>
 </ul>
 
 </div>

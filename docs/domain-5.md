@@ -614,6 +614,42 @@ The module's exercise, [Build an AI dream team with GitHub Copilot CLI custom ag
 
 ---
 
+## From the Practice Exams: Facts to Know
+
+Facts the practice questions tested for this domain. Topics already covered above (fan-out/fan-in with `needs`, `action:artifact.destroy`, `gh agent-task view --log --follow`, `disable-model-invocation`) are not repeated except where the exam adds a twist.
+
+| Topic | Fact / decision rule | Trap / distractor |
+|---|---|---|
+| Callable subagents vs handoffs | To let an Orchestrator **call** a new subagent, add it to the **Orchestrator's** `agents: [...]` list. `handoffs` are human-clicked chat buttons. | Editing the *Reviewer's* frontmatter, or putting an agent in `tools` (subagents are not tools). A missing `handoffs` entry never explains a failed programmatic call. |
+| Debugging a subagent that will not run | If sibling subagents in the same `agents` list run, the registry works; diff the failing child's frontmatter. `disable-model-invocation: true` blocks model calls; `user-invocable: false` only blocks humans. | Blaming a missing handoff or missing edit tools (a summarizer needs neither). |
+| Read-only planner | `tools: [search, read, fetch]` plus a handoff with `send: false` so a human approves the plan before the implementer starts. | Any of `edit`, `execute`, `commit`, `push`, `merge`, `publish` in the list; `send: true` auto-submits before approval. |
+| Parallel agents on a shared file | Need all three: **isolated branches**, **concurrent** runs, and a **required status check** that detects file-level overlap before merge. | A concurrency group (serializes, loses concurrency), CODEOWNERS alone (no isolation), read-only tools (agents cannot do their job). |
+| Concurrency group design | Declare it at **workflow level** with a per-branch key such as `${{ github.workflow }}-${{ github.ref }}`: rapid pushes to one PR serialize while different PRs run in parallel. | Job-level concurrency (wrong scope); any key containing `run_id` (unique per run, so nothing is ever grouped); `strategy.matrix` (fan-out, not grouping). |
+| Passing files between jobs | Runners are ephemeral: `upload-artifact` in the producer job, `download-artifact` in each consumer (`review`, `deploy`). Artifacts are also inspectable in the Actions UI. | Dependency cache (best-effort), committing generated files, a network share. |
+| Human approval gate for a plan | Order: `plan` job (uploads plan artifact) → environment (e.g. `plan-review`) with the approving team as **required reviewers** → `execute` job with `needs: [plan]` and `environment: plan-review`. | Auto-advance on green checks; a main-branch approval ruleset (guards pushes, not plan outputs); adding the wrong team as reviewers. |
+| Limiting what an agent can reach | Scope the **credential**: a fine-grained PAT limited to one repository makes other repos fail at authentication. | A prose instruction (not enforced), a workflow `permissions` block (scopes `GITHUB_TOKEN`, not the agent session), a bot-push ruleset (blocks pushes only). |
+| Autonomy level | Production secrets + compliance → **human-in-the-loop with required manual approvals** for production; the agent prepares, humans release. | Read-only (cannot deploy), non-production only (misses the target), fully autonomous (violates compliance). |
+| Safe to delegate vs human-only | Delegable: generating `assessment.md`, reviewing `plan.md` dependencies, checking `tasks.md` exists. Human-only: validating security-relevant findings and approving commits. | Treating "the agent produced it" as validation. |
+| Long-term audit retention | GitHub keeps audit history only for a limited period (about 180 days); for a multi-year requirement **stream the audit log** to your own sink (e.g. Azure Event Hubs). | A "retention setting", "log forwarding", or the Git events toggle (selects event types, not retention). |
+| Stalled coding-agent session | **Live but quiet**: open *View session*, then comment `@copilot` on the PR (write access required) to continue the same session. **Dead** (e.g. silent 70 min, no new commits): **unassign and reassign** the issue for a fresh session from the issue context. | Waiting, merging the draft, *Approve and run workflows* (gates CI, does not revive agents), closing/reopening, starting a new PR from Chat. |
+| Failure classification | A tool call that fails at invocation with no result = **tool misuse**. Wrong logic with a working call = reasoning error; prompt/scope sizing = context issue; transport failure = network. | Mid-stream failure at a tool call can also be a `preToolUse` hook denial (`postToolUse` cannot break a call). |
+| Reading agent logs | Trust literal fields: `isolationEnabled: false` with no worktree path = isolation never engaged; `Passing 1 MCP server(s) [github]` = that server reached the session; count sessions by distinct `isNewSession: true` IDs. Lines like `message 0 returned` mean no output; a UI tag such as `[panel/editAgent]` is not a file edit. | Counting request IDs as sessions; reading panel names as actions. |
+
+```yaml
+# Workflow-level, per-branch queue; fan-in after parallel analyzers
+concurrency:
+  group: multiagent-${{ github.ref }}
+jobs:
+  spec_analyzer: { runs-on: ubuntu-latest, steps: [ ... ] }
+  risk_reviewer: { runs-on: ubuntu-latest, steps: [ ... ] }
+  plan_merger:
+    needs: [spec_analyzer, risk_reviewer]
+    runs-on: ubuntu-latest
+    steps: [ ... ]
+```
+
+> ⚠️ **Exam Trap:** `needs` orders jobs *within* a run; `concurrency` orders *runs against each other*. A question asking for "parallel and safe" usually wants isolation plus detection, not serialization.
+
 ## Recap: Key Takeaways
 
 - Give each agent one narrow role, its own tools, and its own paths; agents propose, humans and policy accept.

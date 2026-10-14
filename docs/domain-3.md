@@ -541,6 +541,78 @@ Use this table for a final review: you should be able to explain each row in one
 
 > **🎓 Video Insight — Context rot and the persistent timeline:** Ari describes "context rot" — when the context window is too full, the model drifts from the main goal. The GitHub platform (issues, PRs, commits, workflow artifacts) is the **system of record**. Agents don't start over — they check the PR history, commits, and past workflow runs to know what happened and decide what to do next. *(unverified community info — video source not checked)*
 
+## From the Practice Exams: Facts to Know
+
+Facts the practice questions test for this domain that are easy to miss. Skipped here because they are already covered above: the 28-day expiry, the PR as state anchor, and durable references for handoffs.
+
+### Copilot Memory: how entries leave and why stale ones are harmless
+
+| Question | Answer | Trap / distractor |
+|---|---|---|
+| Two ways memories are deleted? | **Manual deletion** (repo owners/admins for repository facts; users for their own preferences) and **automatic expiry after 28 days unused** | Archiving the repo, deleting the source code, or merging PRs do **not** delete memories |
+| How does Copilot keep old memories from misleading it? | Each fact has **citations**; they are re-checked against the **current branch** before use, and a memory whose code is gone is **ignored** (ignored ≠ deleted) | "Per-user only" (repo facts are shared with everyone who has memory access), "kept forever until an admin deletes" (false), "blocks memory from closed-unmerged PRs" (backwards: they can create memories; validation guards quality) |
+| Agent PR is thin or has the wrong scope from a one-line issue ("Fix the login bug")? | Write a **clear issue**: problem, context, desired outcome, how to verify | Memory (style only), MCP rate limits, `copilot-setup-steps.yml` resources (runner environment) do not supply missing scope |
+
+### Session context hygiene (Chat and CLI)
+
+| Symptom / need | Do this | Not this |
+|---|---|---|
+| Chat answers are skewed by earlier, unrelated troubleshooting | **Start a new chat** (resets history) and **open the related files / close unrelated ones** (curates the working set) | Deleting memories (destroys durable knowledge), deleting one request, switching to agent mode, disabling features |
+| Copilot CLI context is nearly full but you must keep the progress | `/compact` — summarizes the conversation and continues | `/clear` discards history; `/context` only shows what is loaded; `/yolo` only auto-approves tools |
+| Check token consumption in the CLI | `/usage` | `/context` shows scope, not consumption; `/diff` shows changes |
+| Review the approach before any change in the CLI | **Plan mode**: Copilot writes the plan to `plan.md` and **stops**; implementation only after you approve | It does not create a branch or PR, and does not start implementing on its own; `--allow-all` removes approvals |
+
+### Durable evidence of an agent run (GitHub as system of record)
+
+| Need | Mechanism |
+|---|---|
+| Outputs that survive after the run and can be downloaded later | `actions/upload-artifact` (with a `retention-days` setting) |
+| Decisions and progress reviewers can follow on the PR | The **PR body and timeline** (the agent keeps the description updated) |
+| Watching the agent work right now | **View session** (live log) |
+| Passing `trace.json` / `plan.md` from `agent-run` to later `review` and `deploy` jobs | Upload as artifacts in the producer job and `download-artifact` in each consumer — runners are ephemeral and jobs are isolated |
+
+```yaml
+- uses: actions/upload-artifact@v4
+  with:
+    name: agent-outputs
+    path: |
+      trace.json
+      plan.md
+    retention-days: 30
+```
+
+Distractors for the handoff: dependency **caching** (best-effort, for dependencies), **committing** generated files (pollutes history), a network share (external infrastructure runners cannot rely on). Assigning an issue, **Approve and run**, and mentioning `@copilot` are triggers or gates, not records.
+
+To find out *who deleted* an artifact: audit log event `artifact.destroy` (filter `action:artifact.destroy`). `checks.delete_logs` is a different event family; PR text and merge history never record deletions.
+
+### Reading and recovering a cloud agent session
+
+| Signal / situation | Meaning / action |
+|---|---|
+| 👀 (eyes) reaction on the issue | Agent **accepted** the task. No reaction at all means it never accepted: check the assignment and permissions |
+| Timeline updates / commits on the branch | Actively working |
+| Draft PR with checks sitting **idle** | Workflows need a human to click **Approve and run** — normal, not a failure |
+| No progress for ~55 minutes, you want to continue the *same* work (no redo, same approach) | Confirm state with **View session**, then comment `@copilot` on the **pull request** |
+| Session is dead (e.g., log and PR status silent for 70 minutes) and must restart from the issue context | **Unassign and reassign the issue** to Copilot (fresh session, same issue context) |
+| Reviewer iteration applied to the correct session | Reviewer needs **write access** and mentions `@copilot` in the **PR comments** |
+| PR is "successful" but has no file changes | Read the **agent session log** (Agents panel): it is the only artifact with the agent's reasoning |
+
+Traps: `@github` or task comments address other machinery; a new task from Chat is disconnected from the PR session; reassigning the issue or closing/reopening it *restarts* (use it only for a dead session, not to nudge a live one); merging a draft PR and mentioning `@copilot` on it does not revive the agent; **Approve and run** gates workflows, it does not revive agents.
+
+Live-streaming one task from the terminal: `gh agent-task view <id> --log --follow`. `--jq` queries a static snapshot, and `list` only enumerates tasks.
+
+### Same tools everywhere (IDE and github.com)
+
+Local MCP servers (Docker, `/mcp add`) exist only on one machine, so state and tools are lost when you switch to github.com. For consistent tools on any device with no local setup, use a **GitHub-hosted MCP server** and turn MCP on centrally with the **organization Copilot policy (Enable MCP servers)**. Changing chat mode or disabling toolsets does not unify tools.
+
+> ⚠️ **Where credentials live (state that must not leak):** the coding agent runs outside Actions, so an Actions secret is invisible to it. Agent/MCP credentials go in the **Copilot environment** secrets; for MCP, use the `COPILOT_MCP_` name prefix and reference the variable name from the MCP config. Anything committed (instructions file, agent config, plaintext `apiKey`) is readable by every repo reader.
+
+### Modernization agent files (state across stages)
+
+The app-modernization agent writes its state under `.github/upgrades/{scenario}`: `assessment.md` (analysis: breaking changes, deprecated APIs; written before the upgrade), `plan.md` (strategy), and `tasks.md` (live checklist: each task cycles start, execute, validate (build and test), complete). To verify each upgrade step and test results, read `tasks.md`. The site teaches `tasks.md` here even though the saved exam key lists `assessment.md`, which is frozen before execution and has no step status.
+
+> 🎯 **Exam angle:** Match the question's verb to the mechanism: *remember a fact long-term* → memory or an artifact; *forget* → manual delete or 28 days unused; *stale memory* → citation validation (ignored, not deleted); *too much old chat* → new chat or `/compact`; *nudge a live agent* → `@copilot` in the PR; *restart a dead agent* → unassign/reassign.
+
 ## Recap: Key Takeaways
 
 - An agent's working context lives in the **session** and disappears when the session ends.

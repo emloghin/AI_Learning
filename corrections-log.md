@@ -189,3 +189,17 @@
 | 14 | Tip "Beta exam counts — no retake needed at GA". | Kept as historical; beta is over. | https://github.com/jtur671/gh-600-study-guide (community README) |
 | 15 | Hero: "Every resource has been vetted by the community". | Community resources now labeled "(community, unofficial)"; dead links flagged. | Link checks above |
 
+# Re-verification round — 2026-10-14
+
+1. **Certification page** (updated_at 2026-09-22): all exam facts re-confirmed (120 min, 700/1000, Pearson VUE, English only + 30-min rule, proctored, sandbox ghcertdemo.starttest.com, retake 24h). **Renewal transition details added**: certs expiring before the new recertification process is live are extended by 6 months; already-expired certs get one free first-renewal voucher via learn@github.com. Updated index.md table + resources.md Section 6. Source: https://learn.microsoft.com/en-us/credentials/certifications/agentic-ai-developer/
+2. **Study guide** (ms.date 2026-05-04, updated 2026-07-09): all six domain titles and weights re-confirmed verbatim. Its "Get trained" section links only **3 of the 6** modules (Foundations, Architecture, Tooling); the other three (Memory/State/Evaluation, Multi-Agent, Governance) are live on Learn but not linked from the study guide. Wording in index.md / resources.md changed from "six modules form the official training" to reflect this. Source: https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/gh-600
+3. **All six module URLs + 16 GitHub Docs URLs** re-checked: all HTTP 200. Note `copilot/reference/hooks-configuration` now redirects to `hooks-reference`; `cloud-agent/about-hooks` redirects to `concepts/agents/hooks`.
+4. **jtur671 repo** re-confirmed (67 flashcards, 41-question mock, 6 labs at root; last commit 2026-05-22). Existing site description still accurate.
+5. **naim149 gist** is a full ~2,600-line six-domain study workbook, not just an artifact-mapping reference → descriptions updated in index.md and resources.md. Source: https://gist.github.com/naim149/a8aa41c7468685b7d984822c38863aae
+6. **PromptLab playlist** reachable, title matches; video count (7) not independently verifiable (YouTube renders count via JS) — kept, already labeled community/unverified.
+7. **Reactor video** `bgj20o0kYKg` confirmed via oEmbed (Microsoft Reactor channel). **ghcertdemo.starttest.com** reachable (GH-001 UI demo).
+8. **New community resources added** to resources.md Section 3: vicentegnz GH-600 repo, serkutYILDIRIM guide, CertyPro 15-lesson course, jetstreamin practice Q&A, gh600lab.com (freemium). All verified reachable 2026-10-14. ghcertified.com noted but not linked (GH-600 question coverage unconfirmed).
+9. **Dump-vendor caution**: Reddit threads mention examice/examheist/Skillcertpro-style vendors; not linked (NDA/fake material). Warning line added to the new community table.
+10. **Exam format**: no change reported post-GA; "56 questions + 2 case studies" remains the live community consensus — still marked unverified.
+11. **"From the Practice Exams: Facts to Know" sections recovered**: commit `caab5b6` had added these sections directly to `site/domain-*.html` without a markdown source, so the 2026-10-14 rebuild dropped them. All six sections were converted back to markdown and inserted into `docs/domain-1..6.md` (before "Recap: Key Takeaways"); content verified word-for-word against the committed HTML (0 missing chunks per domain). Site and docs are in sync again — future rebuilds preserve them.
+

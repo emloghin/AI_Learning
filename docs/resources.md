@@ -8,7 +8,7 @@ Navigation: [Home](index.md) · [D1](domain-1.md) · [D2](domain-2.md) · [D3](d
 
 ## 1. Official Microsoft Learn Modules
 
-These six modules form the official training for GH-600. **Start here.**
+These six modules form the core Learn training for GH-600. **Start here.** Note: the official study guide's "Get trained" section links only the first three; the other three are live on Microsoft Learn and cover Domains 3–6.
 
 ### Foundations of Agentic AI in GitHub
 *Module · All domains*
@@ -148,11 +148,26 @@ Community study repository. Contains **67 flashcards** (`flashcards.md`), a **41
 ### Naim149 "GH-600 Public Study Guide" gist (community, unofficial)
 *File paths*
 
-A single-page GitHub Gist mapping exam-relevant file paths and concepts: agent profile paths (`.github/agents/*.agent.md`), instruction file locations (`.github/instructions/*.instructions.md`), MCP config paths, and workflow file patterns. Verify paths against the official docs above.
+A **full study workbook** (~2,600 lines, organized by all six domains) in a single GitHub Gist: Copilot customization file inventory (`.github/agents/*.agent.md`, `.github/instructions/*.instructions.md`), custom-agent configuration, MCP transport types, Copilot CLI commands and `~/.copilot/` paths, hooks, and concurrency. The artifact/file-path mapping tables are one component. Verify details against the official docs above.
 
-**Good for:** Quick lookup of file paths during study sessions.
+**Good for:** Second full pass after the Learn modules; quick lookup of file paths during study sessions.
 
 https://gist.github.com/naim149/a8aa41c7468685b7d984822c38863aae
+
+### More community study repos (community, unofficial)
+*All domains*
+
+Additional community material that appeared after the beta (verified reachable October 2026):
+
+| Resource | What it offers | Link |
+|---|---|---|
+| vicentegnz GH-600 study plan | Study plan, practice questions, and a rendered companion site | [github.com/vicentegnz/GH-600-Developing-in-Agentic-AI-Systems](https://github.com/vicentegnz/GH-600-Developing-in-Agentic-AI-Systems) |
+| serkutYILDIRIM GH-600 guide | Six domain deep-dives, flashcards, mock exam, labs | [github.com/serkutYILDIRIM/gh-600-agentic-ai-developer-guide](https://github.com/serkutYILDIRIM/gh-600-agentic-ai-developer-guide) |
+| CertyPro GH-600 course | Free 15-lesson course with per-domain lab repos, cheat sheets, capstone, practice questions | [github.com/CertyPro/certy-gh600-course-content](https://github.com/CertyPro/certy-gh600-course-content) |
+| jetstreamin practice Q&A | 50+ practice questions with answers | [jetstreamin.github.io](https://jetstreamin.github.io/gh-certifications/gh-600-practice-questions-answers.html) |
+| gh600lab.com | Free 12-question diagnostic; paid practice scenarios and timed mock exams | [gh600lab.com](https://www.gh600lab.com/) |
+
+⚠️ Avoid dump vendors (e.g. sites advertising "real exam questions" with match-rate claims): exam content is under NDA, and their material is fake or stolen.
 
 ---
 
@@ -184,7 +199,7 @@ For hands-on practice with real agent configuration, use your own test repositor
 ### GitHub Certified: Agentic AI Developer — certification page
 *Official*
 
-Hosted on Microsoft Learn. Exam overview, skills measured, preparation resources, and registration. Key facts: **120 minutes**, proctored, scheduled **through Pearson VUE**, passing score **700**, offered in **English** only. GitHub certifications are **valid for 2 years** (GitHub is transitioning to Microsoft's recertification process). The number of questions and case studies is **not published** by Microsoft; "56 questions + 2 case studies" is unverified community info.
+Hosted on Microsoft Learn. Exam overview, skills measured, preparation resources, and registration. Key facts: **120 minutes**, proctored, scheduled **through Pearson VUE**, passing score **700**, offered in **English** only. GitHub certifications are **valid for 2 years**. GitHub is transitioning to Microsoft's recertification process: certifications expiring before the new process is available are **extended by 6 months**, and already-expired certs can get **one free renewal-attempt voucher** by emailing **learn@github.com**. The number of questions and case studies is **not published** by Microsoft; "56 questions + 2 case studies" is unverified community info (still the post-GA consensus on Reddit as of October 2026).
 
 **Good for:** Exam registration, official details, skill domain breakdown.
 

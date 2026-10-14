@@ -697,11 +697,14 @@ then re-run the tests and update the Progress block.</div>
 <div class="section">
 <h2 id="from-the-practice-exams-facts-to-know">From the Practice Exams: Facts to Know</h2>
 <p>Facts the practice questions test for this domain that are easy to miss. Skipped here because they are already covered above: the 28-day expiry, the PR as state anchor, and durable references for handoffs.</p>
-
-<h3 id="pe-copilot-memory-lifecycle">Copilot Memory: how entries leave and why stale ones are harmless</h3>
+<h3 id="copilot-memory-how-entries-leave-and-why-stale-ones-are-harmless">Copilot Memory: how entries leave and why stale ones are harmless</h3>
 <div class="table-wrap"><table>
 <thead>
-<tr><th>Question</th><th>Answer</th><th>Trap / distractor</th></tr>
+<tr>
+<th>Question</th>
+<th>Answer</th>
+<th>Trap / distractor</th>
+</tr>
 </thead>
 <tbody><tr>
 <td>Two ways memories are deleted?</td>
@@ -719,11 +722,14 @@ then re-run the tests and update the Progress block.</div>
 <td>Memory (style only), MCP rate limits, <code>copilot-setup-steps.yml</code> resources (runner environment) do not supply missing scope</td>
 </tr>
 </tbody></table></div>
-
-<h3 id="pe-session-context-hygiene">Session context hygiene (Chat and CLI)</h3>
+<h3 id="session-context-hygiene-chat-and-cli">Session context hygiene (Chat and CLI)</h3>
 <div class="table-wrap"><table>
 <thead>
-<tr><th>Symptom / need</th><th>Do this</th><th>Not this</th></tr>
+<tr>
+<th>Symptom / need</th>
+<th>Do this</th>
+<th>Not this</th>
+</tr>
 </thead>
 <tbody><tr>
 <td>Chat answers are skewed by earlier, unrelated troubleshooting</td>
@@ -746,11 +752,13 @@ then re-run the tests and update the Progress block.</div>
 <td>It does not create a branch or PR, and does not start implementing on its own; <code>--allow-all</code> removes approvals</td>
 </tr>
 </tbody></table></div>
-
-<h3 id="pe-durable-run-state">Durable evidence of an agent run (GitHub as system of record)</h3>
+<h3 id="durable-evidence-of-an-agent-run-github-as-system-of-record">Durable evidence of an agent run (GitHub as system of record)</h3>
 <div class="table-wrap"><table>
 <thead>
-<tr><th>Need</th><th>Mechanism</th></tr>
+<tr>
+<th>Need</th>
+<th>Mechanism</th>
+</tr>
 </thead>
 <tbody><tr>
 <td>Outputs that survive after the run and can be downloaded later</td>
@@ -778,11 +786,13 @@ then re-run the tests and update the Progress block.</div>
     retention-days: 30</div>
 <p>Distractors for the handoff: dependency <strong>caching</strong> (best-effort, for dependencies), <strong>committing</strong> generated files (pollutes history), a network share (external infrastructure runners cannot rely on). Assigning an issue, <strong>Approve and run</strong>, and mentioning <code>@copilot</code> are triggers or gates, not records.</p>
 <p>To find out <em>who deleted</em> an artifact: audit log event <code>artifact.destroy</code> (filter <code>action:artifact.destroy</code>). <code>checks.delete_logs</code> is a different event family; PR text and merge history never record deletions.</p>
-
-<h3 id="pe-session-signals">Reading and recovering a cloud agent session</h3>
+<h3 id="reading-and-recovering-a-cloud-agent-session">Reading and recovering a cloud agent session</h3>
 <div class="table-wrap"><table>
 <thead>
-<tr><th>Signal / situation</th><th>Meaning / action</th></tr>
+<tr>
+<th>Signal / situation</th>
+<th>Meaning / action</th>
+</tr>
 </thead>
 <tbody><tr>
 <td>👀 (eyes) reaction on the issue</td>
@@ -810,20 +820,17 @@ then re-run the tests and update the Progress block.</div>
 </tr>
 <tr>
 <td>PR is &quot;successful&quot; but has no file changes</td>
-<td>Read the <strong>agent session log</strong> (Agents panel): it is the only artifact with the agent's reasoning</td>
+<td>Read the <strong>agent session log</strong> (Agents panel): it is the only artifact with the agent&#39;s reasoning</td>
 </tr>
 </tbody></table></div>
 <p>Traps: <code>@github</code> or task comments address other machinery; a new task from Chat is disconnected from the PR session; reassigning the issue or closing/reopening it <em>restarts</em> (use it only for a dead session, not to nudge a live one); merging a draft PR and mentioning <code>@copilot</code> on it does not revive the agent; <strong>Approve and run</strong> gates workflows, it does not revive agents.</p>
 <p>Live-streaming one task from the terminal: <code>gh agent-task view &lt;id&gt; --log --follow</code>. <code>--jq</code> queries a static snapshot, and <code>list</code> only enumerates tasks.</p>
-
-<h3 id="pe-continuity-tools">Same tools everywhere (IDE and github.com)</h3>
+<h3 id="same-tools-everywhere-ide-and-githubcom">Same tools everywhere (IDE and github.com)</h3>
 <p>Local MCP servers (Docker, <code>/mcp add</code>) exist only on one machine, so state and tools are lost when you switch to github.com. For consistent tools on any device with no local setup, use a <strong>GitHub-hosted MCP server</strong> and turn MCP on centrally with the <strong>organization Copilot policy (Enable MCP servers)</strong>. Changing chat mode or disabling toolsets does not unify tools.</p>
-<div class="callout warning"><p><strong>⚠️ Where credentials live (state that must not leak):</strong> the coding agent runs outside Actions, so an Actions secret is invisible to it. Agent/MCP credentials go in the <strong>Copilot environment</strong> secrets; for MCP, use the <code>COPILOT_MCP_</code> name prefix and reference the variable name from the MCP config. Anything committed (instructions file, agent config, plaintext <code>apiKey</code>) is readable by every repo reader.</p></div>
-
-<h3 id="pe-modernization-artifacts">Modernization agent files (state across stages)</h3>
+<div class="callout warning"><p>⚠️ <strong>Where credentials live (state that must not leak):</strong> the coding agent runs outside Actions, so an Actions secret is invisible to it. Agent/MCP credentials go in the <strong>Copilot environment</strong> secrets; for MCP, use the <code>COPILOT_MCP_</code> name prefix and reference the variable name from the MCP config. Anything committed (instructions file, agent config, plaintext <code>apiKey</code>) is readable by every repo reader.</p></div>
+<h3 id="modernization-agent-files-state-across-stages">Modernization agent files (state across stages)</h3>
 <p>The app-modernization agent writes its state under <code>.github/upgrades/{scenario}</code>: <code>assessment.md</code> (analysis: breaking changes, deprecated APIs; written before the upgrade), <code>plan.md</code> (strategy), and <code>tasks.md</code> (live checklist: each task cycles start, execute, validate (build and test), complete). To verify each upgrade step and test results, read <code>tasks.md</code>. The site teaches <code>tasks.md</code> here even though the saved exam key lists <code>assessment.md</code>, which is frozen before execution and has no step status.</p>
-
-<div class="callout"><p><strong>🎯 Exam angle:</strong> Match the question's verb to the mechanism: <em>remember a fact long-term</em> → memory or an artifact; <em>forget</em> → manual delete or 28 days unused; <em>stale memory</em> → citation validation (ignored, not deleted); <em>too much old chat</em> → new chat or <code>/compact</code>; <em>nudge a live agent</em> → <code>@copilot</code> in the PR; <em>restart a dead agent</em> → unassign/reassign.</p></div>
+<div class="callout tip"><p>🎯 <strong>Exam angle:</strong> Match the question&#39;s verb to the mechanism: <em>remember a fact long-term</em> → memory or an artifact; <em>forget</em> → manual delete or 28 days unused; <em>stale memory</em> → citation validation (ignored, not deleted); <em>too much old chat</em> → new chat or <code>/compact</code>; <em>nudge a live agent</em> → <code>@copilot</code> in the PR; <em>restart a dead agent</em> → unassign/reassign.</p></div>
 
 </div>
 <div class="section">
@@ -840,9 +847,6 @@ then re-run the tests and update the Progress block.</div>
 <li><strong>Context drift</strong> is silent; detect it by comparing work against acceptance criteria, recorded decisions, and checks.</li>
 <li>Correct drift with <strong>re-read → re-validate → re-plan</strong>; steer a useful session, stop an obsolete one, reset when requirements change.</li>
 <li>Share state across tools via <strong>references</strong> (PR #, SHAs, run links), with one source of truth per information type.</li>
-<li>Memories leave by <strong>manual deletion</strong> or <strong>28 days unused</strong>; stale ones are <em>ignored</em> after citation validation, not deleted by archiving, code deletion, or merges.</li>
-<li>CLI context pressure → <code>/compact</code> (keeps conclusions); wrong chat history → new chat; <code>/usage</code> shows token consumption; plan mode writes <code>plan.md</code> and stops.</li>
-<li>Live agent: steer with <code>@copilot</code> in the PR (write access); dead agent: unassign/reassign the issue; pass files between jobs with upload/download-artifact.</li>
 </ul>
 
 </div>

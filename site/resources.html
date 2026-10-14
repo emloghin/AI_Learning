@@ -42,7 +42,7 @@
 </div>
 <div class="section">
 <h2 id="1-official-microsoft-learn-modules">1. Official Microsoft Learn Modules</h2>
-<p>These six modules form the official training for GH-600. <strong>Start here.</strong></p>
+<p>These six modules form the core Learn training for GH-600. <strong>Start here.</strong> Note: the official study guide&#39;s &quot;Get trained&quot; section links only the first three; the other three are live on Microsoft Learn and cover Domains 3–6.</p>
 <h3 id="foundations-of-agentic-ai-in-github">Foundations of Agentic AI in GitHub</h3>
 <p><em>Module · All domains</em></p>
 <p>Introductory module covering what agentic AI means in the GitHub ecosystem: how the developer role shifts to guiding, reviewing, and validating agents across the SDLC, and GitHub&#39;s role as system of record and control plane. Prerequisite reading before diving into individual domains.</p>
@@ -278,9 +278,47 @@
 <p><a href="https://github.com/jtur671/gh-600-study-guide" target="_blank" rel="noopener">Repository</a> · <a href="https://github.com/jtur671/gh-600-study-guide/blob/main/flashcards.md" target="_blank" rel="noopener">Flashcards</a> · <a href="https://github.com/jtur671/gh-600-study-guide/blob/main/mock-exam.md" target="_blank" rel="noopener">Mock exam</a> · <a href="https://github.com/jtur671/gh-600-study-guide/blob/main/lab-guide.md" target="_blank" rel="noopener">Labs</a></p>
 <h3 id="naim149-gh-600-public-study-guide-gist-community-unofficial">Naim149 &quot;GH-600 Public Study Guide&quot; gist (community, unofficial)</h3>
 <p><em>File paths</em></p>
-<p>A single-page GitHub Gist mapping exam-relevant file paths and concepts: agent profile paths (<code>.github/agents/*.agent.md</code>), instruction file locations (<code>.github/instructions/*.instructions.md</code>), MCP config paths, and workflow file patterns. Verify paths against the official docs above.</p>
-<p><strong>Good for:</strong> Quick lookup of file paths during study sessions.</p>
+<p>A <strong>full study workbook</strong> (~2,600 lines, organized by all six domains) in a single GitHub Gist: Copilot customization file inventory (<code>.github/agents/*.agent.md</code>, <code>.github/instructions/*.instructions.md</code>), custom-agent configuration, MCP transport types, Copilot CLI commands and <code>~/.copilot/</code> paths, hooks, and concurrency. The artifact/file-path mapping tables are one component. Verify details against the official docs above.</p>
+<p><strong>Good for:</strong> Second full pass after the Learn modules; quick lookup of file paths during study sessions.</p>
 <p><a href="https://gist.github.com/naim149/a8aa41c7468685b7d984822c38863aae" target="_blank" rel="noopener">https://gist.github.com/naim149/a8aa41c7468685b7d984822c38863aae</a></p>
+<h3 id="more-community-study-repos-community-unofficial">More community study repos (community, unofficial)</h3>
+<p><em>All domains</em></p>
+<p>Additional community material that appeared after the beta (verified reachable October 2026):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>What it offers</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>vicentegnz GH-600 study plan</td>
+<td>Study plan, practice questions, and a rendered companion site</td>
+<td><a href="https://github.com/vicentegnz/GH-600-Developing-in-Agentic-AI-Systems" target="_blank" rel="noopener">github.com/vicentegnz/GH-600-Developing-in-Agentic-AI-Systems</a></td>
+</tr>
+<tr>
+<td>serkutYILDIRIM GH-600 guide</td>
+<td>Six domain deep-dives, flashcards, mock exam, labs</td>
+<td><a href="https://github.com/serkutYILDIRIM/gh-600-agentic-ai-developer-guide" target="_blank" rel="noopener">github.com/serkutYILDIRIM/gh-600-agentic-ai-developer-guide</a></td>
+</tr>
+<tr>
+<td>CertyPro GH-600 course</td>
+<td>Free 15-lesson course with per-domain lab repos, cheat sheets, capstone, practice questions</td>
+<td><a href="https://github.com/CertyPro/certy-gh600-course-content" target="_blank" rel="noopener">github.com/CertyPro/certy-gh600-course-content</a></td>
+</tr>
+<tr>
+<td>jetstreamin practice Q&amp;A</td>
+<td>50+ practice questions with answers</td>
+<td><a href="https://jetstreamin.github.io/gh-certifications/gh-600-practice-questions-answers.html" target="_blank" rel="noopener">jetstreamin.github.io</a></td>
+</tr>
+<tr>
+<td>gh600lab.com</td>
+<td>Free 12-question diagnostic; paid practice scenarios and timed mock exams</td>
+<td><a href="https://www.gh600lab.com/" target="_blank" rel="noopener">gh600lab.com</a></td>
+</tr>
+</tbody></table></div>
+<p>⚠️ Avoid dump vendors (e.g. sites advertising &quot;real exam questions&quot; with match-rate claims): exam content is under NDA, and their material is fake or stolen.</p>
 
 </div>
 <div class="section">
@@ -358,7 +396,7 @@
 <h2 id="6-registration-exam-details">6. Registration &amp; Exam Details</h2>
 <h3 id="github-certified-agentic-ai-developer-certification-page">GitHub Certified: Agentic AI Developer — certification page</h3>
 <p><em>Official</em></p>
-<p>Hosted on Microsoft Learn. Exam overview, skills measured, preparation resources, and registration. Key facts: <strong>120 minutes</strong>, proctored, scheduled <strong>through Pearson VUE</strong>, passing score <strong>700</strong>, offered in <strong>English</strong> only. GitHub certifications are <strong>valid for 2 years</strong> (GitHub is transitioning to Microsoft&#39;s recertification process). The number of questions and case studies is <strong>not published</strong> by Microsoft; &quot;56 questions + 2 case studies&quot; is unverified community info.</p>
+<p>Hosted on Microsoft Learn. Exam overview, skills measured, preparation resources, and registration. Key facts: <strong>120 minutes</strong>, proctored, scheduled <strong>through Pearson VUE</strong>, passing score <strong>700</strong>, offered in <strong>English</strong> only. GitHub certifications are <strong>valid for 2 years</strong>. GitHub is transitioning to Microsoft&#39;s recertification process: certifications expiring before the new process is available are <strong>extended by 6 months</strong>, and already-expired certs can get <strong>one free renewal-attempt voucher</strong> by emailing <strong><a href="mailto:learn@github.com">learn@github.com</a></strong>. The number of questions and case studies is <strong>not published</strong> by Microsoft; &quot;56 questions + 2 case studies&quot; is unverified community info (still the post-GA consensus on Reddit as of October 2026).</p>
 <p><strong>Good for:</strong> Exam registration, official details, skill domain breakdown.</p>
 <p><a href="https://learn.microsoft.com/en-us/credentials/certifications/agentic-ai-developer/" target="_blank" rel="noopener">https://learn.microsoft.com/en-us/credentials/certifications/agentic-ai-developer/</a> (short link <code>gh.io/gh-600</code> redirects here)</p>
 <h3 id="official-study-guide">Official study guide</h3>

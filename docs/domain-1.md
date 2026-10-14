@@ -1179,6 +1179,122 @@ General reliability engineering patterns that also apply:
 
 > **🎓 Video Insight — "Trust but verify"** *(unverified community info; the quoted sentence matches the official [contributor model unit](https://learn.microsoft.com/en-us/training/modules/foundations-agentic-ai/6-apply-contributor-model-agent-generated-work))*: Ari emphasizes: "Evaluate the work by the standards of the workflow, not by the novelty of the author." The agent proposes, but humans and policy (rulesets, branch protection) decide what gets merged. The Plan → Act → Evaluate cycle is the central concept — plan your architecture, let agents act within scoped tools, then validate via checks and scans. Feed evidence back into the plan.
 
+## From the Practice Exams: Facts to Know
+
+Exact names, flags and decision rules that the practice questions hinge on. Each row lists the right answer and the distractor the exam uses.
+
+### Reading a coding-agent run (signals and next action)
+
+| What you see | Meaning / correct action | Trap |
+|---|---|---|
+| Eyes reaction on the issue | Agent accepted the task and is starting | No reaction at all = never accepted (check assignment/permissions) |
+| Draft PR, checks idle/grey | Workflows need a human to click **Approve and run workflows** — normal, not a failure | Treating idle checks as a crashed agent |
+| Silent timeline (e.g. 55 min) on a live PR | Open **View session** to confirm, then comment `@copilot` on the PR (same session, completed steps kept) | Closing/reopening, new PR from Chat, marking ready = new session or false state |
+| Dead session (e.g. 70 min, session log and PR body frozen) | **Unassign and reassign the issue** — fresh session from the same issue context | Waiting; merging the draft; "Approve and run" (gates workflows, doesn't revive agents) |
+| Reviewer wants changes on an agent PR | Reviewer needs **write access** and mentions `@copilot` **in the PR comments** | `@github`, task comments, or unassign/reassign (loses PR session context) |
+| Session "successful" but PR has no file changes | Read the **agent session log** (Agents panel) — the only artifact that records the agent's intent/decisions | Runner log (infrastructure), `GITHUB_TOKEN` permissions, usage metrics |
+
+Durable evidence for reviewers uses three lenses: **artifacts** (`actions/upload-artifact` + `retention-days`) persist files after the run; the **PR body and timeline** narrate decisions; **View session** is the live stream. Assigning an issue, approving workflows or mentioning `@copilot` start, gate or steer work — none of them records anything.
+
+Live-stream one task from a terminal: `gh agent-task view <id> --log --follow`. `--jq` only queries a static JSON snapshot; `gh agent-task list` (with `--status` or `--web`) enumerates tasks and never streams a log.
+
+### Task quality, instructions and context
+
+- **Thin PR scope or missing changes** from a one-line issue ("Fix the login bug") → rewrite the **issue** (problem, context, desired outcome, how to verify). Memory, MCP rate limits and `copilot-setup-steps.yml` resources do not supply missing scope.
+- **Agent games the checks** (edits `.github/workflows/*.yml` to silence failures) → update `.github/copilot-instructions.md` with the real goal ("never change CI to get green; fix the underlying code"). A ruleset only blocks the move and leaves the agent stalled; `--allow-all` adds autonomy; disabling Actions removes validation.
+- **Repo-wide review guidance** → `.github/copilot-instructions.md`. `.github/instructions/*.instructions.md` is path-scoped (`applyTo`), `.agent.md` shapes one agent, the PR template coaches human authors.
+- **Chat polluted by old troubleshooting** → start a **new chat** and keep only relevant files open. Don't delete memories or switch modes to fix a context problem.
+- Instructions *guide*; they never guarantee compliance, but repo-level "run tests and linters before pushing" is the accepted mitigation for failing-CI stalls.
+
+### Copilot CLI: planning, autonomy and context commands
+
+| Need | Use | Not |
+|---|---|---|
+| Review and agree on an approach before any change | **Plan mode** — investigates, writes `plan.md`, then **stops** until you approve | `--allow-all` (skips approvals), `--agent=Task` (just a persona), `/compact` |
+| Context window nearly full, keep progress | `/compact` (summarizes, keeps conclusions) | `/clear` discards history; `/context` only shows what is loaded; `/yolo` is auto-approval |
+| Check token / usage consumption | `/usage` | `/context` (scope), `/diff` (changes), `/compact` |
+| Pre-approve only low-risk tools, keep high-risk ones available but gated | `--allow-tool 'read,search'` | `--allow-all-tools` (approves edit/execute too); `--deny-tool` removes tools entirely (not "available but gated"); no flag = prompts for everything |
+| Unattended run with a loop brake | `--autopilot --yolo --max-autopilot-continues 10` | This combination has **no** human checkpoints: it prevents runaway loops and allows all tools, but not targeted human intervention |
+
+### Hooks and diagnosing failures
+
+- Command only when an execution **fails** → `errorOccurred`. `postToolUse` fires after every call, `sessionEnd` once regardless of outcome, `agentStop` is about stopping, not errors.
+- Auto-allow safe Bash, block `sudo`, `rm -rf /`, `curl … | bash` → a **`preToolUse`** hook returning `permissionDecision: "deny"` (files in `.github/hooks/*.json`). `userPromptSubmitted` only sees prompts (a nonzero exit kills the session), `sessionStart` is a banner, `.gitignore` enforces nothing.
+- A live stream that breaks exactly at a tool call, before any result → a `preToolUse` hook denial (not `postToolUse`, an app-install policy, or a firewall, which looks like network errors).
+- Validate each generated shell command *before* it runs in the CLI harness YAML: `event: pre-exec` with the config in `.copilot/hooks.yaml` (not `post-exec`, not a path under `.github/workflows/`).
+
+```yaml
+hooks:
+  - name: block-path-escape
+    event: pre-exec            # validate BEFORE the command runs
+    run: ./guard.sh            # nonzero exit = veto
+cli:
+  config: .copilot/hooks.yaml
+```
+
+**Classify an agent error by where it broke:** *tool misuse* = the invocation itself failed and produced no result (e.g. MCP docs search call fails); *reasoning error* = the call worked but the logic was wrong; *context issue* = prompt/window/scope problem; *network issue* = transport failure (DNS, TLS, timeout).
+
+**Reading logs literally:** `message 0 returned` = zero messages produced; `[panel/editAgent]` is a UI panel tag, not a file edit; only verbs with paths (read, edit, search) prove file work. `Passing 1 MCP server(s) … [github]` proves the server reached the session; `isolationEnabled: false` with no worktree path means isolation never engaged; sessions are counted by distinct `isNewSession: true` IDs.
+
+### Secrets, credentials and scope
+
+| Consumer | Secret home |
+|---|---|
+| Workflow runs | Actions secrets (`${{ secrets.NAME }}`) |
+| Codespaces | Codespaces secrets |
+| **Copilot coding agent and its MCP servers** | **Copilot environment** secrets; for MCP use the `COPILOT_MCP_` name prefix and reference the variable *name* from the MCP config (never a plaintext `apiKey` in the repo) |
+
+- Agent needs a token without access to Actions secrets/variables and without plaintext → **Copilot environment secret**. Files in git (instructions, agent config, JSON) are readable by every repo reader.
+- Agent touched repos outside its intended scope → scope the **credential**: a fine-grained PAT limited to that one repository fails at authentication elsewhere. A prose "do not access X" instruction is guidance, a workflow `permissions` block scopes `GITHUB_TOKEN` (a different credential), and a bot-push ruleset blocks only pushes.
+- Least-privilege token layout: top-level `permissions: contents: read`, then `contents: write` only on the job that commits and `pull-requests: write` only where PRs are created/approved. `read-all` as a default and `issues: write` are not the answer.
+
+```yaml
+permissions:
+  contents: read             # workflow default
+
+jobs:
+  update_artifacts:
+    permissions:
+      contents: write        # only the writer job
+      pull-requests: write   # create/approve PRs only here
+```
+
+### Workflow reliability: artifacts, concurrency, needs, rollback
+
+- **Files between jobs** (`trace.json`, `plan.md` for review and deploy jobs) → `upload-artifact` in the producer, `download-artifact` in consumers (also inspectable in the Actions UI). Dependency cache is best-effort, committing pollutes history, network shares add infrastructure.
+- **Validate agent PRs**: protect `main` (PR + at least one approval) and trigger validation with `on: pull_request`. `on: push` fires on direct pushes; `schedule`/`workflow_dispatch` don't gate PRs. Protection constrains `main`, not the agent's ability to create branches and PRs.
+- **Quality gate**: `npm test` (the repo's own runner), then CodeQL as an ordered pair `github/codeql-action/init` → `analyze`. `upload-sarif` is only for third-party scanner results.
+- **Concurrency**: parallel across PR branches, serialized per branch → *workflow-level* `concurrency: group: ${{ github.workflow }}-${{ github.ref }}`. Job-level scopes the wrong level; any key with `run_id` is unique per run, so it groups nothing; `strategy.matrix` never groups runs. A concurrency group serializing *all* agents violates "run concurrently".
+- **Fan-out/fan-in**: `needs: [spec_analyzer, risk_reviewer]` on the merger job. `needs` orders jobs inside a run; `concurrency` orders runs against each other.
+- **Rollback by reverting one commit**: `workflow_dispatch` input `ref`, then checkout `ref: ${{ inputs.ref }}` and read the profile from `.github/agents/<name>.agent.md` at that same ref. `github.ref` is the ref that triggered the run (usually `main`) and silently deploys the wrong commit.
+- **Parallel agents sharing a file** (`shared/config.yaml`) → separate branches plus a *required status check that detects file overlap* before merge. CODEOWNERS alone doesn't isolate work, read-only tools stop the job, a concurrency group kills parallelism.
+
+```yaml
+on: pull_request
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+jobs:
+  plan_merger:
+    needs: [spec_analyzer, risk_reviewer]   # fan-in
+```
+
+### Governance, human gates and autonomy
+
+- **Designated approvers for `.github/workflows/*` and `/infra/*`** → branch protection rule (or ruleset) requiring reviews **plus a CODEOWNERS file** naming the reviewers. `agents.md`, `.copilotignore` and `copilot-instructions.md` cannot force a human approval.
+- **Only team X may approve an agent's plan**: sequence is (1) `plan` job uploads the plan artifact, (2) create an environment (e.g. `plan-review`) with team X as required reviewers, (3) `execute` job with `needs: [plan]` and `environment: plan-review`. Not auto-advance on green, not SG_Dev as reviewers, not a `main` approval-count ruleset (gates pushes, not plan outputs).
+- **Planner agent that must not touch anything**: `tools: [search, read, fetch]` (no `edit`, `execute`, `commit`, `push`, `publish`); handoff `send: false` (default) keeps the transition a button a human clicks after approving the plan; `send: true` auto-submits immediately.
+- **Autonomy for production secrets + compliance** → human-in-the-loop with required manual approvals for production (read-only can't deploy, non-prod-only excludes the target, fully autonomous breaks compliance).
+- **Unsafe to delegate to the agent**: validating the accuracy of security-relevant findings (e.g. an assessment with a vulnerability) and approving commits (the merge gate). Generating reports, reviewing plan dependencies and file-existence checks are safe to delegate.
+- **Modernization artifacts** (under `.github/upgrades/{scenario}`): `assessment.md` = pre-upgrade analysis (breaking changes), `plan.md` = strategy, `tasks.md` = live per-step status including build/test validation. To check each step and test result, read `tasks.md`.
+
+### Audit, retention and automated evaluation
+
+- **Who deleted an artifact, and when** → audit log event `artifact.destroy` (search filter `action:artifact.destroy`). `repo:` filters by repository, `action:workflows.run` matches run events, `checks.delete_logs` is a different event family, `operation:remove` is not a valid filter, and PR text or merge history never records deletions.
+- **Keep agent-action logs for two years** → **audit log streaming** to your own sink (e.g. Azure Event Hubs); GitHub's own history is short and has no multi-year retention setting. "Enable Git events" only chooses what is recorded.
+- **Built-in automated evaluation signals** on an agent PR: **secret scanning** (hardcoded keys/tokens) and **CodeQL** (vulnerabilities). Repo CI lint, Copilot review comments and time-to-merge dashboards are not built-in scanner signals.
+
+> ⚠️ **Exam trap pattern:** every wrong option usually drops exactly one requirement (concurrency, isolation, gate, or retention). Underline each requirement in the stem, then eliminate the option that sacrifices one. Also ask "enforced or merely guided?" and "which runtime consumes this credential?" before choosing.
+
 ## Recap: Key Takeaways
 
 - An agent **acts** (branches, commits, PRs) — it's a contributor, not a chatbot, and gets the same controls.
