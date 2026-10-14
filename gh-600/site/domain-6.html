@@ -100,8 +100,7 @@
             <tr>
               <td><strong>Ruleset</strong></td>
               <td>A named set of rules GitHub enforces on branches, tags, or pushes (e.g., &quot;no force push to
-                <code>main</code>&quot;, &quot;PR + 1 approval required&quot;).
-              </td>
+                <code>main</code>&quot;, &quot;PR + 1 approval required&quot;).</td>
             </tr>
             <tr>
               <td><strong>Bypass list</strong></td>
@@ -160,8 +159,7 @@
       <p><strong>Define autonomy levels</strong></p>
       <ul>
         <li>Classify agent actions by operational, security, and compliance risk to right-size human interventions → see
-          <a href="#mapping-risk-to-autonomy">Mapping Risk to Autonomy</a>
-        </li>
+          <a href="#mapping-risk-to-autonomy">Mapping Risk to Autonomy</a></li>
         <li>Assign autonomy levels to maximize delivery speed while remaining compliant with organizational security and
           Responsible AI standards → see <a href="#autonomy-levels">Autonomy Levels</a> and <a
             href="#responsible-ai-standards-in-agent-governance">Responsible AI Standards in Agent Governance</a></li>
@@ -190,8 +188,7 @@
         low-risk (reading a file, editing docs), while others are high-risk (deploying to production, accessing secrets,
         changing <code>.github/workflows/</code>). Risk depends on the action, <strong>where</strong> it applies,
         <strong>how reversible</strong> it is, and <strong>how quickly</strong> it affects users. The exam expects you
-        to map <strong>risk levels</strong> to <strong>autonomy levels</strong> and design appropriate boundaries.
-      </p>
+        to map <strong>risk levels</strong> to <strong>autonomy levels</strong> and design appropriate boundaries.</p>
       <h3 id="autonomy-levels">Autonomy Levels</h3>
       <p>Microsoft Learn&#39;s autonomy model:</p>
       <div class="table-wrap">
@@ -252,8 +249,7 @@
         execution on a <strong>machine-readable</strong> risk signal (e.g., <code>risk</code> in <code>plan.json</code>
         → job <code>if:</code> + <code>environment:</code>), not on narrative explanations. Learn also recommends
         <strong>progressive autonomy</strong>: start by allowing PRs only, then merge of low-risk PRs after checks, then
-        automatic staging deploys, and production only through environment approval.
-      </p>
+        automatic staging deploys, and production only through environment approval.</p>
       <h3 id="worked-example-classifying-eight-agent-actions">Worked Example: Classifying Eight Agent Actions</h3>
       <p>For each action ask four questions: <em>what does it touch, where, can it be undone easily, and how fast does
           it reach users?</em> Then pick the lightest control that covers that risk.</p>
@@ -399,8 +395,7 @@
         <p><strong>⚠️ Exam Trap:</strong> An RAI or compliance policy that exists only as text in instructions is
           <strong>not enforcement</strong> — agents can ignore prompts. Block violating actions with platform controls
           (rulesets, required checks, <code>preToolUse</code> deny hooks, environment gates) and keep the evidence in
-          GitHub.
-        </p>
+          GitHub.</p>
       </div>
 
     </div>
@@ -417,8 +412,7 @@
           <strong>Required checks</strong> are the smoke detectors that must show green before anyone moves in.
           <strong>CODEOWNERS</strong> says &quot;the keyholder for this room must look before changes are made&quot;. An
           <strong>environment with required reviewers</strong> is a manager&#39;s signature before a bank transfer goes
-          out.
-        </p>
+          out.</p>
       </div>
       <h3 id="rulesets">Rulesets</h3>
       <p>Rulesets are the <strong>first line of defense</strong>. They define allowed and disallowed operations for
@@ -436,8 +430,7 @@
           <em>can</em> sign its commits and may instead be blocked by other rules that restrict commit metadata (<a
             href="https://docs.github.com/copilot/tutorials/cloud-agent/build-guardrails" target="_blank"
             rel="noopener">build guardrails</a>). Multiple rulesets and branch protection rules aggregate; the most
-          restrictive version of each rule applies.
-        </li>
+          restrictive version of each rule applies.</li>
       </ul>
       <p><strong>Annotated example.</strong> Here is a ruleset for the default branch written as the JSON body for the
         REST endpoint <code>POST /repos/{owner}/{repo}/rulesets</code>; the <strong>Settings → Rules → Rulesets</strong>
@@ -498,8 +491,7 @@
               <td>The bypass list. Here one team (ID <code>1234567</code> is a placeholder) may bypass, and with
                 <code>bypass_mode: &quot;pull_request&quot;</code> only through a PR, not by direct push.
                 <code>always</code> allows any bypass; <code>exempt</code> skips the rules without creating a bypass
-                audit entry.
-              </td>
+                audit entry.</td>
             </tr>
             <tr>
               <td><code>conditions.ref_name</code></td>
@@ -521,8 +513,7 @@
               <td><code>required_status_checks</code></td>
               <td>The <code>test</code> and <code>CodeQL</code> checks must pass;
                 <code>strict_required_status_checks_policy: true</code> also requires the PR to be tested with the
-                latest base-branch code.
-              </td>
+                latest base-branch code.</td>
             </tr>
           </tbody>
         </table>
@@ -570,12 +561,10 @@
         <li><strong>Exam tip:</strong> You can list up to <strong>six</strong> users or teams as required reviewers, but
           <strong>only one</strong> needs to approve; enable &quot;Prevent self-reviews&quot; so the initiator can&#39;t
           approve. Wait timers are 1–43,200 minutes (30 days). By default admins can bypass environment protection rules
-          unless you disable that.
-        </li>
+          unless you disable that.</li>
       </ul>
       <p>The annotated CODEOWNERS file below protects the files agents are most likely to touch; save it as
-        <code>.github/CODEOWNERS</code> (GitHub also reads it from the repository root or <code>docs/</code>):
-      </p>
+        <code>.github/CODEOWNERS</code> (GitHub also reads it from the repository root or <code>docs/</code>):</p>
       <div class="code-block"># Example: CODEOWNERS for sensitive agent-controlled files
         # Last matching pattern wins; any one listed owner can approve.
 
@@ -614,8 +603,7 @@
       <div class="callout warning">
         <p><strong>⚠️ Common mistake:</strong> Expecting CODEOWNERS alone to stop a merge. On its own it only
           <em>requests</em> reviewers. The block comes from the &quot;Require review from Code Owners&quot; rule — and
-          the owners must be users or teams with write access, not agent profiles.
-        </p>
+          the owners must be users or teams with write access, not agent profiles.</p>
       </div>
       <div class="callout warning">
         <p><strong>⚠️ Exam Trap:</strong> A common exam question presents a scenario where an agent bypasses a
@@ -624,8 +612,7 @@
           tests → <strong>required status checks</strong>. If sensitive files changed without expert review →
           <strong>CODEOWNERS + &quot;Require review from Code Owners&quot;</strong>. If an agent deploys to production
           without approval → <strong>environment protection rules</strong>. Know which control addresses which type of
-          bypass.
-        </p>
+          bypass.</p>
       </div>
 
     </div>
@@ -641,8 +628,7 @@
       </div>
       <p>Learn&#39;s layered enforcement model is: <strong>pre-action constraints</strong> (permissions, hooks) →
         <strong>in-action validation</strong> (checks, reviews, approvals) → <strong>post-action traceability</strong>
-        (logs, artifacts). The diagram below groups GitHub controls into six layers:
-      </p>
+        (logs, artifacts). The diagram below groups GitHub controls into six layers:</p>
       <div class="diagram-wrap"><svg viewBox="0 0 720 600" xmlns="http://www.w3.org/2000/svg" role="img"
           aria-label="Guardrails layered defense diagram showing six layers from branch protection to hooks">
           <defs>
@@ -802,8 +788,7 @@
         <code>preToolUse</code> hook returning <code>deny</code>) block dangerous commands before execution — Learn: use
         enforceable hooks for blocking; logging and banners don&#39;t prevent execution. Client-side Git hooks
         (pre-commit/pre-push) can be skipped and are not an enforcement boundary. &quot;If the platform can&#39;t
-        enforce it, it will be bypassed.&quot;
-      </p>
+        enforce it, it will be bypassed.&quot;</p>
       <p>Learn also suggests <strong>guardrail workflows</strong> as defense in depth — e.g., fail a required check if
         the PR is authored by <code>github-copilot[bot]</code> or if no approval comes from a human
         (<code>user.type === &quot;User&quot;</code>).</p>
@@ -851,12 +836,10 @@
       <ol>
         <li>The agent decides to run <code>git push --force</code>.</li>
         <li>Before the shell tool executes, Copilot runs the hook and passes <code>toolName</code> and
-          <code>toolArgs</code>.
-        </li>
+          <code>toolArgs</code>.</li>
         <li>The script matches the pattern and prints
           <code>{&quot;permissionDecision&quot;:&quot;deny&quot;,&quot;permissionDecisionReason&quot;:&quot;destructive_operation_detected: …&quot;}</code>.
-          The reason is <strong>required</strong> for a deny and is shown to the agent.
-        </li>
+          The reason is <strong>required</strong> for a deny and is shown to the agent.</li>
         <li>The command never runs. Per Learn, the agent should hand off to a human rather than retry (<a
             href="https://learn.microsoft.com/en-us/training/modules/multi-agent-systems-orchestration/7-scale-failure-recovery"
             target="_blank" rel="noopener">failure recovery</a>).</li>
@@ -891,8 +874,7 @@
           <strong>E</strong>nvironment Protection → <strong>A</strong>pprovals → <strong>D</strong>ata/Audit Logs →
           <strong>H</strong>ooks. It is a study aid only — the official material does not define a six-layer order
           (unverified community info). For exam questions, think in Learn&#39;s terms: pre-action, in-action,
-          post-action — and find the first control that would have <em>enforced</em> (not just logged) the rule.
-        </p>
+          post-action — and find the first control that would have <em>enforced</em> (not just logged) the rule.</p>
       </div>
 
     </div>
@@ -901,8 +883,7 @@
       </h2>
       <p>Some actions are too risky for even the most constrained agent. The exam expects you to know when and how to
         insert a <strong>human-in-the-loop (HITL)</strong> gate into your agent workflows. Learn: put humans at
-        <strong>decision points</strong> (merge, deploy, secret access), not at every step.
-      </p>
+        <strong>decision points</strong> (merge, deploy, secret access), not at every step.</p>
       <div class="callout tip">
         <p><strong>📘 In plain words:</strong> <strong>Human-in-the-loop (HITL)</strong> means the automation pauses and
           waits for a person. Like a bank: small card payments go through automatically, but a large transfer waits for
@@ -975,8 +956,7 @@
         <li><strong>Set up (once):</strong> in <strong>Settings → Environments → New environment</strong>, create
           <code>production</code>. Add required reviewers (up to <strong>six</strong> users or teams; they need at least
           read access). Tick <strong>Prevent self-reviews</strong>, consider turning off admin bypass, and store the
-          production credential as an <strong>environment secret</strong>.
-        </li>
+          production credential as an <strong>environment secret</strong>.</li>
         <li><strong>Agent triggers the run:</strong> the workflow job declares <code>environment: production</code> and
           starts.</li>
         <li><strong>Job waits:</strong> before the job is sent to a runner, all protection rules must pass. The run
@@ -984,8 +964,7 @@
           available to the job.</li>
         <li><strong>A reviewer decides:</strong> they open the run, click <strong>Review deployments</strong>, select
           the environment, optionally comment, and click <strong>Approve and deploy</strong> — or
-          <strong>Reject</strong>, which fails the workflow.
-        </li>
+          <strong>Reject</strong>, which fails the workflow.</li>
         <li><strong>One approval is enough:</strong> any <strong>one</strong> of the listed reviewers can approve. With
           Prevent self-reviews on, the person who triggered the run can&#39;t approve it, even if listed.</li>
         <li><strong>The job runs:</strong> after approval (and any wait timer or branch restriction passes), the job
@@ -994,8 +973,7 @@
           giving auditors a record of the human decision.</li>
       </ol>
       <p>On GitHub Free, Pro, and Team plans, required reviewers and wait timers are available only for
-        <strong>public</strong> repositories.
-      </p>
+        <strong>public</strong> repositories.</p>
       <div class="callout warning">
         <p><strong>⚠️ Common mistake:</strong> Assuming an approved PR also means &quot;approved to deploy&quot;. PR
           review checks the <em>code</em>; the environment gate checks the <em>release</em>. A merged PR can still be
@@ -1022,16 +1000,14 @@
           analysis, formatting, or routine checks.</li>
         <li><strong>Gate tools by consequence:</strong> auto-allow read/search (e.g.,
           <code>--allow-tool &#39;read,search&#39;</code>, or <code>--allow-tool &#39;shell(git)&#39;</code> for a
-          read-only commit summary) while edit/execute still prompt at time of use.
-        </li>
+          read-only commit summary) while edit/execute still prompt at time of use.</li>
         <li><strong>Let reversibility decide:</strong> low-risk, reversible work (docs, formatting) runs fully
           automated; route by a machine-readable risk value so low-risk plans skip the approval environment.</li>
         <li><strong>Relax gradually:</strong> progressive autonomy expands what agents may do only after they prove
           reliable.</li>
         <li><strong>Serialize instead of approving twice:</strong> <code>concurrency: group: production</code> with
           <code>cancel-in-progress: true</code> prevents overlapping production deploys without adding another human
-          gate.
-        </li>
+          gate.</li>
         <li><strong>Spot rubber-stamping:</strong> if approvals become &quot;click to unblock&quot;, add better
           evidence, CODEOWNERS routing, and smaller PRs rather than more approvers.</li>
       </ul>
@@ -1067,15 +1043,13 @@
           omitting <code>tools</code> enables <strong>all</strong> tools, <code>tools: []</code> disables all.</li>
         <li><strong>Workflow permissions:</strong> GitHub Actions <code>permissions:</code> key controls what the
           <code>GITHUB_TOKEN</code> can do — read-only default at workflow level, elevate per job only where needed
-          (treat <code>pull-requests: write</code> as elevated)
-        </li>
+          (treat <code>pull-requests: write</code> as elevated)</li>
         <li><strong>Repository/org-level token permissions:</strong> Restrict the default <code>GITHUB_TOKEN</code>
           permissions and which tokens agents can use</li>
         <li><strong>Environment secrets:</strong> Sensitive credentials are scoped to specific environments</li>
         <li><strong>CLI tool permissions / hooks:</strong> Copilot CLI <code>--allow-tool</code> /
           <code>--deny-tool</code> (e.g., <code>--allow-tool &#39;shell(git)&#39;</code>) and <code>preToolUse</code>
-          deny hooks
-        </li>
+          deny hooks</li>
         <li><strong>Cloud agent built-ins:</strong> firewall-restricted internet access, push only to its own branch,
           cannot run <code>git push</code> directly</li>
       </ul>
@@ -1131,8 +1105,7 @@
           rulesets restricting file paths, CODEOWNERS on sensitive paths) — widens blast radius</li>
         <li><strong>Missing tool restrictions:</strong> Not restricting shell commands (Copilot CLI
           <code>--allow-tool</code>/<code>--deny-tool</code>, <code>preToolUse</code> deny hooks) — agent can run
-          arbitrary commands
-        </li>
+          arbitrary commands</li>
         <li><strong>Unpinned third-party actions:</strong> Learn recommends minimizing third-party actions and pinning
           versions</li>
       </ul>
@@ -1142,15 +1115,13 @@
           In a workflow, setting <em>any</em> scope under <code>permissions:</code> sets every unlisted scope to
           <code>none</code> — so add each scope a job needs explicitly (<a
             href="https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#permissions"
-            target="_blank" rel="noopener">workflow syntax</a>).
-        </p>
+            target="_blank" rel="noopener">workflow syntax</a>).</p>
       </div>
       <div class="callout tip">
         <p><strong>🎯 Exam angle:</strong> &quot;Reduce blast radius&quot; or &quot;agent did more than its role&quot;
           questions want the <em>narrowest</em> fix: job-level <code>permissions:</code> instead of workflow-wide
           <code>write-all</code>, a trimmed <code>tools</code> list, environment-scoped secrets. Answers that add
-          monitoring but leave the access in place fail to solve the problem.
-        </p>
+          monitoring but leave the access in place fail to solve the problem.</p>
       </div>
       <div class="callout tip">
         <p><strong>📘 Teaching Tip — Audit Agents Regularly:</strong> Least privilege is not a one-time configuration.
@@ -1167,8 +1138,7 @@
         <strong>detecting</strong> them and <strong>proving</strong> what happened. Learn&#39;s rule: every meaningful
         action must leave a trace a reviewer can inspect — PR + commit history, workflow results (logs, time, actor),
         uploaded artifacts (plan, test results, execution report), approval and merge events, and environment approval
-        records. <strong>Missing evidence = failure.</strong>
-      </p>
+        records. <strong>Missing evidence = failure.</strong></p>
       <div class="callout tip">
         <p><strong>📘 In plain words:</strong> A car&#39;s dashboard shows how it runs right now (observability). A trip
           log shows the route you took (traceability). A notarized inspection report proves the car met the rules
@@ -1207,8 +1177,7 @@
           &quot;What happened?&quot; (forensic), <strong>Auditability</strong> = &quot;Can we prove it?&quot;
           (compliance). A question about &quot;proving compliance to an auditor&quot; is about
           <strong>auditability</strong>. (These definitions are this guide&#39;s framing; Learn uses the terms together
-          — unverified community info.)
-        </p>
+          — unverified community info.)</p>
       </div>
       <div class="callout warning">
         <p><strong>⚠️ Common mistake:</strong> Thinking logging is a guardrail that <em>stops</em> things. Logs and the
@@ -1220,8 +1189,7 @@
     <div class="section">
       <h2 id="7-maintaining-governance-over-time">7. Maintaining Governance Over Time</h2>
       <p>Governance is not a set-it-and-forget-it activity. The exam expects you to understand how to
-        <strong>maintain</strong> governance as the agent system evolves.
-      </p>
+        <strong>maintain</strong> governance as the agent system evolves.</p>
       <div class="callout tip">
         <p><strong>📘 In plain words:</strong> Governance is a garden, not a fence. Teams change, files move, new agents
           get extra tools — and unless someone weeds regularly, the rules quietly stop matching reality. Learn calls
@@ -1306,15 +1274,13 @@
               <td>Security validation runs by default: <strong>CodeQL</strong>, new dependencies checked against the
                 <strong>GitHub Advisory Database</strong> (malware, High/Critical CVSS), <strong>secret
                   scanning</strong>, plus a Copilot code review pass. No GHAS/Code Security/Secret Protection license
-                needed; individual tools can be disabled.
-              </td>
+                needed; individual tools can be disabled.</td>
             </tr>
             <tr>
               <td>Agent pushes code</td>
               <td>Only users with <strong>write access</strong> can trigger it (comments from others are never shown to
                 it); pushes only to one branch (<code>copilot/...</code> or the PR branch); can&#39;t run
-                <code>git push</code> directly; subject to branch protections and required checks.
-              </td>
+                <code>git push</code> directly; subject to branch protections and required checks.</td>
             </tr>
             <tr>
               <td>Merging without review</td>
@@ -1355,14 +1321,12 @@
           <code>action</code> (e.g., <code>pull_request.create</code>), <code>actor_is_agent</code>,
           <code>agent_session_id</code>, and <code>user</code> (who initiated it) (<a
             href="https://docs.github.com/en/copilot/reference/enterprise-administrators/agentic-audit-log-events"
-            target="_blank" rel="noopener">GitHub Docs</a>).
-        </li>
+            target="_blank" rel="noopener">GitHub Docs</a>).</li>
         <li>The audit log retains <strong>180 days</strong>; stream it to a SIEM for longer history and alerts. It does
           <strong>not</strong> contain local client prompts (e.g., Copilot CLI), which need a custom solution such as
           hooks (<a
             href="https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-for-organization/review-activity/review-audit-logs"
-            target="_blank" rel="noopener">GitHub Docs</a>).
-        </li>
+            target="_blank" rel="noopener">GitHub Docs</a>).</li>
       </ul>
       <h3 id="enterprise-guardrail-setup">Enterprise Guardrail Setup</h3>
       <p>From <a href="https://docs.github.com/copilot/tutorials/cloud-agent/build-guardrails" target="_blank"
@@ -1380,8 +1344,7 @@
           runners; org owners can pin the agent to a runner label.</li>
         <li><strong>Token:</strong> the enterprise default <code>GITHUB_TOKEN</code> policy doesn&#39;t change
           Copilot&#39;s session token, but it does apply to <code>copilot-setup-steps.yml</code>, so keep
-          <code>permissions</code> minimal there.
-        </li>
+          <code>permissions</code> minimal there.</li>
       </ul>
       <div class="callout warning">
         <p><strong>⚠️ Exam Trap:</strong> &quot;The agent must not see the production database password&quot; means keep
@@ -1517,8 +1480,7 @@
         <li>A different guardrail-file format appeared in one question: a <code>.copilot/hooks.yaml</code> with an event
           of <code>pre-exec</code> (validate before the command runs; a script exits nonzero to veto, e.g., reject
           <code>..</code> or absolute paths). Rules: validate <strong>before</strong> execution (<code>post-exec</code>
-          is too late), and the file must be the harness file, never a path under <code>.github/workflows/</code>.
-        </li>
+          is too late), and the file must be the harness file, never a path under <code>.github/workflows/</code>.</li>
       </ul>
       <h3 id="copilot-cli-autonomy-flags-and-modes">Copilot CLI autonomy flags and modes</h3>
       <div class="table-wrap">
@@ -1533,8 +1495,7 @@
             <tr>
               <td><code>--allow-tool &#39;read,search&#39;</code></td>
               <td>Pre-approves only those tools: no prompts for safe work; unlisted tools (edit, execute) stay
-                <strong>available but still prompt</strong>
-              </td>
+                <strong>available but still prompt</strong></td>
             </tr>
             <tr>
               <td><code>--deny-tool &#39;edit,execute&#39;</code></td>
@@ -1565,8 +1526,7 @@
         <p>⚠️ <strong>Exam Trap:</strong> <code>copilot --autopilot --yolo --max-autopilot-continues 10</code> prevents
           runaway loops (cap) and allows all tools (yolo), but offers <strong>no</strong> human intervention points:
           nothing ever asks. &quot;Review and agree on the approach before changes&quot; = plan mode, never
-          <code>--allow-all</code>.
-        </p>
+          <code>--allow-all</code>.</p>
       </div>
       <h3 id="tokens-credentials-and-where-secrets-live">Tokens, credentials, and where secrets live</h3>
       <div class="code-block">permissions:
@@ -1580,13 +1540,11 @@
       <ul>
         <li>Set a read-only default at workflow top level and widen <strong>per job</strong>. <code>read-all</code> is
           not the least-privilege default asked for; <code>issues: write</code> is irrelevant unless issues are touched;
-          <code>pull-requests: read</code> cannot create or approve PRs.
-        </li>
+          <code>pull-requests: read</code> cannot create or approve PRs.</li>
         <li><strong>MCP credentials for the cloud agent:</strong> store them as secrets in the Copilot environment with
           a <code>COPILOT_MCP_</code> name prefix, then reference the variable name from the MCP config. Wrong homes:
           Actions secrets (<code>${{ secrets.X }}</code>), Codespaces secrets, and any file committed to git (plaintext
-          <code>apiKey</code>, instructions file, agent config) all fail or leak.
-        </li>
+          <code>apiKey</code>, instructions file, agent config) all fail or leak.</li>
         <li>Remote MCP over HTTP with a GitHub PAT: <code>type: http</code> plus
           <code>Authorization: Bearer &lt;token&gt;</code> (read the token from an environment variable, never inline).
         </li>
@@ -1601,33 +1559,28 @@
           <code>/infra/*</code>): branch protection (or ruleset) requiring review <strong>plus</strong> a
           <code>CODEOWNERS</code> file. Distractors: <code>agents.md</code> (not an enforcement file),
           <code>.copilotignore</code> (only hides files from Copilot), <code>copilot-instructions.md</code> (guides,
-          cannot force approval).
-        </li>
+          cannot force approval).</li>
         <li><strong>Trunk-based with agents:</strong> protect <code>main</code> (PR + at least one approval) and trigger
           validation with <code>on: pull_request</code>. <code>on: push</code> misses PR gating, and
           <code>schedule</code>/<code>workflow_dispatch</code> are not PR-driven. Protection constrains
-          <code>main</code>, never the agent&#39;s ability to branch and open PRs.
-        </li>
+          <code>main</code>, never the agent&#39;s ability to branch and open PRs.</li>
         <li><strong>Agent PR quality gate:</strong> unit tests (e.g., <code>npm test</code>) plus the CodeQL action pair
           in order: <code>github/codeql-action/init</code> then <code>analyze</code>. <code>upload-sarif</code> is only
           for third-party scanners.</li>
         <li><strong>Two agents colliding on one file, both must keep running:</strong> separate branches plus a
           <strong>required status check</strong> that detects file-level overlap before merge. A concurrency group
           serializes them (violates &quot;run concurrently&quot;), read-only tools stop the work, CODEOWNERS adds review
-          but no isolation.
-        </li>
+          but no isolation.</li>
         <li><strong>Concurrency key:</strong> declare it at <strong>workflow level</strong> with
           <code>group: ${{ github.workflow }}-${{ github.ref }}</code>: pushes to one PR branch queue while different
           branches run in parallel. A key containing <code>run_id</code> is unique per run, so it groups nothing;
           job-level concurrency and <code>strategy.matrix</code> do not group whole runs. Fan-out/fan-in inside a run is
-          <code>needs: [a, b]</code> on the final job.
-        </li>
+          <code>needs: [a, b]</code> on the final job.</li>
         <li><strong>Human-approved plan pipeline (order matters):</strong> (1) a <code>plan</code> job uploads the plan
           as an artifact; (2) create an environment (e.g., <code>plan-review</code>) whose required reviewers are
           <strong>only</strong> the approving team (e.g., <code>SG_Review</code>, not the developers); (3) an
           <code>execute</code> job with <code>needs: [plan]</code> and <code>environment: plan-review</code>. A
-          2-approval ruleset on <code>main</code> gates pushes, not plan outputs.
-        </li>
+          2-approval ruleset on <code>main</code> gates pushes, not plan outputs.</li>
       </ul>
       <h3 id="evidence-logs-and-audit">Evidence, logs, and audit</h3>
       <ul>
@@ -1635,13 +1588,11 @@
           <code>trace.json</code>/<code>plan.md</code> with <code>actions/upload-artifact</code> in the producer and
           <code>download-artifact</code> in later jobs (this also makes them inspectable in the Actions UI; set
           <code>retention-days</code> for durability). Caches are best-effort, committing generated files pollutes
-          history, a network share adds unreliable infra.
-        </li>
+          history, a network share adds unreliable infra.</li>
         <li><strong>Reviewer lenses on an agent PR:</strong> artifacts = durable files after the run; PR body + timeline
           = running narrative; <strong>View session</strong> = live log. Live-stream from a terminal:
           <code>gh agent-task view &lt;id&gt; --log --follow</code> (<code>--jq</code> is a static snapshot;
-          <code>list</code> only enumerates).
-        </li>
+          <code>list</code> only enumerates).</li>
         <li><strong>Status signals:</strong> eyes reaction = accepted; timeline updates = working; idle checks = waiting
           for a human to click <strong>Approve and run workflows</strong> (not a failure).</li>
         <li><strong>PR successful but empty?</strong> Read the <strong>agent session log</strong> (the only artifact
@@ -1662,8 +1613,7 @@
         <li><strong>Agent games your checks</strong> (edits workflows to turn CI green): teach the goal in
           <code>.github/copilot-instructions.md</code> (never modify CI to pass; fix the underlying code). A ruleset
           alone just stalls it; disabling Actions removes validation; <code>--allow-all</code> adds autonomy to the
-          misbehavior. Instructions steer but do not enforce, so pair with a ruleset/CODEOWNERS on workflow files.
-        </li>
+          misbehavior. Instructions steer but do not enforce, so pair with a ruleset/CODEOWNERS on workflow files.</li>
         <li><strong>Vague issue, thin PR:</strong> the agent plans from the issue text, so write the problem, scope, and
           acceptance criteria.</li>
         <li><strong>Iterating:</strong> comment <code>@copilot</code> <strong>on the PR</strong> from an account with
@@ -1713,8 +1663,7 @@
       <p><strong>Exercise 1 — Block direct pushes with a ruleset.</strong></p>
       <ol>
         <li><strong>Settings → Rules → Rulesets → New ruleset → New branch ruleset.</strong> Name it
-          <code>protect-main</code>, set enforcement to <strong>Active</strong>, target the default branch.
-        </li>
+          <code>protect-main</code>, set enforcement to <strong>Active</strong>, target the default branch.</li>
         <li>Enable <strong>Restrict deletions</strong>, <strong>Block force pushes</strong>, and <strong>Require a pull
             request before merging</strong> (1 approval). Leave the bypass list empty.</li>
         <li>Locally, commit a change on <code>main</code> and run <code>git push</code>.</li>
@@ -1727,8 +1676,7 @@
         <li>Add <code>.github/CODEOWNERS</code> with the line <code>/docs/ @YOUR-USERNAME</code> and merge it.</li>
         <li>In the ruleset from Exercise 1, enable <strong>Require review from Code Owners</strong>.</li>
         <li>From a second account (or ask a friend with write access), open a PR that changes a file in
-          <code>docs/</code>.
-        </li>
+          <code>docs/</code>.</li>
         <li><strong>Expected result:</strong> you are automatically requested as reviewer, and the PR can&#39;t merge
           until you approve. A PR that only changes files outside <code>docs/</code> doesn&#39;t request you.</li>
       </ol>
@@ -1746,8 +1694,7 @@
       <p><strong>Optional — Try the deny hook locally.</strong> Add the <a
           href="#worked-example-a-pretooluse-deny-hook">hook files above</a> to a repo, start Copilot CLI there, and ask
         it to run <code>git push --force</code>. <strong>Expected result:</strong> the command is denied with the
-        <code>destructive_operation_detected</code> reason.
-      </p>
+        <code>destructive_operation_detected</code> reason.</p>
       <p>Related Learn units: <a
           href="https://learn.microsoft.com/en-us/training/modules/governance-guardrails-operations/2-define-risk-based-autonomy"
           target="_blank" rel="noopener">Define risk-based autonomy</a>, <a
@@ -1815,8 +1762,7 @@
         each one. Where do you start?</p>
       <ul>
         <li>A. The enterprise audit log filtered by <code>actor:Copilot</code>, using the <code>user</code> and
-          <code>agent_session_id</code> fields
-        </li>
+          <code>agent_session_id</code> fields</li>
         <li>B. Each developer&#39;s local Copilot CLI history</li>
         <li>C. The repository&#39;s CODEOWNERS file</li>
         <li>D. The Actions cache</li>

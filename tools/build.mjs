@@ -1,13 +1,13 @@
-// Builds <site>/site/*.html from <site>/docs/*.md (default: the GH-600 site in docs/ -> site/).
-// Usage: node tools/build.mjs            -> GH-600 site
-//        node tools/build.mjs ai-models  -> ai-models/docs -> ai-models/site, configured by ai-models/docs/site.json
+// Builds <root>/site/*.html from <root>/docs/*.md for a site folder under the repo root.
+// Usage: node tools/build.mjs            -> gh-600 site
+//        node tools/build.mjs ai-fundamentals  -> ai-fundamentals site, configured by ai-fundamentals/docs/site.json
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { marked } from 'marked';
 
 const repo = join(dirname(fileURLToPath(import.meta.url)), '..');
-const root = process.argv[2] ? join(repo, process.argv[2]) : repo;
+const root = join(repo, process.argv[2] || 'gh-600');
 const docs = join(root, 'docs');
 const out = join(root, 'site');
 const outLabel = process.argv[2] ? `${process.argv[2]}/site` : 'site';
