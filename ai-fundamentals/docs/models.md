@@ -73,7 +73,7 @@ The license is what decides whether your project is allowed. Always read the lic
 |---|---|---|---|---|---|
 | **Apache-2.0** | Yes | Yes | Yes | Keep the license and notices; mark changed files; includes a patent grant | Many Mistral, Qwen, IBM Granite and Ai2 OLMo releases; Gemma 4 |
 | **MIT** | Yes | Yes | Yes | Keep the copyright and license notice | Microsoft Phi; several DeepSeek releases |
-| **Llama Community License** | Yes, with a big-company limit | Yes | Yes | Companies with over 700 million monthly active users must ask Meta for a license; show "Built with Llama"; start derivative model names with "Llama"; follow the Acceptable Use Policy | Meta Llama 3.x |
+| **Llama Community License** | Yes, with a big-company limit | Yes | Yes | Companies with over 700 million monthly active users must ask Meta for a license; show "Built with Llama"; start derivative model names with "Llama"; follow the Acceptable Use Policy | Meta Llama 3.x and Llama 4 (each version has its own license text) |
 | **Gemma Terms of Use** | Yes | Yes | Yes | Pass on the Prohibited Use Policy restrictions to your users; include the license and a notice file | Gemma 1–3 and related Gemma variants |
 | **Research-only / non-commercial** | No | Usually, for research | Limited | Personal, academic or evaluation use only | Some research releases (for example under CC BY-NC or a vendor "research license") |
 | **Proprietary terms of service** | Yes, as a paying customer | Only through the provider's own fine-tuning service, if offered | No | Usage policies, rate limits, data-handling terms | GPT, Claude, Gemini, Grok |
@@ -95,7 +95,7 @@ Model versions change every few months, so learn the **families** — who makes 
 | Family | Provider | What it is known for | Where you can use it |
 |---|---|---|---|
 | **GPT and reasoning models** (earlier reasoning models were branded "o-series") | [OpenAI](https://developers.openai.com/api/docs/models) | General-purpose chat and coding, reasoning effort controls, built-in tools, very large developer ecosystem | ChatGPT, OpenAI API, Microsoft Foundry |
-| **Claude** (tiers such as Haiku, Sonnet, Opus) | [Anthropic](https://docs.anthropic.com/) | Long documents, careful instruction following, coding and agent work | Claude apps, Anthropic API, Amazon Bedrock, Google Cloud, Microsoft Foundry |
+| **Claude** (tiers such as Haiku, Sonnet, Opus) | [Anthropic](https://platform.claude.com/docs/) | Long documents, careful instruction following, coding and agent work | Claude apps, Anthropic API, Amazon Bedrock, Google Cloud, Microsoft Foundry |
 | **Gemini** (tiers such as Flash and Pro) | [Google](https://ai.google.dev/) | Native multimodal input (text, images, audio, video), very long context windows | Gemini app, Google AI Studio, Gemini Enterprise Agent Platform |
 | **Grok** | [xAI](https://docs.x.ai/) | Conversational model integrated with X, real-time information features | Grok app, xAI API, some cloud platforms |
 
@@ -105,7 +105,7 @@ Providers usually sell each family in **tiers**: a small fast cheap tier for hig
 
 | Family | Creator | Typical license | Strengths |
 |---|---|---|---|
-| **Llama** | Meta | Llama Community License | The largest ecosystem of fine-tunes, tutorials and tooling |
+| **Llama** (and Meta's newer **Muse Glimmer**) | Meta | Llama Community License; Muse Glimmer (August 2026) is Apache-2.0 | Llama has the largest ecosystem of fine-tunes, tutorials and tooling |
 | **Mistral / Mixtral** | Mistral AI (France) | Many models Apache-2.0; some premium models proprietary or research-only | Efficient models; Mixtral helped popularize Mixture-of-Experts in open models |
 | **Qwen** | Alibaba Cloud | Many models Apache-2.0 | Very wide size range, strong multilingual and coding variants, vision variants |
 | **DeepSeek** | DeepSeek | Recent major releases MIT | Strong reasoning and coding; large Mixture-of-Experts designs |
@@ -264,13 +264,13 @@ If you do not want to manage hardware, call a model over the internet. You pay p
 | Platform | What it is | Good for |
 |---|---|---|
 | [OpenAI API](https://developers.openai.com/api/docs) | Direct access to OpenAI's GPT and reasoning models through the Responses API | Building with OpenAI models and built-in tools |
-| [Anthropic API](https://docs.anthropic.com/) | Direct access to Claude models through the Messages API | Building with Claude |
+| [Anthropic API](https://platform.claude.com/docs/) | Direct access to Claude models through the Messages API | Building with Claude |
 | [Google AI Studio](https://aistudio.google.com/) and [Gemini Enterprise Agent Platform](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models) (formerly Vertex AI) | AI Studio is a quick way to try the Gemini API; the Agent Platform is Google Cloud's enterprise service with Model Garden, including Gemini, Gemma, partner models such as Claude and Mistral, and open models | Prototyping with Gemini; enterprise deployments on Google Cloud |
 | [Microsoft Foundry](https://learn.microsoft.com/azure/foundry/what-is-foundry) (formerly Azure AI Foundry) | Azure platform with a catalog of thousands of models from Microsoft, OpenAI, Anthropic, Meta and others, plus agents, evaluation and governance | Enterprises on Azure that need security, networking and compliance controls |
 | [Hugging Face Inference Providers](https://huggingface.co/docs/inference-providers) | One API and account to call many open models hosted by Hugging Face partners | Trying many open models without hosting them |
 | [Amazon Bedrock](https://aws.amazon.com/bedrock/) | AWS service offering models from Anthropic, Meta, Mistral, Amazon and others | Teams already on AWS |
 
-> **⚠️ Warning:** Platforms change. For example, [GitHub Models has been retired](https://docs.github.com/en/github-models/about-github-models) as of July 30, 2026; GitHub now points users to Microsoft Foundry for model access and to [GitHub Copilot](https://docs.github.com/en/copilot) for AI inside GitHub workflows. Before you build on any platform, check its current documentation and model retirement schedule.
+> **⚠️ Warning:** Platforms change. For example, [GitHub Models has been retired](https://docs.github.com/en/github-models) as of July 30, 2026; GitHub now points users to Microsoft Foundry for model access and to [GitHub Copilot](https://docs.github.com/en/copilot) for AI inside GitHub workflows. Before you build on any platform, check its current documentation and model retirement schedule.
 
 > **📘 In plain words:** Many providers and local tools speak the same "OpenAI-compatible" request format. That makes it easier to swap models: often you change the base URL, the API key and the model name, and the rest of your code keeps working.
 

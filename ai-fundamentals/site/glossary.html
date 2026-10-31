@@ -16,6 +16,7 @@
     <div class="header-logo"><span>AI&nbsp;</span>Learn</div>
     <nav class="header-nav">
       <a href="index.html">Home</a>
+      <a href="study-plan.html">Study Plan</a>
       <a href="foundations.html">1. Foundations</a>
       <a href="neural-networks.html">2. Neural Networks</a>
       <a href="transformers.html">3. Transformers &amp; LLMs</a>
@@ -24,6 +25,7 @@
       <a href="using-ai.html">6. Using Models</a>
       <a href="tokens.html">7. Tokens &amp; Cost</a>
       <a href="best-practices.html">8. Best Practices</a>
+      <a href="ai-at-work.html">9. AI at Work</a>
       <a href="glossary.html" class="active">Glossary</a>
       <a href="resources.html">Resources</a>
     </nav>
@@ -43,6 +45,8 @@
 <p>A small math function inside each neuron that decides how strongly it &quot;fires&quot;, adding the non-linearity that lets networks learn complex patterns. Common ones are ReLU (turns negatives into 0) and sigmoid (squashes values between 0 and 1). See <a href="neural-networks.html">Chapter 2</a>.</p>
 <h3 id="agent">Agent</h3>
 <p>An AI system that uses a model in a loop to plan, call tools, look at the results and decide the next step until a goal is reached. Example: a coding agent that reads an error, edits a file, runs tests and repeats. See <a href="using-ai.html">Chapter 6</a>.</p>
+<h3 id="ai-literacy">AI literacy</h3>
+<p>The skills, knowledge and understanding people need to use AI systems in an informed way and to be aware of their opportunities, risks and possible harms. In the EU, Article 4 of the AI Act requires providers and deployers of AI systems to take measures to support the AI literacy of their staff. See <a href="ai-at-work.html">Chapter 9</a>.</p>
 <h3 id="alignment">Alignment</h3>
 <p>The work of making a model behave the way people intend: helpful, honest and harmless. Techniques such as RLHF and DPO are used for alignment. See <a href="training.html">Chapter 4</a>.</p>
 <h3 id="attention">Attention</h3>
@@ -72,7 +76,7 @@
 <h3 id="chain-of-thought">Chain-of-thought</h3>
 <p>Asking or allowing a model to work through a problem step by step before giving the final answer, which often improves results on maths and logic. Example prompt: &quot;Think through this step by step, then give the answer.&quot; See <a href="using-ai.html">Chapter 6</a>.</p>
 <h3 id="checkpoint">Checkpoint</h3>
-<p>A saved snapshot of a model&#39;s weights at a point during training, so training can resume or an earlier version can be reused. Downloaded open models are usually checkpoints too. See <a href="training.html">Chapter 4</a>.</p>
+<p>A saved snapshot of a model&#39;s weights at a point during training, so training can resume or an earlier version can be reused. Downloaded open models are usually checkpoints too. See <a href="models.html">Chapter 5</a>.</p>
 <h3 id="context-engineering">Context engineering</h3>
 <p>Choosing and maintaining the best set of information (instructions, tools, history, retrieved data) in the model&#39;s context at every step. It extends prompt engineering to agents and long tasks. See <a href="best-practices.html">Chapter 8</a>.</p>
 <h3 id="context-window">Context window</h3>
@@ -114,7 +118,7 @@
 <h3 id="flops">FLOPs</h3>
 <p>Floating-point operations: the count of basic arithmetic steps a computer performs. Used to describe how much compute training a model takes (total FLOPs) or how fast hardware is (FLOPs per second). See <a href="training.html">Chapter 4</a>.</p>
 <h3 id="foundation-model">Foundation model</h3>
-<p>A large model pretrained on broad data that can be adapted to many tasks, such as the base models behind chat assistants. See <a href="foundations.html">Chapter 1</a> and <a href="training.html">Chapter 4</a>.</p>
+<p>A large model pretrained on broad data that can be adapted to many tasks, such as the base models behind chat assistants. See base models in <a href="training.html">Chapter 4</a>.</p>
 <h3 id="function-calling">Function calling</h3>
 <p>A feature where the model, instead of answering in text, returns a structured request to run one of your functions (for example <code>get_weather(city=&quot;Paris&quot;)</code>). Your code runs it and sends the result back. Also called tool calling. See <a href="using-ai.html">Chapter 6</a>.</p>
 
@@ -202,7 +206,7 @@
 <h3 id="parameter">Parameter</h3>
 <p>A number inside the model that is learned during training, mainly weights and biases. &quot;7B&quot; means about 7 billion parameters. See <a href="neural-networks.html">Chapter 2</a>.</p>
 <h3 id="perplexity">Perplexity</h3>
-<p>A measure of how &quot;surprised&quot; a language model is by a piece of text; lower perplexity means it predicts the text better. See <a href="training.html">Chapter 4</a>.</p>
+<p>A measure of how &quot;surprised&quot; a language model is by a piece of text; lower perplexity means it predicts the text better. Not covered in depth on this site; related: evaluation and benchmarks in <a href="training.html">Chapter 4</a>.</p>
 <h3 id="pretraining">Pretraining</h3>
 <p>The first, most expensive training stage, where a model learns general patterns of language from massive amounts of text by predicting the next token. See <a href="training.html">Chapter 4</a>.</p>
 <h3 id="prompt">Prompt</h3>
@@ -230,7 +234,7 @@
 <h3 id="reinforcement-learning">Reinforcement learning</h3>
 <p>A type of learning where an agent tries actions, receives rewards or penalties, and learns to maximize reward over time. See <a href="foundations.html">Chapter 1</a>.</p>
 <h3 id="reranking">Reranking</h3>
-<p>A second step in search that reorders retrieved results with a more accurate model so the best few go into the prompt. See <a href="tokens.html">Chapter 7</a>.</p>
+<p>A second step in search that reorders retrieved results with a more accurate model so the best few go into the prompt. See <a href="using-ai.html">Chapter 6</a> and <a href="tokens.html">Chapter 7</a>.</p>
 <h3 id="rlhf-reinforcement-learning-from-human-feedback">RLHF (Reinforcement Learning from Human Feedback)</h3>
 <p>A tuning method where humans rank model answers, a reward model learns those preferences, and the language model is trained to produce answers the reward model scores highly. See <a href="training.html">Chapter 4</a>.</p>
 
@@ -283,7 +287,7 @@
 <h2 id="z">Z</h2>
 <h3 id="zero-shot">Zero-shot</h3>
 <p>Asking a model to do a task with no examples in the prompt, relying only on instructions. Example: &quot;Classify this review as positive or negative.&quot; See <a href="using-ai.html">Chapter 6</a>.</p>
-<div class="nav-links"><a href="best-practices.html">← Chapter 8: Best Practices</a><a href="resources.html">Resources →</a></div>
+<div class="nav-links"><a href="ai-at-work.html">← Chapter 9: AI at Work</a><a href="resources.html">Resources →</a></div>
 </div>
 </main>
 

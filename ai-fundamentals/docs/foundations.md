@@ -15,7 +15,7 @@ These four terms are often used as if they mean the same thing. They do not — 
 
 ![Nested circles: AI contains machine learning, which contains deep learning, which contains generative AI](images/ai-ml-dl.svg)
 
-*Figure 1 — Each field is a subset of the one around it. All generative AI is deep learning, but not all AI is generative.*
+*Figure 1 — Each field is a subset of the one around it. Today's generative AI is built almost entirely with deep learning, but not all AI is generative.*
 
 > **📘 In plain words:** AI is the whole kitchen. Machine learning is cooking by tasting and adjusting rather than following a fixed recipe. Deep learning is a particularly powerful oven. Generative AI is the set of dishes that oven is famous for.
 
@@ -54,7 +54,7 @@ Instead, you collect 100,000 emails that people have already marked as "spam" or
 
 ## 3. Types of learning
 
-Machine learning methods are usually grouped by *what kind of feedback* the model gets while learning. The [Google Machine Learning Crash Course](https://developers.google.com/machine-learning/crash-course) introduces the first three in detail.
+Machine learning methods are usually grouped by *what kind of feedback* the model gets while learning. Google's [What is Machine Learning?](https://developers.google.com/machine-learning/intro-to-ml/what-is-ml) page introduces the first three, and its [Machine Learning Crash Course](https://developers.google.com/machine-learning/crash-course) goes deeper into supervised learning.
 
 ### 3.1 Supervised learning — learning with an answer key
 
@@ -208,7 +208,7 @@ Models are also grouped by *what kind of output* they produce.
 
 Others you will meet: **clustering** (grouping without labels), **recommendation** (what to watch next), and **embedding** models, which turn text or images into lists of numbers that capture meaning (used for search — see [Transformers & LLMs](transformers.md)).
 
-> **💡 Example:** An LLM is, underneath, a classifier repeated many times: at each step it "classifies" which token should come next out of a vocabulary of tens of thousands of possible tokens. Chaining those choices together produces generated text.
+> **💡 Example:** An LLM is, underneath, a classifier repeated many times: at each step it "classifies" which token should come next out of a vocabulary of tens of thousands to a few hundred thousand possible tokens. Chaining those choices together produces generated text.
 
 ## 9. Where models run
 

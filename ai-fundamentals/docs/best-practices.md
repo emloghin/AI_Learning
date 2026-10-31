@@ -17,7 +17,7 @@ OpenAI, Anthropic and Google each publish a prompting guide. They use different 
 | **Show examples (few-shot)** | A few diverse, consistently formatted input/output examples teach format and style better than long rule lists. | [Google](https://ai.google.dev/gemini-api/docs/prompting-strategies), [OpenAI](https://developers.openai.com/api/docs/guides/prompt-engineering) |
 | **Give the needed context** | Provide the facts the model needs instead of assuming it knows them; for long documents, put the context first and the question last. | [Google](https://ai.google.dev/gemini-api/docs/prompting-strategies) |
 | **Break big tasks down** | Split complex work into steps or chained prompts, each with its own clear input and output. | [Google](https://ai.google.dev/gemini-api/docs/prompting-strategies) |
-| **Prompt reasoning models differently** | Give reasoning models the goal and constraints and let them work out the steps; give non-reasoning models more explicit instructions. | [OpenAI](https://developers.openai.com/api/docs/guides/reasoning) |
+| **Prompt reasoning models differently** | Give reasoning models the goal and constraints and let them work out the steps; give non-reasoning models more explicit instructions. | [OpenAI](https://developers.openai.com/api/docs/guides/prompt-engineering), [OpenAI reasoning guide](https://developers.openai.com/api/docs/guides/reasoning) |
 | **Iterate and measure** | Change one thing at a time and re-run your test set. | [Anthropic](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview), [Google](https://ai.google.dev/gemini-api/docs/prompting-strategies) |
 | **Pin versions and keep prompts in code** | Pin production apps to a specific model snapshot and store prompts in version control with tests. | [OpenAI](https://developers.openai.com/api/docs/guides/prompt-engineering) |
 
@@ -167,7 +167,7 @@ Unless your organization has explicitly approved the tool for that data:
 
 ### 5.2 Enterprise data controls
 
-Before using an AI service with real data, check its **data-retention**, **training-use** and **data-residency** settings. Providers document these in their API docs (for example Anthropic's notes on zero data retention in its [prompt caching](https://platform.claude.com/docs/en/build-with-claude/prompt-caching) and [batch](https://platform.claude.com/docs/en/build-with-claude/batch-processing) pages). GitHub Copilot offers **content exclusion** so certain files are never sent ([GitHub Copilot docs](https://docs.github.com/en/copilot)).
+Before using an AI service with real data, check its **data-retention**, **training-use** and **data-residency** settings. Providers document these in their API docs (for example Anthropic's notes on zero data retention in its [prompt caching](https://platform.claude.com/docs/en/build-with-claude/prompt-caching) and [batch](https://platform.claude.com/docs/en/build-with-claude/batch-processing) pages). GitHub Copilot offers **content exclusion** so Copilot does not use certain files, but it is not supported everywhere (for example, not in Edit and Agent modes of Copilot Chat in VS Code), so check the support table ([GitHub Docs: Content exclusion](https://docs.github.com/en/copilot/concepts/context/content-exclusion)).
 
 ### 5.3 PII redaction
 
@@ -252,7 +252,7 @@ You cannot improve what you cannot see. For every model call, log:
 - **Tool calls** and their results, for agents
 - **User feedback** (thumbs up/down) and evaluation scores
 
-Use **tracing** to connect the steps of one request (retrieval → model → tool → model) into a single timeline, so you can see where time, tokens and errors come from. Many platforms support OpenTelemetry-based tracing, including [Microsoft Foundry](https://learn.microsoft.com/en-us/azure/ai-foundry/) and GitHub Copilot agents ([GitHub Copilot docs](https://docs.github.com/en/copilot)).
+Use **tracing** to connect the steps of one request (retrieval → model → tool → model) into a single timeline, so you can see where time, tokens and errors come from. Many platforms support OpenTelemetry-based tracing, including [Microsoft Foundry](https://learn.microsoft.com/en-us/azure/foundry/) and GitHub Copilot's agents in VS Code ([VS Code: Monitor agent usage with OpenTelemetry](https://code.visualstudio.com/docs/copilot/guides/monitoring-agents)).
 
 > **⚠️ Common misconception:** "Log everything forever." Prompts and outputs can contain personal data. Redact, restrict access and set retention limits on your logs too.
 
@@ -372,4 +372,4 @@ Running open-weight models yourself (see [Chapter 5](models.md)) gives control a
 
 > **✅ Answer:** B — Model updates can change outputs, so pinning a snapshot keeps behaviour predictable until you test and approve a new version.
 
-[← Chapter 7: Tokens & Cost](tokens.md) · [Glossary →](glossary.md)
+[← Chapter 7: Tokens & Cost](tokens.md) · [Chapter 9: AI at Work →](ai-at-work.md)

@@ -16,6 +16,7 @@
     <div class="header-logo"><span>AI&nbsp;</span>Learn</div>
     <nav class="header-nav">
       <a href="index.html" class="active">Home</a>
+      <a href="study-plan.html">Study Plan</a>
       <a href="foundations.html">1. Foundations</a>
       <a href="neural-networks.html">2. Neural Networks</a>
       <a href="transformers.html">3. Transformers &amp; LLMs</a>
@@ -24,6 +25,7 @@
       <a href="using-ai.html">6. Using Models</a>
       <a href="tokens.html">7. Tokens &amp; Cost</a>
       <a href="best-practices.html">8. Best Practices</a>
+      <a href="ai-at-work.html">9. AI at Work</a>
       <a href="glossary.html">Glossary</a>
       <a href="resources.html">Resources</a>
     </nav>
@@ -41,7 +43,7 @@
 <h2 id="1-what-this-site-is">1. What this site is</h2>
 <p>AI Learn is a step-by-step course that explains what happens <em>inside</em> an AI model: how it learns from data, what its &quot;billions of parameters&quot; really are, why it writes one word-piece at a time, and why it sometimes gets things confidently wrong.</p>
 <p>Every chapter uses plain language first, then a small worked example with real numbers, then a picture. Where a fact matters, we link to the source — mainly the <a href="https://developers.google.com/machine-learning/crash-course" target="_blank" rel="noopener">Google Machine Learning Crash Course</a>, <a href="https://learn.microsoft.com/training/modules/get-started-ai-fundamentals/" target="_blank" rel="noopener">Microsoft Learn: Introduction to AI concepts</a>, the <a href="https://huggingface.co/learn/llm-course" target="_blank" rel="noopener">Hugging Face LLM Course</a>, the <a href="https://www.3blue1brown.com/topics/neural-networks" target="_blank" rel="noopener">3Blue1Brown neural network series</a>, and the original research papers.</p>
-<div class="callout tip"><p><strong>📘 In plain words:</strong> This site is the &quot;how does the engine work&quot; manual. It is not a list of prompts or a product review. Once you understand the engine, every AI product starts to make sense.</p></div>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Chapters 1–8 are the &quot;how does the engine work&quot; manual. Chapter 9 and the <a href="study-plan.html">Study Plan</a> are the driving lessons: they connect this site with the best free courses from Google, Microsoft, OpenAI, Anthropic and the University of Helsinki, and show you how to apply AI to your own daily work.</p></div>
 
 </div>
 <div class="section">
@@ -57,6 +59,7 @@
 <div class="section">
 <h2 id="3-how-to-use-it">3. How to use it</h2>
 <ol>
+<li><strong>Pick a path.</strong> The <a href="study-plan.html">Study Plan</a> offers three week-by-week paths — AI-literate professional, AI power user and AI builder — that mix these chapters with external courses and practice on your own work.</li>
 <li><strong>Read in order.</strong> Each chapter builds on the previous one. Chapter 3 (Transformers) makes much more sense after Chapter 2 (Neural Networks).</li>
 <li><strong>Look for the callouts.</strong> 📘 boxes restate an idea in plain words, 💡 boxes give examples, ⚠️ boxes flag common misconceptions, ✅ boxes summarize, and 🎯 boxes suggest something to try.</li>
 <li><strong>Do the quiz.</strong> Each chapter ends with &quot;Check Your Understanding&quot;. If you miss a question, reread that section — it is the fastest way to make ideas stick.</li>
@@ -97,12 +100,12 @@
 </tr>
 <tr>
 <td><a href="models.html">5. Model Landscape</a></td>
-<td>Proprietary vs open-weight models, model families and sizes, multimodal models, how to compare them</td>
+<td>Proprietary vs open-weight models, licenses, model families and sizes, model cards, running models locally, how to choose</td>
 <td>~30 min</td>
 </tr>
 <tr>
 <td><a href="using-ai.html">6. Using Models</a></td>
-<td>Prompting, temperature, system prompts, RAG, tools and agents, running models locally</td>
+<td>Prompting, temperature, system prompts, structured outputs, RAG, tools, agents and MCP</td>
 <td>~35 min</td>
 </tr>
 <tr>
@@ -112,8 +115,18 @@
 </tr>
 <tr>
 <td><a href="best-practices.html">8. Best Practices</a></td>
-<td>Hallucinations, bias, privacy, security, evaluation, and responsible use</td>
+<td>Prompting and context engineering, evaluation, security, privacy, responsible AI and reliability</td>
 <td>~30 min</td>
+</tr>
+<tr>
+<td><a href="ai-at-work.html">9. AI at Work</a></td>
+<td>Finding AI-ready tasks, the delegate-review-refine loop, measuring impact, a prompt library, and building your own learning plan</td>
+<td>~15 min</td>
+</tr>
+<tr>
+<td><a href="study-plan.html">Study Plan</a></td>
+<td>Three week-by-week learning paths combining these chapters with Elements of AI, Google AI Essentials, OpenAI Academy, Anthropic Academy and Microsoft AI-901</td>
+<td>plan</td>
 </tr>
 <tr>
 <td><a href="glossary.html">Glossary</a></td>
@@ -126,7 +139,7 @@
 <td>reference</td>
 </tr>
 </tbody></table></div>
-<p>Total: about four and a quarter hours of reading, spread over as many sessions as you like.</p>
+<p>Total: about four and a half hours of reading for the chapters. The Study Plan paths add external courses and practice, from 4 to 8 weeks depending on the path.</p>
 
 </div>
 <div class="section">
@@ -160,7 +173,7 @@
   <text x="335" y="110" text-anchor="middle" font-family="Inter,sans-serif" font-size="16" font-weight="700" fill="#4c1d95">2. Training</text>
   <text x="335" y="136" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#4c1d95">Guess, measure error,</text>
   <text x="335" y="154" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#4c1d95">nudge the numbers.</text>
-  <text x="335" y="172" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#4c1d95">Repeat billions</text>
+  <text x="335" y="172" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#4c1d95">Repeat trillions</text>
   <text x="335" y="190" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#4c1d95">of times on GPUs</text>
 
   <line x1="420" y1="145" x2="466" y2="145" stroke="#475569" stroke-width="2.5" marker-end="url(#bpArrow)"/>
@@ -246,7 +259,7 @@
 <td>The maximum number of tokens a model can consider at once, including both your prompt and its reply.</td>
 </tr>
 </tbody></table></div>
-<div class="nav-links"><a href="foundations.html">Start Chapter 1: Foundations →</a></div>
+<div class="nav-links"><a href="study-plan.html">Choose your path in the Study Plan →</a><a href="foundations.html">Start Chapter 1: Foundations →</a></div>
 </div>
 </main>
 

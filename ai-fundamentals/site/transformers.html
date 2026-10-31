@@ -16,6 +16,7 @@
     <div class="header-logo"><span>AI&nbsp;</span>Learn</div>
     <nav class="header-nav">
       <a href="index.html">Home</a>
+      <a href="study-plan.html">Study Plan</a>
       <a href="foundations.html">1. Foundations</a>
       <a href="neural-networks.html">2. Neural Networks</a>
       <a href="transformers.html" class="active">3. Transformers &amp; LLMs</a>
@@ -24,6 +25,7 @@
       <a href="using-ai.html">6. Using Models</a>
       <a href="tokens.html">7. Tokens &amp; Cost</a>
       <a href="best-practices.html">8. Best Practices</a>
+      <a href="ai-at-work.html">9. AI at Work</a>
       <a href="glossary.html">Glossary</a>
       <a href="resources.html">Resources</a>
     </nav>
@@ -157,7 +159,7 @@ a · b  = multiply matching numbers and add them up (the &quot;dot product&quot;
 <h3 id="a-worked-example-what-does-it-refer-to">A worked example: what does &quot;it&quot; refer to?</h3>
 <p>Take the sentence:</p>
 <p><strong>&quot;The animal didn&#39;t cross the street because it was tired.&quot;</strong></p>
-<p>To understand &quot;it&quot;, the model must work out that &quot;it&quot; means <strong>the animal</strong>, not the street (streets do not get tired). In a trained model, when processing &quot;it&quot;, the attention spotlight shines brightly on &quot;animal&quot;. Change one word — &quot;...because <strong>it</strong> was too wide&quot; — and the spotlight shifts toward &quot;street&quot;. This exact example is visualized in Jay Alammar&#39;s <a href="https://jalammar.github.io/illustrated-transformer/" target="_blank" rel="noopener">Illustrated Transformer</a>.</p>
+<p>To understand &quot;it&quot;, the model must work out that &quot;it&quot; means <strong>the animal</strong>, not the street (streets do not get tired). In a trained model, when processing &quot;it&quot;, the attention spotlight shines brightly on &quot;animal&quot;. Change one word — &quot;...because <strong>it</strong> was too wide&quot; — and the spotlight shifts toward &quot;street&quot;. The &quot;tired&quot; version of this sentence is visualized in Jay Alammar&#39;s <a href="https://jalammar.github.io/illustrated-transformer/" target="_blank" rel="noopener">Illustrated Transformer</a>.</p>
 <p><strong>Self-attention</strong> simply means the words attend to other words in the <em>same</em> text (as opposed to attending to a separate text, like a source sentence during translation).</p>
 <h3 id="queries-keys-and-values">Queries, keys, and values</h3>
 <p>How does a token decide where to point its spotlight? Each token&#39;s embedding is turned into three new vectors, using weights learned in training:</p>
@@ -224,7 +226,7 @@ a · b  = multiply matching numbers and add them up (the &quot;dot product&quot;
 <td>2.12</td>
 </tr>
 </tbody></table></div>
-<p>Softmax turns <code>3.54, 0.71, 2.12</code> into roughly <strong>77% animal, 4.5% street, 18.5% tired</strong>. So the new vector for &quot;it&quot; is built mostly from the value of &quot;animal&quot; — the model has linked &quot;it&quot; to &quot;the animal&quot;.</p></div>
+<p>Softmax turns <code>3.54, 0.71, 2.12</code> into roughly <strong>76.8% animal, 4.5% street, 18.7% tired</strong>. So the new vector for &quot;it&quot; is built mostly from the value of &quot;animal&quot; — the model has linked &quot;it&quot; to &quot;the animal&quot;.</p></div>
 <p><strong>Softmax</strong> itself just means: raise <em>e</em> (≈ 2.718) to the power of each score, then divide each result by their total. Bigger scores grow much bigger, so the best match dominates.</p>
 <div class="callout tip"><p><strong>🎬 Watch:</strong> 3Blue1Brown&#39;s video series on <a href="https://www.3blue1brown.com/topics/neural-networks" target="_blank" rel="noopener">transformers and attention</a> animates queries, keys, and values beautifully.</p></div>
 <h3 id="masking-no-peeking-at-the-future">Masking: no peeking at the future</h3>
@@ -247,6 +249,7 @@ a · b  = multiply matching numbers and add them up (the &quot;dot product&quot;
 <li><strong>Feed-forward network</strong> — a small neural network (exactly like the ones in <a href="neural-networks.html">Chapter 2</a>) applied to each token separately. This is where much of the model&#39;s stored knowledge appears to live.</li>
 <li><strong>Add &amp; Norm</strong> again.</li>
 </ol>
+<p>(This is the order used in the original paper. Most modern LLMs apply the normalization <em>before</em> the attention and feed-forward parts instead — called &quot;pre-norm&quot; — which makes very deep stacks easier to train. The ingredients are the same.)</p>
 <div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 600" font-family="Inter,sans-serif" role="img" aria-label="A transformer block: token embeddings flow up through self-attention, add and norm, feed-forward, add and norm, repeated N times, then an output layer gives next-token probabilities">
   <defs>
     <marker id="tfArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
@@ -337,7 +340,7 @@ a · b  = multiply matching numbers and add them up (the &quot;dot product&quot;
 <td><strong>Decoder-only</strong></td>
 <td>only earlier tokens (causal mask)</td>
 <td>generating text, chat, code</td>
-<td>GPT series (OpenAI), Llama, Claude, Gemini</td>
+<td>GPT series (OpenAI), Llama, Gemini</td>
 </tr>
 <tr>
 <td><strong>Encoder-only</strong></td>
@@ -548,13 +551,13 @@ a · b  = multiply matching numbers and add them up (the &quot;dot product&quot;
 </div>
 <div class="section">
 <h2 id="15-reasoning-models">15. Reasoning Models</h2>
-<p>Some recent models — for example OpenAI&#39;s o-series (<a href="https://openai.com/index/learning-to-reason-with-llms/" target="_blank" rel="noopener">Learning to reason with LLMs</a>), DeepSeek-R1 (<a href="https://arxiv.org/abs/2501.12948" target="_blank" rel="noopener">paper</a>), and Claude or Gemini models with &quot;thinking&quot; modes — are trained to <strong>think before they answer</strong>.</p>
+<p>Some recent models — for example OpenAI&#39;s o-series and GPT-5 (<a href="https://openai.com/index/learning-to-reason-with-llms/" target="_blank" rel="noopener">Learning to reason with LLMs</a>), DeepSeek-R1 (<a href="https://arxiv.org/abs/2501.12948" target="_blank" rel="noopener">paper</a>), and Claude or Gemini models with &quot;thinking&quot; modes — are trained to <strong>think before they answer</strong>.</p>
 <p>Conceptually, a reasoning model is still a next-token predictor. The difference is that before writing the final answer, it generates a long stream of extra <strong>reasoning tokens</strong>: breaking the problem down, trying an approach, checking it, backtracking. These models are typically trained with <strong>reinforcement learning</strong> on problems whose answers can be checked (math, code tests, logic puzzles), so the model is rewarded for reasoning paths that actually reach correct answers.</p>
 <div class="callout tip"><p><strong>💡 Example:</strong> Asked &quot;A bat and a ball cost $1.10 in total; the bat costs $1.00 more than the ball. How much is the ball?&quot;, a fast model may blurt the intuitive &quot;10 cents&quot;. A reasoning model&#39;s hidden thinking might go: <em>&quot;If the ball is 0.10, the bat is 1.10, total 1.20 — too much. Let ball = x, bat = x + 1.00, so 2x + 1.00 = 1.10, x = 0.05.&quot;</em> Then it answers <strong>5 cents</strong>.</p></div>
 <p>Trade-offs to know:</p>
 <ul>
 <li><strong>Better</strong> at multi-step math, coding, planning, and tricky logic.</li>
-<li><strong>Slower and more expensive:</strong> reasoning tokens are generated just like normal tokens. OpenAI and Anthropic both bill reasoning (thinking) tokens as <strong>output tokens</strong>, even when they are hidden or summarized (<a href="https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them" target="_blank" rel="noopener">OpenAI tokens guide</a>, <a href="https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking" target="_blank" rel="noopener">Anthropic extended thinking</a>).</li>
+<li><strong>Slower and more expensive:</strong> reasoning tokens are generated just like normal tokens. OpenAI and Anthropic both bill reasoning (thinking) tokens as <strong>output tokens</strong>, even when they are hidden or summarized (<a href="https://developers.openai.com/api/docs/guides/reasoning" target="_blank" rel="noopener">OpenAI reasoning guide</a>, <a href="https://platform.claude.com/docs/en/build-with-claude/thinking-steering-and-cost#pricing" target="_blank" rel="noopener">Anthropic thinking pricing</a>).</li>
 <li><strong>Overkill</strong> for simple tasks like rewording a sentence or extracting a name.</li>
 </ul>
 <div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;The thinking text is exactly how the model reached its answer.&quot; The visible reasoning (when shown) is helpful, but research shows it is not always a faithful record of the computation inside the network. Treat it as a useful explanation, not a guaranteed one.</p></div>
@@ -586,7 +589,7 @@ a · b  = multiply matching numbers and add them up (the &quot;dot product&quot;
 <li>C) Translating text into a fixed set of commands</li>
 <li>D) Searching the internet for matching pages</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> B — An LLM predicts a probability for every possible next token, picks one, and repeats. A plain LLM has no fact database or live internet access.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — An LLM predicts a probability for every possible next token, picks one, and repeats. A plain LLM has no fact database or live internet access.</p></div></details>
 <p><strong>2. Roughly how many tokens is a 750-word English text?</strong></p>
 <ul>
 <li>A) About 250</li>
@@ -594,7 +597,7 @@ a · b  = multiply matching numbers and add them up (the &quot;dot product&quot;
 <li>C) About 1,000</li>
 <li>D) About 3,000</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> C — Using the rule of thumb 1 token ≈ ¾ of a word, 750 ÷ 0.75 ≈ 1,000 tokens. Other languages or code would usually need more.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> C — Using the rule of thumb 1 token ≈ ¾ of a word, 750 ÷ 0.75 ≈ 1,000 tokens. Other languages or code would usually need more.</p></div></details>
 <p><strong>3. In self-attention, what does a token&#39;s <em>query</em> do?</strong></p>
 <ul>
 <li>A) It stores the token&#39;s final output text</li>
@@ -602,7 +605,7 @@ a · b  = multiply matching numbers and add them up (the &quot;dot product&quot;
 <li>C) It records the token&#39;s position in the sentence</li>
 <li>D) It decides the temperature for sampling</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> B — The query is &quot;what am I looking for?&quot;. It is matched against each token&#39;s key to decide how much attention to pay, and the matching tokens&#39; values are blended in.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — The query is &quot;what am I looking for?&quot;. It is matched against each token&#39;s key to decide how much attention to pay, and the matching tokens&#39; values are blended in.</p></div></details>
 <p><strong>4. With probabilities mat 40%, floor 20%, sofa 15%, bed 10%, roof 8%, other 7%, which tokens remain under top-p = 0.75?</strong></p>
 <ul>
 <li>A) Only mat</li>
@@ -610,7 +613,7 @@ a · b  = multiply matching numbers and add them up (the &quot;dot product&quot;
 <li>C) Mat, floor, and sofa</li>
 <li>D) All of them</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> C — Adding from the top: 40% + 20% + 15% = 75%, which reaches p = 0.75. Those three are kept and rescaled; the rest are removed.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> C — Adding from the top: 40% + 20% + 15% = 75%, which reaches p = 0.75. Those three are kept and rescaled; the rest are removed.</p></div></details>
 <p><strong>5. Why do long prompts cost more and run slower?</strong></p>
 <ul>
 <li>A) Every input token is processed and billed, and attention work grows roughly with the square of the length</li>
@@ -618,7 +621,7 @@ a · b  = multiply matching numbers and add them up (the &quot;dot product&quot;
 <li>C) The model must download each document from the web</li>
 <li>D) Long prompts always use a higher temperature</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> A — Each token in the context is billed and processed, attention compares tokens pairwise (about n × n comparisons), and the KV cache memory grows with length.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> A — Each token in the context is billed and processed, attention compares tokens pairwise (about n × n comparisons), and the KV cache memory grows with length.</p></div></details>
 <div class="nav-links"><a href="neural-networks.html">← Chapter 2: Neural Networks</a><a href="training.html">Chapter 4: Training &amp; Tuning →</a></div>
 </div>
 </main>

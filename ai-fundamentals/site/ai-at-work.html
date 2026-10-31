@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI at Work: From Knowing to Doing — AI Learn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>.section td code,.callout code,.diagram-caption code{background:var(--primary-light);color:var(--primary);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:13px}.callout p+p{margin-top:8px}.callout ul{margin:8px 0 0 20px}</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-logo"><span>AI&nbsp;</span>Learn</div>
+    <nav class="header-nav">
+      <a href="index.html">Home</a>
+      <a href="study-plan.html">Study Plan</a>
+      <a href="foundations.html">1. Foundations</a>
+      <a href="neural-networks.html">2. Neural Networks</a>
+      <a href="transformers.html">3. Transformers &amp; LLMs</a>
+      <a href="training.html">4. Training &amp; Tuning</a>
+      <a href="models.html">5. Model Landscape</a>
+      <a href="using-ai.html">6. Using Models</a>
+      <a href="tokens.html">7. Tokens &amp; Cost</a>
+      <a href="best-practices.html">8. Best Practices</a>
+      <a href="ai-at-work.html" class="active">9. AI at Work</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="resources.html">Resources</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-badge">Chapter 9 · AI at Work</div>
+  <h1>AI at Work: From Knowing to Doing</h1>
+  <p>Courses teach you what AI can do; daily practice is what turns that into a skill people notice. This chapter is a practical playbook: find the tasks in your own week where AI helps, use a simple delegate-review-refine loop, measure the effect, build a personal prompt library, and even use an AI assistant to design your own learning plan.</p>
+</section>
+
+<main class="main">
+<div class="section">
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Chapters 1–8 explain the engine. This chapter is about driving: picking real trips, building the habit, and showing where you got to.</p></div>
+
+</div>
+<div class="section">
+<h2 id="1-why-practice-beats-certificates">1. Why practice beats certificates</h2>
+<p>Free AI courses are excellent, and the <a href="study-plan.html">Study Plan</a> lists the best ones. But a certificate only shows that you <em>learned about</em> AI. What colleagues and managers notice is that you <em>deliver differently</em>: faster first drafts, clearer summaries, fewer repetitive hours, and better questions.</p>
+<p>That is also common advice in talks about learning AI for your career: pick a course to get the vocabulary, then apply the tools to your own daily tasks until it becomes routine. The second step is the one that is easiest to skip.</p>
+<div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;Once I finish a course, I will know how to use AI.&quot; Courses give you patterns. Only repeated use on <em>your</em> work shows you where a tool is strong, where it is wrong, and how much checking it needs.</p></div>
+
+</div>
+<div class="section">
+<h2 id="2-find-your-ai-ready-tasks">2. Find your AI-ready tasks</h2>
+<p>Start with an inventory, not a tool. For one week, write down the tasks you do that take more than 15 minutes. Then score each one:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Question</th>
+<th>Good sign for AI help</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Is it mostly reading, writing, summarising or reformatting text?</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Do you already know what a good result looks like?</td>
+<td>Yes (you can check the output)</td>
+</tr>
+<tr>
+<td>Is a first draft that is 70% right still useful?</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Does it need facts the model cannot know (internal data, today&#39;s numbers)?</td>
+<td>Only if you can paste in the needed context — and are allowed to</td>
+</tr>
+<tr>
+<td>Would a mistake be costly or hard to spot?</td>
+<td>No — or only with careful review</td>
+</tr>
+</tbody></table></div>
+<p>Tasks that score well are your <strong>AI-ready tasks</strong>. Start with two or three.</p>
+<h3 id="21-common-patterns">2.1 Common patterns</h3>
+<p>Almost every useful work task fits one of these eight patterns:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>What you ask for</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Summarise</strong></td>
+<td>Shorten long material and keep what matters</td>
+<td>&quot;Summarise this 20-page spec in 10 bullets for a project manager.&quot;</td>
+</tr>
+<tr>
+<td><strong>Draft</strong></td>
+<td>A first version you will edit</td>
+<td>&quot;Draft a status email for the steering group from these notes.&quot;</td>
+</tr>
+<tr>
+<td><strong>Transform</strong></td>
+<td>Change format, tone, language or structure</td>
+<td>&quot;Turn this meeting transcript into a table of decisions and action items.&quot;</td>
+</tr>
+<tr>
+<td><strong>Extract</strong></td>
+<td>Pull structured facts out of messy text</td>
+<td>&quot;List every requirement in this document with its section number.&quot;</td>
+</tr>
+<tr>
+<td><strong>Brainstorm</strong></td>
+<td>Many options to choose from</td>
+<td>&quot;Give me 10 possible names for this internal tool, with a one-line reason each.&quot;</td>
+</tr>
+<tr>
+<td><strong>Critique</strong></td>
+<td>Find weaknesses in your own work</td>
+<td>&quot;Act as a sceptical reviewer. What is unclear or missing in this proposal?&quot;</td>
+</tr>
+<tr>
+<td><strong>Plan</strong></td>
+<td>Break a goal into steps</td>
+<td>&quot;Break this migration into phases with risks for each phase.&quot;</td>
+</tr>
+<tr>
+<td><strong>Explain</strong></td>
+<td>Teach you something new at your level</td>
+<td>&quot;Explain OAuth 2.0 to me like I know HTTP but not security.&quot;</td>
+</tr>
+</tbody></table></div>
+<h3 id="22-examples-by-role">2.2 Examples by role</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Role</th>
+<th>AI-ready tasks to try first</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Developer</strong></td>
+<td>Explain unfamiliar code, write unit tests, draft commit messages and PR descriptions, convert scripts between languages (see <a href="best-practices.html">Chapter 8, §10</a>)</td>
+</tr>
+<tr>
+<td><strong>Consultant / analyst</strong></td>
+<td>Summarise requirement documents, draft workshop agendas, turn interview notes into themes, review a proposal for gaps</td>
+</tr>
+<tr>
+<td><strong>Project manager / scrum master</strong></td>
+<td>Turn meeting notes into action lists, draft release notes, prepare risk registers, rewrite updates for different audiences</td>
+</tr>
+<tr>
+<td><strong>Tester</strong></td>
+<td>Generate test-case ideas from user stories, find edge cases, turn bug reports into clear reproduction steps</td>
+</tr>
+<tr>
+<td><strong>Manager</strong></td>
+<td>Prepare 1:1 agendas, draft job descriptions, structure feedback, summarise long email threads</td>
+</tr>
+<tr>
+<td><strong>Sales / account</strong></td>
+<td>Research a public company profile, draft tailored outreach, prepare objection-handling notes</td>
+</tr>
+</tbody></table></div>
+<div class="callout tip"><p><strong>🎯 Try it:</strong> Pick one row from the table that fits your job. Do one of its tasks with an AI assistant today, and note how long it took compared with doing it yourself.</p></div>
+
+</div>
+<div class="section">
+<h2 id="3-the-delegate-review-refine-loop">3. The delegate → review → refine loop</h2>
+<p>Treat an AI assistant like a fast, well-read new colleague who has never seen your project and is sometimes confidently wrong.</p>
+<ol>
+<li><strong>Delegate clearly.</strong> Give the task, the audience, the context and the output format (the prompting basics from <a href="using-ai.html">Chapter 6</a>).</li>
+<li><strong>Review critically.</strong> Check facts, numbers, names and logic. Ask yourself: &quot;Would I sign this?&quot;</li>
+<li><strong>Refine.</strong> Tell the model exactly what to change (&quot;shorter&quot;, &quot;more formal&quot;, &quot;you missed requirement 4&quot;) instead of starting again.</li>
+<li><strong>Decide.</strong> The final version and the responsibility stay with you.</li>
+</ol>
+<div class="callout tip"><p><strong>💡 Example:</strong> You need a customer-facing project update. Delegate: paste your (anonymised) notes and ask for a 150-word update for a non-technical sponsor. Review: you spot that the model turned &quot;planned for Q3&quot; into &quot;delivered in Q3&quot;. Refine: &quot;Keep all dates exactly as in my notes.&quot; Decide: you edit two sentences and send it. Total: 6 minutes instead of 20.</p></div>
+<div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;If the answer sounds professional, it is correct.&quot; Fluency is not accuracy (see hallucinations in <a href="transformers.html">Chapter 3, §13</a>). The more polished the output, the easier it is to miss an error.</p></div>
+
+</div>
+<div class="section">
+<h2 id="4-rules-of-the-road-at-work">4. Rules of the road at work</h2>
+<p>Before using any AI tool on work material, know your organisation&#39;s rules. In general:</p>
+<ul>
+<li><strong>Use approved tools only.</strong> Company-approved assistants usually come with enterprise data controls (no training on your data, retention limits). Personal accounts usually do not.</li>
+<li><strong>Do not paste what you may not share.</strong> Customer data, personal data, credentials, secrets and confidential documents stay out unless the tool and your policy explicitly allow it. Use synthetic or anonymised examples instead (see <a href="best-practices.html">Chapter 8, §5</a>).</li>
+<li><strong>Be transparent.</strong> If AI substantially wrote something, say so where your policy or your audience expects it.</li>
+<li><strong>Keep a human decision.</strong> AI output is a draft. Decisions about people, money, contracts or compliance are made by a person who has checked the facts.</li>
+<li><strong>Know the regulation.</strong> In the EU, <a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-4" target="_blank" rel="noopener">Article 4 of the AI Act</a> requires providers and deployers of AI systems — which includes most organisations that use AI at work — to take measures to support the AI literacy of their staff. Since the 2026 &quot;Digital Omnibus&quot; amendment, no specific level is mandated, but the obligation remains — one more reason structured learning is worth the time.</li>
+</ul>
+
+</div>
+<div class="section">
+<h2 id="5-measure-the-effect">5. Measure the effect</h2>
+<p>Improvements you can show are worth more than improvements you feel. Keep a simple log for a month:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Task</th>
+<th>Time without AI (estimate)</th>
+<th>Time with AI (incl. review)</th>
+<th>Quality note</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>03 Nov</td>
+<td>Sprint review summary</td>
+<td>40 min</td>
+<td>15 min</td>
+<td>Needed one date fix</td>
+</tr>
+<tr>
+<td>05 Nov</td>
+<td>Test cases for login story</td>
+<td>60 min</td>
+<td>25 min</td>
+<td>Found 2 edge cases I would have missed</td>
+</tr>
+<tr>
+<td>06 Nov</td>
+<td>Proposal review</td>
+<td>30 min</td>
+<td>30 min</td>
+<td>No gain — AI critique too generic</td>
+</tr>
+</tbody></table></div>
+<p>Rows with no gain are valuable too: they show you where <em>not</em> to use AI.</p>
+<div class="callout tip"><p><strong>💡 Example:</strong> After four weeks the log shows about 3 hours saved per week, mostly on summaries and test design, and no gain on proposals. That is a concrete story to share in a team meeting or a performance conversation — and a guide to where to invest next.</p></div>
+<div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;Time saved is the only benefit.&quot; Often the bigger win is quality: a second opinion on your own work, edge cases you missed, or a clearer explanation for a different audience. Note those too.</p></div>
+
+</div>
+<div class="section">
+<h2 id="6-build-a-personal-prompt-library">6. Build a personal prompt library</h2>
+<p>When a prompt works well, save it. A prompt library turns one good result into a repeatable one.</p>
+<ul>
+<li>Keep prompts in a document or note with a <strong>name</strong>, <strong>when to use it</strong>, the <strong>prompt text</strong> with placeholders, and <strong>pitfalls</strong> you found.</li>
+<li>Most assistants also let you store instructions once: custom instructions, projects, custom GPTs, Claude projects or Copilot custom instructions. Use these for context you repeat every time (your role, writing style, output format).</li>
+<li>Share good prompts with your team. A shared library spreads the gains and avoids everyone rediscovering the same tricks.</li>
+</ul>
+<div class="code-block">Name: Meeting notes → action list
+Use when: after any project meeting
+Prompt:
+  You are a project assistant. From the notes below, produce:
+  1. Decisions (one line each)
+  2. Action items as a table: owner | action | due date
+  3. Open questions
+  Use only information in the notes. Write &quot;unknown&quot; if an owner or date is missing.
+  &lt;notes&gt;
+  {paste notes here}
+  &lt;/notes&gt;
+Pitfalls: invents due dates if you don&#39;t include the &quot;unknown&quot; rule.</div>
+
+</div>
+<div class="section">
+<h2 id="7-use-ai-to-build-your-own-learning-plan">7. Use AI to build your own learning plan</h2>
+<p>An AI assistant is a good tutor and planner — if you give it enough context and verify what it suggests. You can use it to tailor the <a href="study-plan.html">Study Plan</a> to your role and schedule.</p>
+<div class="code-block">I work as a {role} at an IT services company. I use AI tools
+{never / occasionally / daily} and want to {goal, e.g. &quot;use AI confidently
+for analysis work&quot; or &quot;pass the Azure AI Fundamentals exam&quot;}.
+
+I can study {N} hours per week for {M} weeks.
+
+Create a week-by-week learning plan that:
+- mixes short theory with a practical exercise on my own type of work each week
+- uses free courses from well-known providers (name the provider and course)
+- ends each week with a small deliverable I can show
+- includes a weekly 15-minute review of what worked
+
+Ask me up to 3 clarifying questions before you write the plan.</div>
+<p>Then use the assistant as a tutor while you learn:</p>
+<ul>
+<li><strong>&quot;Explain it at my level&quot;:</strong> &quot;Explain attention in transformers using an analogy from logistics.&quot;</li>
+<li><strong>&quot;Quiz me&quot;:</strong> &quot;Ask me 5 questions on tokens and context windows, one at a time, and correct my answers.&quot;</li>
+<li><strong>&quot;Check my understanding&quot;:</strong> &quot;Here is my explanation of RAG in my own words. What is wrong or missing?&quot;</li>
+</ul>
+<div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;The plan the AI gives me is accurate.&quot; Models can invent course names, outdated links and wrong durations. Check every course it suggests against the provider&#39;s own site — or start from the verified list in the <a href="study-plan.html">Study Plan</a>.</p></div>
+
+</div>
+<div class="section">
+<h2 id="8-a-30-day-practice-challenge">8. A 30-day practice challenge</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Focus</th>
+<th>Daily habit (10–20 min)</th>
+<th>End-of-week deliverable</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><strong>Explore</strong></td>
+<td>Use AI on one real task per day from your inventory</td>
+<td>A list of 3 tasks where AI clearly helps</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Improve prompts</strong></td>
+<td>Rewrite one prompt per day using the Chapter 6 techniques; compare results</td>
+<td>3 saved prompts in your library</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Measure</strong></td>
+<td>Log time and quality for every AI-assisted task</td>
+<td>One week of log entries</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Share</strong></td>
+<td>Polish your best workflow and write it up</td>
+<td>A 5-minute demo or a one-page &quot;how I use AI for X&quot; for your team</td>
+</tr>
+</tbody></table></div>
+<div class="callout success"><p><strong>✅ Key takeaway:</strong> Learn the basics once, then practise on your own work every day, measure the result and share it. Skill with AI shows in what you deliver, not in how many courses you finished.</p></div>
+
+</div>
+<div class="section">
+<h2 id="recap">Recap</h2>
+<ul>
+<li>Certificates give vocabulary; daily application on real tasks builds the skill people notice.</li>
+<li>Inventory your week, score tasks for AI-readiness, and start with two or three that fit common patterns (summarise, draft, transform, extract, brainstorm, critique, plan, explain).</li>
+<li>Work in a delegate → review → refine → decide loop; the responsibility and final decision stay with you.</li>
+<li>Follow your organisation&#39;s rules: approved tools, no confidential or personal data unless allowed, transparency, and human decisions.</li>
+<li>Log time and quality to see where AI helps and where it does not, and save good prompts in a shared library.</li>
+<li>Use an AI assistant to tailor a learning plan and to quiz you — but verify every course and link it suggests.</li>
+</ul>
+
+</div>
+<div class="section">
+<h2 id="check-your-understanding">Check Your Understanding</h2>
+<p><strong>1. Which task is the best first candidate for AI help?</strong></p>
+<ul>
+<li>A) Approving a contract amendment</li>
+<li>B) Turning your own meeting notes into a list of action items</li>
+<li>C) Calculating a client&#39;s final invoice without checking it</li>
+<li>D) Deciding which candidate to hire</li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — It is text transformation, you know what a good result looks like, and errors are easy to spot. The others involve high-stakes decisions that must stay with a person.</p></div></details>
+<p><strong>2. In the delegate → review → refine loop, what should you do when the model gets one detail wrong?</strong></p>
+<ul>
+<li>A) Start a new chat from scratch</li>
+<li>B) Accept it, since the rest is good</li>
+<li>C) Tell the model precisely what to fix and keep the rest</li>
+<li>D) Switch to a different AI tool</li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> C — Targeted feedback (&quot;keep all dates as in my notes&quot;) is the fastest way to a correct result.</p></div></details>
+<p><strong>3. Why keep a log of AI-assisted tasks?</strong></p>
+<ul>
+<li>A) Providers require it for billing</li>
+<li>B) It shows where AI saves time or improves quality — and where it does not</li>
+<li>C) It trains the model on your work</li>
+<li>D) It replaces the need to review outputs</li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — Measured results tell you where to invest and give you concrete examples to share.</p></div></details>
+<p><strong>4. An AI assistant gives you a learning plan with five courses. What should you do next?</strong></p>
+<ul>
+<li>A) Enrol in all five immediately</li>
+<li>B) Verify each course and link on the provider&#39;s own website</li>
+<li>C) Ask the same assistant whether the courses are real</li>
+<li>D) Ignore it; AI cannot help with learning</li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — Models can invent or misdate courses; the provider&#39;s site is the source of truth. Asking the same model to check itself is not independent verification.</p></div></details>
+<p><strong>5. You want to use AI to summarise a document containing customer personal data. What is the right first step?</strong></p>
+<ul>
+<li>A) Paste it into any free chatbot; it is only a summary</li>
+<li>B) Check your organisation&#39;s policy and use an approved tool, or anonymise the data first</li>
+<li>C) Remove the customer&#39;s name and assume the rest is fine</li>
+<li>D) Ask the model to forget the data afterwards</li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — Personal data needs an approved tool and a policy that allows it; otherwise use anonymised or synthetic input. Removing one name rarely anonymises a document.</p></div></details>
+<div class="nav-links"><a href="best-practices.html">← Chapter 8: Best Practices</a><a href="glossary.html">Glossary →</a></div>
+</div>
+</main>
+
+<footer class="site-footer">AI Learn · A beginner's guide to how AI models work · Based on official docs and open course material · Not affiliated with any model provider</footer>
+</body>
+</html>

@@ -16,6 +16,7 @@
     <div class="header-logo"><span>AI&nbsp;</span>Learn</div>
     <nav class="header-nav">
       <a href="index.html">Home</a>
+      <a href="study-plan.html">Study Plan</a>
       <a href="foundations.html">1. Foundations</a>
       <a href="neural-networks.html">2. Neural Networks</a>
       <a href="transformers.html">3. Transformers &amp; LLMs</a>
@@ -24,6 +25,7 @@
       <a href="using-ai.html">6. Using Models</a>
       <a href="tokens.html">7. Tokens &amp; Cost</a>
       <a href="best-practices.html" class="active">8. Best Practices</a>
+      <a href="ai-at-work.html">9. AI at Work</a>
       <a href="glossary.html">Glossary</a>
       <a href="resources.html">Resources</a>
     </nav>
@@ -86,7 +88,7 @@
 <tr>
 <td><strong>Prompt reasoning models differently</strong></td>
 <td>Give reasoning models the goal and constraints and let them work out the steps; give non-reasoning models more explicit instructions.</td>
-<td><a href="https://developers.openai.com/api/docs/guides/reasoning" target="_blank" rel="noopener">OpenAI</a></td>
+<td><a href="https://developers.openai.com/api/docs/guides/prompt-engineering" target="_blank" rel="noopener">OpenAI</a>, <a href="https://developers.openai.com/api/docs/guides/reasoning" target="_blank" rel="noopener">OpenAI reasoning guide</a></td>
 </tr>
 <tr>
 <td><strong>Iterate and measure</strong></td>
@@ -291,7 +293,7 @@ def render_reply(model_output: str) -&gt; str:
 <li>Confidential source code, contracts, unreleased financials, security reports</li>
 </ul>
 <h3 id="52-enterprise-data-controls">5.2 Enterprise data controls</h3>
-<p>Before using an AI service with real data, check its <strong>data-retention</strong>, <strong>training-use</strong> and <strong>data-residency</strong> settings. Providers document these in their API docs (for example Anthropic&#39;s notes on zero data retention in its <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank" rel="noopener">prompt caching</a> and <a href="https://platform.claude.com/docs/en/build-with-claude/batch-processing" target="_blank" rel="noopener">batch</a> pages). GitHub Copilot offers <strong>content exclusion</strong> so certain files are never sent (<a href="https://docs.github.com/en/copilot" target="_blank" rel="noopener">GitHub Copilot docs</a>).</p>
+<p>Before using an AI service with real data, check its <strong>data-retention</strong>, <strong>training-use</strong> and <strong>data-residency</strong> settings. Providers document these in their API docs (for example Anthropic&#39;s notes on zero data retention in its <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank" rel="noopener">prompt caching</a> and <a href="https://platform.claude.com/docs/en/build-with-claude/batch-processing" target="_blank" rel="noopener">batch</a> pages). GitHub Copilot offers <strong>content exclusion</strong> so Copilot does not use certain files, but it is not supported everywhere (for example, not in Edit and Agent modes of Copilot Chat in VS Code), so check the support table (<a href="https://docs.github.com/en/copilot/concepts/context/content-exclusion" target="_blank" rel="noopener">GitHub Docs: Content exclusion</a>).</p>
 <h3 id="53-pii-redaction">5.3 PII redaction</h3>
 <p>Remove or mask personal data <strong>before</strong> it reaches the model or the logs, for example replacing <code>jane.doe@contoso.com</code> with <code>[EMAIL_1]</code> and keeping the mapping on your side if you need to restore it later.</p>
 <div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;Deleting the chat deletes the data.&quot; Logs, caches, batch storage and backups can keep copies for a defined period. Read the retention policy rather than assuming.</p></div>
@@ -430,7 +432,7 @@ def call_with_retries(call, max_attempts=4, base_delay=1.0):
 <li><strong>Tool calls</strong> and their results, for agents</li>
 <li><strong>User feedback</strong> (thumbs up/down) and evaluation scores</li>
 </ul>
-<p>Use <strong>tracing</strong> to connect the steps of one request (retrieval → model → tool → model) into a single timeline, so you can see where time, tokens and errors come from. Many platforms support OpenTelemetry-based tracing, including <a href="https://learn.microsoft.com/en-us/azure/ai-foundry/" target="_blank" rel="noopener">Microsoft Foundry</a> and GitHub Copilot agents (<a href="https://docs.github.com/en/copilot" target="_blank" rel="noopener">GitHub Copilot docs</a>).</p>
+<p>Use <strong>tracing</strong> to connect the steps of one request (retrieval → model → tool → model) into a single timeline, so you can see where time, tokens and errors come from. Many platforms support OpenTelemetry-based tracing, including <a href="https://learn.microsoft.com/en-us/azure/foundry/" target="_blank" rel="noopener">Microsoft Foundry</a> and GitHub Copilot&#39;s agents in VS Code (<a href="https://code.visualstudio.com/docs/copilot/guides/monitoring-agents" target="_blank" rel="noopener">VS Code: Monitor agent usage with OpenTelemetry</a>).</p>
 <div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;Log everything forever.&quot; Prompts and outputs can contain personal data. Redact, restrict access and set retention limits on your logs too.</p></div>
 
 </div>
@@ -575,7 +577,7 @@ def call_with_retries(call, max_attempts=4, base_delay=1.0):
 <li>C) Data poisoning during training</li>
 <li>D) Unbounded consumption</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> B — The malicious instruction arrives through external content the model reads, which OWASP classifies as indirect prompt injection.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — The malicious instruction arrives through external content the model reads, which OWASP classifies as indirect prompt injection.</p></div></details>
 <p><strong>2. Your app inserts the model&#39;s reply directly into a web page as HTML. Which OWASP risk does this create, and what is the fix?</strong></p>
 <ul>
 <li>A) Excessive agency; remove all tools</li>
@@ -583,7 +585,7 @@ def call_with_retries(call, max_attempts=4, base_delay=1.0):
 <li>C) Improper output handling; escape or validate the output before rendering</li>
 <li>D) Supply chain; switch model providers</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> C — Model output must be treated as untrusted input, so escaping or validating it prevents attacks such as cross-site scripting.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> C — Model output must be treated as untrusted input, so escaping or validating it prevents attacks such as cross-site scripting.</p></div></details>
 <p><strong>3. What is the best first step before tuning a prompt for a new feature?</strong></p>
 <ul>
 <li>A) Pick the largest available model</li>
@@ -591,7 +593,7 @@ def call_with_retries(call, max_attempts=4, base_delay=1.0):
 <li>C) Raise the temperature to get more creative answers</li>
 <li>D) Ask an LLM judge whether the prompt looks good</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> B — A test set defines success and lets you measure every change objectively, which is the core of evaluation-driven development.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — A test set defines success and lets you measure every change objectively, which is the core of evaluation-driven development.</p></div></details>
 <p><strong>4. Which list correctly names the four functions of the NIST AI Risk Management Framework?</strong></p>
 <ul>
 <li>A) Plan, Build, Test, Deploy</li>
@@ -599,7 +601,7 @@ def call_with_retries(call, max_attempts=4, base_delay=1.0):
 <li>C) Govern, Map, Measure, Manage</li>
 <li>D) Fairness, Safety, Privacy, Accountability</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> C — The NIST AI RMF organizes AI risk work into Govern, Map, Measure and Manage.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> C — The NIST AI RMF organizes AI risk work into Govern, Map, Measure and Manage.</p></div></details>
 <p><strong>5. Why should production apps pin a specific model version?</strong></p>
 <ul>
 <li>A) Pinned versions are always cheaper</li>
@@ -607,8 +609,8 @@ def call_with_retries(call, max_attempts=4, base_delay=1.0):
 <li>C) Providers require it for API access</li>
 <li>D) It disables prompt caching</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> B — Model updates can change outputs, so pinning a snapshot keeps behaviour predictable until you test and approve a new version.</p></div>
-<div class="nav-links"><a href="tokens.html">← Chapter 7: Tokens &amp; Cost</a><a href="glossary.html">Glossary →</a></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — Model updates can change outputs, so pinning a snapshot keeps behaviour predictable until you test and approve a new version.</p></div></details>
+<div class="nav-links"><a href="tokens.html">← Chapter 7: Tokens &amp; Cost</a><a href="ai-at-work.html">Chapter 9: AI at Work →</a></div>
 </div>
 </main>
 

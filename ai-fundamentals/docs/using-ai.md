@@ -68,7 +68,7 @@ The response comes back as JSON. Shortened, it looks like this:
 }
 ```
 
-The answer is inside `output`, and `usage` tells you how many tokens you paid for. OpenAI's docs warn that `output` can contain several items — tool calls, reasoning summaries and messages — so do not assume the text is always the first item; the official SDKs offer an `output_text` shortcut that joins all the text for you.
+The answer is inside `output`, and `usage` tells you how many tokens you paid for. OpenAI's docs warn that `output` can contain several items — tool calls, reasoning summaries and messages — so do not assume the text is always the first item; some official SDKs offer an `output_text` shortcut that joins all the text for you.
 
 > **💡 Example:** Other providers use the same ideas with slightly different names. Anthropic's Messages API takes a `system` field, a `messages` list and `max_tokens`; Ollama's local `/api/chat` takes `messages` and returns `message.content`. Once you understand roles, messages and parameters, every API looks familiar.
 
@@ -379,7 +379,7 @@ Big tasks are sometimes split across several agents, each with its own instructi
 
 ## 8. MCP: The Model Context Protocol
 
-Every AI app used to write its own custom connector for every tool and data source. The [Model Context Protocol (MCP)](https://modelcontextprotocol.io) is an open standard that fixes this: write a tool or data source **once** as an MCP server, and any MCP-compatible app can use it.
+Every AI app used to write its own custom connector for every tool and data source. The [Model Context Protocol (MCP)](https://modelcontextprotocol.io) is an open standard that fixes this: write a tool or data source **once** as an MCP server, and any MCP-compatible app can use it. Anthropic introduced MCP in 2024; since December 2025 it has been hosted by the Linux Foundation's Agentic AI Foundation.
 
 According to the [MCP architecture overview](https://modelcontextprotocol.io/docs/learn/architecture), there are three participants:
 
@@ -399,7 +399,7 @@ Servers offer three core **primitives**:
 | **Resources** | Data the app can read as context | A file's contents, a database schema, an API response |
 | **Prompts** | Reusable prompt templates | "Summarize this ticket in our team's format" |
 
-A client discovers tools with `tools/list` and runs one with `tools/call`. A simplified call (the real protocol also carries version and capability metadata with each request) looks like this:
+A client discovers tools with `tools/list` and runs one with `tools/call`. A simplified call (in the current spec every real request also carries the protocol version and client capabilities in a `_meta` field) looks like this:
 
 ```json
 {
@@ -417,7 +417,7 @@ The server replies with a `content` list (for example a text block with the weat
 
 > **📘 In plain words:** MCP is like USB-C for AI apps. One standard plug, and any compatible host can use any compatible tool — instead of a different cable for every device.
 
-> **⚠️ Warning:** An MCP server runs with whatever access you give it. Install servers only from sources you trust, review which tools are enabled, and keep confirmation prompts on for actions that change things. The protocol is versioned by date and still evolving, so check [modelcontextprotocol.io](https://modelcontextprotocol.io) for the current specification.
+> **⚠️ Warning:** An MCP server runs with whatever access you give it. Install servers only from sources you trust, review which tools are enabled, and keep confirmation prompts on for actions that change things. The protocol is versioned by date (the current revision at the time of writing is `2026-07-28`) and still evolving, so check [modelcontextprotocol.io](https://modelcontextprotocol.io) for the current specification.
 
 ## 9. Multimodal Inputs
 
@@ -491,7 +491,7 @@ Let us combine everything into a small RAG bot that answers questions from a fol
 5. **For each question:** embed it, find the closest chunks, build a prompt with citations, and ask the chat model.
 6. **Test** with ten questions whose answers you know, and fix chunking or prompts where it fails.
 
-### 13.2 The code (pseudo-code)
+### 13.2 The code (Python with two placeholders)
 
 The code below is runnable Python except for two placeholders: `embed(text)` returns a list of numbers from your embedding model, and `generate(prompt)` returns the chat model's text answer. Fill them in with your provider's SDK or Ollama's local API.
 

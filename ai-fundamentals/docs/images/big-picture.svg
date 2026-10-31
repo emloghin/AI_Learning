@@ -22,7 +22,7 @@
   <text x="335" y="110" text-anchor="middle" font-family="Inter,sans-serif" font-size="16" font-weight="700" fill="#4c1d95">2. Training</text>
   <text x="335" y="136" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#4c1d95">Guess, measure error,</text>
   <text x="335" y="154" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#4c1d95">nudge the numbers.</text>
-  <text x="335" y="172" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#4c1d95">Repeat billions</text>
+  <text x="335" y="172" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#4c1d95">Repeat trillions</text>
   <text x="335" y="190" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#4c1d95">of times on GPUs</text>
 
   <line x1="420" y1="145" x2="466" y2="145" stroke="#475569" stroke-width="2.5" marker-end="url(#bpArrow)"/>

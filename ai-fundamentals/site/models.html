@@ -16,6 +16,7 @@
     <div class="header-logo"><span>AI&nbsp;</span>Learn</div>
     <nav class="header-nav">
       <a href="index.html">Home</a>
+      <a href="study-plan.html">Study Plan</a>
       <a href="foundations.html">1. Foundations</a>
       <a href="neural-networks.html">2. Neural Networks</a>
       <a href="transformers.html">3. Transformers &amp; LLMs</a>
@@ -24,6 +25,7 @@
       <a href="using-ai.html">6. Using Models</a>
       <a href="tokens.html">7. Tokens &amp; Cost</a>
       <a href="best-practices.html">8. Best Practices</a>
+      <a href="ai-at-work.html">9. AI at Work</a>
       <a href="glossary.html">Glossary</a>
       <a href="resources.html">Resources</a>
     </nav>
@@ -259,7 +261,7 @@
 <td>Yes</td>
 <td>Yes</td>
 <td>Companies with over 700 million monthly active users must ask Meta for a license; show &quot;Built with Llama&quot;; start derivative model names with &quot;Llama&quot;; follow the Acceptable Use Policy</td>
-<td>Meta Llama 3.x</td>
+<td>Meta Llama 3.x and Llama 4 (each version has its own license text)</td>
 </tr>
 <tr>
 <td><strong>Gemma Terms of Use</strong></td>
@@ -313,7 +315,7 @@
 </tr>
 <tr>
 <td><strong>Claude</strong> (tiers such as Haiku, Sonnet, Opus)</td>
-<td><a href="https://docs.anthropic.com/" target="_blank" rel="noopener">Anthropic</a></td>
+<td><a href="https://platform.claude.com/docs/" target="_blank" rel="noopener">Anthropic</a></td>
 <td>Long documents, careful instruction following, coding and agent work</td>
 <td>Claude apps, Anthropic API, Amazon Bedrock, Google Cloud, Microsoft Foundry</td>
 </tr>
@@ -342,10 +344,10 @@
 </tr>
 </thead>
 <tbody><tr>
-<td><strong>Llama</strong></td>
+<td><strong>Llama</strong> (and Meta&#39;s newer <strong>Muse Glimmer</strong>)</td>
 <td>Meta</td>
-<td>Llama Community License</td>
-<td>The largest ecosystem of fine-tunes, tutorials and tooling</td>
+<td>Llama Community License; Muse Glimmer (August 2026) is Apache-2.0</td>
+<td>Llama has the largest ecosystem of fine-tunes, tutorials and tooling</td>
 </tr>
 <tr>
 <td><strong>Mistral / Mixtral</strong></td>
@@ -659,7 +661,7 @@ ollama rm gemma4:e2b</div>
 <td>Building with OpenAI models and built-in tools</td>
 </tr>
 <tr>
-<td><a href="https://docs.anthropic.com/" target="_blank" rel="noopener">Anthropic API</a></td>
+<td><a href="https://platform.claude.com/docs/" target="_blank" rel="noopener">Anthropic API</a></td>
 <td>Direct access to Claude models through the Messages API</td>
 <td>Building with Claude</td>
 </tr>
@@ -684,7 +686,7 @@ ollama rm gemma4:e2b</div>
 <td>Teams already on AWS</td>
 </tr>
 </tbody></table></div>
-<div class="callout warning"><p><strong>⚠️ Warning:</strong> Platforms change. For example, <a href="https://docs.github.com/en/github-models/about-github-models" target="_blank" rel="noopener">GitHub Models has been retired</a> as of July 30, 2026; GitHub now points users to Microsoft Foundry for model access and to <a href="https://docs.github.com/en/copilot" target="_blank" rel="noopener">GitHub Copilot</a> for AI inside GitHub workflows. Before you build on any platform, check its current documentation and model retirement schedule.</p></div>
+<div class="callout warning"><p><strong>⚠️ Warning:</strong> Platforms change. For example, <a href="https://docs.github.com/en/github-models" target="_blank" rel="noopener">GitHub Models has been retired</a> as of July 30, 2026; GitHub now points users to Microsoft Foundry for model access and to <a href="https://docs.github.com/en/copilot" target="_blank" rel="noopener">GitHub Copilot</a> for AI inside GitHub workflows. Before you build on any platform, check its current documentation and model retirement schedule.</p></div>
 <div class="callout tip"><p><strong>📘 In plain words:</strong> Many providers and local tools speak the same &quot;OpenAI-compatible&quot; request format. That makes it easier to swap models: often you change the base URL, the API key and the model name, and the rest of your code keeps working.</p></div>
 
 </div>
@@ -815,7 +817,7 @@ ollama rm gemma4:e2b</div>
 <li>C) Fully Open Source AI</li>
 <li>D) Research-only</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> B — The weights are openly licensed, so it is open-weight. The OSAID also requires complete code and detailed data information, so it does not meet the full definition.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — The weights are openly licensed, so it is open-weight. The OSAID also requires complete code and detailed data information, so it does not meet the full definition.</p></div></details>
 <p><strong>2. Which three elements make up the &quot;preferred form for making modifications&quot; in the OSAID?</strong></p>
 <ul>
 <li>A) Weights, a chat app and an API key</li>
@@ -823,7 +825,7 @@ ollama rm gemma4:e2b</div>
 <li>C) Model card, benchmark scores and a license</li>
 <li>D) Training data, GPUs and electricity</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> B — The OSAID lists data information, the complete code to train and run the system, and the parameters (weights).</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — The OSAID lists data information, the complete code to train and run the system, and the parameters (weights).</p></div></details>
 <p><strong>3. What does the file name <code>Qwen2.5-7B-Instruct-Q4_K_M.gguf</code> tell you?</strong></p>
 <ul>
 <li>A) A 7-million-parameter base model in Python pickle format</li>
@@ -831,7 +833,7 @@ ollama rm gemma4:e2b</div>
 <li>C) A model with a 7k-token context window that only runs in the cloud</li>
 <li>D) A Mixture-of-Experts model with 7 experts</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> B — <code>7B</code> is the size, <code>Instruct</code> means tuned to follow instructions, <code>Q4_K_M</code> is a 4-bit llama.cpp quantization, and <code>.gguf</code> is the file format used by llama.cpp, Ollama and LM Studio.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — <code>7B</code> is the size, <code>Instruct</code> means tuned to follow instructions, <code>Q4_K_M</code> is a 4-bit llama.cpp quantization, and <code>.gguf</code> is the file format used by llama.cpp, Ollama and LM Studio.</p></div></details>
 <p><strong>4. Roughly how much memory does an 8-billion-parameter model need at 4-bit quantization, using this chapter&#39;s rule of thumb?</strong></p>
 <ul>
 <li>A) About 1 GB</li>
@@ -839,7 +841,7 @@ ollama rm gemma4:e2b</div>
 <li>C) About 19 GB</li>
 <li>D) About 80 GB</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> B — 8 billion × 0.5 byte = 4 GB, plus about 20% overhead ≈ 5 GB. At 16-bit it would be about 19 GB.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — 8 billion × 0.5 byte = 4 GB, plus about 20% overhead ≈ 5 GB. At 16-bit it would be about 19 GB.</p></div></details>
 <p><strong>5. A clinic needs an assistant that summarizes patient notes, and the data may not leave its own servers. Which choice fits best?</strong></p>
 <ul>
 <li>A) Any free public chatbot website</li>
@@ -847,7 +849,7 @@ ollama rm gemma4:e2b</div>
 <li>C) A self-hosted open-weight model whose license allows the use</li>
 <li>D) A research-only model in production</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> C — Self-hosting an open-weight model keeps data on the clinic&#39;s own servers. The license still has to permit the use, which rules out research-only models in production.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> C — Self-hosting an open-weight model keeps data on the clinic&#39;s own servers. The license still has to permit the use, which rules out research-only models in production.</p></div></details>
 <div class="nav-links"><a href="training.html">← Chapter 4: Training &amp; Tuning</a><a href="using-ai.html">Chapter 6: Using Models →</a></div>
 </div>
 </main>

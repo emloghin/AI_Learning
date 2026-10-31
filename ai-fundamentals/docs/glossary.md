@@ -12,6 +12,9 @@ A small math function inside each neuron that decides how strongly it "fires", a
 ### Agent
 An AI system that uses a model in a loop to plan, call tools, look at the results and decide the next step until a goal is reached. Example: a coding agent that reads an error, edits a file, runs tests and repeats. See [Chapter 6](using-ai.md).
 
+### AI literacy
+The skills, knowledge and understanding people need to use AI systems in an informed way and to be aware of their opportunities, risks and possible harms. In the EU, Article 4 of the AI Act requires providers and deployers of AI systems to take measures to support the AI literacy of their staff. See [Chapter 9](ai-at-work.md).
+
 ### Alignment
 The work of making a model behave the way people intend: helpful, honest and harmless. Techniques such as RLHF and DPO are used for alignment. See [Chapter 4](training.md).
 
@@ -47,7 +50,7 @@ A tokenization method that starts from single characters or bytes and repeatedly
 Asking or allowing a model to work through a problem step by step before giving the final answer, which often improves results on maths and logic. Example prompt: "Think through this step by step, then give the answer." See [Chapter 6](using-ai.md).
 
 ### Checkpoint
-A saved snapshot of a model's weights at a point during training, so training can resume or an earlier version can be reused. Downloaded open models are usually checkpoints too. See [Chapter 4](training.md).
+A saved snapshot of a model's weights at a point during training, so training can resume or an earlier version can be reused. Downloaded open models are usually checkpoints too. See [Chapter 5](models.md).
 
 ### Context engineering
 Choosing and maintaining the best set of information (instructions, tools, history, retrieved data) in the model's context at every step. It extends prompt engineering to agents and long tasks. See [Chapter 8](best-practices.md).
@@ -98,7 +101,7 @@ Continuing to train an existing model on a smaller, specific dataset to adapt it
 Floating-point operations: the count of basic arithmetic steps a computer performs. Used to describe how much compute training a model takes (total FLOPs) or how fast hardware is (FLOPs per second). See [Chapter 4](training.md).
 
 ### Foundation model
-A large model pretrained on broad data that can be adapted to many tasks, such as the base models behind chat assistants. See [Chapter 1](foundations.md) and [Chapter 4](training.md).
+A large model pretrained on broad data that can be adapted to many tasks, such as the base models behind chat assistants. See base models in [Chapter 4](training.md).
 
 ### Function calling
 A feature where the model, instead of answering in text, returns a structured request to run one of your functions (for example `get_weather(city="Paris")`). Your code runs it and sends the result back. Also called tool calling. See [Chapter 6](using-ai.md).
@@ -194,7 +197,7 @@ When a model memorizes its training data, including noise, and performs poorly o
 A number inside the model that is learned during training, mainly weights and biases. "7B" means about 7 billion parameters. See [Chapter 2](neural-networks.md).
 
 ### Perplexity
-A measure of how "surprised" a language model is by a piece of text; lower perplexity means it predicts the text better. See [Chapter 4](training.md).
+A measure of how "surprised" a language model is by a piece of text; lower perplexity means it predicts the text better. Not covered in depth on this site; related: evaluation and benchmarks in [Chapter 4](training.md).
 
 ### Pretraining
 The first, most expensive training stage, where a model learns general patterns of language from massive amounts of text by predicting the next token. See [Chapter 4](training.md).
@@ -228,7 +231,7 @@ The hidden "thinking" tokens a reasoning model generates before answering. You d
 A type of learning where an agent tries actions, receives rewards or penalties, and learns to maximize reward over time. See [Chapter 1](foundations.md).
 
 ### Reranking
-A second step in search that reorders retrieved results with a more accurate model so the best few go into the prompt. See [Chapter 7](tokens.md).
+A second step in search that reorders retrieved results with a more accurate model so the best few go into the prompt. See [Chapter 6](using-ai.md) and [Chapter 7](tokens.md).
 
 ### RLHF (Reinforcement Learning from Human Feedback)
 A tuning method where humans rank model answers, a reward model learns those preferences, and the language model is trained to produce answers the reward model scores highly. See [Chapter 4](training.md).
@@ -288,4 +291,4 @@ The learned numbers on the connections between neurons that determine how strong
 ### Zero-shot
 Asking a model to do a task with no examples in the prompt, relying only on instructions. Example: "Classify this review as positive or negative." See [Chapter 6](using-ai.md).
 
-[← Chapter 8: Best Practices](best-practices.md) · [Resources →](resources.md)
+[← Chapter 9: AI at Work](ai-at-work.md) · [Resources →](resources.md)

@@ -16,6 +16,7 @@
     <div class="header-logo"><span>AI&nbsp;</span>Learn</div>
     <nav class="header-nav">
       <a href="index.html">Home</a>
+      <a href="study-plan.html">Study Plan</a>
       <a href="foundations.html">1. Foundations</a>
       <a href="neural-networks.html">2. Neural Networks</a>
       <a href="transformers.html">3. Transformers &amp; LLMs</a>
@@ -24,6 +25,7 @@
       <a href="using-ai.html">6. Using Models</a>
       <a href="tokens.html">7. Tokens &amp; Cost</a>
       <a href="best-practices.html">8. Best Practices</a>
+      <a href="ai-at-work.html">9. AI at Work</a>
       <a href="glossary.html">Glossary</a>
       <a href="resources.html">Resources</a>
     </nav>
@@ -190,7 +192,7 @@
 </div>
 <div class="section">
 <h2 id="3-compute-gpus-and-cost">3. Compute: GPUs and Cost</h2>
-<p>Training is mostly giant <strong>matrix multiplications</strong> (multiplying big grids of numbers). <strong>GPUs</strong> (graphics processing units) and similar AI chips (like Google&#39;s TPUs) are built to do thousands of these multiplications in parallel, which makes them far faster than ordinary CPUs for this job. Large models are trained on clusters of thousands to tens of thousands of GPUs running for weeks or months.</p>
+<p>Training is mostly giant <strong>matrix multiplications</strong> (multiplying big grids of numbers). <strong>GPUs</strong> (graphics processing units) and similar AI chips (like Google&#39;s TPUs) are built to do thousands of these multiplications in parallel, which makes them far faster than ordinary CPUs for this job. Large models are trained on clusters of thousands to tens of thousands of GPUs running for weeks or months — and the very largest projects use even more.</p>
 <h3 id="how-much-compute">How much compute?</h3>
 <p>A widely used rule of thumb (<a href="https://arxiv.org/abs/2001.08361" target="_blank" rel="noopener">Kaplan et al., 2020</a>) estimates training compute as:</p>
 <div class="code-block">training compute (FLOPs) ≈ 6 × parameters × training tokens</div>
@@ -199,7 +201,7 @@
 <h3 id="a-real-world-example">A real-world example</h3>
 <p>Meta reports that training the Llama 3.1 family used a cumulative <strong>39.3 million GPU-hours</strong> on H100-80GB GPUs, of which <strong>30.84 million</strong> were for the 405-billion-parameter model (<a href="https://github.com/meta-llama/llama-models/blob/main/models/llama3_1/MODEL_CARD.md" target="_blank" rel="noopener">model card</a>).</p>
 <div class="callout tip"><p><strong>💡 Example:</strong> To get a feel for the cost, <em>assume</em> renting one such GPU costs $2 per hour (an illustrative figure — real prices vary widely, and Meta uses its own hardware). Then 30.84 million GPU-hours × $2 ≈ <strong>$62 million</strong> of compute for one final training run — before counting failed experiments, staff, data, and electricity.</p></div>
-<div class="callout success"><p><strong>✅ Key takeaway:</strong> Pretraining a frontier model costs tens to hundreds of millions of dollars and is done by only a few organizations. Almost everyone else <strong>starts from an existing model</strong> and adapts it.</p></div>
+<div class="callout success"><p><strong>✅ Key takeaway:</strong> Pretraining a frontier model costs tens to hundreds of millions of dollars (or more) and is done by only a few organizations. Almost everyone else <strong>starts from an existing model</strong> and adapts it.</p></div>
 
 </div>
 <div class="section">
@@ -314,6 +316,8 @@ Response: The client wants to move Friday&#39;s meeting to Monday at 10am.</div>
 <div class="callout success"><p><strong>✅ Key takeaway:</strong> Both RLHF and DPO teach a model <em>which kind of answer people prefer</em> — helpful, clear, honest, safe — something that is hard to capture with example answers alone.</p></div>
 <h3 id="ai-feedback-and-constitutional-ai">AI feedback and Constitutional AI</h3>
 <p>Human feedback is slow and expensive. Anthropic&#39;s <strong>Constitutional AI</strong> (<a href="https://arxiv.org/abs/2212.08073" target="_blank" rel="noopener">Bai et al., 2022</a>) replaces much of it with <strong>AI feedback</strong>: the model is given a written list of principles (a &quot;constitution&quot;), asked to critique and revise its own answers according to those principles, and an AI judge — rather than humans — picks the better of two answers for the preference-training step. This is often called <strong>RLAIF</strong> (reinforcement learning from AI feedback). Today, most labs mix human and AI feedback.</p>
+<h3 id="reinforcement-learning-for-reasoning">Reinforcement learning for reasoning</h3>
+<p>Newer post-training pipelines add another RL stage for <strong>reasoning models</strong>. Instead of a reward model guessing what people like, the reward comes from an automatic check: is the math answer correct, do the code&#39;s tests pass? The model tries many solutions, and the ones that reach a verifiably correct answer are reinforced. DeepSeek-R1 (<a href="https://arxiv.org/abs/2501.12948" target="_blank" rel="noopener">DeepSeek-AI, 2025</a>) showed that RL with such rule-based rewards can teach a model to produce long, self-checking chains of reasoning. See <a href="transformers.html">Chapter 3</a> for how reasoning models behave in use.</p>
 
 </div>
 <div class="section">
@@ -429,7 +433,7 @@ r : the &quot;rank&quot;, a small number like 8 or 16</div>
 <div class="code-block">memory for weights ≈ number of parameters × bytes per weight</div>
 <div class="callout tip"><p><strong>💡 Example:</strong> A 7-billion-parameter model in INT4: 7,000,000,000 × 0.5 bytes = 3.5 billion bytes ≈ <strong>3.5 GB</strong>. That fits on a laptop GPU or even a phone, while the FP32 version (28 GB) would not. Running the model also needs extra memory for the KV cache and activations, so real needs are somewhat higher.</p></div>
 <ul>
-<li><strong>FP16</strong> and <strong>BF16</strong> both use 16 bits. <strong>BF16</strong> (&quot;brain float&quot;) keeps FP32&#39;s range of very large and very small numbers but with less precision, which makes training more stable. Most models today are trained and released in BF16.</li>
+<li><strong>FP16</strong> and <strong>BF16</strong> both use 16 bits. <strong>BF16</strong> (&quot;brain float&quot;) keeps FP32&#39;s range of very large and very small numbers but with less precision, which makes training more stable. Many models today are trained and released in BF16 (some newer ones also use 8-bit formats during training).</li>
 <li><strong>INT8</strong> and <strong>INT4</strong> store weights as small integers plus scaling factors. Quality usually drops only a little at 8-bit and somewhat more at 4-bit; very low bit-widths (below 4) can hurt quality noticeably, especially on harder tasks.</li>
 </ul>
 <p>Common names you will see when downloading open models:</p>
@@ -496,7 +500,7 @@ r : the &quot;rank&quot;, a small number like 8 or 16</div>
 <td>fix real GitHub issues from popular Python projects so the project&#39;s tests pass</td>
 </tr>
 <tr>
-<td><strong>LMArena</strong> (<a href="https://lmarena.ai" target="_blank" rel="noopener">lmarena.ai</a>)</td>
+<td><strong>Arena</strong> (formerly LMArena, <a href="https://arena.ai" target="_blank" rel="noopener">arena.ai</a>)</td>
 <td>overall human preference</td>
 <td>people chat with two anonymous models side by side and vote for the better answer; votes become a leaderboard rating</td>
 </tr>
@@ -504,7 +508,7 @@ r : the &quot;rank&quot;, a small number like 8 or 16</div>
 <h3 id="the-limits-of-benchmarks">The limits of benchmarks</h3>
 <ul>
 <li><strong>Contamination:</strong> benchmark questions are published online, so they can leak into the pretraining data. A model may then partly <em>remember</em> answers instead of solving them — like a student who saw the exam beforehand.</li>
-<li><strong>Saturation:</strong> top models now score very high on older tests. Llama 3.1 405B Instruct, for example, reports 87.3% on MMLU. When everyone scores near the top, the test stops telling models apart, so harder benchmarks keep appearing.</li>
+<li><strong>Saturation:</strong> top models now score very high on older tests. Llama 3.1 405B Instruct, for example, reports 87.3% on MMLU (5-shot). When everyone scores near the top, the test stops telling models apart, so harder benchmarks keep appearing.</li>
 <li><strong>Narrowness:</strong> a benchmark measures one thing in one format. A high coding score says little about how well a model writes your marketing emails.</li>
 <li><strong>Teaching to the test:</strong> once a number becomes a target, labs optimize for it, and it can stop reflecting real-world quality.</li>
 <li><strong>Human-vote leaderboards</strong> capture what people <em>like</em>, which can reward style (length, formatting, confidence) as well as correctness.</li>
@@ -540,11 +544,11 @@ r : the &quot;rank&quot;, a small number like 8 or 16</div>
 <li><strong>Pretraining</strong> is self-supervised next-token prediction over trillions of tokens; it takes most of the compute (millions of GPU-hours for frontier models).</li>
 <li><strong>Scaling laws</strong> show quality improves predictably with parameters, data, and compute; <strong>Chinchilla</strong> showed size and data should grow together (~20 tokens per parameter for compute-optimal training).</li>
 <li>A <strong>base model</strong> continues text; an <strong>instruct model</strong> has been fine-tuned to follow instructions.</li>
-<li><strong>SFT</strong> learns from example answers; <strong>RLHF</strong> uses human rankings, a reward model, and RL; <strong>DPO</strong> learns from chosen/rejected pairs without a reward model; <strong>Constitutional AI</strong> uses AI feedback guided by written principles.</li>
+<li><strong>SFT</strong> learns from example answers; <strong>RLHF</strong> uses human rankings, a reward model, and RL; <strong>DPO</strong> learns from chosen/rejected pairs without a reward model; <strong>Constitutional AI</strong> uses AI feedback guided by written principles; <strong>RL with automatically checked rewards</strong> trains reasoning models.</li>
 <li><strong>LoRA/QLoRA</strong> fine-tune by training small add-on matrices; try <strong>prompting, then RAG, then fine-tuning</strong>.</li>
 <li><strong>Distillation</strong> trains a small student to imitate a big teacher; <strong>quantization</strong> shrinks memory by storing weights in fewer bits (FP32 → BF16 → INT8 → INT4).</li>
 <li><strong>Mixture of Experts</strong> models have many total parameters but only a fraction active per token.</li>
-<li><strong>Benchmarks</strong> (MMLU, HumanEval, SWE-bench, LMArena) are useful but limited by contamination, saturation, and narrowness.</li>
+<li><strong>Benchmarks</strong> (MMLU, HumanEval, SWE-bench, Arena) are useful but limited by contamination, saturation, and narrowness.</li>
 <li>Models have a <strong>knowledge cutoff</strong>, and <strong>safety</strong> comes from layers of training, testing, and application safeguards.</li>
 </ul>
 
@@ -558,7 +562,7 @@ r : the &quot;rank&quot;, a small number like 8 or 16</div>
 <li>C) Humans supervise every training example</li>
 <li>D) The model chooses its own training data from the internet</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> B — Each next token in the text acts as the label, so no human labeling is needed. That is what makes training on trillions of tokens possible.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — Each next token in the text acts as the label, so no human labeling is needed. That is what makes training on trillions of tokens possible.</p></div></details>
 <p><strong>2. What was the main finding of the Chinchilla paper?</strong></p>
 <ul>
 <li>A) Bigger models always beat smaller ones, regardless of data</li>
@@ -566,7 +570,7 @@ r : the &quot;rank&quot;, a small number like 8 or 16</div>
 <li>C) Training data quality has no effect on results</li>
 <li>D) Models should be trained on fewer tokens to avoid overfitting</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> B — Chinchilla found many models were undertrained and showed that doubling model size should come with doubling training tokens. Its 70B model beat the 280B Gopher using the same compute.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — Chinchilla found many models were undertrained and showed that doubling model size should come with doubling training tokens. Its 70B model beat the 280B Gopher using the same compute.</p></div></details>
 <p><strong>3. In RLHF, what is the reward model&#39;s job?</strong></p>
 <ul>
 <li>A) It writes the example answers for supervised fine-tuning</li>
@@ -574,7 +578,7 @@ r : the &quot;rank&quot;, a small number like 8 or 16</div>
 <li>C) It compresses the model to 4-bit</li>
 <li>D) It removes duplicate web pages from the training data</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> B — The reward model is trained on human rankings of answers, then used to score the chat model&#39;s outputs during reinforcement learning. DPO skips this separate model.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — The reward model is trained on human rankings of answers, then used to score the chat model&#39;s outputs during reinforcement learning. DPO skips this separate model.</p></div></details>
 <p><strong>4. A company wants its chatbot to answer questions using its product manuals, which are updated every month. What should it try first?</strong></p>
 <ul>
 <li>A) Pretrain a new model from scratch</li>
@@ -582,7 +586,7 @@ r : the &quot;rank&quot;, a small number like 8 or 16</div>
 <li>C) Use retrieval-augmented generation (RAG) to put relevant manual sections into the prompt</li>
 <li>D) Raise the temperature</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> C — RAG keeps changing facts up to date and lets the model cite the source. Fine-tuning is better for style and format, and pretraining from scratch is far too costly.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> C — RAG keeps changing facts up to date and lets the model cite the source. Fine-tuning is better for style and format, and pretraining from scratch is far too costly.</p></div></details>
 <p><strong>5. Roughly how much memory do the weights of a 7-billion-parameter model need in INT4?</strong></p>
 <ul>
 <li>A) About 3.5 GB</li>
@@ -590,7 +594,7 @@ r : the &quot;rank&quot;, a small number like 8 or 16</div>
 <li>C) About 14 GB</li>
 <li>D) About 28 GB</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> A — INT4 uses 0.5 bytes per weight: 7 billion × 0.5 = 3.5 GB. INT8 would be ~7 GB, BF16 ~14 GB, and FP32 ~28 GB.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> A — INT4 uses 0.5 bytes per weight: 7 billion × 0.5 = 3.5 GB. INT8 would be ~7 GB, BF16 ~14 GB, and FP32 ~28 GB.</p></div></details>
 <div class="nav-links"><a href="transformers.html">← Chapter 3: Transformers &amp; LLMs</a><a href="models.html">Chapter 5: Model Landscape →</a></div>
 </div>
 </main>

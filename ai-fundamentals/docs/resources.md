@@ -6,19 +6,27 @@ These are hand-picked, free or freely readable resources for going deeper after 
 
 ## 1. Free courses
 
+For a week-by-week plan that combines these courses with the chapters of this site, see the [Study Plan](study-plan.md).
+
 | Resource | Type | Level | Why it's useful | Link |
 |---|---|---|---|---|
+| Elements of AI (University of Helsinki & MinnaLearn) | Course | Beginner | Free, non-technical introduction to what AI is, how it works and its societal impact, with a free certificate; local sites for NL, BE, RO and LT. Part 2, *Building AI*, adds basic Python. | [elementsofai.com](https://www.elementsofai.com/) |
+| Google AI Essentials | Course + certificate | Beginner | Five short courses on using generative AI tools at work, prompting and responsible use; Coursera subscription required for the certificate. | [coursera.org](https://www.coursera.org/specializations/ai-essentials-google) |
+| OpenAI Academy | Course hub | Beginner → Intermediate | Free self-paced courses by audience: Apply AI at Work, Build with AI, Lead AI Adoption, Teach and Learn with AI. Needs a ChatGPT account. | [academy.openai.com](https://academy.openai.com/) |
+| Anthropic Academy: AI Fluency | Course | Beginner | Free courses on working well with AI (*AI Fluency: Framework & Foundations*, *AI Capabilities and Limitations*). | [academy.claude.com](https://academy.claude.com/) |
+| Anthropic Academy: product & developer courses | Course hub | Beginner → Intermediate | Free courses with certificates: Claude 101, Claude Code in Action, Building with the Claude API, Model Context Protocol. | [anthropic.skilljar.com](https://anthropic.skilljar.com/) |
+| Anthropic Prompt Engineering Interactive Tutorial | GitHub course | Beginner → Intermediate | Nine hands-on chapters from basic prompt structure to avoiding hallucinations; examples use Claude 3 model names, but the techniques still apply. | [github.com](https://github.com/anthropics/prompt-eng-interactive-tutorial) |
 | Google Machine Learning Crash Course | Course | Beginner | Short lessons, visuals and exercises covering regression, neural networks, overfitting and gradient descent. | [developers.google.com](https://developers.google.com/machine-learning/crash-course) |
 | Microsoft Learn: AI learning hub | Course hub | Beginner | Microsoft's starting point for AI training, including an introduction to generative AI and Responsible AI. | [learn.microsoft.com/ai](https://learn.microsoft.com/en-us/ai/) |
 | Microsoft: Introduction to AI in Azure (AI-901) | Course + certification | Beginner | Prepares for the Azure AI Fundamentals certification, which now uses exam AI-901 and covers AI concepts plus Microsoft Foundry. | [Course](https://learn.microsoft.com/en-us/training/courses/ai-901t00) · [Exam AI-901](https://learn.microsoft.com/en-us/credentials/certifications/exams/ai-901/) |
-| Generative AI for Beginners (Microsoft) | GitHub course | Beginner | Free lessons on building generative AI apps: prompting, RAG, agents and more, with code samples. | [github.com](https://github.com/microsoft/generative-ai-for-beginners) |
+| Generative AI for Beginners (Microsoft) | GitHub course | Beginner | 21 free lessons on building generative AI apps: prompting, RAG, agents and more, with code samples. | [github.com](https://github.com/microsoft/generative-ai-for-beginners) |
 | ML for Beginners (Microsoft) | GitHub course | Beginner | A 12-week classic machine learning curriculum with quizzes and projects. | [github.com](https://github.com/microsoft/ML-For-Beginners) |
 | Hugging Face LLM Course | Course | Beginner → Intermediate | Hands-on introduction to transformers, tokenizers, fine-tuning and sharing models with the Hugging Face ecosystem. | [huggingface.co](https://huggingface.co/learn/llm-course) |
 | fast.ai: Practical Deep Learning for Coders | Course | Intermediate | Top-down, code-first deep learning course for people who can already program. | [course.fast.ai](https://course.fast.ai/) |
-| DeepLearning.AI Short Courses | Short courses | Beginner → Intermediate | One- to two-hour courses on prompting, RAG, agents and evaluation, often made with model providers. | [deeplearning.ai](https://www.deeplearning.ai/short-courses/) |
+| DeepLearning.AI Short Courses | Short courses | Beginner → Intermediate | Mostly one- to two-hour courses on prompting, RAG, agents and evaluation, often made with model providers. | [deeplearning.ai](https://www.deeplearning.ai/courses/) |
 | Andrej Karpathy: Neural Networks: Zero to Hero | Video course | Intermediate | Build neural networks and a small GPT from scratch in Python, explaining every line. | [karpathy.ai](https://karpathy.ai/zero-to-hero.html) |
 
-> **💡 Example:** A good beginner path is Google's crash course first, then 3Blue1Brown's videos, then the Hugging Face LLM Course, and finally Karpathy's series once you are comfortable with Python.
+> **💡 Example:** For using AI at work, start with Elements of AI and one of Google AI Essentials, OpenAI Academy or Anthropic AI Fluency. For how models work inside, a good path is Google's crash course first, then 3Blue1Brown's videos, then the Hugging Face LLM Course, and finally Karpathy's series once you are comfortable with Python.
 
 ## 2. Videos
 
@@ -26,6 +34,7 @@ These are hand-picked, free or freely readable resources for going deeper after 
 |---|---|---|---|---|
 | 3Blue1Brown: Neural Networks | Video series | Beginner | Beautiful visual explanations of neurons, gradient descent and backpropagation. | [3blue1brown.com](https://www.3blue1brown.com/topics/neural-networks) |
 | 3Blue1Brown: Transformers, the tech behind LLMs | Video lesson | Beginner → Intermediate | Shows how GPT-style models turn tokens into embeddings and predict the next token, step by step. | [3blue1brown.com](https://www.3blue1brown.com/lessons/gpt) |
+| Matt Wolfe | YouTube channel + newsletter | Beginner | Weekly AI news and tool walk-throughs; his Future Tools site is a searchable AI tool directory. Good for discovering tools — some listings are sponsored, so test before you rely on them. | [YouTube](https://www.youtube.com/@mreflow) · [futuretools.io](https://www.futuretools.io/) |
 
 ## 3. Interactive tools
 
@@ -43,7 +52,7 @@ These are hand-picked, free or freely readable resources for going deeper after 
 | OpenAI API docs | Docs | Beginner → Advanced | Guides for text generation, structured outputs, function calling, reasoning, caching and batch. | [developers.openai.com](https://developers.openai.com/api/docs) |
 | Anthropic (Claude) docs | Docs | Beginner → Advanced | Prompt engineering guide, token counting, prompt caching and tool use for Claude models. | [platform.claude.com](https://platform.claude.com/docs/en/home) |
 | Google Gemini API docs | Docs | Beginner → Advanced | Prompting strategies, context caching, batch API and multimodal input for Gemini. | [ai.google.dev](https://ai.google.dev/gemini-api/docs) |
-| Microsoft Foundry (formerly Azure AI Foundry) | Docs | Intermediate | Build, evaluate and deploy AI apps and agents on Azure with many model families. | [learn.microsoft.com](https://learn.microsoft.com/en-us/azure/ai-foundry/) |
+| Microsoft Foundry (formerly Azure AI Foundry) | Docs | Intermediate | Build, evaluate and deploy AI apps and agents on Azure with many model families. | [learn.microsoft.com](https://learn.microsoft.com/en-us/azure/foundry/) |
 | GitHub Copilot docs | Docs | Beginner → Advanced | Using Copilot in the editor, agents, custom instructions, models and billing. | [docs.github.com](https://docs.github.com/en/copilot) |
 | Hugging Face docs | Docs | Beginner → Advanced | The Hub, Transformers library, datasets and model cards for open models. | [huggingface.co](https://huggingface.co/docs) |
 | Ollama docs | Docs | Beginner | Run open-weight models on your own computer with a single command. | [docs.ollama.com](https://docs.ollama.com/) |
@@ -81,7 +90,7 @@ You do not need to read these to use AI, but each one changed the field. The arX
 | OpenAI: Batch API | Docs | Intermediate | Run large non-urgent jobs at a discount. | [developers.openai.com](https://developers.openai.com/api/docs/guides/batch) |
 | Anthropic: Batch processing | Docs | Intermediate | Message Batches for asynchronous, discounted processing. | [platform.claude.com](https://platform.claude.com/docs/en/build-with-claude/batch-processing) |
 | Gemini: Batch API | Docs | Intermediate | Asynchronous batch jobs for Gemini at reduced cost. | [ai.google.dev](https://ai.google.dev/gemini-api/docs/batch-api) |
-| Anthropic: Effective context engineering for AI agents | Article | Intermediate | Why context is a finite budget and how to curate it for agents. | [anthropic.com](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) |
+| Anthropic: Effective context engineering for AI agents | Article | Intermediate | Why context is a finite budget and how to curate it for agents. | [anthropic.com](https://www.anthropic.com/research/effective-context-engineering-for-ai-agents) |
 | GitHub: Optimizing your AI usage | Docs | Beginner | Practical habits for spending fewer AI credits in Copilot. | [docs.github.com](https://docs.github.com/en/copilot/tutorials/optimize-ai-usage) |
 | VS Code: Optimize AI credit usage | Docs | Beginner | Editor-specific tips: compacting chats, tool sets, cache explorer and usage indicators. | [code.visualstudio.com](https://code.visualstudio.com/docs/agents/guides/optimize-usage) |
 | tiktoken | Library | Intermediate | Count OpenAI tokens locally in Python. | [github.com](https://github.com/openai/tiktoken) |
@@ -100,4 +109,4 @@ You do not need to read these to use AI, but each one changed the field. The arX
 
 > **✅ Key takeaway:** Start with one beginner course, one visual series and one interactive tool, then use the official docs as your source of truth whenever you build something real.
 
-[← Glossary](glossary.md) · [Home →](index.md)
+[← Glossary](glossary.md) · [Study Plan →](study-plan.md)

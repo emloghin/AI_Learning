@@ -23,7 +23,7 @@ The table below shows the kinds of text that surprise beginners. The splits are 
 | Emojis | `🚀🎉` | Each emoji is several bytes, so one emoji can be **several** tokens |
 | Numbers and dates | `2026-10-13`, `3.14159265` | Split into small digit groups and punctuation; long numbers become many tokens |
 
-> **⚠️ Common misconception:** "The same text always costs the same number of tokens." Different model families use different tokenizers. Anthropic notes that its newer tokenizer produces roughly 30% more tokens for the same text than earlier Claude models, and advises recounting prompts against the exact model you plan to use ([Anthropic: Token counting](https://platform.claude.com/docs/en/build-with-claude/token-counting)).
+> **⚠️ Common misconception:** "The same text always costs the same number of tokens." Different model families use different tokenizers. Anthropic notes that the newer tokenizer used since Claude Opus 4.7 produces roughly 30% more tokens for the same text than earlier Claude models, and advises recounting prompts against the exact model you plan to use ([Anthropic: Token counting](https://platform.claude.com/docs/en/build-with-claude/token-counting)).
 
 ## 2. The four kinds of tokens on your bill
 
@@ -104,7 +104,7 @@ The **context window** is the maximum number of tokens a model can handle in one
 
 If you fill the suitcase with input, the model may stop mid-answer. OpenAI warns that when generated tokens hit the context limit or your `max_output_tokens` value, the response ends as `incomplete`, possibly **before any visible text**, while you still pay for input and reasoning tokens. Their guidance is to reserve at least **25,000 tokens** for reasoning and output when you start experimenting with reasoning models ([OpenAI: Reasoning models](https://developers.openai.com/api/docs/guides/reasoning)).
 
-A bigger window is not a free pass either. Anthropic describes **context rot**: "as the number of tokens in the context window increases, the model's ability to accurately recall information from that context decreases," so context should be treated "as a finite resource with diminishing marginal returns" ([Anthropic: Effective context engineering for AI agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)).
+A bigger window is not a free pass either. Anthropic describes **context rot**: "as the number of tokens in the context window increases, the model's ability to accurately recall information from that context decreases," so context should be treated "as a finite resource with diminishing marginal returns" ([Anthropic: Effective context engineering for AI agents](https://www.anthropic.com/research/effective-context-engineering-for-ai-agents)).
 
 > **✅ Key takeaway:** Fewer, better tokens usually mean lower cost, faster answers **and** better quality. Token saving is a quality practice, not only a money practice.
 
@@ -123,7 +123,7 @@ Every API response reports what you actually used. Field names differ by provide
 | Provider / endpoint | Input | Output | Cache | Reasoning |
 |---|---|---|---|---|
 | OpenAI Responses API | `usage.input_tokens` | `usage.output_tokens` | `usage.input_tokens_details.cached_tokens` | `usage.output_tokens_details.reasoning_tokens` |
-| OpenAI Chat Completions | `prompt_tokens` | `completion_tokens` | — | — |
+| OpenAI Chat Completions | `usage.prompt_tokens` | `usage.completion_tokens` | `usage.prompt_tokens_details.cached_tokens` | `usage.completion_tokens_details.reasoning_tokens` |
 | Anthropic Messages API | `usage.input_tokens` (only tokens **after** the last cache breakpoint) | `usage.output_tokens` | `cache_read_input_tokens`, `cache_creation_input_tokens` | — |
 | Gemini API | — | — | `usage.total_cached_tokens` | — |
 
@@ -152,7 +152,7 @@ enc_for_model = tiktoken.encoding_for_model("gpt-4o")
 print("Same text, model-specific count:", len(enc_for_model.encode(text)))
 ```
 
-The script prints how many tokens the sentence uses and shows each piece, so you can see the emoji turn into several tokens. Two caveats: `tiktoken` only knows **OpenAI** tokenizers, and a plain-text count does not include the extra tokens added by message formatting, tools, images or files ([OpenAI Help](https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them)). For other providers, use their counting endpoint or the usage fields.
+The script prints how many tokens the sentence uses and shows each piece, so you can see the emoji turn into more than one token. Two caveats: `tiktoken` only knows **OpenAI** tokenizers, and a plain-text count does not include the extra tokens added by message formatting, tools, images or files ([OpenAI Help](https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them)). For other providers, use their counting endpoint or the usage fields.
 
 ## 7. Token-saving techniques: the catalog
 
@@ -161,7 +161,7 @@ Each technique below lists **why** it works, **how** to do it, a short **example
 ### 7.1 Write concise prompts and remove boilerplate
 
 - **Why:** Every word you send is billed on every request, and repeated filler ("You are a world-class, highly skilled, extremely helpful assistant who always...") adds up quickly.
-- **How:** State the task, the constraints and the output format. Cut politeness padding, repeated rules and long role-play intros. Anthropic's guidance is to aim for "the smallest possible set of high-signal tokens" ([Anthropic](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)).
+- **How:** State the task, the constraints and the output format. Cut politeness padding, repeated rules and long role-play intros. Anthropic's guidance is to aim for "the smallest possible set of high-signal tokens" ([Anthropic](https://www.anthropic.com/research/effective-context-engineering-for-ai-agents)).
 - **Example:** "Summarize the text below in 3 bullet points for a manager" beats a 120-word preamble that says the same thing.
 - **Trade-off:** "Minimal does not necessarily mean short" (Anthropic). Remove fluff, not the facts the model needs.
 
@@ -216,7 +216,7 @@ Sources: [OpenAI Prompt caching](https://developers.openai.com/api/docs/guides/p
 - **Why:** In a chat, the **whole history is re-sent on every turn**. Turn 30 pays for turns 1–29 again.
 - **How:** Pick one or more:
   - **Start a new chat** when the topic changes.
-  - **Summarize / compact** older turns into a short recap. Anthropic calls compaction "the first lever in context engineering" ([Anthropic](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)).
+  - **Summarize / compact** older turns into a short recap. Anthropic calls compaction "the first lever in context engineering" ([Anthropic](https://www.anthropic.com/research/effective-context-engineering-for-ai-agents)).
   - **Truncate** or use a **sliding window**: keep only the last N turns plus the system prompt.
   - **Clear old tool results** that the agent no longer needs.
 - **Example:** After 40 turns debugging a login bug, replace the history with a 150-token summary of what was tried and what is still broken.
@@ -225,7 +225,7 @@ Sources: [OpenAI Prompt caching](https://developers.openai.com/api/docs/guides/p
 ### 7.7 Do RAG right instead of pasting whole documents
 
 - **Why:** Pasting an entire manual into every request is expensive and can bury the relevant part (context rot).
-- **How:** With [Retrieval-Augmented Generation](using-ai.md) you store documents in chunks, retrieve only the few chunks most related to the question, and optionally **rerank** them so the best 3–5 go into the prompt. Anthropic also describes "just in time" retrieval, where an agent keeps lightweight references (file paths, links) and loads data only when needed ([Anthropic](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)).
+- **How:** With [Retrieval-Augmented Generation](using-ai.md) you store documents in chunks, retrieve only the few chunks most related to the question, and optionally **rerank** them so the best 3–5 go into the prompt. Anthropic also describes "just in time" retrieval, where an agent keeps lightweight references (file paths, links) and loads data only when needed ([Anthropic](https://www.anthropic.com/research/effective-context-engineering-for-ai-agents)).
 - **Example:** Instead of a 120-page HR handbook (≈80,000 tokens), send the 4 chunks about "parental leave" (≈2,000 tokens).
 - **Trade-off:** Retrieval can miss the right chunk. Test retrieval quality separately from answer quality.
 
@@ -259,7 +259,7 @@ Sources: [OpenAI Prompt caching](https://developers.openai.com/api/docs/guides/p
 ### 7.11 Avoid re-sending large files
 
 - **Why:** Re-attaching the same 5,000-line log or PDF on every turn multiplies its cost.
-- **How:** Send it once and refer back to it, keep it in a cached prefix, upload it once to a provider's file store where supported, or extract only the relevant section first (for example with `grep`, `head` or a script). Anthropic describes agents analysing large data "without ever loading the full data objects into context" ([Anthropic](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)).
+- **How:** Send it once and refer back to it, keep it in a cached prefix, upload it once to a provider's file store where supported, or extract only the relevant section first (for example with `grep`, `head` or a script). Anthropic describes agents analysing large data "without ever loading the full data objects into context" ([Anthropic](https://www.anthropic.com/research/effective-context-engineering-for-ai-agents)).
 - **Example:** Instead of pasting a 2 MB log, paste the 40 lines around the first `ERROR`.
 - **Trade-off:** The model only knows what you show it. Make sure the excerpt contains the real cause.
 
@@ -307,7 +307,7 @@ Coding agents send a **lot** of context: instructions, open files, search result
 
 As of this writing (October 2026), GitHub Copilot measures chat and agent usage in **GitHub AI Credits**: each interaction consumes input, output and cached tokens priced per model, and "the total is converted into AI credits, where 1 AI credit = $0.01 USD." Code completions and next edit suggestions are not billed in AI credits ([GitHub Docs: Models and pricing](https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing)).
 
-The older **premium request** system, where each prompt cost one premium request times a **model multiplier** (a heavier model might count as several requests, an included model as zero), now applies only to Copilot Pro and Pro+ subscribers who stayed on an existing annual plan after June 1, 2026 ([GitHub Docs: Requests in GitHub Copilot (legacy)](https://docs.github.com/en/copilot/concepts/billing/copilot-requests)). Either way the lesson is the same: **heavier models and bigger contexts cost more of your allowance.**
+The older **premium request** system, where each prompt cost one premium request times a **model multiplier** (a heavier model might count as several requests, an included model as zero), now applies only to Copilot Pro and Pro+ subscribers who stayed on an existing annual plan after June 1, 2026 ([GitHub Docs: Requests in GitHub Copilot (legacy)](https://docs.github.com/en/copilot/reference/copilot-billing/request-based-billing-legacy/copilot-requests)). Either way the lesson is the same: **heavier models and bigger contexts cost more of your allowance.**
 
 > **📘 In plain words:** Copilot now works like the APIs in this chapter: more tokens and bigger models use more credits. Every technique in section 7 also helps you inside your editor.
 
@@ -315,25 +315,25 @@ The older **premium request** system, where each prompt cost one premium request
 
 | Technique | What to do | Source |
 |---|---|---|
-| **Keep custom instructions short and specific** | `.github/copilot-instructions.md` and `AGENTS.md` load on every chat interaction. Include build/test commands, required libraries and known pitfalls; avoid long generic documentation. | [VS Code best practices](https://code.visualstudio.com/docs/copilot/best-practices), [GitHub: Optimize AI usage](https://docs.github.com/en/copilot/tutorials/optimize-ai-usage) |
-| **Scope instructions with `applyTo`** | Put language- or folder-specific rules in `.github/instructions/*.instructions.md` with an `applyTo` glob (for example `'**/*.py'`), so they load only when matching files are touched. | [VS Code: Custom instructions](https://code.visualstudio.com/docs/copilot/customization/custom-instructions) |
-| **Reference specific files, not the whole workspace** | Use `#file`, `#folder` or `#symbol` mentions to point at what matters; reserve `#codebase` for genuinely broad questions. | [VS Code: Add context to chat](https://code.visualstudio.com/docs/copilot/chat/copilot-chat-context) |
+| **Keep custom instructions short and specific** | `.github/copilot-instructions.md` and `AGENTS.md` load on every chat interaction. Include build/test commands, required libraries and known pitfalls; avoid long generic documentation. | [VS Code best practices](https://code.visualstudio.com/docs/agents/best-practices), [GitHub: Optimize AI usage](https://docs.github.com/en/copilot/tutorials/optimize-ai-usage) |
+| **Scope instructions with `applyTo`** | Put language- or folder-specific rules in `.github/instructions/*.instructions.md` with an `applyTo` glob (for example `'**/*.py'`), so they load only when matching files are touched. | [VS Code: Custom instructions](https://code.visualstudio.com/docs/agent-customization/custom-instructions) |
+| **Reference specific files, not the whole workspace** | Use `#file`, `#folder` or `#symbol` mentions to point at what matters; reserve `#codebase` for genuinely broad questions. | [VS Code: Add context to chat](https://code.visualstudio.com/docs/chat/copilot-chat-context) |
 | **Close irrelevant tabs** | Open editor tabs count as context. | [GitHub: Optimize AI usage](https://docs.github.com/en/copilot/tutorials/optimize-ai-usage) |
 | **Start a new chat per task** | "Start a new conversation when you switch problems." Use `/compact` to shrink a long session you want to keep, and `/fork` to explore an alternative without re-explaining. | [GitHub: Optimize chat usage](https://docs.github.com/en/copilot/tutorials/optimize-chat-usage), [VS Code: Optimize AI credit usage](https://code.visualstudio.com/docs/agents/guides/optimize-usage) |
-| **Pick a lighter model for simple tasks** | Lighter models for refactoring, formatting and docs; reasoning models for architecture and hard debugging. Auto model selection routes for you (and GitHub offers a 10% discount on model costs with it on paid plans). | [GitHub: Optimize AI usage](https://docs.github.com/en/copilot/tutorials/optimize-ai-usage) |
+| **Pick a lighter model for simple tasks** | Lighter models for refactoring, formatting and docs; reasoning models for architecture and hard debugging. Auto model selection can choose for you. | [GitHub: Optimize AI usage](https://docs.github.com/en/copilot/tutorials/optimize-ai-usage) |
 | **Keep reasoning at the default** | Higher reasoning levels and the 1-million-token context option consume more credits; raise them only for complex tasks. | [GitHub: Supported models](https://docs.github.com/en/copilot/reference/ai-models/supported-models) |
 | **Limit enabled MCP tools** | "Large tool sets ... add to the context on every request." Use **Configure Tools** to enable only what the task needs, or give custom agents a narrow `tools` list. | [GitHub: Optimize AI usage](https://docs.github.com/en/copilot/tutorials/optimize-ai-usage), [VS Code: Optimize AI credit usage](https://code.visualstudio.com/docs/agents/guides/optimize-usage) |
 | **Preserve the cache** | Avoid switching models, reasoning level, context size or the enabled tool set mid-session; each change can force the full context to be re-processed at the uncached price. | [GitHub: Optimize AI usage](https://docs.github.com/en/copilot/tutorials/optimize-ai-usage) |
-| **Plan first** | Use the Plan agent (or `/plan` in Copilot CLI) with a strong model, review the plan, then implement with a cheaper model. This "avoids spending AI credits on code that needs to be thrown away." | [VS Code best practices](https://code.visualstudio.com/docs/copilot/best-practices) |
+| **Plan first** | Use the Plan agent (or `/plan` in Copilot CLI) with a strong model, review the plan, then implement with a cheaper model. This "avoids spending AI credits on code that needs to be thrown away." | [VS Code best practices](https://code.visualstudio.com/docs/agents/best-practices), [GitHub: Optimize AI usage](https://docs.github.com/en/copilot/tutorials/optimize-ai-usage) |
 | **Write concise, complete agent prompts** | Give a clear task, the relevant files/errors, and a **stopping condition** ("done when the existing tests pass"). This reduces retries and scope drift. | [GitHub: Optimize AI usage](https://docs.github.com/en/copilot/tutorials/optimize-ai-usage) |
 | **Exclude noisy files** | Use `.gitignore`, `files.exclude` and `search.exclude` so build output and logs do not flood search results; "search match snippets count toward the context window." | [VS Code: Optimize AI credit usage](https://code.visualstudio.com/docs/agents/guides/optimize-usage) |
 | **Watch the meter** | Hover a chat response to see its credit cost, check the context window control for session totals, and use Agent Debug Logs and the Cache Explorer to find waste. | [VS Code: Optimize AI credit usage](https://code.visualstudio.com/docs/agents/guides/optimize-usage) |
 
 ### 8.3 Before and after: the same request, fewer tokens
 
-Counts below are **approximate**, using the rule of thumb of about 100 tokens per 75 words. Use a tokenizer for exact numbers.
+Counts below are **approximate**, measured with OpenAI's `o200k_base` tokenizer; other tokenizers give somewhat different numbers. File paths and code names cost more tokens per word than plain English.
 
-**Before (≈ 200 tokens of prompt, plus whatever the agent explores):**
+**Before (≈ 150 tokens of prompt, plus whatever the agent explores):**
 
 ```text
 Hi Copilot! I hope you're doing well. I have a bit of a problem and I was
@@ -347,7 +347,7 @@ comments and documentation too if you have time. Please explain everything you
 do in a lot of detail so I can understand it. Thanks so much in advance!
 ```
 
-**After (≈ 60 tokens):**
+**After (≈ 75 tokens):**
 
 ```text
 Login fails with "401 invalid token" after the user's session is 24h old.
@@ -357,7 +357,7 @@ Fix the bug only. Done when tests/test_auth.py passes.
 Reply with a 3-line summary of the change.
 ```
 
-The second prompt is about **70% shorter**, but the bigger saving is everything it prevents: no whole-codebase search, no unrequested refactoring, no long explanation, and fewer retries because the agent knows exactly when it is finished.
+The second prompt is about **half as long**, but the bigger saving is everything it prevents: no whole-codebase search, no unrequested refactoring, no long explanation, and fewer retries because the agent knows exactly when it is finished.
 
 > **🎯 Try it:** Take a prompt you used this week. Add a stopping condition and one `#file` reference, delete every sentence that does not change what the agent should do, and compare the credit cost shown when you hover the response.
 

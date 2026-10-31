@@ -16,6 +16,7 @@
     <div class="header-logo"><span>AI&nbsp;</span>Learn</div>
     <nav class="header-nav">
       <a href="index.html">Home</a>
+      <a href="study-plan.html">Study Plan</a>
       <a href="foundations.html">1. Foundations</a>
       <a href="neural-networks.html" class="active">2. Neural Networks</a>
       <a href="transformers.html">3. Transformers &amp; LLMs</a>
@@ -24,6 +25,7 @@
       <a href="using-ai.html">6. Using Models</a>
       <a href="tokens.html">7. Tokens &amp; Cost</a>
       <a href="best-practices.html">8. Best Practices</a>
+      <a href="ai-at-work.html">9. AI at Work</a>
       <a href="glossary.html">Glossary</a>
       <a href="resources.html">Resources</a>
     </nav>
@@ -33,7 +35,7 @@
 <section class="hero">
   <div class="hero-badge">Chapter 2 · Neural Networks</div>
   <h1>Neural Networks: The Engine Inside AI</h1>
-  <p>Every modern AI model — from your phone&#39;s face unlock to the largest chatbot — is a neural network: layers of tiny calculators connected by adjustable numbers, tuned by showing it examples and correcting its mistakes millions of times.</p>
+  <p>Almost every modern AI model you hear about — from your phone&#39;s face unlock to the largest chatbot — is a neural network: layers of tiny calculators connected by adjustable numbers, tuned by showing it examples and correcting its mistakes millions of times.</p>
 </section>
 
 <main class="main">
@@ -148,7 +150,7 @@ Bias: <code>b = 0.5</code></p>
 cat  = 7.39 / 11.22 ≈ 0.66   (66%)
 dog  = 2.72 / 11.22 ≈ 0.24   (24%)
 bird = 1.11 / 11.22 ≈ 0.10   (10%)</div>
-<p>The biggest score gets the biggest probability, and all the probabilities add up to 100%. A language model does exactly this at every step — over a vocabulary of tens of thousands of tokens instead of three animals.</p>
+<p>The biggest score gets the biggest probability, and all the probabilities add up to 100%. A language model does exactly this at every step — over a vocabulary of tens of thousands (often over a hundred thousand) of tokens instead of three animals.</p>
 <div class="callout tip"><p><strong>📘 In plain words:</strong> Why bother with an activation? Without it, stacking layers would be pointless: a chain of &quot;multiply and add&quot; steps can always be collapsed into a single &quot;multiply and add&quot;. The activation adds a bend (a <em>non-linearity</em>), and stacking many bends lets the network model curvy, complex patterns like language and images. Google&#39;s crash course explains this in <a href="https://developers.google.com/machine-learning/crash-course/neural-networks/activation-functions" target="_blank" rel="noopener">Activation functions</a>.</p></div>
 
 </div>
@@ -216,7 +218,7 @@ bird = 1.11 / 11.22 ≈ 0.10   (10%)</div>
 </svg>
 <div class="diagram-caption">Figure 2 — A small fully connected network: 3 inputs, one hidden layer of 4 neurons, 2 outputs.</div></div>
 <p><strong>Depth</strong> is the number of layers. &quot;Deep learning&quot; simply means networks with many hidden layers. Early layers tend to learn simple patterns, later layers combine them into complex ones. In an image network, early layers may react to edges, middle layers to shapes like eyes or wheels, and late layers to whole objects. The <a href="https://www.3blue1brown.com/lessons/neural-networks" target="_blank" rel="noopener">3Blue1Brown video &quot;But what is a neural network?&quot;</a> shows this idea beautifully with handwritten digits.</p>
-<div class="callout tip"><p><strong>💡 Example:</strong> In the house network of Figure 2, one hidden neuron might end up acting as a &quot;spacious family home&quot; detector (big size, many rooms), another as an &quot;old fixer-upper&quot; detector (high age). Nobody programs those roles — they emerge during training because they help predict the price.</p></div>
+<div class="callout tip"><p><strong>💡 Example:</strong> In the house network of Figure 2, one hidden neuron might end up acting as a &quot;spacious family home&quot; detector (big size, many rooms), another as an &quot;old fixer-upper&quot; detector (high age). Nobody programs those roles — they emerge during training because they help decide between the two outputs, &quot;cheap&quot; and &quot;expensive&quot;.</p></div>
 
 </div>
 <div class="section">
@@ -608,7 +610,7 @@ new b = 0   − 0.1 × (−9)  = 0.9
 new prediction = 3.2 × 3 + 0.9 = 10.5   → error 4.5, loss 20.25</div>
 <p>The model jumped from far too low (1.5) to far too high (10.5) — overshooting the valley — and the loss did not improve at all. This is exactly the &quot;too large&quot; learning rate from section 7.1.</p>
 <div class="callout success"><p><strong>✅ Key takeaway:</strong> That is all training is: forward pass → loss → gradients → small update → repeat. An LLM does the same four steps, just with billions of parameters, cross-entropy loss over tokens, and trillions of examples.</p></div>
-<div class="callout tip"><p><strong>🎯 Try it:</strong> Open Google&#39;s interactive <a href="https://developers.google.com/machine-learning/crash-course/neural-networks/interactive-exercises" target="_blank" rel="noopener">Neural networks exercises</a> or the free TensorFlow Playground, change the learning rate and the number of hidden neurons, and watch the loss curve respond.</p></div>
+<div class="callout tip"><p><strong>🎯 Try it:</strong> Open Google&#39;s interactive <a href="https://developers.google.com/machine-learning/crash-course/neural-networks/interactive-exercises" target="_blank" rel="noopener">Neural networks exercises</a> or the free <a href="https://playground.tensorflow.org/" target="_blank" rel="noopener">TensorFlow Playground</a>, change the learning rate and the number of hidden neurons, and watch the loss curve respond.</p></div>
 
 </div>
 <div class="section">
@@ -637,7 +639,7 @@ new prediction = 3.2 × 3 + 0.9 = 10.5   → error 4.5, loss 20.25</div>
 <li>C) 2</li>
 <li>D) 6</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> C — z = (1 × 3) + (2 × −1) + 1 = 3 − 2 + 1 = 2. ReLU keeps positive numbers unchanged, so the output is 2.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> C — z = (1 × 3) + (2 × −1) + 1 = 3 − 2 + 1 = 2. ReLU keeps positive numbers unchanged, so the output is 2.</p></div></details>
 <p><strong>2. How many parameters does a fully connected layer with 4 inputs and 3 outputs have?</strong></p>
 <ul>
 <li>A) 7</li>
@@ -645,7 +647,7 @@ new prediction = 3.2 × 3 + 0.9 = 10.5   → error 4.5, loss 20.25</div>
 <li>C) 15</li>
 <li>D) 16</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> C — 4 × 3 = 12 weights plus 3 biases = 15 parameters.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> C — 4 × 3 = 12 weights plus 3 biases = 15 parameters.</p></div></details>
 <p><strong>3. Roughly how much memory do the weights of a 13-billion-parameter model need at 4-bit (INT4) precision?</strong></p>
 <ul>
 <li>A) About 3 GB</li>
@@ -653,7 +655,7 @@ new prediction = 3.2 × 3 + 0.9 = 10.5   → error 4.5, loss 20.25</div>
 <li>C) About 26 GB</li>
 <li>D) About 52 GB</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> B — 13 billion × 0.5 bytes = 6.5 GB. (FP16 would be 26 GB; FP32 would be 52 GB.)</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — 13 billion × 0.5 bytes = 6.5 GB. (FP16 would be 26 GB; FP32 would be 52 GB.)</p></div></details>
 <p><strong>4. What does backpropagation do?</strong></p>
 <ul>
 <li>A) Collects more training data</li>
@@ -661,7 +663,7 @@ new prediction = 3.2 × 3 + 0.9 = 10.5   → error 4.5, loss 20.25</div>
 <li>C) Converts text into tokens</li>
 <li>D) Picks the learning rate automatically</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> B — Backpropagation works backwards from the loss to compute a gradient for every parameter. Gradient descent then uses those gradients to update the parameters.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — Backpropagation works backwards from the loss to compute a gradient for every parameter. Gradient descent then uses those gradients to update the parameters.</p></div></details>
 <p><strong>5. During training, the loss jumps around and sometimes increases sharply after each update. What is the most likely cause?</strong></p>
 <ul>
 <li>A) The learning rate is too high</li>
@@ -669,7 +671,7 @@ new prediction = 3.2 × 3 + 0.9 = 10.5   → error 4.5, loss 20.25</div>
 <li>C) The model has too few epochs</li>
 <li>D) The softmax is missing</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> A — Steps that are too large overshoot the low point of the loss landscape, as in the worked example with a learning rate of 0.1.</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> A — Steps that are too large overshoot the low point of the loss landscape, as in the worked example with a learning rate of 0.1.</p></div></details>
 <p><strong>6. A dataset has 50,000 examples and the batch size is 500. How many iterations make up one epoch?</strong></p>
 <ul>
 <li>A) 10</li>
@@ -677,7 +679,7 @@ new prediction = 3.2 × 3 + 0.9 = 10.5   → error 4.5, loss 20.25</div>
 <li>C) 500</li>
 <li>D) 50,000</li>
 </ul>
-<div class="callout success"><p><strong>✅ Answer:</strong> B — One epoch processes every example once: 50,000 / 500 = 100 batches, so 100 iterations (parameter updates).</p></div>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — One epoch processes every example once: 50,000 / 500 = 100 batches, so 100 iterations (parameter updates).</p></div></details>
 <div class="nav-links"><a href="foundations.html">← Chapter 1: Foundations</a><a href="transformers.html">Chapter 3: Transformers &amp; LLMs →</a></div>
 </div>
 </main>

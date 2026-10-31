@@ -55,7 +55,7 @@ To predict the next word well across all of human writing, the model is forced t
 
 ## 3. Compute: GPUs and Cost
 
-Training is mostly giant **matrix multiplications** (multiplying big grids of numbers). **GPUs** (graphics processing units) and similar AI chips (like Google's TPUs) are built to do thousands of these multiplications in parallel, which makes them far faster than ordinary CPUs for this job. Large models are trained on clusters of thousands to tens of thousands of GPUs running for weeks or months.
+Training is mostly giant **matrix multiplications** (multiplying big grids of numbers). **GPUs** (graphics processing units) and similar AI chips (like Google's TPUs) are built to do thousands of these multiplications in parallel, which makes them far faster than ordinary CPUs for this job. Large models are trained on clusters of thousands to tens of thousands of GPUs running for weeks or months — and the very largest projects use even more.
 
 ### How much compute?
 
@@ -75,7 +75,7 @@ Meta reports that training the Llama 3.1 family used a cumulative **39.3 million
 
 > **💡 Example:** To get a feel for the cost, *assume* renting one such GPU costs $2 per hour (an illustrative figure — real prices vary widely, and Meta uses its own hardware). Then 30.84 million GPU-hours × $2 ≈ **$62 million** of compute for one final training run — before counting failed experiments, staff, data, and electricity.
 
-> **✅ Key takeaway:** Pretraining a frontier model costs tens to hundreds of millions of dollars and is done by only a few organizations. Almost everyone else **starts from an existing model** and adapts it.
+> **✅ Key takeaway:** Pretraining a frontier model costs tens to hundreds of millions of dollars (or more) and is done by only a few organizations. Almost everyone else **starts from an existing model** and adapts it.
 
 ## 4. Scaling Laws
 
@@ -168,6 +168,10 @@ DPO trains directly on preference pairs — (prompt, **chosen** answer, **reject
 
 Human feedback is slow and expensive. Anthropic's **Constitutional AI** ([Bai et al., 2022](https://arxiv.org/abs/2212.08073)) replaces much of it with **AI feedback**: the model is given a written list of principles (a "constitution"), asked to critique and revise its own answers according to those principles, and an AI judge — rather than humans — picks the better of two answers for the preference-training step. This is often called **RLAIF** (reinforcement learning from AI feedback). Today, most labs mix human and AI feedback.
 
+### Reinforcement learning for reasoning
+
+Newer post-training pipelines add another RL stage for **reasoning models**. Instead of a reward model guessing what people like, the reward comes from an automatic check: is the math answer correct, do the code's tests pass? The model tries many solutions, and the ones that reach a verifiably correct answer are reinforced. DeepSeek-R1 ([DeepSeek-AI, 2025](https://arxiv.org/abs/2501.12948)) showed that RL with such rule-based rewards can teach a model to produce long, self-checking chains of reasoning. See [Chapter 3](transformers.md) for how reasoning models behave in use.
+
 ## 8. Fine-Tuning for Your Own Use
 
 You can also fine-tune an existing model on your own examples — for example to always answer in your company's format, or to classify support tickets into your categories.
@@ -241,7 +245,7 @@ memory for weights ≈ number of parameters × bytes per weight
 
 > **💡 Example:** A 7-billion-parameter model in INT4: 7,000,000,000 × 0.5 bytes = 3.5 billion bytes ≈ **3.5 GB**. That fits on a laptop GPU or even a phone, while the FP32 version (28 GB) would not. Running the model also needs extra memory for the KV cache and activations, so real needs are somewhat higher.
 
-- **FP16** and **BF16** both use 16 bits. **BF16** ("brain float") keeps FP32's range of very large and very small numbers but with less precision, which makes training more stable. Most models today are trained and released in BF16.
+- **FP16** and **BF16** both use 16 bits. **BF16** ("brain float") keeps FP32's range of very large and very small numbers but with less precision, which makes training more stable. Many models today are trained and released in BF16 (some newer ones also use 8-bit formats during training).
 - **INT8** and **INT4** store weights as small integers plus scaling factors. Quality usually drops only a little at 8-bit and somewhat more at 4-bit; very low bit-widths (below 4) can hurt quality noticeably, especially on harder tasks.
 
 Common names you will see when downloading open models:
@@ -278,12 +282,12 @@ How do we know if a model is good? Labs publish scores on **benchmarks** — sta
 | **MMLU** ([Hendrycks et al.](https://arxiv.org/abs/2009.03300)) | broad knowledge | multiple-choice questions across 57 subjects, from math to law |
 | **HumanEval** ([Chen et al.](https://arxiv.org/abs/2107.03374)) | basic coding | 164 hand-written Python problems checked by unit tests |
 | **SWE-bench** ([Jimenez et al.](https://arxiv.org/abs/2310.06770)) | real software engineering | fix real GitHub issues from popular Python projects so the project's tests pass |
-| **LMArena** ([lmarena.ai](https://lmarena.ai)) | overall human preference | people chat with two anonymous models side by side and vote for the better answer; votes become a leaderboard rating |
+| **Arena** (formerly LMArena, [arena.ai](https://arena.ai)) | overall human preference | people chat with two anonymous models side by side and vote for the better answer; votes become a leaderboard rating |
 
 ### The limits of benchmarks
 
 - **Contamination:** benchmark questions are published online, so they can leak into the pretraining data. A model may then partly *remember* answers instead of solving them — like a student who saw the exam beforehand.
-- **Saturation:** top models now score very high on older tests. Llama 3.1 405B Instruct, for example, reports 87.3% on MMLU. When everyone scores near the top, the test stops telling models apart, so harder benchmarks keep appearing.
+- **Saturation:** top models now score very high on older tests. Llama 3.1 405B Instruct, for example, reports 87.3% on MMLU (5-shot). When everyone scores near the top, the test stops telling models apart, so harder benchmarks keep appearing.
 - **Narrowness:** a benchmark measures one thing in one format. A high coding score says little about how well a model writes your marketing emails.
 - **Teaching to the test:** once a number becomes a target, labs optimize for it, and it can stop reflecting real-world quality.
 - **Human-vote leaderboards** capture what people *like*, which can reward style (length, formatting, confidence) as well as correctness.
@@ -318,11 +322,11 @@ There are real trade-offs. A model tuned to refuse too much becomes unhelpful ("
 - **Pretraining** is self-supervised next-token prediction over trillions of tokens; it takes most of the compute (millions of GPU-hours for frontier models).
 - **Scaling laws** show quality improves predictably with parameters, data, and compute; **Chinchilla** showed size and data should grow together (~20 tokens per parameter for compute-optimal training).
 - A **base model** continues text; an **instruct model** has been fine-tuned to follow instructions.
-- **SFT** learns from example answers; **RLHF** uses human rankings, a reward model, and RL; **DPO** learns from chosen/rejected pairs without a reward model; **Constitutional AI** uses AI feedback guided by written principles.
+- **SFT** learns from example answers; **RLHF** uses human rankings, a reward model, and RL; **DPO** learns from chosen/rejected pairs without a reward model; **Constitutional AI** uses AI feedback guided by written principles; **RL with automatically checked rewards** trains reasoning models.
 - **LoRA/QLoRA** fine-tune by training small add-on matrices; try **prompting, then RAG, then fine-tuning**.
 - **Distillation** trains a small student to imitate a big teacher; **quantization** shrinks memory by storing weights in fewer bits (FP32 → BF16 → INT8 → INT4).
 - **Mixture of Experts** models have many total parameters but only a fraction active per token.
-- **Benchmarks** (MMLU, HumanEval, SWE-bench, LMArena) are useful but limited by contamination, saturation, and narrowness.
+- **Benchmarks** (MMLU, HumanEval, SWE-bench, Arena) are useful but limited by contamination, saturation, and narrowness.
 - Models have a **knowledge cutoff**, and **safety** comes from layers of training, testing, and application safeguards.
 
 ## Check Your Understanding

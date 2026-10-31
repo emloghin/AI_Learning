@@ -10,7 +10,7 @@ AI Learn is a step-by-step course that explains what happens *inside* an AI mode
 
 Every chapter uses plain language first, then a small worked example with real numbers, then a picture. Where a fact matters, we link to the source — mainly the [Google Machine Learning Crash Course](https://developers.google.com/machine-learning/crash-course), [Microsoft Learn: Introduction to AI concepts](https://learn.microsoft.com/training/modules/get-started-ai-fundamentals/), the [Hugging Face LLM Course](https://huggingface.co/learn/llm-course), the [3Blue1Brown neural network series](https://www.3blue1brown.com/topics/neural-networks), and the original research papers.
 
-> **📘 In plain words:** This site is the "how does the engine work" manual. It is not a list of prompts or a product review. Once you understand the engine, every AI product starts to make sense.
+> **📘 In plain words:** Chapters 1–8 are the "how does the engine work" manual. Chapter 9 and the [Study Plan](study-plan.md) are the driving lessons: they connect this site with the best free courses from Google, Microsoft, OpenAI, Anthropic and the University of Helsinki, and show you how to apply AI to your own daily work.
 
 ## 2. Who it is for
 
@@ -22,10 +22,11 @@ You do **not** need to know calculus, statistics, or programming. When a formula
 
 ## 3. How to use it
 
-1. **Read in order.** Each chapter builds on the previous one. Chapter 3 (Transformers) makes much more sense after Chapter 2 (Neural Networks).
-2. **Look for the callouts.** 📘 boxes restate an idea in plain words, 💡 boxes give examples, ⚠️ boxes flag common misconceptions, ✅ boxes summarize, and 🎯 boxes suggest something to try.
-3. **Do the quiz.** Each chapter ends with "Check Your Understanding". If you miss a question, reread that section — it is the fastest way to make ideas stick.
-4. **Use the glossary.** Any unfamiliar word is probably in the [Glossary](glossary.md).
+1. **Pick a path.** The [Study Plan](study-plan.md) offers three week-by-week paths — AI-literate professional, AI power user and AI builder — that mix these chapters with external courses and practice on your own work.
+2. **Read in order.** Each chapter builds on the previous one. Chapter 3 (Transformers) makes much more sense after Chapter 2 (Neural Networks).
+3. **Look for the callouts.** 📘 boxes restate an idea in plain words, 💡 boxes give examples, ⚠️ boxes flag common misconceptions, ✅ boxes summarize, and 🎯 boxes suggest something to try.
+4. **Do the quiz.** Each chapter ends with "Check Your Understanding". If you miss a question, reread that section — it is the fastest way to make ideas stick.
+5. **Use the glossary.** Any unfamiliar word is probably in the [Glossary](glossary.md).
 
 > **🎯 Try it:** Keep an AI chat tool open while you read. When a chapter explains an idea (for example, tokens or temperature), try it out and see the effect for yourself.
 
@@ -37,14 +38,16 @@ You do **not** need to know calculus, statistics, or programming. When a formula
 | [2. Neural Networks](neural-networks.md) | Neurons, weights, layers, parameters, loss, gradient descent, backpropagation — with a worked example | ~40 min |
 | [3. Transformers & LLMs](transformers.md) | Embeddings, attention, the Transformer architecture, and how a large language model predicts the next token | ~40 min |
 | [4. Training & Tuning](training.md) | Pre-training, fine-tuning, instruction tuning, RLHF, and why training is so expensive | ~30 min |
-| [5. Model Landscape](models.md) | Proprietary vs open-weight models, model families and sizes, multimodal models, how to compare them | ~30 min |
-| [6. Using Models](using-ai.md) | Prompting, temperature, system prompts, RAG, tools and agents, running models locally | ~35 min |
+| [5. Model Landscape](models.md) | Proprietary vs open-weight models, licenses, model families and sizes, model cards, running models locally, how to choose | ~30 min |
+| [6. Using Models](using-ai.md) | Prompting, temperature, system prompts, structured outputs, RAG, tools, agents and MCP | ~35 min |
 | [7. Tokens & Cost](tokens.md) | What tokens are, context windows, how pricing works, and how to estimate cost | ~25 min |
-| [8. Best Practices](best-practices.md) | Hallucinations, bias, privacy, security, evaluation, and responsible use | ~30 min |
+| [8. Best Practices](best-practices.md) | Prompting and context engineering, evaluation, security, privacy, responsible AI and reliability | ~30 min |
+| [9. AI at Work](ai-at-work.md) | Finding AI-ready tasks, the delegate-review-refine loop, measuring impact, a prompt library, and building your own learning plan | ~15 min |
+| [Study Plan](study-plan.md) | Three week-by-week learning paths combining these chapters with Elements of AI, Google AI Essentials, OpenAI Academy, Anthropic Academy and Microsoft AI-901 | plan |
 | [Glossary](glossary.md) | Every key term in one place | reference |
 | [Resources](resources.md) | Free courses, videos, papers, and tools for going further | reference |
 
-Total: about four and a quarter hours of reading, spread over as many sessions as you like.
+Total: about four and a half hours of reading for the chapters. The Study Plan paths add external courses and practice, from 4 to 8 weeks depending on the path.
 
 ## 5. The big picture in 60 seconds
 
@@ -83,4 +86,4 @@ Short definitions now; fuller explanations in the chapters and the [Glossary](gl
 | **Prompt** | The input you give a model: your question, instructions, and any context. |
 | **Context window** | The maximum number of tokens a model can consider at once, including both your prompt and its reply. |
 
-[Start Chapter 1: Foundations →](foundations.md)
+[Choose your path in the Study Plan →](study-plan.md) · [Start Chapter 1: Foundations →](foundations.md)

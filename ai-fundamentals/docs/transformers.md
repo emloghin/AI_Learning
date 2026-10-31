@@ -140,7 +140,7 @@ Take the sentence:
 
 **"The animal didn't cross the street because it was tired."**
 
-To understand "it", the model must work out that "it" means **the animal**, not the street (streets do not get tired). In a trained model, when processing "it", the attention spotlight shines brightly on "animal". Change one word — "...because **it** was too wide" — and the spotlight shifts toward "street". This exact example is visualized in Jay Alammar's [Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/).
+To understand "it", the model must work out that "it" means **the animal**, not the street (streets do not get tired). In a trained model, when processing "it", the attention spotlight shines brightly on "animal". Change one word — "...because **it** was too wide" — and the spotlight shifts toward "street". The "tired" version of this sentence is visualized in Jay Alammar's [Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/).
 
 **Self-attention** simply means the words attend to other words in the *same* text (as opposed to attending to a separate text, like a source sentence during translation).
 
@@ -177,7 +177,7 @@ In words:
 > | street | `[0, 1]` | 2×0 + 1×1 = 1 | 0.71 |
 > | tired | `[1, 1]` | 2×1 + 1×1 = 3 | 2.12 |
 >
-> Softmax turns `3.54, 0.71, 2.12` into roughly **77% animal, 4.5% street, 18.5% tired**. So the new vector for "it" is built mostly from the value of "animal" — the model has linked "it" to "the animal".
+> Softmax turns `3.54, 0.71, 2.12` into roughly **76.8% animal, 4.5% street, 18.7% tired**. So the new vector for "it" is built mostly from the value of "animal" — the model has linked "it" to "the animal".
 
 **Softmax** itself just means: raise *e* (≈ 2.718) to the power of each score, then divide each result by their total. Bigger scores grow much bigger, so the best match dominates.
 
@@ -204,6 +204,8 @@ A transformer is built from one repeating unit — the **transformer block** —
 3. **Feed-forward network** — a small neural network (exactly like the ones in [Chapter 2](neural-networks.md)) applied to each token separately. This is where much of the model's stored knowledge appears to live.
 4. **Add & Norm** again.
 
+(This is the order used in the original paper. Most modern LLMs apply the normalization *before* the attention and feed-forward parts instead — called "pre-norm" — which makes very deep stacks easier to train. The ingredients are the same.)
+
 ![A transformer block: embeddings flow up through self-attention and a feed-forward network, each followed by add and norm, repeated N times, then an output layer](images/transformer.svg)
 
 *Figure 1 — A decoder-style transformer. Each block lets tokens share context (attention), then thinks about each token on its own (feed-forward). Dashed lines are skip connections.*
@@ -224,7 +226,7 @@ The original 2017 transformer had two halves: an **encoder** that reads the inpu
 
 | Shape | Sees | Good at | Famous example |
 |---|---|---|---|
-| **Decoder-only** | only earlier tokens (causal mask) | generating text, chat, code | GPT series (OpenAI), Llama, Claude, Gemini |
+| **Decoder-only** | only earlier tokens (causal mask) | generating text, chat, code | GPT series (OpenAI), Llama, Gemini |
 | **Encoder-only** | the whole text in both directions | understanding: classification, search embeddings | BERT ([Google, 2018](https://arxiv.org/abs/1810.04805)) |
 | **Encoder-decoder** | encoder sees all input; decoder writes output | text-to-text: translation, summarization | T5 ([Google, 2019](https://arxiv.org/abs/1910.10683)) |
 
@@ -370,7 +372,7 @@ Because images and audio become tokens, they **count against the context window 
 
 ## 15. Reasoning Models
 
-Some recent models — for example OpenAI's o-series ([Learning to reason with LLMs](https://openai.com/index/learning-to-reason-with-llms/)), DeepSeek-R1 ([paper](https://arxiv.org/abs/2501.12948)), and Claude or Gemini models with "thinking" modes — are trained to **think before they answer**.
+Some recent models — for example OpenAI's o-series and GPT-5 ([Learning to reason with LLMs](https://openai.com/index/learning-to-reason-with-llms/)), DeepSeek-R1 ([paper](https://arxiv.org/abs/2501.12948)), and Claude or Gemini models with "thinking" modes — are trained to **think before they answer**.
 
 Conceptually, a reasoning model is still a next-token predictor. The difference is that before writing the final answer, it generates a long stream of extra **reasoning tokens**: breaking the problem down, trying an approach, checking it, backtracking. These models are typically trained with **reinforcement learning** on problems whose answers can be checked (math, code tests, logic puzzles), so the model is rewarded for reasoning paths that actually reach correct answers.
 
@@ -379,7 +381,7 @@ Conceptually, a reasoning model is still a next-token predictor. The difference 
 Trade-offs to know:
 
 - **Better** at multi-step math, coding, planning, and tricky logic.
-- **Slower and more expensive:** reasoning tokens are generated just like normal tokens. OpenAI and Anthropic both bill reasoning (thinking) tokens as **output tokens**, even when they are hidden or summarized ([OpenAI tokens guide](https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them), [Anthropic extended thinking](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking)).
+- **Slower and more expensive:** reasoning tokens are generated just like normal tokens. OpenAI and Anthropic both bill reasoning (thinking) tokens as **output tokens**, even when they are hidden or summarized ([OpenAI reasoning guide](https://developers.openai.com/api/docs/guides/reasoning), [Anthropic thinking pricing](https://platform.claude.com/docs/en/build-with-claude/thinking-steering-and-cost#pricing)).
 - **Overkill** for simple tasks like rewording a sentence or extracting a name.
 
 > **⚠️ Common misconception:** "The thinking text is exactly how the model reached its answer." The visible reasoning (when shown) is helpful, but research shows it is not always a faithful record of the computation inside the network. Treat it as a useful explanation, not a guaranteed one.

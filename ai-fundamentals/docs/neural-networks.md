@@ -2,7 +2,7 @@
 
 **Chapter 2 · Neural Networks**
 
-Every modern AI model — from your phone's face unlock to the largest chatbot — is a neural network: layers of tiny calculators connected by adjustable numbers, tuned by showing it examples and correcting its mistakes millions of times.
+Almost every modern AI model you hear about — from your phone's face unlock to the largest chatbot — is a neural network: layers of tiny calculators connected by adjustable numbers, tuned by showing it examples and correcting its mistakes millions of times.
 
 ## 1. Inspired by the brain (loosely)
 
@@ -69,7 +69,7 @@ dog  = 2.72 / 11.22 ≈ 0.24   (24%)
 bird = 1.11 / 11.22 ≈ 0.10   (10%)
 ```
 
-The biggest score gets the biggest probability, and all the probabilities add up to 100%. A language model does exactly this at every step — over a vocabulary of tens of thousands of tokens instead of three animals.
+The biggest score gets the biggest probability, and all the probabilities add up to 100%. A language model does exactly this at every step — over a vocabulary of tens of thousands (often over a hundred thousand) of tokens instead of three animals.
 
 > **📘 In plain words:** Why bother with an activation? Without it, stacking layers would be pointless: a chain of "multiply and add" steps can always be collapsed into a single "multiply and add". The activation adds a bend (a *non-linearity*), and stacking many bends lets the network model curvy, complex patterns like language and images. Google's crash course explains this in [Activation functions](https://developers.google.com/machine-learning/crash-course/neural-networks/activation-functions).
 
@@ -89,7 +89,7 @@ When every neuron in one layer connects to every neuron in the next, the layers 
 
 **Depth** is the number of layers. "Deep learning" simply means networks with many hidden layers. Early layers tend to learn simple patterns, later layers combine them into complex ones. In an image network, early layers may react to edges, middle layers to shapes like eyes or wheels, and late layers to whole objects. The [3Blue1Brown video "But what is a neural network?"](https://www.3blue1brown.com/lessons/neural-networks) shows this idea beautifully with handwritten digits.
 
-> **💡 Example:** In the house network of Figure 2, one hidden neuron might end up acting as a "spacious family home" detector (big size, many rooms), another as an "old fixer-upper" detector (high age). Nobody programs those roles — they emerge during training because they help predict the price.
+> **💡 Example:** In the house network of Figure 2, one hidden neuron might end up acting as a "spacious family home" detector (big size, many rooms), another as an "old fixer-upper" detector (high age). Nobody programs those roles — they emerge during training because they help decide between the two outputs, "cheap" and "expensive".
 
 ## 4. Weights, parameters, and what "7B" means
 
@@ -382,7 +382,7 @@ The model jumped from far too low (1.5) to far too high (10.5) — overshooting 
 
 > **✅ Key takeaway:** That is all training is: forward pass → loss → gradients → small update → repeat. An LLM does the same four steps, just with billions of parameters, cross-entropy loss over tokens, and trillions of examples.
 
-> **🎯 Try it:** Open Google's interactive [Neural networks exercises](https://developers.google.com/machine-learning/crash-course/neural-networks/interactive-exercises) or the free TensorFlow Playground, change the learning rate and the number of hidden neurons, and watch the loss curve respond.
+> **🎯 Try it:** Open Google's interactive [Neural networks exercises](https://developers.google.com/machine-learning/crash-course/neural-networks/interactive-exercises) or the free [TensorFlow Playground](https://playground.tensorflow.org/), change the learning rate and the number of hidden neurons, and watch the loss curve respond.
 
 ## Recap
 
