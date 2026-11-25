@@ -26,6 +26,10 @@
       <a href="tokens.html">7. Tokens &amp; Cost</a>
       <a href="best-practices.html">8. Best Practices</a>
       <a href="ai-at-work.html">9. AI at Work</a>
+      <a href="spec-driven-development.html">10. Spec-Driven Dev</a>
+      <a href="spec-kit.html">10a. Spec Kit</a>
+      <a href="squad.html">10b. Squad</a>
+      <a href="sdd-production.html">10c. Shipping &amp; Reuse</a>
       <a href="glossary.html">Glossary</a>
       <a href="resources.html" class="active">Resources</a>
     </nav>
@@ -35,7 +39,7 @@
 <section class="hero">
   <div class="hero-badge">Reference · Keep learning</div>
   <h1>Learning Resources</h1>
-  <p>These are hand-picked, free or freely readable resources for going deeper after AI Learn. Every link below was checked in October 2026; where a resource has moved or been renamed, the table points to its current home.</p>
+  <p>These are hand-picked, free or freely readable resources for going deeper after AI Learn. The original course and model references were checked in October 2026; the Spec Kit and Squad references in section 9 were checked on 25 November 2026. Where a resource has moved or been renamed, the table points to its current home.</p>
 </section>
 
 <main class="main">
@@ -546,6 +550,80 @@
 </tr>
 </tbody></table></div>
 <div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;If a forum post says a model is best, it is best for me.&quot; Community opinions move fast and depend on the poster&#39;s hardware and tasks. Test claims on your own data (see <a href="best-practices.html">Chapter 8</a>).</p></div>
+
+</div>
+<div class="section">
+<h2 id="9-spec-driven-development-with-spec-kit-and-squad">9. Spec-driven development with Spec Kit and Squad</h2>
+<p>Start with <a href="spec-driven-development.html">Chapter 10&#39;s guided learning path</a>, then use these sources to check the commands and adapt the workflow. Open-source tools do not make model usage free.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Provenance</th>
+<th>What to use it for</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://github.github.io/spec-kit/installation.html" target="_blank" rel="noopener">Spec Kit installation</a> and <a href="https://github.com/github/spec-kit/releases" target="_blank" rel="noopener">releases</a></td>
+<td>Official</td>
+<td>Prerequisites, supported installation channels and version changes</td>
+</tr>
+<tr>
+<td><a href="https://github.github.io/spec-kit/quickstart.html" target="_blank" rel="noopener">Spec Kit quickstart</a> and <a href="https://github.github.io/spec-kit/reference/agentic-sdd.html" target="_blank" rel="noopener">Agentic SDD reference</a></td>
+<td>Official</td>
+<td>Workflow steps, artifacts, checklists, analysis and convergence</td>
+</tr>
+<tr>
+<td><a href="https://github.github.io/spec-kit/integrations/copilot.html" target="_blank" rel="noopener">Copilot integration</a> and <a href="https://github.github.io/spec-kit/integrations/cli.html#command-invocation" target="_blank" rel="noopener">invocation syntax</a></td>
+<td>Official</td>
+<td>Default skills versus other command layouts; host-specific behaviour</td>
+</tr>
+<tr>
+<td><a href="https://github.github.io/spec-kit/how-to/existing-projects.html" target="_blank" rel="noopener">Existing projects</a>, <a href="https://github.github.io/spec-kit/how-to/evolving-specs.html" target="_blank" rel="noopener">evolving specs</a>, <a href="https://github.github.io/spec-kit/how-to/persisting-specs.html" target="_blank" rel="noopener">persistence</a></td>
+<td>Official</td>
+<td>Bounded brownfield adoption, changing intent and choosing what to retain</td>
+</tr>
+<tr>
+<td><a href="https://github.github.io/spec-kit/overview/core.html" target="_blank" rel="noopener">Spec Kit core commands</a> and <a href="https://github.github.io/spec-kit/upgrade.html" target="_blank" rel="noopener">upgrade guide</a></td>
+<td>Official</td>
+<td>Active-feature selection, multiple project roots, CLI versus project-file upgrades</td>
+</tr>
+<tr>
+<td><a href="https://github.github.io/squad/docs/get-started/installation/" target="_blank" rel="noopener">Squad installation</a> and <a href="https://github.com/github/squad/releases" target="_blank" rel="noopener">releases</a></td>
+<td>Official</td>
+<td>Current repository, npm package, stable versions and platform prerequisites</td>
+</tr>
+<tr>
+<td><a href="https://github.github.io/squad/docs/get-started/first-session/" target="_blank" rel="noopener">Squad first session</a> and <a href="https://github.github.io/squad/docs/reference/cli/" target="_blank" rel="noopener">CLI reference</a></td>
+<td>Official</td>
+<td>Team formation, launch, diagnostics, memory, export/import and updates</td>
+</tr>
+<tr>
+<td><a href="https://github.github.io/squad/docs/features/model-selection/" target="_blank" rel="noopener">Squad model selection</a> and <a href="https://github.github.io/squad/docs/reference/host-feature-matrix/" target="_blank" rel="noopener">host feature matrix</a></td>
+<td>Official, with conflicting claims</td>
+<td>Check actual host support rather than assuming per-agent model preferences work everywhere</td>
+</tr>
+<tr>
+<td><a href="https://github.github.io/squad/docs/features/security-hardening/" target="_blank" rel="noopener">Squad hardening</a> and <a href="https://github.github.io/squad/docs/features/cost-tracking/" target="_blank" rel="noopener">cost tracking</a></td>
+<td>Official</td>
+<td>Shared-memory risks, permission boundaries and which execution paths populate cost records</td>
+</tr>
+<tr>
+<td><a href="https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html" target="_blank" rel="noopener">Understanding SDD: Kiro, spec-kit and Tessl</a></td>
+<td>Independent practitioner analysis, October 2025</td>
+<td>Lifecycle taxonomy and evaluation questions; not a current CLI tutorial</td>
+</tr>
+<tr>
+<td><a href="https://github.com/github/squad/issues/1033#issuecomment-4658769575" target="_blank" rel="noopener">Combining Spec Kit and Squad: github/squad#1033</a></td>
+<td>Maintainer reply</td>
+<td>Confirms complementary roles; not a specification for an automatic integration</td>
+</tr>
+<tr>
+<td><a href="sdd-production.html">Community lessons and production examples</a></td>
+<td>This site&#39;s sourced synthesis</td>
+<td>Concrete failure cases, release gates, multi-project reuse and how to weigh practitioner evidence</td>
+</tr>
+</tbody></table></div>
 <div class="callout success"><p><strong>✅ Key takeaway:</strong> Start with one beginner course, one visual series and one interactive tool, then use the official docs as your source of truth whenever you build something real.</p></div>
 <div class="nav-links"><a href="glossary.html">← Glossary</a><a href="study-plan.html">Study Plan →</a></div>
 </div>

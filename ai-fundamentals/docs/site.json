@@ -15,6 +15,10 @@
     ["tokens", "7. Tokens &amp; Cost"],
     ["best-practices", "8. Best Practices"],
     ["ai-at-work", "9. AI at Work"],
+    ["spec-driven-development", "10. Spec-Driven Dev"],
+    ["spec-kit", "10a. Spec Kit"],
+    ["squad", "10b. Squad"],
+    ["sdd-production", "10c. Shipping &amp; Reuse"],
     ["glossary", "Glossary"],
     ["resources", "Resources"]
   ]

@@ -73,6 +73,19 @@ The paths stack: B assumes A's basics, and C assumes B's. If you already know a 
 
 > **⚠️ Common misconception:** "A certificate proves I can build AI solutions." AI-901 is a *fundamentals* exam. The bot, the evaluation and the security test from weeks 4–7 are what show you can build.
 
+### Optional builder workshop: spec to production
+
+After you can run and test a small application, use [Chapter 10](spec-driven-development.md) to practise AI-assisted software delivery. This is separate from the AI-901 exam path; your product does not need to contain an AI model.
+
+| Session | Practise | Deliverable |
+|---|---|---|
+| 1 | [Set up Spec Kit](spec-kit.md), write one bounded feature and resolve ambiguities | Reviewed spec with observable acceptance criteria |
+| 2 | Review the plan, tasks and analysis; implement with one agent | Small working change with tests you have actually run |
+| 3 | [Try Squad](squad.md) on independent remaining tasks, then review the combined result | A recorded task handoff and evidence of what each role changed |
+| 4 | Follow [Shipping and Reuse](sdd-production.md), including a brownfield change and release rehearsal | PR checklist, rollback plan and a reusable project setup checklist |
+
+Start with synthetic data and a learning repository. The tutorial is not permission to deploy an unreviewed application.
+
 ## 6. The courses at a glance
 
 All facts below come from the providers' own pages, checked on 31 October 2026. Prices, content and names change often — check the link before you enrol.
@@ -131,6 +144,7 @@ Copy this checklist into your notes and tick items off as you go.
 **Build (Path C)**
 - [ ] I built a small RAG bot with tests and a prompt-injection check
 - [ ] I passed the AI-901 practice assessment / exam
+- [ ] Optional: I delivered one bounded feature with Spec Kit, tried a reviewed Squad handoff, and rehearsed the release checklist ([Ch. 10](spec-driven-development.md))
 
 > **✅ Key takeaway:** Pick one path, combine one course with this site's chapters, and practise on your own work every week. Completed checklists and a log of real results are worth more than a pile of half-finished courses.
 

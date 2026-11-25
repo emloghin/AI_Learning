@@ -6,6 +6,9 @@ This glossary explains the words you meet throughout AI Learn in plain language.
 
 ## A
 
+### Acceptance criterion
+An observable condition for accepting a change. Example: two simultaneous requests for the same room and time produce only one reservation. See [Chapter 10](spec-driven-development.md).
+
 ### Activation function
 A small math function inside each neuron that decides how strongly it "fires", adding the non-linearity that lets networks learn complex patterns. Common ones are ReLU (turns negatives into 0) and sigmoid (squashes values between 0 and 1). See [Chapter 2](neural-networks.md).
 
@@ -51,6 +54,9 @@ Asking or allowing a model to work through a problem step by step before giving 
 
 ### Checkpoint
 A saved snapshot of a model's weights at a point during training, so training can resume or an earlier version can be reused. Downloaded open models are usually checkpoints too. See [Chapter 5](models.md).
+
+### Constitution (Spec Kit)
+A project's reviewed engineering principles and constraints, used to guide planning and implementation. It is not a security boundary or a replacement for feature requirements. See [Spec Kit](spec-kit.md).
 
 ### Context engineering
 Choosing and maintaining the best set of information (instructions, tools, history, retrieved data) in the model's context at every step. It extends prompt engineering to agents and long tasks. See [Chapter 8](best-practices.md).
@@ -129,6 +135,9 @@ Checks and limits around an AI system that block or correct unsafe or unwanted i
 When a model produces confident but false or made-up information, such as a citation to a paper that does not exist. It happens because models predict likely text, not verified facts. See [Chapter 3](transformers.md).
 
 ## I
+
+### Idempotency
+The property that repeating an operation has the same business effect as performing it once. Important for retrying requests and processing duplicate payment notifications. See [Shipping and Reuse](sdd-production.md).
 
 ### Inference
 Using a trained model to make predictions or generate output, as opposed to training it. Every chat message you send triggers inference. See [Chapter 1](foundations.md).
@@ -247,6 +256,15 @@ Fine-tuning on example prompts paired with high-quality answers written or appro
 ### Softmax
 A function that turns a list of raw scores into probabilities that are all positive and add up to 1. Used at a model's output and inside attention. See [Chapter 2](neural-networks.md) and [Chapter 3](transformers.md).
 
+### Spec-driven development (SDD)
+A development approach in which explicit requirements guide planning, implementation and verification. A useful spec describes observable behaviour and boundaries rather than vague aspirations. See [Chapter 10](spec-driven-development.md).
+
+### Spec Kit
+GitHub's toolkit of CLI commands, templates, scripts and agent instructions for structured development processes. Its SDD workflow carries a feature specification through implementation and completeness assessment. See [Spec Kit](spec-kit.md).
+
+### Squad
+An open-source toolkit for coordinating AI-agent teams with repository-based roles, routing and shared context. A team remains under human direction; multiple agents do not guarantee correctness or isolated edits. See [Squad](squad.md).
+
 ### Stop sequence
 A string that tells the model to stop generating when it appears, such as `"\n\n"` or `"END"`. Useful for keeping outputs short. See [Chapter 7](tokens.md).
 
@@ -291,4 +309,4 @@ The learned numbers on the connections between neurons that determine how strong
 ### Zero-shot
 Asking a model to do a task with no examples in the prompt, relying only on instructions. Example: "Classify this review as positive or negative." See [Chapter 6](using-ai.md).
 
-[← Chapter 9: AI at Work](ai-at-work.md) · [Resources →](resources.md)
+[← Shipping and Reuse](sdd-production.md) · [Resources →](resources.md)

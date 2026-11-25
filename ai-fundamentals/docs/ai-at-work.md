@@ -213,4 +213,4 @@ Then use the assistant as a tutor while you learn:
 
 > **✅ Answer:** B — Personal data needs an approved tool and a policy that allows it; otherwise use anonymised or synthetic input. Removing one name rarely anonymises a document.
 
-[← Chapter 8: Best Practices](best-practices.md) · [Glossary →](glossary.md)
+[← Chapter 8: Best Practices](best-practices.md) · [Chapter 10: Spec-Driven Development →](spec-driven-development.md)

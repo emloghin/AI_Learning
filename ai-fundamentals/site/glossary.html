@@ -26,6 +26,10 @@
       <a href="tokens.html">7. Tokens &amp; Cost</a>
       <a href="best-practices.html">8. Best Practices</a>
       <a href="ai-at-work.html">9. AI at Work</a>
+      <a href="spec-driven-development.html">10. Spec-Driven Dev</a>
+      <a href="spec-kit.html">10a. Spec Kit</a>
+      <a href="squad.html">10b. Squad</a>
+      <a href="sdd-production.html">10c. Shipping &amp; Reuse</a>
       <a href="glossary.html" class="active">Glossary</a>
       <a href="resources.html">Resources</a>
     </nav>
@@ -41,6 +45,8 @@
 <main class="main">
 <div class="section">
 <h2 id="a">A</h2>
+<h3 id="acceptance-criterion">Acceptance criterion</h3>
+<p>An observable condition for accepting a change. Example: two simultaneous requests for the same room and time produce only one reservation. See <a href="spec-driven-development.html">Chapter 10</a>.</p>
 <h3 id="activation-function">Activation function</h3>
 <p>A small math function inside each neuron that decides how strongly it &quot;fires&quot;, adding the non-linearity that lets networks learn complex patterns. Common ones are ReLU (turns negatives into 0) and sigmoid (squashes values between 0 and 1). See <a href="neural-networks.html">Chapter 2</a>.</p>
 <h3 id="agent">Agent</h3>
@@ -77,6 +83,8 @@
 <p>Asking or allowing a model to work through a problem step by step before giving the final answer, which often improves results on maths and logic. Example prompt: &quot;Think through this step by step, then give the answer.&quot; See <a href="using-ai.html">Chapter 6</a>.</p>
 <h3 id="checkpoint">Checkpoint</h3>
 <p>A saved snapshot of a model&#39;s weights at a point during training, so training can resume or an earlier version can be reused. Downloaded open models are usually checkpoints too. See <a href="models.html">Chapter 5</a>.</p>
+<h3 id="constitution-spec-kit">Constitution (Spec Kit)</h3>
+<p>A project&#39;s reviewed engineering principles and constraints, used to guide planning and implementation. It is not a security boundary or a replacement for feature requirements. See <a href="spec-kit.html">Spec Kit</a>.</p>
 <h3 id="context-engineering">Context engineering</h3>
 <p>Choosing and maintaining the best set of information (instructions, tools, history, retrieved data) in the model&#39;s context at every step. It extends prompt engineering to agents and long tasks. See <a href="best-practices.html">Chapter 8</a>.</p>
 <h3 id="context-window">Context window</h3>
@@ -145,6 +153,8 @@
 </div>
 <div class="section">
 <h2 id="i">I</h2>
+<h3 id="idempotency">Idempotency</h3>
+<p>The property that repeating an operation has the same business effect as performing it once. Important for retrying requests and processing duplicate payment notifications. See <a href="sdd-production.html">Shipping and Reuse</a>.</p>
 <h3 id="inference">Inference</h3>
 <p>Using a trained model to make predictions or generate output, as opposed to training it. Every chat message you send triggers inference. See <a href="foundations.html">Chapter 1</a>.</p>
 <h3 id="instruction-tuning">Instruction tuning</h3>
@@ -247,6 +257,12 @@
 <p>Fine-tuning on example prompts paired with high-quality answers written or approved by people. It is usually the first step in turning a base model into a chat model. See <a href="training.html">Chapter 4</a>.</p>
 <h3 id="softmax">Softmax</h3>
 <p>A function that turns a list of raw scores into probabilities that are all positive and add up to 1. Used at a model&#39;s output and inside attention. See <a href="neural-networks.html">Chapter 2</a> and <a href="transformers.html">Chapter 3</a>.</p>
+<h3 id="spec-driven-development-sdd">Spec-driven development (SDD)</h3>
+<p>A development approach in which explicit requirements guide planning, implementation and verification. A useful spec describes observable behaviour and boundaries rather than vague aspirations. See <a href="spec-driven-development.html">Chapter 10</a>.</p>
+<h3 id="spec-kit">Spec Kit</h3>
+<p>GitHub&#39;s toolkit of CLI commands, templates, scripts and agent instructions for structured development processes. Its SDD workflow carries a feature specification through implementation and completeness assessment. See <a href="spec-kit.html">Spec Kit</a>.</p>
+<h3 id="squad">Squad</h3>
+<p>An open-source toolkit for coordinating AI-agent teams with repository-based roles, routing and shared context. A team remains under human direction; multiple agents do not guarantee correctness or isolated edits. See <a href="squad.html">Squad</a>.</p>
 <h3 id="stop-sequence">Stop sequence</h3>
 <p>A string that tells the model to stop generating when it appears, such as <code>&quot;\n\n&quot;</code> or <code>&quot;END&quot;</code>. Useful for keeping outputs short. See <a href="tokens.html">Chapter 7</a>.</p>
 <h3 id="structured-output">Structured output</h3>
@@ -287,7 +303,7 @@
 <h2 id="z">Z</h2>
 <h3 id="zero-shot">Zero-shot</h3>
 <p>Asking a model to do a task with no examples in the prompt, relying only on instructions. Example: &quot;Classify this review as positive or negative.&quot; See <a href="using-ai.html">Chapter 6</a>.</p>
-<div class="nav-links"><a href="ai-at-work.html">← Chapter 9: AI at Work</a><a href="resources.html">Resources →</a></div>
+<div class="nav-links"><a href="sdd-production.html">← Shipping and Reuse</a><a href="resources.html">Resources →</a></div>
 </div>
 </main>
 

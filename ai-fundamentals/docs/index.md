@@ -10,7 +10,7 @@ AI Learn is a step-by-step course that explains what happens *inside* an AI mode
 
 Every chapter uses plain language first, then a small worked example with real numbers, then a picture. Where a fact matters, we link to the source — mainly the [Google Machine Learning Crash Course](https://developers.google.com/machine-learning/crash-course), [Microsoft Learn: Introduction to AI concepts](https://learn.microsoft.com/training/modules/get-started-ai-fundamentals/), the [Hugging Face LLM Course](https://huggingface.co/learn/llm-course), the [3Blue1Brown neural network series](https://www.3blue1brown.com/topics/neural-networks), and the original research papers.
 
-> **📘 In plain words:** Chapters 1–8 are the "how does the engine work" manual. Chapter 9 and the [Study Plan](study-plan.md) are the driving lessons: they connect this site with the best free courses from Google, Microsoft, OpenAI, Anthropic and the University of Helsinki, and show you how to apply AI to your own daily work.
+> **📘 In plain words:** Chapters 1–8 are the "how does the engine work" manual. Chapter 9 and the [Study Plan](study-plan.md) are the driving lessons: they connect this site with the best free courses from Google, Microsoft, OpenAI, Anthropic and the University of Helsinki, and show you how to apply AI to your own daily work. [Chapter 10](spec-driven-development.md) is the software-building workshop: use Spec Kit and Squad to turn an idea into a reviewed change, then learn what it takes to ship it.
 
 ## 2. Who it is for
 
@@ -43,11 +43,12 @@ You do **not** need to know calculus, statistics, or programming. When a formula
 | [7. Tokens & Cost](tokens.md) | What tokens are, context windows, how pricing works, and how to estimate cost | ~25 min |
 | [8. Best Practices](best-practices.md) | Prompting and context engineering, evaluation, security, privacy, responsible AI and reliability | ~30 min |
 | [9. AI at Work](ai-at-work.md) | Finding AI-ready tasks, the delegate-review-refine loop, measuring impact, a prompt library, and building your own learning plan | ~15 min |
+| [10. Spec-Driven Development](spec-driven-development.md) | A beginner's introduction, [Spec Kit setup and workflow](spec-kit.md), [Squad teams](squad.md), and [production examples, community lessons and multi-project reuse](sdd-production.md) | ~80 min across four pages |
 | [Study Plan](study-plan.md) | Three week-by-week learning paths combining these chapters with Elements of AI, Google AI Essentials, OpenAI Academy, Anthropic Academy and Microsoft AI-901 | plan |
 | [Glossary](glossary.md) | Every key term in one place | reference |
 | [Resources](resources.md) | Free courses, videos, papers, and tools for going further | reference |
 
-Total: about four and a half hours of reading for the chapters. The Study Plan paths add external courses and practice, from 4 to 8 weeks depending on the path.
+Chapters 1–9 take about four and a half hours to read. The optional software-building section adds about 80 minutes plus hands-on practice. The Study Plan paths add external courses and practice, from 4 to 8 weeks depending on the path.
 
 ## 5. The big picture in 60 seconds
 

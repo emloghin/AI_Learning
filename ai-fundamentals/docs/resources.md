@@ -2,7 +2,7 @@
 
 **Reference · Keep learning**
 
-These are hand-picked, free or freely readable resources for going deeper after AI Learn. Every link below was checked in October 2026; where a resource has moved or been renamed, the table points to its current home.
+These are hand-picked, free or freely readable resources for going deeper after AI Learn. The original course and model references were checked in October 2026; the Spec Kit and Squad references in section 9 were checked on 25 November 2026. Where a resource has moved or been renamed, the table points to its current home.
 
 ## 1. Free courses
 
@@ -106,6 +106,25 @@ You do not need to read these to use AI, but each one changed the field. The arX
 | r/LocalLLaMA | Reddit community | Intermediate | Active community for running open-weight models on your own hardware. | [reddit.com](https://www.reddit.com/r/LocalLLaMA/) |
 
 > **⚠️ Common misconception:** "If a forum post says a model is best, it is best for me." Community opinions move fast and depend on the poster's hardware and tasks. Test claims on your own data (see [Chapter 8](best-practices.md)).
+
+## 9. Spec-driven development with Spec Kit and Squad
+
+Start with [Chapter 10's guided learning path](spec-driven-development.md), then use these sources to check the commands and adapt the workflow. Open-source tools do not make model usage free.
+
+| Resource | Provenance | What to use it for |
+|---|---|---|
+| [Spec Kit installation](https://github.github.io/spec-kit/installation.html) and [releases](https://github.com/github/spec-kit/releases) | Official | Prerequisites, supported installation channels and version changes |
+| [Spec Kit quickstart](https://github.github.io/spec-kit/quickstart.html) and [Agentic SDD reference](https://github.github.io/spec-kit/reference/agentic-sdd.html) | Official | Workflow steps, artifacts, checklists, analysis and convergence |
+| [Copilot integration](https://github.github.io/spec-kit/integrations/copilot.html) and [invocation syntax](https://github.github.io/spec-kit/integrations/cli.html#command-invocation) | Official | Default skills versus other command layouts; host-specific behaviour |
+| [Existing projects](https://github.github.io/spec-kit/how-to/existing-projects.html), [evolving specs](https://github.github.io/spec-kit/how-to/evolving-specs.html), [persistence](https://github.github.io/spec-kit/how-to/persisting-specs.html) | Official | Bounded brownfield adoption, changing intent and choosing what to retain |
+| [Spec Kit core commands](https://github.github.io/spec-kit/overview/core.html) and [upgrade guide](https://github.github.io/spec-kit/upgrade.html) | Official | Active-feature selection, multiple project roots, CLI versus project-file upgrades |
+| [Squad installation](https://github.github.io/squad/docs/get-started/installation/) and [releases](https://github.com/github/squad/releases) | Official | Current repository, npm package, stable versions and platform prerequisites |
+| [Squad first session](https://github.github.io/squad/docs/get-started/first-session/) and [CLI reference](https://github.github.io/squad/docs/reference/cli/) | Official | Team formation, launch, diagnostics, memory, export/import and updates |
+| [Squad model selection](https://github.github.io/squad/docs/features/model-selection/) and [host feature matrix](https://github.github.io/squad/docs/reference/host-feature-matrix/) | Official, with conflicting claims | Check actual host support rather than assuming per-agent model preferences work everywhere |
+| [Squad hardening](https://github.github.io/squad/docs/features/security-hardening/) and [cost tracking](https://github.github.io/squad/docs/features/cost-tracking/) | Official | Shared-memory risks, permission boundaries and which execution paths populate cost records |
+| [Understanding SDD: Kiro, spec-kit and Tessl](https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html) | Independent practitioner analysis, October 2025 | Lifecycle taxonomy and evaluation questions; not a current CLI tutorial |
+| [Combining Spec Kit and Squad: github/squad#1033](https://github.com/github/squad/issues/1033#issuecomment-4658769575) | Maintainer reply | Confirms complementary roles; not a specification for an automatic integration |
+| [Community lessons and production examples](sdd-production.md) | This site's sourced synthesis | Concrete failure cases, release gates, multi-project reuse and how to weigh practitioner evidence |
 
 > **✅ Key takeaway:** Start with one beginner course, one visual series and one interactive tool, then use the official docs as your source of truth whenever you build something real.
 

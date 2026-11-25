@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shipping and Reusing the Workflow — AI Learn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>.section td code,.callout code,.diagram-caption code{background:var(--primary-light);color:var(--primary);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:13px}.callout p+p{margin-top:8px}.callout ul{margin:8px 0 0 20px}</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-logo"><span>AI&nbsp;</span>Learn</div>
+    <nav class="header-nav">
+      <a href="index.html">Home</a>
+      <a href="study-plan.html">Study Plan</a>
+      <a href="foundations.html">1. Foundations</a>
+      <a href="neural-networks.html">2. Neural Networks</a>
+      <a href="transformers.html">3. Transformers &amp; LLMs</a>
+      <a href="training.html">4. Training &amp; Tuning</a>
+      <a href="models.html">5. Model Landscape</a>
+      <a href="using-ai.html">6. Using Models</a>
+      <a href="tokens.html">7. Tokens &amp; Cost</a>
+      <a href="best-practices.html">8. Best Practices</a>
+      <a href="ai-at-work.html">9. AI at Work</a>
+      <a href="spec-driven-development.html">10. Spec-Driven Dev</a>
+      <a href="spec-kit.html">10a. Spec Kit</a>
+      <a href="squad.html">10b. Squad</a>
+      <a href="sdd-production.html" class="active">10c. Shipping &amp; Reuse</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="resources.html">Resources</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-badge">Chapter 10c · Production, multiple projects and community lessons</div>
+  <h1>Shipping and Reusing the Workflow</h1>
+  <p>A working demo is the beginning, not the release gate. This page shows how to reuse Spec Kit and Squad without mixing project context, turn real failure modes into acceptance criteria, and collect evidence before shipping. The examples are teaching scenarios, not claims that a generated sample has already passed production review.</p>
+</section>
+
+<main class="main">
+<div class="section">
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Production means real users depend on the result. Your workflow must cover what happens when requests collide, credentials are wrong, a migration fails, or the new version needs to be rolled back — not only the happy-path demo.</p></div>
+
+</div>
+<div class="section">
+<h2 id="1-use-the-same-method-across-different-projects">1. Use the same method across different projects</h2>
+<p>Install the CLIs once on your machine, but initialize and review their files <strong>per project</strong>. A good reusable asset is a small set of engineering conventions, not another customer&#39;s entire agent memory.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Scope</th>
+<th>Keep here</th>
+<th>Do not blindly copy</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Personal machine</strong></td>
+<td>Tool installations, approved account access, your own general preferences</td>
+<td>Credentials into repository files</td>
+</tr>
+<tr>
+<td><strong>Organization</strong></td>
+<td>Reviewed baseline principles, approved integrations, onboarding checklist</td>
+<td>One application&#39;s architecture as a universal rule</td>
+</tr>
+<tr>
+<td><strong>Repository</strong></td>
+<td>Its constitution, build/test commands, team, routing, scoped decisions</td>
+<td>Another project&#39;s assumptions, paths and secrets</td>
+</tr>
+<tr>
+<td><strong>Feature</strong></td>
+<td>Its spec, plan, tasks, contracts and acceptance evidence</td>
+<td>An old task list with unrelated IDs</td>
+</tr>
+<tr>
+<td><strong>Session</strong></td>
+<td>The current task and active-feature selection</td>
+<td>The assumption that a prior chat knows the current repository</td>
+</tr>
+</tbody></table></div>
+<h3 id="a-repeatable-onboarding-checklist">A repeatable onboarding checklist</h3>
+<p>For project B, repeat the same small sequence you used for project A:</p>
+<ol>
+<li>Open <strong>project B&#39;s root</strong> and establish a clean baseline. Record the current test/build commands and results.</li>
+<li>Initialize Spec Kit there; for a non-empty repository, use the reviewed <code>--here --force</code> flow from the <a href="spec-kit.html">setup page</a>.</li>
+<li>Write the constitution from <strong>B&#39;s actual conventions</strong>. Select one feature and verify its active-feature directory.</li>
+<li>If Squad is useful, run <code>squad init --no-workflows --no-vscode-default</code> in B and form a team for B. Review generated files and run <code>squad doctor</code>.</li>
+<li>Commit reviewed shared configuration through the normal PR process. Start a fresh session in B and verify the agent identifies B before authorizing edits.</li>
+</ol>
+<p>For a monorepo, begin with one clearly scoped configuration at the repository root unless independently governed components genuinely need separate ones. For project-scoped commands <strong>after initialization</strong>, Spec Kit documents <code>SPECIFY_INIT_DIR</code> for selecting a member project and <code>SPECIFY_FEATURE_DIRECTORY</code> for selecting a feature. <code>init</code> itself uses its explicit target, not <code>SPECIFY_INIT_DIR</code>. These are <strong>different selectors</strong>; see the <a href="https://github.github.io/spec-kit/overview/core.html" target="_blank" rel="noopener">core reference</a>.</p>
+<p>For concurrent features, prefer separate checkouts or deliberately configured worktrees and explicitly select the feature in each. Current Spec Kit&#39;s active-feature pointer is mutable local state. Do not have unrelated sessions repeatedly switching it in one shared checkout. A separate conversation is not sufficient isolation.</p>
+<p>For an advanced shared-checkout workflow, the core reference documents <code>SPECIFY_FEATURE_NO_PERSIST=1</code> alongside each process&#39;s own <code>SPECIFY_FEATURE_DIRECTORY</code> to prevent scripts from overwriting the shared pointer. That does not isolate code edits or database state; separate workspaces remain the simpler beginner choice.</p>
+<h3 id="reuse-a-squad-carefully">Reuse a Squad carefully</h3>
+<p>Squad supports <code>squad export</code> and <code>squad import</code>, and its CLI documents remote-team linking and upstream sources. These are optional ways to share team state; they are not required to work on multiple projects.</p>
+<p>An export can include <strong>charters, histories, skills and decisions</strong>. Review its contents before it leaves the original project&#39;s trust boundary. Remove project-specific assumptions and confidential material; verify your organization&#39;s permission to share it. Import into a disposable repository first and inspect the resulting team before using it on real code.</p>
+<p>Do not use <code>squad import --force</code> just to suppress an existing-team warning. The command replaces existing team state and has archival behaviour you need to understand. Start with the <a href="https://github.github.io/squad/docs/reference/cli/" target="_blank" rel="noopener">CLI reference</a> and <a href="https://github.github.io/squad/docs/get-started/first-session/" target="_blank" rel="noopener">first-session export example</a>.</p>
+<p><strong>Recommendation for beginners:</strong> separate teams, shared reviewed principles. Add shared-team infrastructure only when maintaining duplicate conventions becomes a demonstrated problem.</p>
+
+</div>
+<div class="section">
+<h2 id="2-decide-how-specifications-age">2. Decide how specifications age</h2>
+<p>You need one answer to &quot;Which document describes today&#39;s intended behaviour?&quot; Spec Kit deliberately does not choose that policy for you. Its <a href="https://github.github.io/spec-kit/how-to/persisting-specs.html" target="_blank" rel="noopener">persistence guide</a> describes four options:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Policy</th>
+<th>After delivery</th>
+<th>Main tradeoff</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Flow-back</strong></td>
+<td>Accepted discoveries can update the spec, plan and tasks; reconcile them</td>
+<td>Flexible, but easy to leave contradictions</td>
+</tr>
+<tr>
+<td><strong>Flow-forward</strong></td>
+<td>Completed feature artifacts remain historical; new changes get new feature directories</td>
+<td>Clear history, but fragmented context</td>
+</tr>
+<tr>
+<td><strong>Living spec</strong></td>
+<td>Maintain <code>spec.md</code> as the contract; revise or regenerate derived plan/tasks</td>
+<td>Clear current intent, but preserve important design rationale elsewhere</td>
+</tr>
+<tr>
+<td><strong>Constitution-only</strong></td>
+<td>Retire feature artifacts after delivery, keeping enduring requirements and decisions in another maintained home</td>
+<td>Less maintained material, but intent can be lost if the handoff is weak</td>
+</tr>
+</tbody></table></div>
+<p>These are <strong>team conventions, not CLI settings</strong>. None means &quot;skip requirements while developing&quot; or &quot;the constitution replaces the product specification&quot;.</p>
+<p>For a first product, a living spec with ordinary Git history is a reasonable starting convention. Add links between requirements, PRs and tests. When intent changes, update the contract and its derived work before asking an agent to make the code agree.</p>
+<p><strong>Example:</strong> RoomBook changes its minimum duration from 30 to 15 minutes. Update the rule, the API validation, the 14/15/16-minute boundary tests, user documentation and any UI hint together. Preserve the reason for the change. Do not leave an old &quot;30 minutes&quot; decision in Squad memory that contradicts the current spec.</p>
+
+</div>
+<div class="section">
+<h2 id="3-scenario-a-add-a-feature-to-an-existing-product">3. Scenario A: add a feature to an existing product</h2>
+<p><strong>Situation:</strong> An orders application already serves customers. The sales team wants CSV export. This is a brownfield change, not a reason to rebuild the application or retrospectively specify every screen.</p>
+<p><strong>Spec Kit chat prompt:</strong></p>
+<div class="code-block">/speckit-specify Add CSV export to the existing orders page.
+Export only orders the signed-in user is authorized to see, applying the
+same filters as the page. Keep the existing JSON API and permission checks
+unchanged. Include a header row and a stable, documented column order.
+Specify how to handle an empty result, large exports, Unicode, commas,
+quotes, line breaks and values that spreadsheet apps might interpret
+as formulas. Do not introduce a new UI framework or change order editing.
+Ask me to choose the maximum export size and spreadsheet-safety policy.</div>
+<p>Clarify whether export covers the current page or all filtered results. &quot;Same as the page&quot; is otherwise ambiguous. Capture who may export, which sensitive columns are excluded, and what happens if authorization changes during a long-running job.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Acceptance check</th>
+<th>Why it matters</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>User A cannot export user B&#39;s orders, even by tampering with filters or identifiers</td>
+<td>UI filtering is not server-side authorization</td>
+</tr>
+<tr>
+<td>Export agrees with the approved filter/sort semantics</td>
+<td>&quot;Export all&quot; and &quot;export current page&quot; are different products</td>
+</tr>
+<tr>
+<td>Cells round-trip with commas, quotes, line breaks and non-ASCII text</td>
+<td>CSV is a format with edge cases, not <code>join(&quot;,&quot;)</code></td>
+</tr>
+<tr>
+<td>Formula-like cells follow an explicitly reviewed spreadsheet-safety policy</td>
+<td>Quoting a CSV value alone does not necessarily neutralize formula interpretation</td>
+</tr>
+<tr>
+<td>Empty and oversized results have defined behaviour</td>
+<td>Prevent broken files and unbounded memory/work</td>
+</tr>
+<tr>
+<td>Existing order-editing and API tests still pass</td>
+<td>New capability must not regress existing customers</td>
+</tr>
+</tbody></table></div>
+<p><strong>Plan:</strong> reuse the existing authorization/query helper and installed CSV support before writing another serializer. Agree on a bounded synchronous export or a background job based on measured size, not speculation. <strong>Squad:</strong> one owner for backend export, one for UI integration after the contract is agreed, a tester working from the spec. <strong>Release:</strong> use the existing rollout mechanism; monitor export failures and resource use.</p>
+<p>This follows the official <a href="https://github.github.io/spec-kit/how-to/existing-projects.html" target="_blank" rel="noopener">existing-project adoption guidance</a>. The specific export acceptance cases above are this guide&#39;s engineering examples, not built-in Spec Kit checks.</p>
+
+</div>
+<div class="section">
+<h2 id="4-scenario-b-prevent-double-bookings">4. Scenario B: prevent double bookings</h2>
+<p><strong>Situation:</strong> RoomBook works in a single-user demo but two users occasionally reserve the same room. The feature&#39;s real requirement is a concurrency invariant: at most one active booking may occupy an overlapping interval for a room.</p>
+<p>The wrong fix is to add another &quot;is available?&quot; check in the browser. Two requests can both see an available room before either inserts a record.</p>
+<p><strong>Plan requirement:</strong> enforce the invariant atomically in the database, or with an equivalent correctly scoped transaction/locking design. Choose the mechanism appropriate to your actual database. An application-wide in-memory lock does not coordinate several server instances.</p>
+<p><strong>Concrete test recipe using your existing integration-test runner:</strong></p>
+<ol>
+<li>Seed an empty test room and two authenticated test users.</li>
+<li>Submit the same future interval concurrently from two independent requests.</li>
+<li>Assert that exactly one succeeds, the other reports a conflict, and only one active booking exists.</li>
+<li>Repeat for partially overlapping intervals; also test adjacent intervals and a different room.</li>
+<li>Verify cancellation frees the interval and a different user&#39;s cancellation is rejected.</li>
+</ol>
+<p>Run against the real database engine used by the service, not just an in-memory repository mock. Choose enough repeated/concurrent execution to exercise the race, but recognize that tests support the design review rather than proving every possible schedule safe.</p>
+<p><strong>Spec Kit:</strong> capture the invariant and boundary rules in the spec before choosing the transaction design. <strong>Squad:</strong> let one owner change the schema/migration; let a different role derive tests from the spec. <strong>Production gate:</strong> rehearse migration against representative data and detect pre-existing conflicts before enabling the new constraint.</p>
+<div class="callout tip"><p><strong>💡 Example:</strong> A database migration refuses to install because duplicate reservations already exist. That is valuable evidence, not an instruction to delete customer data. Agree on a repair policy and recovery plan with the product owner before proceeding.</p></div>
+
+</div>
+<div class="section">
+<h2 id="5-scenario-c-process-payment-notifications-safely">5. Scenario C: process payment notifications safely</h2>
+<p><strong>Situation:</strong> A payment provider calls your webhook when a payment succeeds. A webhook is an HTTP notification from another service. Delivery can be repeated or delayed; &quot;handle it once in the happy-path demo&quot; is not a sufficient spec.</p>
+<p><strong>Example specification prompt:</strong></p>
+<div class="code-block">/speckit-specify Add payment-success webhook handling to the existing service.
+Verify the provider signature before accepting an event. Process repeated
+deliveries without creating duplicate fulfillment or credit. Handle concurrent
+duplicates and a crash between receiving an event and completing its work.
+Do not assume event arrival order. Persist accepted work durably and define
+retry, failed-event review and reconciliation behaviour.
+Use provider test mode and synthetic accounts only during development.
+No live payments, refunds or customer messaging in this implementation task.</div>
+<p><strong>Idempotent</strong> means that repeating the same operation has the same business effect as performing it once. It does not mean a network delivers an event exactly once.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Required evidence</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Forged payload</td>
+<td>Signature verification rejects it; raw-body handling matches the provider&#39;s instructions</td>
+</tr>
+<tr>
+<td>Same event arrives twice or concurrently</td>
+<td>One durable business effect, not merely two successful HTTP responses</td>
+</tr>
+<tr>
+<td>Process crashes mid-handler</td>
+<td>Recovery completes the work without loss or duplication</td>
+</tr>
+<tr>
+<td>Older event arrives after a newer one</td>
+<td>Defined state transitions; no assumption of delivery order</td>
+</tr>
+<tr>
+<td>Downstream service is unavailable</td>
+<td>Bounded retries, visible failure state and an operator recovery path</td>
+</tr>
+<tr>
+<td>Separate events refer to the same business action</td>
+<td>A business-level deduplication rule where necessary, not only an event-ID cache</td>
+</tr>
+</tbody></table></div>
+<p>For Stripe, the <a href="https://docs.stripe.com/webhooks" target="_blank" rel="noopener">official webhook guide</a> discusses signature verification, retries, duplicate events, ordering and asynchronous processing. Read your provider&#39;s actual delivery contract rather than copying another provider&#39;s assumptions.</p>
+<p><strong>Plan:</strong> durable event recording and processing state, with transaction boundaries and any downstream idempotency key explicitly designed. A successful response should follow durable acceptance; merely starting a background promise can lose the work. Provider-specific details require a qualified review.</p>
+<p><strong>Squad:</strong> separate implementation and adversarial test design, but keep one owner of the business transaction. <strong>Release:</strong> provider test mode first, replay/reconciliation rehearsal, restricted live credentials, dashboards and a human-authorized rollout. Never let an agent &quot;test&quot; with real payments.</p>
+
+</div>
+<div class="section">
+<h2 id="6-scenario-d-ship-a-change-across-repositories">6. Scenario D: ship a change across repositories</h2>
+<p><strong>Situation:</strong> A mobile application and API live in separate repositories. The API adds booking cancellation. Updating both on your laptop does not mean every mobile user updates at the same time.</p>
+<p>Use a shared, reviewed API contract and link the two feature specs to its version. Keep implementation plans and tests local to their repositories.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Evidence to collect</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Define the contract</td>
+<td>Request/response shape, authorization, error cases and compatibility with older clients</td>
+</tr>
+<tr>
+<td>Implement the API additively</td>
+<td>Existing clients still work; server-side permission checks do not depend on the new UI</td>
+</tr>
+<tr>
+<td>Update clients</td>
+<td>Loading, conflict, unavailable-service and cancellation states are handled</td>
+</tr>
+<tr>
+<td>Test across versions</td>
+<td>Old client/new server and new client/new server combinations meet the support policy</td>
+</tr>
+<tr>
+<td>Roll out in order</td>
+<td>Server capability is available before the dependent client feature is enabled</td>
+</tr>
+<tr>
+<td>Retire old behaviour deliberately</td>
+<td>Usage and support policy justify removal; document the migration</td>
+</tr>
+</tbody></table></div>
+<p>Give each repository its own Spec Kit feature and Squad context. A shared team is optional; it does not create an atomic cross-repository release. Name a human integration owner and avoid two agents independently changing the contract.</p>
+
+</div>
+<div class="section">
+<h2 id="7-community-lessons-with-their-limitations">7. Community lessons — with their limitations</h2>
+<p>The community does not have one settled recipe or a universal productivity result. These are specific experiences and arguments, not proof that the same outcome will occur in your project. Older reports are useful for identifying failure modes; their command syntax and implementation details may no longer apply.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Source and provenance</th>
+<th>What it actually supports</th>
+<th>A practice to try</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html" target="_blank" rel="noopener">Birgitta Böckeler: Understanding SDD</a>, Thoughtworks practitioner analysis on Martin Fowler&#39;s site, October 2025</td>
+<td>Distinguishes spec-first, spec-anchored and spec-as-source; explains the effort needed to evaluate tools on realistic greenfield and brownfield work</td>
+<td>Decide how specs age, and measure the time spent reviewing intermediate artifacts. Use current docs for commands, not the article&#39;s older examples</td>
+</tr>
+<tr>
+<td><a href="https://github.com/github/spec-kit/issues/75#issuecomment-3266694509" target="_blank" rel="noopener">github/spec-kit#75: a practitioner&#39;s balanced experience</a></td>
+<td>Reports value for significant changes but overhead for small changes; warns that planning can ignore the existing architecture</td>
+<td>Use a full workflow for consequential changes; require the plan to cite reusable existing components</td>
+</tr>
+<tr>
+<td><a href="https://github.com/github/spec-kit/issues/75#issuecomment-3267488204" target="_blank" rel="noopener">github/spec-kit#75: a contrasting experience</a></td>
+<td>Reports unrequested interfaces, tests and scope despite a detailed feature description</td>
+<td>Review the task list for scope creep. More generated artifacts are not automatically more value</td>
+</tr>
+<tr>
+<td><a href="https://github.com/github/spec-kit/issues/581#issuecomment-5625830594" target="_blank" rel="noopener">github/spec-kit#581: maintainer follow-up</a></td>
+<td>Says monorepo support evolved by separating features from Git</td>
+<td>Recheck old workaround advice against today&#39;s feature-pointer and project-root rules; do not assume every monorepo topology is solved</td>
+</tr>
+<tr>
+<td><a href="https://github.com/github/squad/blob/v2.0.0/docs/src/content/blog/029-upgrade-testing-at-scale.md" target="_blank" rel="noopener">Squad Team: upgrade testing report</a>, maintainer retrospective</td>
+<td>Describes testing beyond clean fixtures against existing configurations and finding edge cases and misleading messages</td>
+<td>Rehearse upgrades on a copy of your own customized repository; compare intended and unintended changes. This is self-reported experience, not a universal reliability guarantee</td>
+</tr>
+<tr>
+<td><a href="https://github.com/github/squad/issues/1033#issuecomment-4658769575" target="_blank" rel="noopener">github/squad#1033: maintainer reply</a></td>
+<td>Describes Spec Kit and Squad as complementary</td>
+<td>Use an explicit artifact handoff and a single owner of task reconciliation; do not imply a built-in automatic integration</td>
+</tr>
+</tbody></table></div>
+<h3 id="turn-the-reports-into-a-working-agreement">Turn the reports into a working agreement</h3>
+<p><strong>Before work:</strong> pick one outcome and explicit non-goals; agree how much review and model usage the experiment is worth. <strong>During work:</strong> stop at each artifact, remove invented scope, and check references to the real code. <strong>After work:</strong> compare total effort, including correction and review, against the simpler one-agent approach.</p>
+<p>Do not turn every complaint into a timeless limitation. For example, <a href="https://github.com/github/spec-kit/issues/1401#issuecomment-5821556138" target="_blank" rel="noopener">github/spec-kit#1401&#39;s later closure</a> says the old always-loaded command-token claim no longer describes skills-based integrations. That comment explicitly identifies itself as AI-drafted on a maintainer&#39;s behalf: it is a pointer to investigate, not an independent benchmark. Current <a href="https://github.github.io/spec-kit/integrations/copilot.html" target="_blank" rel="noopener">Copilot integration documentation</a> describes the skills layout; measure actual invocation, artifact and review costs in your own host.</p>
+<div class="callout success"><p><strong>✅ Key takeaway:</strong> The defensible community lesson is not &quot;always use specs&quot; or &quot;always use more agents&quot;. It is to match the process to the risk, inspect what the tools actually produce, preserve existing architecture, and keep only the coordination that pays for itself.</p></div>
+
+</div>
+<div class="section">
+<h2 id="8-a-release-gate-not-a-production-ready-prompt">8. A release gate, not a &quot;production-ready&quot; prompt</h2>
+<h3 id="protect-the-development-workflow-itself">Protect the development workflow itself</h3>
+<p>Shared agent memory can preserve <strong>prompt injection</strong>: untrusted instructions in an issue or web page get summarized into decisions, then influence other agents later. Review externally derived memory before reuse; separate external-content ingestion from writing trusted team state. Delimiters help communicate a boundary, but are not an enforcement mechanism.</p>
+<p>Inspect <code>.mcp.json</code>, installed skills, extensions and GitHub Actions before enabling them. Pin reviewed dependencies/actions appropriately and use narrow token permissions. A community catalog listing is not a security audit. For Copilot-hosted Squad, enforce permissions in the host, workspace and repository; do not assume SDK hooks protect that path. The separate Microsoft Agent Framework integration documents an <code>ApproveAll</code> default that is not production-safe.</p>
+<p>The official <a href="https://github.github.io/squad/docs/features/security-hardening/" target="_blank" rel="noopener">Squad hardening guide</a> describes these risks and explicitly says Squad has no built-in network egress filtering. It is a threat model, not proof of an incident or a guarantee of isolation. Build your application&#39;s operational controls separately.</p>
+<p>Put the relevant gates in your issue or PR template. Scale them to the feature&#39;s risk, but never silently turn a failed or unexecuted check into a pass.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Gate</th>
+<th>Evidence before release</th>
+<th>Accountable person</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Intent</strong></td>
+<td>Reviewed spec, explicit non-goals, approved policy decisions</td>
+<td>Product owner</td>
+</tr>
+<tr>
+<td><strong>Correctness</strong></td>
+<td>Test results linked to acceptance criteria, including failure/concurrency cases</td>
+<td>Implementer and reviewer</td>
+</tr>
+<tr>
+<td><strong>Compatibility</strong></td>
+<td>Regression and contract checks; upgrade/downgrade implications</td>
+<td>Service owner</td>
+</tr>
+<tr>
+<td><strong>Security and privacy</strong></td>
+<td>Authorization tests, input validation, secret/dependency checks, reviewed data handling</td>
+<td>Assigned reviewer/security owner</td>
+</tr>
+<tr>
+<td><strong>Accessibility</strong></td>
+<td>Keyboard, focus, labels and error announcements for affected interfaces</td>
+<td>UI owner</td>
+</tr>
+<tr>
+<td><strong>Operations</strong></td>
+<td>Health checks, useful redacted logs/metrics, actionable alerts and an on-call owner</td>
+<td>Operations/service owner</td>
+</tr>
+<tr>
+<td><strong>Data changes</strong></td>
+<td>Migration rehearsal, backup/restore evidence, repair plan for bad existing data</td>
+<td>Database/service owner</td>
+</tr>
+<tr>
+<td><strong>Delivery</strong></td>
+<td>Protected branch, required CI, reviewed release artifact, staged rollout and recovery plan</td>
+<td>Release owner</td>
+</tr>
+<tr>
+<td><strong>After release</strong></td>
+<td>Monitor agreed signals; record the decision to continue or roll back</td>
+<td>Release/on-call owner</td>
+</tr>
+</tbody></table></div>
+<p>For a small team, one person may hold several roles. Still name the person; &quot;the tester agent approved&quot; is not accountability.</p>
+<p><strong>Rollback is not always &quot;run the down migration&quot;.</strong> A destructive schema change may be irreversible after new writes. Prefer compatible staged changes where possible, and document whether recovery means reverting code, restoring data, or rolling forward with a repair.</p>
+<p><strong>Example release exercise:</strong> In staging, enable the new booking path for a small test group. Check conflict rate, error rate and latency against agreed thresholds. Deliberately disable the new path and verify the previous supported behaviour. Keep production credentials and the actual release outside the agent&#39;s implementation task.</p>
+
+</div>
+<div class="section">
+<h2 id="9-verify-with-multiple-models-and-independent-evidence">9. Verify with multiple models — and independent evidence</h2>
+<p>Different models can catch different mistakes, but shared training data, shared prompts and shared documentation can also produce shared errors. Use model review as one layer of evidence.</p>
+<ol>
+<li><strong>First pass: authoritative facts.</strong> Ask one model to check install commands, prerequisites, file locations and lifecycle behaviour against current official docs and the selected release.</li>
+<li><strong>Second pass: an independent critique.</strong> Give another model the artifacts and source links, not the first model&#39;s verdict. Ask it to find unsupported claims, unsafe assumptions, missing failure cases and stale instructions.</li>
+<li><strong>Resolve disagreements against evidence.</strong> Prefer installed help, tagged source, release notes and actual execution results over a majority vote.</li>
+<li><strong>Execute the relevant checks.</strong> In a safe repository, confirm the tool setup, run the application&#39;s tests, inspect the diff and rehearse delivery. Record what you did not run.</li>
+</ol>
+<p>A useful review prompt:</p>
+<div class="code-block">Independently review this spec, plan and implementation.
+For each issue, report the claim or requirement, severity, exact source
+or file location, and the smallest correction. Distinguish documented
+behaviour from inference. Inspect failure paths and existing behaviour.
+Do not infer that a command was executed because documentation shows it.
+Do not treat another model&#39;s agreement as verification.</div>
+<p>For important claims, keep a small evidence table:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Claim</th>
+<th>Evidence</th>
+<th>Result / limitation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&quot;This flag is supported&quot;</td>
+<td>Versioned help or tagged CLI source</td>
+<td>Record the version; latest docs alone may be newer</td>
+</tr>
+<tr>
+<td>&quot;Two bookings cannot conflict&quot;</td>
+<td>Atomic design review plus real-database concurrency tests</td>
+<td>Test results cover the exercised conditions</td>
+</tr>
+<tr>
+<td>&quot;The migration is recoverable&quot;</td>
+<td>Restore/repair rehearsal</td>
+<td>Record dataset and environment</td>
+</tr>
+<tr>
+<td>&quot;This is a community best practice&quot;</td>
+<td>Named report or maintainer discussion</td>
+<td>An experience report is not universal consensus</td>
+</tr>
+</tbody></table></div>
+
+</div>
+<div class="section">
+<h2 id="10-a-first-month-without-over-automation">10. A first month without over-automation</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Your goal</th>
+<th>Keep as evidence</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Finish one Spec Kit feature with one agent in a learning repo</td>
+<td>Spec corrections you made, working diff and actual check results</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Apply the method to one small existing-code change</td>
+<td>Compatibility boundaries and regression evidence</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Try Squad on two genuinely independent tasks</td>
+<td>Assignment/ownership plan, combined checks and usage/cost</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Repeat in another repository and rehearse a release</td>
+<td>Reusable onboarding checklist, separate context and recovery runbook</td>
+</tr>
+</tbody></table></div>
+<p>Measure <strong>review time, rework, escaped defects, elapsed delivery time and total model usage</strong>, not just generated lines or number of agents. Compare against a similar task completed with your simpler workflow. Keep the extra coordination only if it helps.</p>
+
+</div>
+<div class="section">
+<h2 id="11-sources-and-verification-scope">11. Sources and verification scope</h2>
+<p>The four-page section draws on official installation and command references, tagged releases/source, integration and upgrade guides, existing-project and persistence guidance, Squad&#39;s host compatibility and hardening documentation, and the community reports above. The <a href="resources.html#9-spec-driven-development-with-spec-kit-and-squad">Resources index</a> groups the main references.</p>
+<p><strong>Checked on 25 November 2026:</strong> Spec Kit v1.4.4 and Squad v2.0.0 are the release baselines, not promises that later versions behave identically. Official documentation conflicts are called out where they affect the walkthrough, notably Squad&#39;s model-selection claims.</p>
+<p>The instructions are source-checked, not an executed certification of Spec Kit/Squad setup on every platform. The RoomBook, CSV, webhook and cross-repository scenarios are examples of requirements and verification work, not shipped reference applications. Before relying on the workflow, run a small feature in your own safe environment and record the actual versions, commands, results and unresolved gaps.</p>
+
+</div>
+<div class="section">
+<h2 id="check-your-understanding">Check Your Understanding</h2>
+<p><strong>1. Can you safely reuse a customer&#39;s full Squad export in another customer&#39;s repository?</strong></p>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> Not without permission and a careful review of histories, decisions and other contents. Reuse sanitized conventions, not confidential context.</p></div></details>
+<p><strong>2. A webhook handler keeps processed event IDs in memory. Is that enough for production idempotency?</strong></p>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> No. Restarts, multiple instances, concurrent deliveries and partial failures require a durable design and business-effect checks.</p></div></details>
+<p><strong>3. Must every project keep every generated spec forever?</strong></p>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> No. Choose and document a retention policy. Preserve enduring requirements and rationale in an agreed maintained location.</p></div></details>
+<p><strong>4. What evidence proves an agent-generated migration can be recovered?</strong></p>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> A reviewed recovery strategy and a successful rehearsal in an appropriate test environment, not the agent&#39;s confidence or a green unit test alone.</p></div></details>
+<div class="nav-links"><a href="squad.html">← Squad walkthrough</a><a href="resources.html">Learning Resources →</a></div>
+</div>
+</main>
+
+<footer class="site-footer">AI Learn · A beginner's guide to how AI models work · Based on official docs and open course material · Not affiliated with any model provider</footer>
+</body>
+</html>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spec-Driven Development: From Idea to Reviewed Change — AI Learn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>.section td code,.callout code,.diagram-caption code{background:var(--primary-light);color:var(--primary);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:13px}.callout p+p{margin-top:8px}.callout ul{margin:8px 0 0 20px}</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-logo"><span>AI&nbsp;</span>Learn</div>
+    <nav class="header-nav">
+      <a href="index.html">Home</a>
+      <a href="study-plan.html">Study Plan</a>
+      <a href="foundations.html">1. Foundations</a>
+      <a href="neural-networks.html">2. Neural Networks</a>
+      <a href="transformers.html">3. Transformers &amp; LLMs</a>
+      <a href="training.html">4. Training &amp; Tuning</a>
+      <a href="models.html">5. Model Landscape</a>
+      <a href="using-ai.html">6. Using Models</a>
+      <a href="tokens.html">7. Tokens &amp; Cost</a>
+      <a href="best-practices.html">8. Best Practices</a>
+      <a href="ai-at-work.html">9. AI at Work</a>
+      <a href="spec-driven-development.html" class="active">10. Spec-Driven Dev</a>
+      <a href="spec-kit.html">10a. Spec Kit</a>
+      <a href="squad.html">10b. Squad</a>
+      <a href="sdd-production.html">10c. Shipping &amp; Reuse</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="resources.html">Resources</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-badge">Chapter 10 · Build with a spec</div>
+  <h1>Spec-Driven Development: From Idea to Reviewed Change</h1>
+  <p>Instead of asking an AI to &quot;build an app&quot; and hoping it guesses correctly, agree on the behaviour first, turn it into a plan, and check the result against that agreement. This four-part guide takes you from your first specification to using Spec Kit and Squad across real projects, with production release gates that remain under human control.</p>
+</section>
+
+<main class="main">
+<div class="section">
+<div class="callout tip"><p><strong>📘 In plain words:</strong> A spec is the agreement about what you are building. Spec Kit helps you write and carry that agreement through development. Squad helps coordinate a team of AI agents. Neither replaces your judgement, tests, or release process.</p></div>
+
+</div>
+<div class="section">
+<h2 id="1-your-route-through-this-section">1. Your route through this section</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Read</th>
+<th>What you will do</th>
+<th>Suggested time</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>This page: understand the approach</strong></td>
+<td>Learn the vocabulary and decide when a spec is worth writing</td>
+<td>~10 min</td>
+</tr>
+<tr>
+<td><a href="spec-kit.html">Spec Kit: setup and first feature</a></td>
+<td>Install the tools, write requirements, review a plan, implement, and check for gaps</td>
+<td>~25 min reading, then a hands-on session</td>
+</tr>
+<tr>
+<td><a href="squad.html">Squad: setup and team workflow</a></td>
+<td>Create an AI team and hand it a bounded piece of approved work</td>
+<td>~20 min reading</td>
+</tr>
+<tr>
+<td><a href="sdd-production.html">Shipping and reusing the workflow</a></td>
+<td>Handle existing code, multiple projects, production risks, and community lessons</td>
+<td>~25 min reading</td>
+</tr>
+</tbody></table></div>
+<p>You do <strong>not</strong> have to install Squad to use Spec Kit. Start with one feature and one coding agent; add a team when the work genuinely benefits from separate specialists.</p>
+<p><strong>Before the hands-on pages:</strong> know how to open a terminal, navigate to a project folder, and run that project&#39;s tests. Basic Git and programming knowledge are useful. If you have never shipped software, use a throwaway learning repository and get an experienced developer to review the production parts. Knowing how to prompt is not the same as knowing how to operate a service.</p>
+<p><strong>Freshness:</strong> documentation and release references were checked on <strong>25 November 2026</strong>. The walkthrough uses GitHub Copilot&#39;s default Spec Kit skills interface. Tool versions and interfaces change; the linked documentation and your installed help take precedence. These are source-checked instructions, not a claim that every tool/platform combination was executed here.</p>
+
+</div>
+<div class="section">
+<h2 id="2-what-spec-driven-development-means">2. What spec-driven development means</h2>
+<p><strong>Spec-driven development (SDD)</strong> means using an explicit specification to guide implementation and verification. A useful specification describes observable outcomes: who can do what, under which conditions, and how you will know it works.</p>
+<p>Compare these two requests:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Vague request</th>
+<th>Reviewable specification</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&quot;Build a room-booking app.&quot;</td>
+<td>&quot;An authenticated employee can reserve an available room. Overlapping bookings for the same room are refused, including simultaneous requests.&quot;</td>
+</tr>
+<tr>
+<td>&quot;Make it secure.&quot;</td>
+<td>&quot;The server obtains the employee identity from the authenticated session. A caller cannot cancel another employee&#39;s booking by changing an ID.&quot;</td>
+</tr>
+<tr>
+<td>&quot;Make it fast.&quot;</td>
+<td>&quot;In the agreed staging environment, 95% of availability requests finish within 300 ms at 50 concurrent users.&quot;</td>
+</tr>
+<tr>
+<td>&quot;Make it production-ready.&quot;</td>
+<td>&quot;Ship only after authorization, concurrency, migration and restore checks pass; name the release owner and rollback procedure.&quot;</td>
+</tr>
+</tbody></table></div>
+<p>Those numbers are <strong>example product targets</strong>, not promises from Spec Kit or Squad. Your team must choose targets that fit its users and infrastructure.</p>
+<div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;A longer spec is a better spec.&quot; A short, testable requirement beats three pages of &quot;robust, scalable, enterprise-grade&quot;. Write enough to remove consequential ambiguity, not every implementation detail in advance.</p></div>
+
+</div>
+<div class="section">
+<h2 id="3-three-tools-three-different-jobs">3. Three tools, three different jobs</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Its job</th>
+<th>What it does not guarantee</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong><a href="https://github.github.io/spec-kit/" target="_blank" rel="noopener">GitHub Spec Kit</a></strong></td>
+<td>Provides a CLI, templates, scripts and agent instructions for specifications, plans, tasks and checks</td>
+<td>That the requirements are correct, or that generated code is safe</td>
+</tr>
+<tr>
+<td><strong><a href="https://github.github.io/squad/" target="_blank" rel="noopener">Squad</a></strong></td>
+<td>Coordinates AI-emulated specialist roles with repository-based team context and decisions</td>
+<td>That parallel work is isolated, cheap, conflict-free, or independently correct</td>
+</tr>
+<tr>
+<td><strong>Your repository and CI/CD</strong></td>
+<td>Record changes and run repeatable build, test and delivery checks; CI means continuous integration, CD means continuous delivery/deployment</td>
+<td>That a green build proves the product meets users&#39; needs</td>
+</tr>
+</tbody></table></div>
+<p>The <strong>coding agent</strong> is the host that reads files, calls tools and writes changes, such as GitHub Copilot. The <strong>model</strong> is the reasoning engine behind it. Spec Kit is not a new model, and Squad&#39;s &quot;tester&quot; is an AI role, not a human quality-assurance department.</p>
+<div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 440" role="img" aria-labelledby="sdd-title sdd-desc">
+  <title id="sdd-title">From a reviewed spec to a controlled release</title>
+  <desc id="sdd-desc">A human approves the requirements. Spec Kit produces the spec, plan and tasks. One coding agent or an optional Squad team implements them. Tests, code review and operational checks provide evidence before a human release decision. Gaps feed back into the spec and tasks.</desc>
+  <defs>
+    <marker id="sdd-arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect width="760" height="440" rx="16" fill="#f8fafc"/>
+  <g font-family="Inter,sans-serif" text-anchor="middle">
+    <text x="380" y="34" font-size="18" font-weight="700" fill="#0f172a">Intent first. Evidence before release.</text>
+    <rect x="25" y="60" width="210" height="112" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+    <text x="130" y="91" font-size="16" font-weight="700" fill="#1e3a8a">1. Human intent</text>
+    <text x="130" y="119" font-size="13" fill="#1e3a8a">Users, rules, boundaries</text>
+    <text x="130" y="144" font-size="13" fill="#1e3a8a">Approve the requirements</text>
+    <rect x="275" y="60" width="210" height="112" rx="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+    <text x="380" y="91" font-size="16" font-weight="700" fill="#4c1d95">2. Spec Kit</text>
+    <text x="380" y="119" font-size="13" fill="#4c1d95">Spec, plan, tasks</text>
+    <text x="380" y="144" font-size="13" fill="#4c1d95">Review before building</text>
+    <rect x="525" y="60" width="210" height="112" rx="12" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+    <text x="630" y="91" font-size="16" font-weight="700" fill="#78350f">3. Implementation</text>
+    <text x="630" y="119" font-size="13" fill="#78350f">One agent or Squad</text>
+    <text x="630" y="144" font-size="13" fill="#78350f">Bounded, reviewable work</text>
+    <rect x="525" y="240" width="210" height="112" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+    <text x="630" y="271" font-size="16" font-weight="700" fill="#1e3a8a">4. Independent checks</text>
+    <text x="630" y="299" font-size="13" fill="#1e3a8a">Tests, diff, operations</text>
+    <text x="630" y="324" font-size="13" fill="#1e3a8a">Evidence, not confidence</text>
+    <rect x="275" y="240" width="210" height="112" rx="12" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+    <text x="380" y="271" font-size="16" font-weight="700" fill="#064e3b">5. Human release gate</text>
+    <text x="380" y="299" font-size="13" fill="#064e3b">Approve or send back</text>
+    <text x="380" y="324" font-size="13" fill="#064e3b">Roll out and observe</text>
+    <text x="130" y="278" font-size="13" fill="#475569">Gaps or changed intent?</text>
+    <text x="130" y="303" font-size="13" fill="#475569">Update spec and tasks.</text>
+    <text x="380" y="407" font-size="13" fill="#475569">Squad handoff is optional. No agent self-report is a deployment approval.</text>
+  </g>
+  <g fill="none" stroke="#475569" stroke-width="2" marker-end="url(#sdd-arrow)">
+    <path d="M235,116 H271"/>
+    <path d="M485,116 H521"/>
+    <path d="M630,172 V236"/>
+    <path d="M525,296 H489"/>
+    <path d="M275,321 H235 V202 H380 V176" stroke-dasharray="5 4"/>
+  </g>
+</svg>
+<div class="diagram-caption">Figure 1 — Use Spec Kit to structure the work, optionally use Squad to distribute implementation, and keep verification and release decisions outside the agent&#39;s self-assessment.</div></div>
+<p>The combined workflow in this guide is a <strong>manual handoff</strong>, not a promised built-in Spec Kit-to-Squad integration. The <a href="squad.html">Squad walkthrough</a> shows exactly which artifacts to hand over and what to do if the coordinator goes off-plan.</p>
+
+</div>
+<div class="section">
+<h2 id="4-a-tiny-vocabulary-before-you-start">4. A tiny vocabulary before you start</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Plain-language meaning</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Repository (repo)</strong></td>
+<td>The project files and their version history</td>
+<td>Your RoomBook application</td>
+</tr>
+<tr>
+<td><strong>Branch / pull request (PR)</strong></td>
+<td>A separate line of work / a proposal for reviewed changes</td>
+<td>One booking feature submitted for review</td>
+</tr>
+<tr>
+<td><strong>Constitution</strong></td>
+<td>A short set of project-wide engineering rules</td>
+<td>&quot;Do not weaken authorization; use the existing test runner.&quot;</td>
+</tr>
+<tr>
+<td><strong>Feature spec</strong></td>
+<td>The behaviour and boundaries of one change</td>
+<td>Who can reserve a room, and what counts as a conflict</td>
+</tr>
+<tr>
+<td><strong>Acceptance criterion</strong></td>
+<td>An observable condition for accepting the work</td>
+<td>Two simultaneous conflicting requests produce only one booking</td>
+</tr>
+<tr>
+<td><strong>Plan</strong></td>
+<td>The technical design for meeting the spec</td>
+<td>API contract, data model, transaction strategy</td>
+</tr>
+<tr>
+<td><strong>Task</strong></td>
+<td>A bounded implementation or verification step</td>
+<td>Add the database constraint and its integration test</td>
+</tr>
+<tr>
+<td><strong>Artifact</strong></td>
+<td>A saved output of a development step</td>
+<td>A Markdown spec, a test report, or a migration</td>
+</tr>
+<tr>
+<td><strong>Brownfield / greenfield</strong></td>
+<td>Changing an existing system / starting a new one</td>
+<td>Add export to an existing app / build RoomBook</td>
+</tr>
+<tr>
+<td><strong>Spec drift</strong></td>
+<td>Requirements and actual behaviour no longer agree</td>
+<td>Code allows cancellations after start, but the spec forbids them</td>
+</tr>
+</tbody></table></div>
+
+</div>
+<div class="section">
+<h2 id="5-the-smallest-useful-development-loop">5. The smallest useful development loop</h2>
+<ol>
+<li><strong>Agree on intent.</strong> Describe the user, the outcome, the boundaries and the failure cases. Answer the agent&#39;s questions rather than letting it invent business policy.</li>
+<li><strong>Review the plan.</strong> Check that it fits the real codebase and uses existing components before introducing new ones.</li>
+<li><strong>Implement one slice.</strong> A slice is a small end-to-end outcome, not &quot;build the entire backend&quot;.</li>
+<li><strong>Collect evidence.</strong> Run the relevant tests; inspect actual results, the diff and the user experience.</li>
+<li><strong>Decide.</strong> A human accepts the change, requests revisions, or stops. Update the spec when the intended behaviour changes.</li>
+</ol>
+<p><strong>Worked example:</strong> You want room reservations. Start with one room and one create-booking endpoint, including permission checks and a conflict test. Do not start with recurring meetings, calendar synchronization, payments and an admin dashboard. A smaller feature can still have serious correctness requirements.</p>
+<div class="callout tip"><p><strong>💡 Example:</strong> The agent asks, &quot;Can bookings touch at their boundaries?&quot; You decide that 10:00–11:00 and 11:00–12:00 are allowed. That one sentence changes the database rule, API tests and UI behaviour. Clarifying it before coding is cheaper than finding three incompatible interpretations later.</p></div>
+
+</div>
+<div class="section">
+<h2 id="6-when-to-use-it-and-when-not-to">6. When to use it — and when not to</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>A proportionate approach</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>New feature with several behaviours or stakeholders</td>
+<td>Spec Kit&#39;s full reviewed workflow</td>
+</tr>
+<tr>
+<td>Existing service with compatibility or data-migration risks</td>
+<td>A bounded change spec plus regression and rollout requirements</td>
+</tr>
+<tr>
+<td>Independent API, UI and test work with an agreed contract</td>
+<td>Consider Squad after the plan is stable</td>
+</tr>
+<tr>
+<td>Small typo, obvious one-line fix, or routine dependency update</td>
+<td>Existing issue, focused change and normal checks may be enough</td>
+</tr>
+<tr>
+<td>Uncertain feasibility</td>
+<td>Time-box a prototype; record what it proves before writing a detailed delivery plan</td>
+</tr>
+<tr>
+<td>Production incident</td>
+<td>Follow the incident process first; make the smallest safe repair and capture the learning afterwards</td>
+</tr>
+</tbody></table></div>
+<p>Spec Kit also documents separate <a href="https://github.github.io/spec-kit/guides/bugfix.html" target="_blank" rel="noopener">bug-fixing</a> and <a href="https://github.github.io/spec-kit/guides/assessment.html" target="_blank" rel="noopener">idea-assessment</a> processes. They are opt-in extensions, not compulsory steps before every feature. You do not need them for this tutorial.</p>
+
+</div>
+<div class="section">
+<h2 id="7-what-remains-your-responsibility">7. What remains your responsibility</h2>
+<p>You own product decisions, access permissions, dependency choices, acceptance criteria and releases. An agent can help draft all of them; it cannot grant itself business approval.</p>
+<ul>
+<li>Use approved AI services and synthetic data while learning. Files, prompts, team memory and logs can all contain sensitive information.</li>
+<li>Keep reviewable checkpoints. Read generated instructions, scripts and workflow files before allowing them to run.</li>
+<li>A constitution is guidance, <strong>not an access-control boundary</strong>. Enforce important rules with permissions, database constraints, required checks and human approvals.</li>
+<li>Agreement between two models is useful review input, <strong>not proof</strong>. Models can repeat the same outdated documentation or miss the same defect.</li>
+</ul>
+<p>The <a href="sdd-production.html">production guide</a> turns these responsibilities into concrete release gates and shows how to verify claims with sources and executable evidence.</p>
+
+</div>
+<div class="section">
+<h2 id="recap">Recap</h2>
+<ul>
+<li>Specify observable behaviour, not just aspirations.</li>
+<li>Spec Kit structures the process; Squad optionally distributes work; your delivery system enforces checks.</li>
+<li>Start with one small feature. Reuse the repository&#39;s existing patterns.</li>
+<li>Keep human decisions and test evidence between &quot;the agent finished&quot; and &quot;we shipped&quot;.</li>
+</ul>
+
+</div>
+<div class="section">
+<h2 id="check-your-understanding">Check Your Understanding</h2>
+<p><strong>1. Is &quot;the system must be secure&quot; a sufficient acceptance criterion?</strong></p>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> No. Name the threat or permission boundary and an observable result, such as rejecting a request to cancel another user&#39;s booking.</p></div></details>
+<p><strong>2. Do you need Squad before trying Spec Kit?</strong></p>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> No. One coding agent can execute Spec Kit&#39;s workflow. Squad is optional coordination for work that benefits from multiple roles.</p></div></details>
+<p><strong>3. Two models say a change is correct. Is it ready for production?</strong></p>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> Not on that evidence alone. Check the actual code, run independent tests, verify operational readiness, and obtain the required human approval.</p></div></details>
+<div class="nav-links"><a href="ai-at-work.html">← Chapter 9: AI at Work</a><a href="spec-kit.html">Set up Spec Kit →</a></div>
+</div>
+</main>
+
+<footer class="site-footer">AI Learn · A beginner's guide to how AI models work · Based on official docs and open course material · Not affiliated with any model provider</footer>
+</body>
+</html>

@@ -21,7 +21,7 @@ Facts checked on 31 October 2026 against the official repositories and docs (sou
 | git, GitHub CLI (`gh`) | current; `gh auth login` done | `gh auth status` |
 | VS Code with GitHub Copilot | current | — |
 
-> **On your laptop today:** `specify` reports **0.13.0**, far behind 1.2.5 (the `--integration` flag and the skill-style commands are newer), and Squad is **not installed**. Upgrade and install before the first rehearsal.
+> **Check before the first rehearsal:** old `specify` builds (for example 0.13.x) lack the `--integration` flag and the skill-style commands, and Squad is a separate install. Upgrade both first.
 
 ```powershell
 # Spec Kit, pinned
@@ -62,7 +62,8 @@ gh auth login
 | 0:14 | 8–9 | Squad, and how we combine the two |
 | 0:17 | 10–11 | Switch to the demo; show the five-act map |
 | 0:17 | — | **Act 1 Setup** (3 min) |
-| 0:20 | 12 | **Act 2 Intent** (8 min), including the twist vote |
+| 0:20 | — | **Act 2 Intent** (8 min) |
+| 0:22 | 12 | Twist vote, inside Act 2 |
 | 0:28 | — | **Act 3 Design** (7 min) |
 | 0:35 | — | **Act 4 Build** (10 min) |
 | 0:45 | — | **Act 5 Change** (7 min) |
@@ -126,7 +127,7 @@ While it runs, ask the room: *"What do you think it will ask us?"* Then open `sp
 | A Dark mode | A dark mode toggle; the choice is remembered after reload. |
 | B Export | An "Export" button that copies the board as a Markdown summary, grouped by column. |
 | C Timebox | A 5-minute countdown per column, started manually, with a visible and accessible alert at zero. |
-| D Dot-voting | Each person can place three votes on cards in "To improve"; votes are anonymous and cards can be sorted by votes. |
+| D Dot-voting | Each person has three votes to place on cards in "To improve" (tallied on the shared screen); cards can be sorted by vote count. |
 
 Answer clarify's questions out loud with the audience ("Should cards be editable after voting? Show of hands…"). Commit.
 
@@ -165,7 +166,7 @@ It is read-only and reports inconsistencies between spec, plan and tasks — a n
 Cast the team (it asks a few questions about the project; keep answers short) and start the coordinator in Copilot CLI:
 
 ```powershell
-$env:SPECIFY_FEATURE_NO_PERSIST = "1"   # parallel agents must not overwrite .specify/feature.json
+$env:SPECIFY_FEATURE_NO_PERSIST = "1"   # PowerShell; bash: export SPECIFY_FEATURE_NO_PERSIST=1. Parallel agents must not overwrite .specify/feature.json
 squad init
 copilot --agent squad
 ```
@@ -242,9 +243,11 @@ You need Python 3.11+, [uv](https://docs.astral.sh/uv/), Node.js 22.5+, git, the
 
 ```powershell
 uv tool install specify-cli --from git+https://github.com/github/spec-kit.git@v1.2.5
-npm install -g @bradygaster/squad-cli
+npm install -g @bradygaster/squad-cli@1.1.0
 specify version; squad --version
 ```
+
+The prompts for every step are in **A4** — copy them and adapt the wording to your toy idea. If something stalls, see the plan B table in **A5**.
 
 ### B2. The 7-day challenge (about 30 minutes a day)
 
@@ -269,6 +272,7 @@ specify version; squad --version
 
 - **Existing codebases:** follow the official [existing projects guide](https://github.github.io/spec-kit/guides/existing-projects.html): commit a baseline, `specify init --here --force --integration copilot`, write a constitution from your real standards, then pick one bounded change.
 - **Extensions:** `specify extension add git` adds numbered feature branches; there are also `bug`, `assess` and `github` extensions.
+- **More labs:** the `labs\` folder has five alternative lab guides, each with its own deck (lunch poll, brownfield, API with Squad, 90-minute workshop, funny Genie game).
 - **Squad watch mode:** Squad can triage GitHub issues and hand small ones to the Copilot coding agent — try it on a side project first.
 
 ---

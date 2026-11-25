@@ -282,6 +282,8 @@ The VS Code team's guidance is to "always treat AI output as a starting point th
 
 > **✅ Key takeaway:** You are the author of record for every line you commit, whether you typed it or an agent did.
 
+For a complete worked workflow, continue with [Spec-Driven Development](spec-driven-development.md): set up Spec Kit, optionally coordinate implementation with Squad, and apply production release gates.
+
 ## 11. Open-model specific practices
 
 Running open-weight models yourself (see [Chapter 5](models.md)) gives control and privacy, plus some extra homework:
