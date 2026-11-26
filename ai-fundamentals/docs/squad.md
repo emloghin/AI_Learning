@@ -81,6 +81,8 @@ Review the proposal and confirm or change it. Names can vary; use the actual ros
 | `.squad\skills\` | Reusable capabilities learned or supplied to the team |
 | Logs and decision inboxes | What happened, what remains unmerged, and whether sensitive data was captured |
 
+**Built-in roles and casting.** `squad init` also registers four fixed background agents that exist in every team: **scribe** (session logger and memory), **ralph** (work monitor for the queue and phase gates), **rai** (Responsible-AI reviewer for safety, bias and secrets) and **fact-checker** (devil's advocate that challenges assumptions). The coordinator may also offer to add `@copilot` (the Copilot coding agent) to the roster, so it can pick up issues later; accept only if you want that. The *themed* teammates you describe (planner, spec expert, implementer, tester) are created later, when you approve the roster. Squad "casts" them with names from a fictional universe, so **names differ on every run; the role is what matters**. Treat `rai` and `fact-checker` as extra reviewers for the human, not as a release gate.
+
 These are inspectable project artifacts, not model training. Sharing them gives another session context; it does not fine-tune the model or guarantee that every fact will be recalled correctly.
 
 The [first-session walkthrough](https://github.github.io/squad/docs/get-started/first-session/) and [team setup guide](https://github.github.io/squad/docs/features/team-setup/) explain formation and memory. Review state before committing it: team memory can contain internal decisions, paths, personal data or copied prompts.
@@ -137,6 +139,8 @@ Do not push, merge, publish packages, change credentials or deploy.
 Stop after the selected tasks and give me the combined diff summary.
 ```
 
+**Speed-run variant.** For a throwaway proof of concept you can tell the team to run the Spec Kit gates in strict order (constitution → specify → plan → tasks → implement; no planning before a spec, no code before tasks), use `clarify` only when the spec is genuinely ambiguous, skip `analyze`, and define "done" as a happy-path smoke test. The recorded demo (a Rock-Paper-Scissors CLI in Python, about an hour from an empty folder) worked this way, and a later change (a score counter) went back through spec → plan → tasks before the implementer touched code. That is a reasonable trade for a demo. For client or production work keep `clarify`, the checklist and `analyze`, and require real tests; see [shipping the workflow](sdd-production.md).
+
 This prompt supplies instructions, **not an enforceable sandbox**. Configure the host's actual permissions and repository controls too.
 
 Spec Kit's default core skills are also model-invocable. Its optional `--integration-options="--no-model-invocation"` setup setting can require manual skill invocation in supported hosts, but it is not a hard security boundary and can affect extension hooks. Read the [integration caveats](https://github.github.io/spec-kit/integrations/copilot.html) before changing an existing setup.
@@ -170,13 +174,15 @@ that need human approval, and the next bounded action.
 Identify any statement in team memory that now conflicts with the spec.
 ```
 
+Squad can also run a **retro**: a Scrum Master-style agent reads the orchestration log, decisions and agent histories and proposes one charter improvement per teammate. In the demo it was told to propose, not apply: proposals went to `.squad/decisions/inbox/` for the human to approve. Keep that rule, because charters steer every later task.
+
 Correct stale memory before the next task. Avoid copying a whole transcript into every agent's context. A small current decision record is more useful than a growing pile of contradictory history.
 
 For a second project, the safe default is **initialize a separate team** and carry over only reviewed generic conventions. Export/import and shared-team features are optional; the [multi-project section](sdd-production.md) explains the privacy and context boundaries.
 
 ## 7. Models, permissions and cost
 
-**Host-specific limitation:** Squad's [model-selection guide](https://github.github.io/squad/docs/features/model-selection/) describes per-agent profiles, but the v2.0.0 [host feature matrix](https://github.github.io/squad/docs/reference/host-feature-matrix/) marks the per-spawn selection feature unsupported for its Copilot projection, despite the underlying host capability. The [VS Code guide](https://github.github.io/squad/docs/features/vscode/) says agents use the session model. The official pages are inconsistent: do not promise that asking the coordinator for two models actually selects two.
+**What a recorded demo showed, and what remains unverified.** The official pages disagree about per-agent models: the [model-selection guide](https://github.github.io/squad/docs/features/model-selection/) describes per-agent profiles, while the v2.0.0 [host feature matrix](https://github.github.io/squad/docs/reference/host-feature-matrix/) marks per-spawn selection unsupported for the Copilot projection. In a Copilot-hosted session recorded on 21 August 2026 (GitHub Copilot Summer Bootcamp), the coordinator was asked in a single prompt to use a stronger model for the planner and spec expert, a mid-tier model for the implementer and a cheap, fast model for the coordinator and tester. The terminal then labelled each spawned agent with a different model (for example a Claude Opus-class model for the Spec Kit expert and planner, a Sonnet-class model for the implementer, a Haiku-class model for the tester), and the choices were persisted in `.squad/config.json` under `agentModelOverrides`. That recording predates v2.0.0 (19 November 2026), so it may reflect a different build. Do not rely on it either way: ask the team to state the model per role, then check the label on each spawned agent and the file. If they differ, trust the label and your host's usage report.
 
 For independent review, use separately configured review sessions with different available models, and verify the actual model in each. Give each session the same artifacts and this prompt:
 
