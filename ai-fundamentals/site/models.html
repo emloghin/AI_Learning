@@ -4,45 +4,88 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Model Landscape: Proprietary vs Open — AI Learn</title>
+<script>try{var t=localStorage.getItem('ailearn:theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<style>.section td code,.callout code,.diagram-caption code{background:var(--primary-light);color:var(--primary);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:13px}.callout p+p{margin-top:8px}.callout ul{margin:8px 0 0 20px}</style>
 </head>
-<body>
-
-<header class="site-header">
-  <div class="header-inner">
-    <div class="header-logo"><span>AI&nbsp;</span>Learn</div>
-    <nav class="header-nav">
-      <a href="index.html">Home</a>
-      <a href="study-plan.html">Study Plan</a>
-      <a href="foundations.html">1. Foundations</a>
-      <a href="neural-networks.html">2. Neural Networks</a>
-      <a href="transformers.html">3. Transformers &amp; LLMs</a>
-      <a href="training.html">4. Training &amp; Tuning</a>
-      <a href="models.html" class="active">5. Model Landscape</a>
-      <a href="using-ai.html">6. Using Models</a>
-      <a href="tokens.html">7. Tokens &amp; Cost</a>
-      <a href="best-practices.html">8. Best Practices</a>
-      <a href="ai-at-work.html">9. AI at Work</a>
-      <a href="spec-driven-development.html">10. Spec-Driven Dev</a>
-      <a href="spec-kit.html">10a. Spec Kit</a>
-      <a href="squad.html">10b. Squad</a>
-      <a href="sdd-production.html">10c. Shipping &amp; Reuse</a>
-      <a href="glossary.html">Glossary</a>
-      <a href="resources.html">Resources</a>
-    </nav>
-  </div>
+<body data-page="models">
+<div class="read-progress" aria-hidden="true"><div></div></div>
+<header class="topbar">
+  <button class="icon-btn menu-btn" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
+  <a class="header-logo" href="index.html"><span>AI&nbsp;</span>Learn</a>
+  <span class="topbar-crumb">Part 1 · Understand AI <b>›</b> 5. Model Landscape</span>
+  <span class="topbar-progress" title="Pages you marked as done"></span>
+  <button class="icon-btn theme-btn" type="button" aria-label="Switch between light and dark theme">◐</button>
 </header>
-
+<div class="shell">
+<aside class="sidebar" aria-label="Site navigation">
+<nav>
+<div class="nav-group">
+<div class="nav-group-title">Start here<span class="nav-count"></span></div>
+<a href="index.html" data-page="index">Home</a>
+<a href="study-plan.html" data-page="study-plan">Study Plan</a>
+<a href="setup.html" data-page="setup">Setup &amp; Git Basics</a>
+</div>
+<div class="nav-group current">
+<div class="nav-group-title">Part 1 · Understand AI<span class="nav-count"></span></div>
+<a href="foundations.html" data-page="foundations">1. Foundations</a>
+<a href="neural-networks.html" data-page="neural-networks">2. Neural Networks</a>
+<a href="transformers.html" data-page="transformers">3. Transformers &amp; LLMs</a>
+<a href="training.html" data-page="training">4. Training &amp; Tuning</a>
+<a href="models.html" data-page="models" class="active" aria-current="page">5. Model Landscape</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 2 · Use AI well<span class="nav-count"></span></div>
+<a href="using-ai.html" data-page="using-ai">6. Using Models</a>
+<a href="connecting-ai.html" data-page="connecting-ai">7. Connecting Models</a>
+<a href="tokens.html" data-page="tokens">8. Tokens &amp; Cost</a>
+<a href="best-practices.html" data-page="best-practices">9. Best Practices</a>
+<a href="ai-at-work.html" data-page="ai-at-work">10. AI at Work</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 3 · Work with agents<span class="nav-count"></span></div>
+<a href="agent-toolkit.html" data-page="agent-toolkit">11. Equip Your Agent</a>
+<a href="agent-guardrails.html" data-page="agent-guardrails">12. Human Control &amp; Guardrails</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 4 · Build with specs<span class="nav-count"></span></div>
+<a href="spec-driven-development.html" data-page="spec-driven-development">13. Spec-Driven Dev</a>
+<a href="spec-kit.html" data-page="spec-kit">14. Spec Kit from Zero</a>
+<a href="sdd-existing-projects.html" data-page="sdd-existing-projects">15. Existing Projects</a>
+<a href="sdd-examples.html" data-page="sdd-examples">16. Real Examples</a>
+<a href="squad.html" data-page="squad">17. Squad</a>
+<a href="sdd-production.html" data-page="sdd-production">18. Shipping &amp; Reuse</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Reference<span class="nav-count"></span></div>
+<a href="sdd-reference.html" data-page="sdd-reference">Command Reference</a>
+<a href="glossary.html" data-page="glossary">Glossary</a>
+<a href="resources.html" data-page="resources">Resources</a>
+<a href="about.html" data-page="about">About &amp; Feedback</a>
+</div>
+</nav>
+</aside>
+<div class="content">
 <section class="hero">
   <div class="hero-badge">Chapter 5 · Model Landscape</div>
   <h1>The Model Landscape: Proprietary vs Open</h1>
   <p>You now know what a model <em>is</em> — a huge set of trained weights running a transformer — so this chapter answers the next practical question: <em>which</em> model should you use, and what are you actually allowed to do with it? We sort today&#39;s models into closed, open-weight and fully open-source, decode licenses and model cards, run an open model on your own computer, and finish with a decision guide you can reuse every time a new model is announced.</p>
+  <div class="hero-meta"><span>⏱ about 22 min of reading</span><span>+ 3 min optional</span><span>Page 8 of 25</span></div>
 </section>
-
 <main class="main">
+<details class="toc-inline"><summary>On this page</summary><nav><a href="#1-three-kinds-of-open">1. Three Kinds of &quot;Open&quot;</a>
+<a href="#2-the-osi-open-source-ai-definition">2. The OSI Open Source AI Definition</a>
+<a href="#3-licenses-in-practice">3. Licenses in Practice</a>
+<a href="#4-the-major-model-families">4. The Major Model Families</a>
+<a href="#5-model-sizes-and-what-they-imply">5. Model Sizes and What They Imply</a>
+<a href="#6-reading-a-model-card">6. Reading a Model Card</a>
+<a href="#7-running-open-models-locally">7. Running Open Models Locally</a>
+<a href="#8-using-models-through-apis-and-platforms">8. Using Models Through APIs and Platforms</a>
+<a href="#9-choosing-a-model-a-decision-guide">9. Choosing a Model: A Decision Guide</a>
+<a href="#10-proprietary-vs-open-pros-cons-and-real-scenarios">10. Proprietary vs Open: Pros, Cons and Real Scenarios</a>
+<a href="#recap">Recap</a>
+<a href="#check-your-understanding">Check Your Understanding</a></nav></details>
 <div class="section">
 <h2 id="1-three-kinds-of-open">1. Three Kinds of &quot;Open&quot;</h2>
 <p>People say &quot;open model&quot; to mean very different things. The useful question is not &quot;is it open?&quot; but <strong>&quot;what exactly was released, and under what terms?&quot;</strong> A trained model has several parts: the <strong>weights</strong> (the learned numbers from <a href="neural-networks.html">Chapter 2</a>), the <strong>inference code</strong> that runs them, the <strong>training code</strong> that produced them, the <strong>training data</strong> (or a detailed description of it), and the <strong>license</strong> that says what you may do with all of it.</p>
@@ -188,10 +231,8 @@
 <h3 id="13-fully-open-source-models">1.3 Fully open-source models</h3>
 <p>Everything needed to understand and reproduce the model is released: weights, training and inference code, detailed data information, and often intermediate checkpoints — all under open terms. Ai2&#39;s <a href="https://allenai.org/olmo" target="_blank" rel="noopener">OLMo</a> family is a well-known example: Ai2 publishes the weights together with its training data, code and evaluation tooling.</p>
 <div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;I can download it, so it is open source.&quot; Downloadable weights alone make a model <strong>open-weight</strong>. Calling it open source also requires the code and data information, under terms that let anyone use, study, modify and share it — see the next section.</p></div>
-
 </div>
-<div class="section">
-<h2 id="2-the-osi-open-source-ai-definition">2. The OSI Open Source AI Definition</h2>
+<details class="section optional"><summary><h2 id="2-the-osi-open-source-ai-definition">2. The OSI Open Source AI Definition</h2><span class="optional-pill">Optional deep dive</span></summary>
 <p>For software, &quot;open source&quot; has had a precise meaning for decades, maintained by the <a href="https://opensource.org/" target="_blank" rel="noopener">Open Source Initiative (OSI)</a>. In October 2024 the OSI published version 1.0 of the <a href="https://opensource.org/ai/open-source-ai-definition" target="_blank" rel="noopener">Open Source AI Definition (OSAID)</a> to do the same for AI.</p>
 <p>The definition says an Open Source AI system must grant four freedoms, adapted from the Free Software Definition:</p>
 <div class="table-wrap"><table>
@@ -227,8 +268,7 @@
 <div class="callout tip"><p><strong>💡 Example:</strong> A model released with weights under Apache-2.0 but with no training code and only a one-line note that it was &quot;trained on public web data&quot; meets the <em>Parameters</em> element but not <em>Code</em> or <em>Data information</em>. Under the OSAID it is open-weight, not Open Source AI.</p></div>
 <p>Notice that the OSAID does not require publishing the raw training data itself — some data cannot legally be shared — but it does require a complete description and pointers to obtainable data. The OSI also explains the difference between <a href="https://opensource.org/ai/open-weights" target="_blank" rel="noopener">open weights and open source AI</a> on a separate page.</p>
 <div class="callout success"><p><strong>✅ Key takeaway:</strong> &quot;Open source AI&quot; has an official definition: freedom to use, study, modify and share, backed by data information, full code and parameters. Most popular &quot;open&quot; models are open-weight, which is still very useful.</p></div>
-
-</div>
+</details>
 <div class="section">
 <h2 id="3-licenses-in-practice">3. Licenses in Practice</h2>
 <p>The license is what decides whether your project is allowed. Always read the license file in the model repository, because two models from the same family can have different licenses.</p>
@@ -293,10 +333,9 @@
 </tr>
 </tbody></table></div>
 <p>The Llama row comes from the <a href="https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct/blob/main/LICENSE" target="_blank" rel="noopener">Llama 3.1 Community License</a>: it grants a royalty-free license to use, copy, modify and distribute, then adds the 700-million-user clause, the &quot;Built with Llama&quot; attribution and the naming rule. Because these extra conditions restrict <em>who</em> can use it and <em>how</em>, the Llama license is not an OSI-approved open source license.</p>
-<p>The Gemma row comes from Google&#39;s <a href="https://ai.google.dev/gemma/terms" target="_blank" rel="noopener">Gemma Terms of Use</a>, which apply to Gemma 1 through 3 and related variants; Google publishes the newer <a href="https://ai.google.dev/gemma/apache_2" target="_blank" rel="noopener">Gemma 4 under Apache 2.0</a>. Google also states it claims no rights in the outputs you generate.</p>
+<p>The Gemma row comes from Google&#39;s <a href="https://gemma.ai/resources/terms/" target="_blank" rel="noopener">Gemma Terms of Use</a>, which apply to Gemma 1 through 3 and related variants; Google publishes the newer <a href="https://gemma.ai/resources/apache-2/" target="_blank" rel="noopener">Gemma 4 under Apache 2.0</a>. Google also states it claims no rights in the outputs you generate.</p>
 <div class="callout tip"><p><strong>💡 Example:</strong> You fine-tune a Llama 3.1 model on your company&#39;s support tickets and ship it inside your app. Under its license you need to include a copy of the license, display &quot;Built with Llama&quot; somewhere such as your About page, and name your model something like &quot;Llama-SupportBot&quot;.</p></div>
 <div class="callout warning"><p><strong>⚠️ Warning:</strong> This section is a beginner&#39;s map, not legal advice. Licenses change between versions, and a fine-tuned model on Hugging Face may carry a different license than its base model. For anything commercial, read the actual license text and check with your legal team.</p></div>
-
 </div>
 <div class="section">
 <h2 id="4-the-major-model-families">4. The Major Model Families</h2>
@@ -312,19 +351,19 @@
 </tr>
 </thead>
 <tbody><tr>
-<td><strong>GPT and reasoning models</strong> (earlier reasoning models were branded &quot;o-series&quot;)</td>
+<td><strong>GPT</strong> (tier names change between generations; earlier reasoning models were branded &quot;o-series&quot;)</td>
 <td><a href="https://developers.openai.com/api/docs/models" target="_blank" rel="noopener">OpenAI</a></td>
 <td>General-purpose chat and coding, reasoning effort controls, built-in tools, very large developer ecosystem</td>
 <td>ChatGPT, OpenAI API, Microsoft Foundry</td>
 </tr>
 <tr>
-<td><strong>Claude</strong> (tiers such as Haiku, Sonnet, Opus)</td>
+<td><strong>Claude</strong> (tiers such as Haiku, Sonnet and Opus, plus the newer Fable and restricted-access Mythos models)</td>
 <td><a href="https://platform.claude.com/docs/" target="_blank" rel="noopener">Anthropic</a></td>
 <td>Long documents, careful instruction following, coding and agent work</td>
 <td>Claude apps, Anthropic API, Amazon Bedrock, Google Cloud, Microsoft Foundry</td>
 </tr>
 <tr>
-<td><strong>Gemini</strong> (tiers such as Flash and Pro)</td>
+<td><strong>Gemini</strong> (tier names change between generations; Flash and Pro are the long-standing ones)</td>
 <td><a href="https://ai.google.dev/" target="_blank" rel="noopener">Google</a></td>
 <td>Native multimodal input (text, images, audio, video), very long context windows</td>
 <td>Gemini app, Google AI Studio, Gemini Enterprise Agent Platform</td>
@@ -336,7 +375,7 @@
 <td>Grok app, xAI API, some cloud platforms</td>
 </tr>
 </tbody></table></div>
-<p>Providers usually sell each family in <strong>tiers</strong>: a small fast cheap tier for high-volume simple tasks and a large slower expensive tier for hard problems. Many recent models also offer a <strong>reasoning</strong> or &quot;thinking&quot; mode that spends extra tokens working through a problem before answering (more on cost in <a href="tokens.html">Chapter 7</a>).</p>
+<p>Providers usually sell each family in <strong>tiers</strong>: a small fast cheap tier for high-volume simple tasks and a large slower expensive tier for hard problems. Many recent models also offer a <strong>reasoning</strong> or &quot;thinking&quot; mode that spends extra tokens working through a problem before answering (more on cost in <a href="tokens.html">Chapter 8</a>).</p>
 <h3 id="42-open-weight-and-open-source-families">4.2 Open-weight and open-source families</h3>
 <div class="table-wrap"><table>
 <thead>
@@ -398,7 +437,6 @@
 </tbody></table></div>
 <div class="callout tip"><p><strong>📘 In plain words:</strong> Proprietary families are usually the strongest at the very top end and the easiest to start with. Open families give you control: you choose where the model runs, you can fine-tune it, and nobody can switch it off or change it under you.</p></div>
 <div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;Open models are always far behind.&quot; The gap between the best open-weight and the best proprietary models has shrunk a lot, and for many everyday tasks — summarizing, classifying, extracting data, simple chat — a good open model is more than enough. Compare on <em>your</em> task, not on headlines.</p></div>
-
 </div>
 <div class="section">
 <h2 id="5-model-sizes-and-what-they-imply">5. Model Sizes and What They Imply</h2>
@@ -439,7 +477,6 @@
 </tbody></table></div>
 <div class="callout tip"><p><strong>💡 Example:</strong> A note-taking app that suggests tags for each note offline uses a tiny model on the phone. A legal research assistant that must reason over 200-page contracts uses a frontier model through an API. Same technology, very different size choices.</p></div>
 <div class="callout success"><p><strong>✅ Key takeaway:</strong> Start with the smallest model that does your task well enough. It will be faster and cheaper, and you can always move up a size if quality is not good enough.</p></div>
-
 </div>
 <div class="section">
 <h2 id="6-reading-a-model-card">6. Reading a Model Card</h2>
@@ -501,9 +538,9 @@
 </tr>
 </tbody></table></div>
 <div class="callout tip"><p><strong>💡 Example:</strong> A file named <code>Llama-3.1-8B-Instruct-Q4_K_M.gguf</code> is Meta&#39;s Llama 3.1, 8 billion parameters, tuned to follow instructions, quantized to about 4 bits per weight in llama.cpp&#39;s K-quant &quot;medium&quot; style, stored in GGUF format — ready to run in Ollama, LM Studio or llama.cpp.</p></div>
-<h3 id="62-a-model-card-walkthrough">6.2 A model card walkthrough</h3>
+<details class="optional sub"><summary><h3 id="62-a-model-card-walkthrough">6.2 A model card walkthrough</h3><span class="optional-pill">Optional deep dive</span></summary>
 <p>Here is the metadata block of a made-up model card, written in the format Hugging Face uses. Read it top to bottom before you read any code:</p>
-<div class="code-block">---
+<div class="code-wrap file"><div class="code-head"><span class="code-label">YAML</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">---
 license: apache-2.0
 base_model: example-org/Helper-7B-Base
 pipeline_tag: text-generation
@@ -516,7 +553,7 @@ datasets:
 tags:
   - chat
   - customer-support
----</div>
+---</div></div>
 <p>What each line tells you:</p>
 <ul>
 <li><code>license: apache-2.0</code> — you may use it commercially, modify it and redistribute it, keeping the notices. If you see <code>license: other</code>, look for <code>license_name</code> and <code>license_link</code> and read that custom license.</li>
@@ -559,6 +596,7 @@ tags:
 </tr>
 </tbody></table></div>
 <div class="callout tip"><p><strong>🎯 Try it:</strong> Open any popular model on Hugging Face, for example a Qwen, Granite or OLMo model. Find the license in the right sidebar, the <code>base_model</code>, the context length and the intended-use section. Then compare it with a quantized GGUF version of the same model uploaded by someone else and note what changed.</p></div>
+</details>
 
 </div>
 <div class="section">
@@ -597,15 +635,22 @@ tags:
 <p>These steps follow the <a href="https://docs.ollama.com/quickstart" target="_blank" rel="noopener">Ollama quickstart</a> and <a href="https://docs.ollama.com/cli" target="_blank" rel="noopener">CLI reference</a>. Model names in the Ollama library change over time, so check the <a href="https://ollama.com/search" target="_blank" rel="noopener">model library</a> for current tags.</p>
 <p><strong>Step 1 — Install.</strong> Download Ollama for Windows, macOS or Linux from <a href="https://ollama.com/download" target="_blank" rel="noopener">ollama.com/download</a> and open it. On Linux, start the server with <code>ollama serve</code> if it is not already running.</p>
 <p><strong>Step 2 — Download and chat with a small model.</strong> In a terminal, run the command below. Ollama downloads the model the first time, then opens an interactive chat:</p>
-<div class="code-block">ollama run gemma4:e2b</div>
+<div class="code-wrap term"><div class="code-head"><span class="code-label">Terminal</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">ollama run gemma4:e2b</div></div>
 <p>Type a question and press Enter. Type <code>/bye</code> to leave. At the time of writing the Ollama docs note this model is about a 7.2 GB download and recommend about 8 GB of available GPU memory (or unified memory on a Mac); with less, Ollama falls back to system RAM and runs slower.</p>
 <p><strong>Step 3 — Manage your models.</strong> These commands list downloaded models, show which ones are loaded in memory, and delete one you no longer need:</p>
-<div class="code-block">ollama ls
+<div class="code-wrap term"><div class="code-head"><span class="code-label">Terminal</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">ollama ls
 ollama ps
-ollama rm gemma4:e2b</div>
+ollama rm gemma4:e2b</div></div>
 <p><strong>Step 4 — Call it from code.</strong> Ollama runs a local API server on port 11434. This request sends one chat message and asks for the whole answer at once instead of streaming:</p>
-<div class="code-block">curl http://localhost:11434/api/chat -H &quot;Content-Type: application/json&quot; -d &quot;{\&quot;model\&quot;: \&quot;gemma4:e2b\&quot;, \&quot;messages\&quot;: [{\&quot;role\&quot;: \&quot;user\&quot;, \&quot;content\&quot;: \&quot;Explain RAG in one sentence.\&quot;}], \&quot;stream\&quot;: false}&quot;</div>
-<p>The answer comes back as JSON, with the text in <code>message.content</code>. Ollama also offers OpenAI-compatible endpoints (such as <code>/v1/chat/completions</code> and <code>/v1/responses</code>), so code written for a cloud API can often point at your local model by changing only the base URL. On Windows PowerShell, type <code>curl.exe</code> instead of <code>curl</code> so you get the real curl program.</p>
+<div class="code-wrap term"><div class="code-head"><span class="code-label">Terminal</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">curl http://localhost:11434/api/chat -H &quot;Content-Type: application/json&quot; -d &quot;{\&quot;model\&quot;: \&quot;gemma4:e2b\&quot;, \&quot;messages\&quot;: [{\&quot;role\&quot;: \&quot;user\&quot;, \&quot;content\&quot;: \&quot;Explain RAG in one sentence.\&quot;}], \&quot;stream\&quot;: false}&quot;</div></div>
+<p>The answer comes back as JSON, with the text in <code>message.content</code>. Ollama also offers OpenAI-compatible endpoints (such as <code>/v1/chat/completions</code> and <code>/v1/responses</code>), so code written for a cloud API can often point at your local model by changing only the base URL.</p>
+<p>That command is written for Bash (macOS, Linux, Git Bash). In <strong>Windows PowerShell</strong> the quoting is different, so use this instead:</p>
+<div class="code-wrap term"><div class="code-head"><span class="code-label">Terminal</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">$body = @{
+  model = &quot;gemma4:e2b&quot;
+  stream = $false
+  messages = @(@{ role = &quot;user&quot;; content = &quot;Explain RAG in one sentence.&quot; })
+} | ConvertTo-Json -Depth 5
+Invoke-RestMethod http://localhost:11434/api/chat -Method Post -ContentType &quot;application/json&quot; -Body $body</div></div>
 <h3 id="72-hardware-rule-of-thumb">7.2 Hardware rule of thumb</h3>
 <p>Memory is the main limit. You already met the math in <a href="neural-networks.html">Chapter 2</a> and <a href="training.html">Chapter 4</a>: every parameter takes a fixed number of bytes, depending on precision.</p>
 <p><strong>Memory (GB) ≈ parameters (in billions) × bytes per weight × 1.2</strong></p>
@@ -646,11 +691,10 @@ ollama rm gemma4:e2b</div>
 </tbody></table></div>
 <div class="callout tip"><p><strong>💡 Example:</strong> A laptop with a 12 GB GPU comfortably runs an 8B model at 4-bit (about 5 GB) with room for a long conversation, but a 70B model will not fit even at 4-bit. For MoE models, plan for the <strong>total</strong> parameter count in memory, even though only the active parameters do work for each token.</p></div>
 <div class="callout warning"><p><strong>⚠️ Warning:</strong> Downloading model files from unknown uploaders carries risk. Prefer the creator&#39;s official repository or well-known quantizers, prefer <code>safetensors</code> and GGUF over formats that can run code when loaded (such as Python pickle files), and check the license of the quantized copy.</p></div>
-
 </div>
 <div class="section">
 <h2 id="8-using-models-through-apis-and-platforms">8. Using Models Through APIs and Platforms</h2>
-<p>If you do not want to manage hardware, call a model over the internet. You pay per token (see <a href="tokens.html">Chapter 7</a>), and someone else handles the GPUs, scaling and updates.</p>
+<p>If you do not want to manage hardware, call a model over the internet. You pay per token (see <a href="tokens.html">Chapter 8</a>), and someone else handles the GPUs, scaling and updates.</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -692,7 +736,6 @@ ollama rm gemma4:e2b</div>
 </tbody></table></div>
 <div class="callout warning"><p><strong>⚠️ Warning:</strong> Platforms change. For example, <a href="https://docs.github.com/en/github-models" target="_blank" rel="noopener">GitHub Models has been retired</a> as of July 30, 2026; GitHub now points users to Microsoft Foundry for model access and to <a href="https://docs.github.com/en/copilot" target="_blank" rel="noopener">GitHub Copilot</a> for AI inside GitHub workflows. Before you build on any platform, check its current documentation and model retirement schedule.</p></div>
 <div class="callout tip"><p><strong>📘 In plain words:</strong> Many providers and local tools speak the same &quot;OpenAI-compatible&quot; request format. That makes it easier to swap models: often you change the base URL, the API key and the model name, and the rest of your code keeps working.</p></div>
-
 </div>
 <div class="section">
 <h2 id="9-choosing-a-model-a-decision-guide">9. Choosing a Model: A Decision Guide</h2>
@@ -744,7 +787,7 @@ ollama rm gemma4:e2b</div>
 </tr>
 </tbody></table></div>
 <p>The same logic as a flowchart:</p>
-<div class="code-block">START: What does your app need?
+<div class="code-wrap plain"><div class="code-head"><span class="code-label"></span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">START: What does your app need?
  │
  ├─ Must data stay on your own machines (law, contract, policy)?
  │     YES → Open-weight model, self-hosted (or a private cloud deployment
@@ -761,9 +804,8 @@ ollama rm gemma4:e2b</div>
  │           (check the license allows your use)
  │     NO  → Proprietary frontier model through an API or cloud platform
  │
- └─ Either way: build a small test set, measure, and re-check every few months.</div>
+ └─ Either way: build a small test set, measure, and re-check every few months.</div></div>
 <div class="callout success"><p><strong>✅ Key takeaway:</strong> Let your constraints choose the model. Privacy and offline needs point to open-weight; speed of getting started and top-end quality point to proprietary APIs. Many real products use both.</p></div>
-
 </div>
 <div class="section">
 <h2 id="10-proprietary-vs-open-pros-cons-and-real-scenarios">10. Proprietary vs Open: Pros, Cons and Real Scenarios</h2>
@@ -794,8 +836,7 @@ ollama rm gemma4:e2b</div>
 <p>Inspectors in remote areas need an app that explains repair manuals with no internet signal. The team ships a tiny, quantized open-weight model inside the app, combined with the manuals stored on the device. Answers are simpler than a frontier model&#39;s, but they work anywhere.</p>
 <h3 id="scenario-4-a-support-bot-at-large-scale">Scenario 4 — A support bot at large scale</h3>
 <p>A retailer answers millions of routine questions per month. It routes simple questions to a small, cheap model (open-weight on its own GPUs or a low-cost API tier) and escalates hard or unusual ones to a frontier model. This <strong>routing</strong> pattern keeps quality high and cost low.</p>
-<div class="callout tip"><p><strong>🎯 Try it:</strong> Pick a project idea of your own. Write one line for each of the six factors in Section 9, then decide: proprietary API, open-weight, or a mix? Keep the note — you will reuse it in <a href="best-practices.html">Chapter 8</a>.</p></div>
-
+<div class="callout tip"><p><strong>🎯 Try it:</strong> Pick a project idea of your own. Write one line for each of the six factors in Section 9, then decide: proprietary API, open-weight, or a mix?</p></div>
 </div>
 <div class="section">
 <h2 id="recap">Recap</h2>
@@ -810,7 +851,6 @@ ollama rm gemma4:e2b</div>
 <li><strong>APIs and platforms</strong> (OpenAI, Anthropic, Google, Microsoft Foundry, Hugging Face, Amazon Bedrock) trade control for convenience — and platforms themselves change.</li>
 <li>Choose with a <strong>decision guide</strong>: privacy, cost, latency, quality, license and on-device needs.</li>
 </ul>
-
 </div>
 <div class="section">
 <h2 id="check-your-understanding">Check Your Understanding</h2>
@@ -854,10 +894,31 @@ ollama rm gemma4:e2b</div>
 <li>D) A research-only model in production</li>
 </ul>
 <details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> C — Self-hosting an open-weight model keeps data on the clinic&#39;s own servers. The license still has to permit the use, which rules out research-only models in production.</p></div></details>
-<div class="nav-links"><a href="training.html">← Chapter 4: Training &amp; Tuning</a><a href="using-ai.html">Chapter 6: Using Models →</a></div>
+</div>
+<div class="done-row"><button class="done-btn" type="button" aria-pressed="false">Mark this page as done</button></div>
+<div class="pager">
+<a class="pager-prev" href="training.html"><span>← Previous</span><strong>4. Training &amp; Tuning</strong></a>
+<a class="pager-next" href="using-ai.html"><span>Next →</span><strong>6. Using Models</strong></a>
 </div>
 </main>
-
-<footer class="site-footer">AI Learn · A beginner's guide to how AI models work · Based on official docs and open course material · Not affiliated with any model provider</footer>
+<footer class="site-footer">AI Learn · A personal learning project by Emanuel Loghin · <a href="about.html">About &amp; feedback</a> · Based on official docs and open course material · Not affiliated with any model provider</footer>
+</div>
+<aside class="toc-rail" aria-label="On this page">
+<div class="toc-title">On this page</div><nav><a href="#1-three-kinds-of-open">1. Three Kinds of &quot;Open&quot;</a>
+<a href="#2-the-osi-open-source-ai-definition">2. The OSI Open Source AI Definition</a>
+<a href="#3-licenses-in-practice">3. Licenses in Practice</a>
+<a href="#4-the-major-model-families">4. The Major Model Families</a>
+<a href="#5-model-sizes-and-what-they-imply">5. Model Sizes and What They Imply</a>
+<a href="#6-reading-a-model-card">6. Reading a Model Card</a>
+<a href="#7-running-open-models-locally">7. Running Open Models Locally</a>
+<a href="#8-using-models-through-apis-and-platforms">8. Using Models Through APIs and Platforms</a>
+<a href="#9-choosing-a-model-a-decision-guide">9. Choosing a Model: A Decision Guide</a>
+<a href="#10-proprietary-vs-open-pros-cons-and-real-scenarios">10. Proprietary vs Open: Pros, Cons and Real Scenarios</a>
+<a href="#recap">Recap</a>
+<a href="#check-your-understanding">Check Your Understanding</a></nav>
+</aside>
+</div>
+<div class="scrim"></div>
+<script src="site.js"></script>
 </body>
 </html>

@@ -4,45 +4,84 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Study Plan: Your Complete AI Learning Path — AI Learn</title>
+<script>try{var t=localStorage.getItem('ailearn:theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<style>.section td code,.callout code,.diagram-caption code{background:var(--primary-light);color:var(--primary);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:13px}.callout p+p{margin-top:8px}.callout ul{margin:8px 0 0 20px}</style>
 </head>
-<body>
-
-<header class="site-header">
-  <div class="header-inner">
-    <div class="header-logo"><span>AI&nbsp;</span>Learn</div>
-    <nav class="header-nav">
-      <a href="index.html">Home</a>
-      <a href="study-plan.html" class="active">Study Plan</a>
-      <a href="foundations.html">1. Foundations</a>
-      <a href="neural-networks.html">2. Neural Networks</a>
-      <a href="transformers.html">3. Transformers &amp; LLMs</a>
-      <a href="training.html">4. Training &amp; Tuning</a>
-      <a href="models.html">5. Model Landscape</a>
-      <a href="using-ai.html">6. Using Models</a>
-      <a href="tokens.html">7. Tokens &amp; Cost</a>
-      <a href="best-practices.html">8. Best Practices</a>
-      <a href="ai-at-work.html">9. AI at Work</a>
-      <a href="spec-driven-development.html">10. Spec-Driven Dev</a>
-      <a href="spec-kit.html">10a. Spec Kit</a>
-      <a href="squad.html">10b. Squad</a>
-      <a href="sdd-production.html">10c. Shipping &amp; Reuse</a>
-      <a href="glossary.html">Glossary</a>
-      <a href="resources.html">Resources</a>
-    </nav>
-  </div>
+<body data-page="study-plan">
+<div class="read-progress" aria-hidden="true"><div></div></div>
+<header class="topbar">
+  <button class="icon-btn menu-btn" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
+  <a class="header-logo" href="index.html"><span>AI&nbsp;</span>Learn</a>
+  <span class="topbar-crumb">Start here <b>›</b> Study Plan</span>
+  <span class="topbar-progress" title="Pages you marked as done"></span>
+  <button class="icon-btn theme-btn" type="button" aria-label="Switch between light and dark theme">◐</button>
 </header>
-
+<div class="shell">
+<aside class="sidebar" aria-label="Site navigation">
+<nav>
+<div class="nav-group current">
+<div class="nav-group-title">Start here<span class="nav-count"></span></div>
+<a href="index.html" data-page="index">Home</a>
+<a href="study-plan.html" data-page="study-plan" class="active" aria-current="page">Study Plan</a>
+<a href="setup.html" data-page="setup">Setup &amp; Git Basics</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 1 · Understand AI<span class="nav-count"></span></div>
+<a href="foundations.html" data-page="foundations">1. Foundations</a>
+<a href="neural-networks.html" data-page="neural-networks">2. Neural Networks</a>
+<a href="transformers.html" data-page="transformers">3. Transformers &amp; LLMs</a>
+<a href="training.html" data-page="training">4. Training &amp; Tuning</a>
+<a href="models.html" data-page="models">5. Model Landscape</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 2 · Use AI well<span class="nav-count"></span></div>
+<a href="using-ai.html" data-page="using-ai">6. Using Models</a>
+<a href="connecting-ai.html" data-page="connecting-ai">7. Connecting Models</a>
+<a href="tokens.html" data-page="tokens">8. Tokens &amp; Cost</a>
+<a href="best-practices.html" data-page="best-practices">9. Best Practices</a>
+<a href="ai-at-work.html" data-page="ai-at-work">10. AI at Work</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 3 · Work with agents<span class="nav-count"></span></div>
+<a href="agent-toolkit.html" data-page="agent-toolkit">11. Equip Your Agent</a>
+<a href="agent-guardrails.html" data-page="agent-guardrails">12. Human Control &amp; Guardrails</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 4 · Build with specs<span class="nav-count"></span></div>
+<a href="spec-driven-development.html" data-page="spec-driven-development">13. Spec-Driven Dev</a>
+<a href="spec-kit.html" data-page="spec-kit">14. Spec Kit from Zero</a>
+<a href="sdd-existing-projects.html" data-page="sdd-existing-projects">15. Existing Projects</a>
+<a href="sdd-examples.html" data-page="sdd-examples">16. Real Examples</a>
+<a href="squad.html" data-page="squad">17. Squad</a>
+<a href="sdd-production.html" data-page="sdd-production">18. Shipping &amp; Reuse</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Reference<span class="nav-count"></span></div>
+<a href="sdd-reference.html" data-page="sdd-reference">Command Reference</a>
+<a href="glossary.html" data-page="glossary">Glossary</a>
+<a href="resources.html" data-page="resources">Resources</a>
+<a href="about.html" data-page="about">About &amp; Feedback</a>
+</div>
+</nav>
+</aside>
+<div class="content">
 <section class="hero">
   <div class="hero-badge">Start here · Study plan</div>
   <h1>Study Plan: Your Complete AI Learning Path</h1>
   <p>A complete, week-by-week plan that combines the chapters of this site with the best free and low-cost AI courses from Google, Microsoft, OpenAI, Anthropic and the University of Helsinki — plus a daily practice habit, because applying AI to your own work is what turns learning into results.</p>
+  <div class="hero-meta"><span>⏱ about 12 min of reading</span><span>Page 2 of 25</span></div>
 </section>
-
 <main class="main">
+<details class="toc-inline"><summary>On this page</summary><nav><a href="#1-how-the-plan-works">1. How the plan works</a>
+<a href="#2-choose-your-path">2. Choose your path</a>
+<a href="#3-path-a-ai-literate-professional-4-weeks">3. Path A — AI-literate professional (4 weeks)</a>
+<a href="#4-path-b-ai-power-user-6-weeks">4. Path B — AI power user (6 weeks)</a>
+<a href="#5-path-c-ai-builder-8-weeks">5. Path C — AI builder (8 weeks)</a>
+<a href="#6-the-courses-at-a-glance">6. The courses at a glance</a>
+<a href="#7-stay-current-a-30-minute-weekly-routine">7. Stay current: a 30-minute weekly routine</a>
+<a href="#8-track-your-progress">8. Track your progress</a></nav></details>
 <div class="section">
 <h2 id="1-how-the-plan-works">1. How the plan works</h2>
 <p>Every path mixes three ingredients:</p>
@@ -57,21 +96,20 @@
 <tbody><tr>
 <td><strong>Understand</strong></td>
 <td>How AI models work, so you can judge what they can and cannot do</td>
-<td>Chapters 1–8 of this site, Elements of AI</td>
+<td>Chapters 1–9 of this site, Elements of AI</td>
 </tr>
 <tr>
 <td><strong>Use</strong></td>
 <td>Hands-on skill with real AI tools and good prompting habits</td>
-<td>Google AI Essentials, OpenAI Academy, Anthropic Academy, Chapter 6</td>
+<td>Google AI Essentials, OpenAI Academy, Claude Academy, Chapter 6</td>
 </tr>
 <tr>
 <td><strong>Apply</strong></td>
 <td>Visible results on your own daily work</td>
-<td><a href="ai-at-work.html">Chapter 9: AI at Work</a> and the weekly practice tasks below</td>
+<td><a href="ai-at-work.html">Chapter 10: AI at Work</a> and the weekly practice tasks below</td>
 </tr>
 </tbody></table></div>
 <div class="callout tip"><p><strong>📘 In plain words:</strong> Learn a little, use it the same week on a real task, and write down what happened. Repeat. That loop beats binge-watching a course.</p></div>
-
 </div>
 <div class="section">
 <h2 id="2-choose-your-path">2. Choose your path</h2>
@@ -100,8 +138,7 @@
 </tr>
 </tbody></table></div>
 <p>The paths stack: B assumes A&#39;s basics, and C assumes B&#39;s. If you already know a topic, skip that week.</p>
-<div class="callout tip"><p><strong>🎯 Try it:</strong> Paste the &quot;learning plan&quot; prompt from <a href="ai-at-work.html">Chapter 9, §7</a> into your AI assistant to adapt the path you picked to your role and calendar.</p></div>
-
+<div class="callout tip"><p><strong>🎯 Try it:</strong> Paste the &quot;learning plan&quot; prompt from <a href="ai-at-work.html">Chapter 10, §7</a> into your AI assistant to adapt the path you picked to your role and calendar.</p></div>
 </div>
 <div class="section">
 <h2 id="3-path-a-ai-literate-professional-4-weeks">3. Path A — AI-literate professional (4 weeks)</h2>
@@ -118,7 +155,7 @@
 <tbody><tr>
 <td>1</td>
 <td><a href="index.html">Home</a> &quot;big picture&quot; + <a href="foundations.html">Chapter 1: Foundations</a> · Elements of AI, chapters 1–2</td>
-<td>List the tasks in your week that take over 15 minutes (<a href="ai-at-work.html">Chapter 9, §2</a>)</td>
+<td>List the tasks in your week that take over 15 minutes (<a href="ai-at-work.html">Chapter 10, §2</a>)</td>
 <td>Your task inventory</td>
 </tr>
 <tr>
@@ -129,19 +166,18 @@
 </tr>
 <tr>
 <td>3</td>
-<td>Anthropic Academy: <em>AI Fluency: Framework &amp; Foundations</em> · <a href="best-practices.html">Chapter 8, §5–6: Privacy &amp; Responsible AI</a></td>
+<td>Claude Academy: <em>AI Fluency: Framework &amp; Foundations</em> · <a href="best-practices.html">Chapter 9, §5–6: Privacy &amp; Responsible AI</a></td>
 <td>Rewrite your best prompts; start a prompt library</td>
 <td>3 saved prompts</td>
 </tr>
 <tr>
 <td>4</td>
-<td>Anthropic Academy: <em>AI Capabilities and Limitations</em> · <a href="ai-at-work.html">Chapter 9: AI at Work</a></td>
+<td>Claude Academy: <em>AI Capabilities and Limitations</em> · <a href="ai-at-work.html">Chapter 10: AI at Work</a></td>
 <td>Log time and quality for every AI-assisted task</td>
 <td>One-page &quot;how I use AI for X&quot;</td>
 </tr>
 </tbody></table></div>
 <div class="callout success"><p><strong>✅ Key takeaway:</strong> After Path A you can explain AI in plain words, prompt well, know the safety rules, and point to real tasks you do better.</p></div>
-
 </div>
 <div class="section">
 <h2 id="4-path-b-ai-power-user-6-weeks">4. Path B — AI power user (6 weeks)</h2>
@@ -163,7 +199,7 @@
 </tr>
 <tr>
 <td>2</td>
-<td><a href="transformers.html">Chapter 3: Transformers &amp; LLMs</a> · <a href="tokens.html">Chapter 7: Tokens &amp; Cost</a></td>
+<td><a href="transformers.html">Chapter 3: Transformers &amp; LLMs</a> · <a href="tokens.html">Chapter 8: Tokens &amp; Cost</a></td>
 <td>Paste text into a tokenizer; compare long vs short prompts</td>
 <td>A note on context limits in your tools</td>
 </tr>
@@ -175,7 +211,7 @@
 </tr>
 <tr>
 <td>4</td>
-<td>Anthropic tutorial, chapters 6–9 · <a href="using-ai.html">Chapter 6: Using Models</a> §3–7</td>
+<td>Anthropic tutorial, chapters 6–9 · <a href="using-ai.html">Chapter 6: Using Models</a> §2–3 and <a href="connecting-ai.html">Chapter 7: Connecting Models</a> §1–4</td>
 <td>Use examples and step-by-step reasoning on a complex task</td>
 <td>A multi-step workflow (e.g. notes → summary → email)</td>
 </tr>
@@ -187,12 +223,11 @@
 </tr>
 <tr>
 <td>6</td>
-<td><a href="best-practices.html">Chapter 8: Best Practices</a> · <a href="ai-at-work.html">Chapter 9, §5–6</a></td>
+<td><a href="best-practices.html">Chapter 9: Best Practices</a> · <a href="ai-at-work.html">Chapter 10, §5–6</a></td>
 <td>Measure a month of AI use; share your best workflow</td>
 <td>5-minute team demo</td>
 </tr>
 </tbody></table></div>
-
 </div>
 <div class="section">
 <h2 id="5-path-c-ai-builder-8-weeks">5. Path C — AI builder (8 weeks)</h2>
@@ -221,31 +256,31 @@
 </tr>
 <tr>
 <td>3</td>
-<td>AI-901 course, Foundry part · <a href="using-ai.html">Chapter 6, §3 &amp; §6</a> (structured outputs, tool calling)</td>
+<td>AI-901 course, Foundry part · <a href="using-ai.html">Chapter 6, §3</a> and <a href="connecting-ai.html">Chapter 7, §3</a> (structured outputs, tool calling)</td>
 <td>Call a model from code or a playground with JSON output</td>
 <td>Working sample</td>
 </tr>
 <tr>
 <td>4</td>
-<td><a href="using-ai.html">Chapter 6, §4–5: Embeddings &amp; RAG</a> · Microsoft <em>Generative AI for Beginners</em>, RAG lessons</td>
-<td>Build the mini Q&amp;A bot from <a href="using-ai.html">Chapter 6, §13</a> on public or synthetic documents</td>
+<td><a href="connecting-ai.html">Chapter 7, §1–2: Embeddings &amp; RAG</a> · Microsoft <em>Generative AI for Beginners</em>, RAG lessons</td>
+<td>Build the mini Q&amp;A bot from <a href="connecting-ai.html#7-mini-project-a-qa-bot-over-your-notes">Chapter 7, §7</a> on public or synthetic documents</td>
 <td>Demo bot</td>
 </tr>
 <tr>
 <td>5</td>
-<td>Anthropic Academy: <em>Building with the Claude API</em> or OpenAI Academy &quot;Build with AI&quot;</td>
+<td>Claude Academy: <em>Building with the Claude API</em> or OpenAI Academy &quot;Build with AI&quot;</td>
 <td>Add tool calling to your bot</td>
 <td>Bot with one tool</td>
 </tr>
 <tr>
 <td>6</td>
-<td>Anthropic Academy: <em>Introduction to Model Context Protocol</em> · <a href="using-ai.html">Chapter 6, §8: MCP</a></td>
+<td>Claude Academy: <em>Introduction to Model Context Protocol</em> · <a href="connecting-ai.html">Chapter 7, §5: MCP</a></td>
 <td>Connect an assistant to a tool via MCP</td>
 <td>MCP experiment notes</td>
 </tr>
 <tr>
 <td>7</td>
-<td><a href="best-practices.html">Chapter 8, §3–4: Evaluation &amp; Security</a> · OWASP Top 10 for LLM Apps</td>
+<td><a href="best-practices.html">Chapter 9, §3–4: Evaluation &amp; Security</a> · OWASP Top 10 for LLM Apps</td>
 <td>Write 10 test cases for your bot; try a prompt-injection attack on it</td>
 <td>Eval results + fixes</td>
 </tr>
@@ -258,7 +293,7 @@
 </tbody></table></div>
 <div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;A certificate proves I can build AI solutions.&quot; AI-901 is a <em>fundamentals</em> exam. The bot, the evaluation and the security test from weeks 4–7 are what show you can build.</p></div>
 <h3 id="optional-builder-workshop-spec-to-production">Optional builder workshop: spec to production</h3>
-<p>After you can run and test a small application, use <a href="spec-driven-development.html">Chapter 10</a> to practise AI-assisted software delivery. This is separate from the AI-901 exam path; your product does not need to contain an AI model.</p>
+<p>After you can run and test a small application, use <a href="spec-driven-development.html">Chapter 13</a> to practise AI-assisted software delivery. This is separate from the AI-901 exam path; your product does not need to contain an AI model.</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -268,6 +303,11 @@
 </tr>
 </thead>
 <tbody><tr>
+<td>0</td>
+<td><a href="agent-toolkit.html">Equip your agent</a> with instructions, one skill, one read-only MCP server and a reviewer agent; apply the <a href="agent-guardrails.html#10-control-checklist">control checklist</a></td>
+<td>A prepared repository and a ticked control checklist</td>
+</tr>
+<tr>
 <td>1</td>
 <td><a href="spec-kit.html">Set up Spec Kit</a>, write one bounded feature and resolve ambiguities</td>
 <td>Reviewed spec with observable acceptance criteria</td>
@@ -284,12 +324,17 @@
 </tr>
 <tr>
 <td>4</td>
-<td>Follow <a href="sdd-production.html">Shipping and Reuse</a>, including a brownfield change and release rehearsal</td>
+<td><a href="sdd-existing-projects.html">Adopt Spec Kit in an existing project</a>: baseline, evidence-based constitution and one bounded change</td>
+<td>The adoption commit, a reviewed constitution and one merged change</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Follow <a href="sdd-production.html">Shipping and Reuse</a>, including a release rehearsal</td>
 <td>PR checklist, rollback plan and a reusable project setup checklist</td>
 </tr>
 </tbody></table></div>
+<p>Keep the <a href="sdd-reference.html">command reference</a> open while you practise.</p>
 <p>Start with synthetic data and a learning repository. The tutorial is not permission to deploy an unreviewed application.</p>
-
 </div>
 <div class="section">
 <h2 id="6-the-courses-at-a-glance">6. The courses at a glance</h2>
@@ -338,7 +383,7 @@
 <td><a href="https://academy.openai.com/" target="_blank" rel="noopener">academy.openai.com</a></td>
 </tr>
 <tr>
-<td><strong>Anthropic Academy</strong> — AI Fluency</td>
+<td><strong>Claude Academy</strong> (formerly Anthropic Academy) — AI Fluency</td>
 <td>Anthropic</td>
 <td>How to work <em>with</em> AI well: delegation, description, discernment, diligence; capabilities and limitations</td>
 <td><em>AI Fluency: Framework &amp; Foundations</em> ~4 h · <em>AI Capabilities and Limitations</em> ~3.5 h</td>
@@ -346,12 +391,12 @@
 <td><a href="https://academy.claude.com/" target="_blank" rel="noopener">academy.claude.com</a></td>
 </tr>
 <tr>
-<td><strong>Anthropic Academy</strong> — product &amp; developer courses</td>
+<td><strong>Claude Academy</strong> (formerly Anthropic Academy) — product &amp; developer courses</td>
 <td>Anthropic</td>
 <td><em>Claude 101</em>, <em>Claude Code in Action</em>, <em>Building with the Claude API</em>, <em>Introduction to Model Context Protocol</em> and more</td>
 <td>Self-paced</td>
-<td>Free; completion certificates</td>
-<td><a href="https://anthropic.skilljar.com/" target="_blank" rel="noopener">anthropic.skilljar.com</a></td>
+<td>Free; completion badge</td>
+<td><a href="https://academy.claude.com/courses" target="_blank" rel="noopener">academy.claude.com</a></td>
 </tr>
 <tr>
 <td><strong>Prompt Engineering Interactive Tutorial</strong></td>
@@ -373,11 +418,10 @@
 <div class="callout warning"><p><strong>⚠️ Watch out for outdated material:</strong></p>
 <ul>
 <li><strong>AI-900 is replaced by AI-901.</strong> Microsoft&#39;s certification page now lists AI-901 as the required exam. Older study guides and videos about AI-900 miss the generative AI and Foundry content.</li>
-<li><strong>Anthropic&#39;s GitHub tutorial uses Claude 3 model names.</strong> The prompting techniques are still valid; just use a current model when you run the exercises. The older <code>anthropics/courses</code> repository was archived in September 2026 — prefer Anthropic Academy for maintained material.</li>
+<li><strong>Anthropic&#39;s GitHub tutorial uses Claude 3 model names.</strong> The prompting techniques are still valid; just use a current model when you run the exercises. The older <code>anthropics/courses</code> repository was archived in September 2026 — prefer Claude Academy for maintained material.</li>
 <li><strong>OpenAI Academy</strong> has reorganised its catalogue, so older blog posts and videos may list course names that no longer match the current site.</li>
 </ul></div>
 <p>More courses, videos, tools and papers are on the <a href="resources.html">Resources</a> page.</p>
-
 </div>
 <div class="section">
 <h2 id="7-stay-current-a-30-minute-weekly-routine">7. Stay current: a 30-minute weekly routine</h2>
@@ -403,31 +447,30 @@
 <tr>
 <td>10 min</td>
 <td><strong>Try one thing</strong> — test one new feature or tool on a real task</td>
-<td>Your own work, logged as in <a href="ai-at-work.html">Chapter 9, §5</a></td>
+<td>Your own work, logged as in <a href="ai-at-work.html">Chapter 10, §5</a></td>
 </tr>
 </tbody></table></div>
 <div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;If a popular creator shows it, it works for my job.&quot; News channels and tool directories are great for <em>discovering</em> tools, but some listings are sponsored or affiliate links and demos show best cases. Check that a tool is approved by your organisation and test it on your own (anonymised) work before relying on it.</p></div>
-
 </div>
 <div class="section">
 <h2 id="8-track-your-progress">8. Track your progress</h2>
-<p>Copy this checklist into your notes and tick items off as you go.</p>
+<p>Tick these off as you go. Your ticks are saved in this browser.</p>
 <p><strong>Understand</strong></p>
 <ul>
 <li><input disabled="" type="checkbox"> I can explain the difference between AI, machine learning, deep learning and generative AI (<a href="foundations.html">Ch. 1</a>)</li>
-<li><input disabled="" type="checkbox"> I can explain what parameters, training and inference are (<a href="neural-networks.html">Ch. 2</a>)</li>
-<li><input disabled="" type="checkbox"> I can explain tokens, context windows and why models hallucinate (<a href="transformers.html">Ch. 3</a>, <a href="tokens.html">Ch. 7</a>)</li>
+<li><input disabled="" type="checkbox"> I can explain what parameters, training and inference are (<a href="foundations.html">Ch. 1</a>, <a href="neural-networks.html">Ch. 2</a>)</li>
+<li><input disabled="" type="checkbox"> I can explain tokens, context windows and why models hallucinate (<a href="transformers.html">Ch. 3</a>, <a href="tokens.html">Ch. 8</a>)</li>
 <li><input disabled="" type="checkbox"> I finished at least one external foundation course (Elements of AI, Google AI Essentials, OpenAI Academy or Anthropic AI Fluency)</li>
 </ul>
 <p><strong>Use</strong></p>
 <ul>
 <li><input disabled="" type="checkbox"> I use clear task, context, examples and format in my prompts (<a href="using-ai.html">Ch. 6</a>)</li>
-<li><input disabled="" type="checkbox"> I know which AI tools my organisation approves and what data I may not paste (<a href="best-practices.html">Ch. 8</a>)</li>
+<li><input disabled="" type="checkbox"> I know which AI tools my organisation approves and what data I may not paste (<a href="best-practices.html">Ch. 9</a>)</li>
 <li><input disabled="" type="checkbox"> I completed the Anthropic Prompt Engineering Interactive Tutorial</li>
 </ul>
 <p><strong>Apply</strong></p>
 <ul>
-<li><input disabled="" type="checkbox"> I have a list of my AI-ready tasks (<a href="ai-at-work.html">Ch. 9</a>)</li>
+<li><input disabled="" type="checkbox"> I have a list of my AI-ready tasks (<a href="ai-at-work.html">Ch. 10</a>)</li>
 <li><input disabled="" type="checkbox"> I keep a prompt library with at least 5 prompts</li>
 <li><input disabled="" type="checkbox"> I logged AI use for 4 weeks and know where it helps and where it does not</li>
 <li><input disabled="" type="checkbox"> I shared one workflow with my team</li>
@@ -436,13 +479,31 @@
 <ul>
 <li><input disabled="" type="checkbox"> I built a small RAG bot with tests and a prompt-injection check</li>
 <li><input disabled="" type="checkbox"> I passed the AI-901 practice assessment / exam</li>
-<li><input disabled="" type="checkbox"> Optional: I delivered one bounded feature with Spec Kit, tried a reviewed Squad handoff, and rehearsed the release checklist (<a href="spec-driven-development.html">Ch. 10</a>)</li>
+<li><input disabled="" type="checkbox"> Optional: I wrote one skill and one custom agent, added a read-only MCP server, and know which permission level my agent sessions use (<a href="agent-toolkit.html">Ch. 11</a>, <a href="agent-guardrails.html">Ch. 12</a>)</li>
+<li><input disabled="" type="checkbox"> Optional: I delivered one bounded feature with Spec Kit, tried a reviewed Squad handoff, and rehearsed the release checklist (<a href="spec-driven-development.html">Ch. 13</a>)</li>
 </ul>
 <div class="callout success"><p><strong>✅ Key takeaway:</strong> Pick one path, combine one course with this site&#39;s chapters, and practise on your own work every week. Completed checklists and a log of real results are worth more than a pile of half-finished courses.</p></div>
-<div class="nav-links"><a href="index.html">← Home</a><a href="foundations.html">Chapter 1: Foundations →</a></div>
+</div>
+<div class="done-row"><button class="done-btn" type="button" aria-pressed="false">Mark this page as done</button></div>
+<div class="pager">
+<a class="pager-prev" href="index.html"><span>← Previous</span><strong>Home</strong></a>
+<a class="pager-next" href="setup.html"><span>Next →</span><strong>Setup &amp; Git Basics</strong></a>
 </div>
 </main>
-
-<footer class="site-footer">AI Learn · A beginner's guide to how AI models work · Based on official docs and open course material · Not affiliated with any model provider</footer>
+<footer class="site-footer">AI Learn · A personal learning project by Emanuel Loghin · <a href="about.html">About &amp; feedback</a> · Based on official docs and open course material · Not affiliated with any model provider</footer>
+</div>
+<aside class="toc-rail" aria-label="On this page">
+<div class="toc-title">On this page</div><nav><a href="#1-how-the-plan-works">1. How the plan works</a>
+<a href="#2-choose-your-path">2. Choose your path</a>
+<a href="#3-path-a-ai-literate-professional-4-weeks">3. Path A — AI-literate professional (4 weeks)</a>
+<a href="#4-path-b-ai-power-user-6-weeks">4. Path B — AI power user (6 weeks)</a>
+<a href="#5-path-c-ai-builder-8-weeks">5. Path C — AI builder (8 weeks)</a>
+<a href="#6-the-courses-at-a-glance">6. The courses at a glance</a>
+<a href="#7-stay-current-a-30-minute-weekly-routine">7. Stay current: a 30-minute weekly routine</a>
+<a href="#8-track-your-progress">8. Track your progress</a></nav>
+</aside>
+</div>
+<div class="scrim"></div>
+<script src="site.js"></script>
 </body>
 </html>

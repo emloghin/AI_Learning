@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Get Ready: Terminal, Tools and Git Basics — AI Learn</title>
+<script>try{var t=localStorage.getItem('ailearn:theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="setup">
+<div class="read-progress" aria-hidden="true"><div></div></div>
+<header class="topbar">
+  <button class="icon-btn menu-btn" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
+  <a class="header-logo" href="index.html"><span>AI&nbsp;</span>Learn</a>
+  <span class="topbar-crumb">Start here <b>›</b> Setup &amp; Git Basics</span>
+  <span class="topbar-progress" title="Pages you marked as done"></span>
+  <button class="icon-btn theme-btn" type="button" aria-label="Switch between light and dark theme">◐</button>
+</header>
+<div class="shell">
+<aside class="sidebar" aria-label="Site navigation">
+<nav>
+<div class="nav-group current">
+<div class="nav-group-title">Start here<span class="nav-count"></span></div>
+<a href="index.html" data-page="index">Home</a>
+<a href="study-plan.html" data-page="study-plan">Study Plan</a>
+<a href="setup.html" data-page="setup" class="active" aria-current="page">Setup &amp; Git Basics</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 1 · Understand AI<span class="nav-count"></span></div>
+<a href="foundations.html" data-page="foundations">1. Foundations</a>
+<a href="neural-networks.html" data-page="neural-networks">2. Neural Networks</a>
+<a href="transformers.html" data-page="transformers">3. Transformers &amp; LLMs</a>
+<a href="training.html" data-page="training">4. Training &amp; Tuning</a>
+<a href="models.html" data-page="models">5. Model Landscape</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 2 · Use AI well<span class="nav-count"></span></div>
+<a href="using-ai.html" data-page="using-ai">6. Using Models</a>
+<a href="connecting-ai.html" data-page="connecting-ai">7. Connecting Models</a>
+<a href="tokens.html" data-page="tokens">8. Tokens &amp; Cost</a>
+<a href="best-practices.html" data-page="best-practices">9. Best Practices</a>
+<a href="ai-at-work.html" data-page="ai-at-work">10. AI at Work</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 3 · Work with agents<span class="nav-count"></span></div>
+<a href="agent-toolkit.html" data-page="agent-toolkit">11. Equip Your Agent</a>
+<a href="agent-guardrails.html" data-page="agent-guardrails">12. Human Control &amp; Guardrails</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 4 · Build with specs<span class="nav-count"></span></div>
+<a href="spec-driven-development.html" data-page="spec-driven-development">13. Spec-Driven Dev</a>
+<a href="spec-kit.html" data-page="spec-kit">14. Spec Kit from Zero</a>
+<a href="sdd-existing-projects.html" data-page="sdd-existing-projects">15. Existing Projects</a>
+<a href="sdd-examples.html" data-page="sdd-examples">16. Real Examples</a>
+<a href="squad.html" data-page="squad">17. Squad</a>
+<a href="sdd-production.html" data-page="sdd-production">18. Shipping &amp; Reuse</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Reference<span class="nav-count"></span></div>
+<a href="sdd-reference.html" data-page="sdd-reference">Command Reference</a>
+<a href="glossary.html" data-page="glossary">Glossary</a>
+<a href="resources.html" data-page="resources">Resources</a>
+<a href="about.html" data-page="about">About &amp; Feedback</a>
+</div>
+</nav>
+</aside>
+<div class="content">
+<section class="hero">
+  <div class="hero-badge">Before Parts 3 and 4 · Setup</div>
+  <h1>Get Ready: Terminal, Tools and Git Basics</h1>
+  <p>Parts 1 and 2 need nothing but a browser. Parts 3 and 4 are hands-on: you will type commands, install a few tools and save your work with Git. This page gives you exactly the basics those chapters assume, and ends with a one-hour path that strings them together.</p>
+  <div class="hero-meta"><span>⏱ about 15 min of reading</span><span>Page 3 of 25</span></div>
+</section>
+<main class="main">
+<details class="toc-inline"><summary>On this page</summary><nav><a href="#1-what-you-need">1. What you need</a>
+<a href="#2-the-terminal-in-five-minutes">2. The terminal in five minutes</a>
+<a href="#3-environment-variables-and-path">3. Environment variables and PATH</a>
+<a href="#4-install-and-check-the-tools">4. Install and check the tools</a>
+<a href="#5-the-ten-git-commands-you-need">5. The ten Git commands you need</a>
+<a href="#6-pull-requests-in-one-minute">6. Pull requests in one minute</a>
+<a href="#7-secrets-keep-them-out-of-git-and-out-of-chat">7. Secrets: keep them out of Git and out of chat</a>
+<a href="#8-your-first-hour-one-path-through-parts-3-and-4">8. Your first hour: one path through Parts 3 and 4</a>
+<a href="#9-if-something-does-not-work">9. If something does not work</a>
+<a href="#recap">Recap</a>
+<a href="#check-your-understanding">Check Your Understanding</a></nav></details>
+<div class="section">
+<div class="callout tip"><p><strong>📘 In plain words:</strong> You do not need to be a developer to follow Parts 3 and 4, but you do need to be comfortable with three things: typing a command in a terminal, knowing which folder you are in, and saving a snapshot of your work with Git. Thirty minutes here saves hours of confusion later.</p></div>
+</div>
+<div class="section">
+<h2 id="1-what-you-need">1. What you need</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>What it is for</th>
+<th>Needed from</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>A terminal</strong></td>
+<td>Typing commands. On Windows this guide uses PowerShell</td>
+<td>Chapter 11</td>
+</tr>
+<tr>
+<td><strong>Git</strong></td>
+<td>Saving snapshots of your work and undoing mistakes</td>
+<td>Chapter 11</td>
+</tr>
+<tr>
+<td><strong>VS Code with GitHub Copilot</strong>, or the <strong>Copilot CLI</strong></td>
+<td>The AI coding agent itself. Needs a GitHub account with Copilot access</td>
+<td>Chapter 11</td>
+</tr>
+<tr>
+<td><strong>Node.js</strong> (LTS version)</td>
+<td>Runs many helper tools, including the Copilot CLI and Squad</td>
+<td>Chapter 11</td>
+</tr>
+<tr>
+<td><strong>uv</strong></td>
+<td>Installs Python tools such as Spec Kit, and Python itself</td>
+<td>Chapter 14</td>
+</tr>
+<tr>
+<td><strong>A practice folder</strong></td>
+<td>A throwaway place to experiment. Never your production repository</td>
+<td>Always</td>
+</tr>
+</tbody></table></div>
+<p><strong>Cost and permission.</strong> The tools are free; the AI agent is not. Copilot uses a paid plan or your organization&#39;s licence, and agent sessions consume usage. At work, use only AI services your organization has approved, and use made-up data while learning.</p>
+</div>
+<div class="section">
+<h2 id="2-the-terminal-in-five-minutes">2. The terminal in five minutes</h2>
+<p>Open <strong>Windows Terminal</strong> or <strong>PowerShell</strong> from the Start menu. In VS Code, the menu <strong>Terminal → New Terminal</strong> opens one that already sits in your project folder.</p>
+<div class="code-wrap term"><div class="code-head"><span class="code-label">Terminal</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">pwd                      # where am I? prints the current folder
+ls                       # what is in this folder?
+cd Documents             # go into a folder
+cd ..                    # go up one level
+mkdir ai-practice        # create a folder
+cd ai-practice
+code .                   # open this folder in VS Code</div></div>
+<p>Three habits prevent most beginner problems:</p>
+<ul>
+<li><strong>Check where you are before you run anything.</strong> Most commands act on the current folder. <code>pwd</code> tells you.</li>
+<li><strong>Read the output.</strong> A command that prints red text or the word &quot;error&quot; did not work, even if the prompt comes back.</li>
+<li><strong>Copy commands exactly.</strong> Spaces, dashes and quotes matter.</li>
+</ul>
+<p><strong>The colour code used on this site:</strong> a green <strong>Terminal</strong> block is typed in PowerShell. A purple <strong>Agent chat</strong> block is typed in the AI assistant&#39;s chat window. Typing one in the other place does nothing useful.</p>
+</div>
+<div class="section">
+<h2 id="3-environment-variables-and-path">3. Environment variables and PATH</h2>
+<p>An <strong>environment variable</strong> is a named value that programs can read. They are used for settings and for secrets such as API keys, so that those values do not have to be written into files.</p>
+<div class="code-wrap term"><div class="code-head"><span class="code-label">Terminal</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">$env:MY_SETTING = &quot;hello&quot;          # set it for this terminal window only
+$env:MY_SETTING                    # show its value</div></div>
+<p>A value set this way disappears when you close the window. To keep it for your user account:</p>
+<div class="code-wrap term"><div class="code-head"><span class="code-label">Terminal</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">[Environment]::SetEnvironmentVariable(&quot;MY_SETTING&quot;, &quot;hello&quot;, &quot;User&quot;)</div></div>
+<p>Then <strong>close and reopen</strong> the terminal and VS Code, because running programs do not see the change. On macOS or Linux the equivalent for one session is <code>export MY_SETTING=hello</code>.</p>
+<p>You will use this in later chapters, for example to keep an API key out of a configuration file (the file says <code>${NAME}</code> and the real value lives in the variable) or to switch a tool&#39;s behaviour (<code>$env:SPECKIT_COPILOT_ALLOW_ALL_TOOLS = &quot;0&quot;</code>).</p>
+<p><strong>PATH</strong> is one special variable: the list of folders the terminal searches when you type a command name. This explains the most common installation problem.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&quot;<code>specify</code> is not recognized as the name of a cmdlet…&quot; right after installing</td>
+<td>The terminal was opened before the installation, so its PATH is old</td>
+<td>Close the terminal and open a new one</td>
+</tr>
+<tr>
+<td>Still not found in a new terminal</td>
+<td>The tool&#39;s folder was not added to PATH</td>
+<td>For tools installed with uv, run <code>uv tool update-shell</code>, then reopen the terminal</td>
+</tr>
+<tr>
+<td>An old version runs instead of the new one</td>
+<td>Two copies are installed and the older one comes first on PATH</td>
+<td><code>Get-Command specify</code> shows which file runs; remove the copy you do not want</td>
+</tr>
+</tbody></table></div>
+</div>
+<div class="section">
+<h2 id="4-install-and-check-the-tools">4. Install and check the tools</h2>
+<p>On Windows, <code>winget</code> (included in Windows 11) installs most tools from the terminal. If a package name below is not found, use <code>winget search &lt;name&gt;</code> or the linked official page.</p>
+<div class="code-wrap term"><div class="code-head"><span class="code-label">Terminal</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">winget install --id Git.Git -e
+winget install --id OpenJS.NodeJS.LTS -e
+winget install --id Microsoft.VisualStudioCode -e
+winget install --id astral-sh.uv -e</div></div>
+<p><strong>Close and reopen the terminal</strong>, then check each one. Every command should print a version number, not an error:</p>
+<div class="code-wrap term"><div class="code-head"><span class="code-label">Terminal</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">git --version
+node --version
+npm --version
+code --version
+uv --version</div></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Official instructions</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Git</td>
+<td><a href="https://git-scm.com/downloads" target="_blank" rel="noopener">git-scm.com/downloads</a></td>
+</tr>
+<tr>
+<td>Node.js</td>
+<td><a href="https://nodejs.org/" target="_blank" rel="noopener">nodejs.org</a></td>
+</tr>
+<tr>
+<td>VS Code</td>
+<td><a href="https://code.visualstudio.com/" target="_blank" rel="noopener">code.visualstudio.com</a></td>
+</tr>
+<tr>
+<td>uv</td>
+<td><a href="https://docs.astral.sh/uv/getting-started/installation/" target="_blank" rel="noopener">docs.astral.sh/uv</a></td>
+</tr>
+<tr>
+<td>GitHub Copilot in VS Code</td>
+<td><a href="https://code.visualstudio.com/docs/setup/copilot" target="_blank" rel="noopener">Set up Copilot in VS Code</a></td>
+</tr>
+<tr>
+<td>GitHub Copilot CLI</td>
+<td><a href="https://docs.github.com/en/copilot/how-tos/copilot-cli/set-up-copilot-cli/install-copilot-cli" target="_blank" rel="noopener">Install Copilot CLI</a></td>
+</tr>
+</tbody></table></div>
+<p><strong>Tell Git who you are</strong> (once per computer). Git records this name on every snapshot:</p>
+<div class="code-wrap term"><div class="code-head"><span class="code-label">Terminal</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">git config --global user.name &quot;Your Name&quot;
+git config --global user.email &quot;you@example.com&quot;</div></div>
+<p><strong>Sign in to Copilot.</strong> In VS Code, open the Chat view and follow the sign-in prompt. For the CLI, install it as the official page describes, run <code>copilot</code> in your practice folder and follow the sign-in instructions. Ask it something harmless first (&quot;What files are in this folder?&quot;) to confirm it works <strong>before</strong> adding Spec Kit or Squad. That way, if something fails later you know which layer is the problem.</p>
+<p><strong>If PowerShell refuses to run a script</strong> (&quot;running scripts is disabled on this system&quot;), the computer&#39;s <em>execution policy</em> is blocking it. This also affects tools installed with npm, such as <code>squad</code>, because they start through a small <code>.ps1</code> script. First look at what is set, and where:</p>
+<div class="code-wrap term"><div class="code-head"><span class="code-label">Terminal</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">Get-ExecutionPolicy -List</div></div>
+<p>The list shows five scopes. <code>MachinePolicy</code> and <code>UserPolicy</code> are set centrally by your organization (Group Policy). If either of them shows a value, you <strong>cannot</strong> override it locally, even as administrator: ask your IT department.</p>
+<p>If those two say <code>Undefined</code>, you may change the policy yourself. Choose the smallest change that works:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>What you run</th>
+<th>Effect</th>
+<th>Needs administrator?</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass</code></td>
+<td>Allows scripts in <strong>this terminal window only</strong>. Gone when you close it</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned</code></td>
+<td>Allows your own local scripts permanently, for your account. Scripts downloaded from the internet must still be signed</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>Set-ExecutionPolicy -Scope LocalMachine -ExecutionPolicy RemoteSigned</code></td>
+<td>The same, for every user of the computer</td>
+<td><strong>Yes.</strong> Open PowerShell with &quot;Run as administrator&quot;</td>
+</tr>
+</tbody></table></div>
+<p><code>RemoteSigned</code> for <code>CurrentUser</code> is the usual choice for a developer machine. Avoid setting <code>Unrestricted</code> or <code>Bypass</code> permanently: that switches the protection off for every script, including ones you did not mean to run. To return to the default later, run <code>Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Undefined</code>.</p>
+<p>On a computer managed by your employer, check the rules before changing anything, even if you have administrator rights. For Spec Kit there is also a route that avoids PowerShell scripts altogether: choose the Python helper scripts with <code>--script py</code>.</p>
+</div>
+<div class="section">
+<h2 id="5-the-ten-git-commands-you-need">5. The ten Git commands you need</h2>
+<p>Git keeps a history of snapshots, called <strong>commits</strong>, of a folder. When an AI agent edits your files, Git is how you see exactly what it changed and how you undo it. Without Git you cannot work safely with an agent.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Command</th>
+<th>What it does</th>
+<th>When you use it</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>git init</code></td>
+<td>Turns the current folder into a Git repository</td>
+<td>Once, in a new project</td>
+</tr>
+<tr>
+<td><code>git status</code></td>
+<td>Shows which files changed since the last commit</td>
+<td>Constantly. Before and after every agent task</td>
+</tr>
+<tr>
+<td><code>git diff</code></td>
+<td>Shows the exact lines that changed</td>
+<td>To read what the agent did</td>
+</tr>
+<tr>
+<td><code>git add -A</code></td>
+<td>Marks all changes to be included in the next commit</td>
+<td>Before committing</td>
+</tr>
+<tr>
+<td><code>git commit -m &quot;message&quot;</code></td>
+<td>Saves a snapshot with a description</td>
+<td>When a step works</td>
+</tr>
+<tr>
+<td><code>git log --oneline</code></td>
+<td>Lists past commits</td>
+<td>To find a point to return to</td>
+</tr>
+<tr>
+<td><code>git switch -c my-branch</code></td>
+<td>Creates a new branch and moves to it</td>
+<td>Before starting any new piece of work</td>
+</tr>
+<tr>
+<td><code>git switch main</code></td>
+<td>Moves back to the main branch</td>
+<td>When you are done with a branch</td>
+</tr>
+<tr>
+<td><code>git restore .</code></td>
+<td>Throws away all uncommitted changes to tracked files</td>
+<td>When the agent made a mess. This cannot be undone</td>
+</tr>
+<tr>
+<td><code>git stash</code></td>
+<td>Puts uncommitted changes aside temporarily; <code>git stash pop</code> brings them back</td>
+<td>When you need a clean folder for a moment</td>
+</tr>
+</tbody></table></div>
+<p><strong>A branch</strong> is a separate line of work. You keep the <code>main</code> branch in a working state and make changes on a branch, so an experiment can be abandoned without harm.</p>
+<p><strong>Try the whole cycle once</strong>, in your practice folder:</p>
+<div class="code-wrap term"><div class="code-head"><span class="code-label">Terminal</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">git init
+&quot;# My practice project&quot; | Out-File README.md -Encoding utf8
+git add -A
+git commit -m &quot;First commit&quot;
+git switch -c try-something
+&quot;A second line&quot; | Add-Content README.md
+git status
+git diff
+git add -A
+git commit -m &quot;Add a second line&quot;
+git log --oneline</div></div>
+<p>After <code>git status</code> you should see <code>README.md</code> listed as modified. After <code>git diff</code> you should see the new line marked with a <code>+</code>. After <code>git log --oneline</code> you should see two commits.</p>
+<div class="callout success"><p><strong>✅ Key takeaway:</strong> The working rhythm with an agent is: commit your own work → let the agent do one task → <code>git status</code> and <code>git diff</code> to read what changed → run the tests → commit, or <code>git restore .</code> to discard. A clean starting point is what makes the agent&#39;s changes reviewable.</p></div>
+<p><strong>Files Git should ignore.</strong> A file named <code>.gitignore</code> lists what must never be committed: build output, dependency folders and, above all, files with secrets.</p>
+<div class="code-wrap file"><div class="code-head"><span class="code-label">File</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">node_modules/
+.venv/
+.env
+*.log</div></div>
+</div>
+<div class="section">
+<h2 id="6-pull-requests-in-one-minute">6. Pull requests in one minute</h2>
+<p>So far everything stayed on your computer. A team shares a repository on a hosting service such as GitHub or Azure DevOps (Azure Repos). <code>git push</code> sends your branch there.</p>
+<p>A <strong>pull request</strong> (PR) is a page on that service that says: &quot;please merge this branch into <code>main</code>&quot;. It shows the diff, lets colleagues comment and approve, and runs automated checks such as tests. Only after the required approvals and checks does the change enter <code>main</code>.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>GitHub</th>
+<th>Azure DevOps</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Proposal to merge</td>
+<td>Pull request</td>
+<td>Pull request</td>
+</tr>
+<tr>
+<td>Rules for the main branch</td>
+<td>Branch protection rules or rulesets</td>
+<td>Branch policies</td>
+</tr>
+<tr>
+<td>&quot;These people must review this path&quot;</td>
+<td><code>CODEOWNERS</code> file</td>
+<td>Automatically included reviewers</td>
+</tr>
+<tr>
+<td>&quot;Tests must pass first&quot;</td>
+<td>Required status checks</td>
+<td>Build validation</td>
+</tr>
+<tr>
+<td>Link to planned work</td>
+<td>Linked issue</td>
+<td>Linked work item</td>
+</tr>
+</tbody></table></div>
+<p>The pull request is the most important human control point in this whole course: whatever an agent wrote, a person reads the diff and approves it there. <a href="agent-guardrails.html">Chapter 12</a> shows how to make that review a rule instead of a habit.</p>
+</div>
+<div class="section">
+<h2 id="7-secrets-keep-them-out-of-git-and-out-of-chat">7. Secrets: keep them out of Git and out of chat</h2>
+<p>A <strong>secret</strong> is anything that grants access: a password, an API key, a token, a connection string.</p>
+<ul>
+<li><strong>Never commit a secret.</strong> Git keeps history, so deleting the line later does not remove it. Put secrets in environment variables or a secret manager, and add files such as <code>.env</code> to <code>.gitignore</code> before you create them.</li>
+<li><strong>Never paste a secret into an AI chat.</strong> The conversation may be stored, and the agent may repeat the value in a file or a command.</li>
+<li><strong>Keep secrets out of the agent&#39;s reach.</strong> An agent can read every file in the folder you opened. Do not keep production credentials there.</li>
+<li><strong>If a secret leaks, rotate it.</strong> That means: create a new one and disable the old one at the service that issued it. Removing it from the file is not enough.</li>
+<li><strong>Use made-up data while learning.</strong> No real customer names, personal identifiers or confidential documents in practice projects or prompts.</li>
+</ul>
+</div>
+<div class="section">
+<h2 id="8-your-first-hour-one-path-through-parts-3-and-4">8. Your first hour: one path through Parts 3 and 4</h2>
+<p>When the checks in section 4 pass, this sequence takes you from an empty folder to a small reviewed change. Each step links to the chapter that explains it. Pick a tiny feature that needs <strong>no database and no web server</strong>, for example a tip calculator that runs in the terminal.</p>
+<ol>
+<li><strong>Create and commit an empty project</strong> (5 min). Make a folder, run <code>git init</code>, add a README and commit, as in section 5.</li>
+<li><strong>Give the agent house rules</strong> (5 min). Create <code>.github\copilot-instructions.md</code> with three lines: the language you want, how to run tests, and &quot;ask before adding dependencies&quot;. See <a href="agent-toolkit.html#2-custom-instructions-the-house-rules">Chapter 11, section 2</a>.</li>
+<li><strong>Add a read-only reviewer agent</strong> (5 min). Copy the Reviewer file from <a href="agent-toolkit.html#5-custom-agents-a-role-with-limited-powers">Chapter 11, section 5</a>. Commit.</li>
+<li><strong>Check your permission level</strong> (2 min). Manual approvals, no allow-all. See <a href="agent-guardrails.html#4-settings-that-actually-stop-an-agent">Chapter 12, section 4</a>.</li>
+<li><strong>Add Spec Kit</strong> (10 min). Install it and initialize the folder as shown in <a href="spec-kit.html#2-install-once-initialize-each-project">Chapter 14, section 2</a>. Read <code>git status</code>, then commit.</li>
+<li><strong>Specify, plan and list tasks</strong> (15 min). In chat: <code>/speckit-specify</code> with two sentences describing the calculator, then <code>/speckit-clarify</code>, <code>/speckit-plan</code> naming a language you know, then <code>/speckit-tasks</code>. Read each file before the next command.</li>
+<li><strong>Implement on a branch</strong> (10 min). <code>git switch -c feature/tip-calculator</code>, then <code>/speckit-implement</code>. Read every approval prompt.</li>
+<li><strong>Verify it yourself</strong> (5 min). <code>git diff</code>, run the tests the plan describes, try the program by hand.</li>
+<li><strong>Review and commit</strong> (5 min). Ask the Reviewer agent to check the diff, fix what matters, commit.</li>
+</ol>
+<p>You have now used instructions, a custom agent, approvals, a spec, a plan, tasks, an implementation and a review: every idea in Parts 3 and 4 at small scale. The chapters explain each one properly.</p>
+</div>
+<div class="section">
+<h2 id="9-if-something-does-not-work">9. If something does not work</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>First thing to check</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A command is &quot;not recognized&quot;</td>
+<td>Reopen the terminal; then section 3 on PATH</td>
+</tr>
+<tr>
+<td>A command works in one terminal but not in VS Code</td>
+<td>Restart VS Code so it picks up the new PATH</td>
+</tr>
+<tr>
+<td>Git says &quot;Author identity unknown&quot;</td>
+<td>Run the two <code>git config --global</code> lines in section 4</td>
+</tr>
+<tr>
+<td>Git says &quot;not a git repository&quot;</td>
+<td>You are in the wrong folder (<code>pwd</code>), or you have not run <code>git init</code></td>
+</tr>
+<tr>
+<td>Copilot will not sign in or says you have no access</td>
+<td>Your account or organization may not have Copilot enabled; ask the administrator</td>
+</tr>
+<tr>
+<td>Downloads fail at work</td>
+<td>A company proxy or policy may block them; ask IT instead of working around it</td>
+</tr>
+<tr>
+<td>The agent&#39;s slash commands do not appear</td>
+<td>Open the project&#39;s root folder, not a subfolder; restart the chat</td>
+</tr>
+<tr>
+<td>PowerShell says scripts are disabled</td>
+<td>Section 4, execution policy</td>
+</tr>
+</tbody></table></div>
+<p>More specific tables: <a href="spec-kit.html#10-troubleshooting-and-deliberate-upgrades">Spec Kit troubleshooting</a>, <a href="squad.html#8-troubleshooting-and-updates">Squad troubleshooting</a> and <a href="sdd-existing-projects.html#13-pitfalls-and-how-to-recover">adoption pitfalls</a>.</p>
+</div>
+<div class="section">
+<h2 id="recap">Recap</h2>
+<ul>
+<li>Know where you are in the terminal, read the output, and reopen the terminal after installing anything.</li>
+<li>Environment variables hold settings and secrets; PATH decides which programs the terminal can find.</li>
+<li>Git makes an agent&#39;s work reviewable and reversible: commit before, <code>git diff</code> after.</li>
+<li>A pull request is where a person approves a change before it reaches the main branch.</li>
+<li>Secrets never go into Git, into chat, or into the folder an agent can read.</li>
+</ul>
+</div>
+<div class="section">
+<h2 id="check-your-understanding">Check Your Understanding</h2>
+<p><strong>1. You installed a tool and the terminal says the command is not recognized. What do you try first?</strong></p>
+<ul>
+<li>A) Install the tool a second time</li>
+<li>B) Close the terminal and open a new one</li>
+<li>C) Change the PowerShell execution policy</li>
+<li>D) Run <code>git init</code> in the current folder</li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — Close the terminal and open a new one, so it reads the updated PATH. A terminal that was opened before the installation still has the old PATH.</p></div></details>
+<p><strong>2. An agent changed twelve files and you do not like the result. Nothing was committed since your last commit. How do you get back?</strong></p>
+<ul>
+<li>A) <code>git switch main</code></li>
+<li>B) <code>git add -A</code></li>
+<li>C) <code>git log --oneline</code></li>
+<li>D) <code>git restore .</code></li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> D — <code>git restore .</code> discards the uncommitted changes to tracked files and returns them to the last commit. Files the agent newly created stay, and <code>git status</code> lists them so you can delete them. This works because you committed before the agent started.</p></div></details>
+<p><strong>3. You accidentally committed an API key and pushed it. You delete the line and commit again. Is the problem solved?</strong></p>
+<ul>
+<li>A) No. The key is still in the history, so rotate it</li>
+<li>B) Yes. The new commit replaces the old one</li>
+<li>C) Yes, once <code>.env</code> is listed in <code>.gitignore</code></li>
+<li>D) No, but <code>git restore .</code> removes it from the history</li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> A — The key is still in the history. Rotate it: create a new key and disable the old one. Removing it from the file is not enough.</p></div></details>
+<p><strong>4. Where does a person formally approve a change before it reaches the main branch?</strong></p>
+<ul>
+<li>A) In the agent&#39;s chat, when it asks for approval</li>
+<li>B) In the message of the commit</li>
+<li>C) In the pull request</li>
+<li>D) In the <code>CODEOWNERS</code> file</li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> C — In the pull request, backed by branch protection (GitHub) or branch policies (Azure DevOps) that require the review. <code>CODEOWNERS</code> only says which people must review a path.</p></div></details>
+<p><strong>5. You run <code>$env:MY_SETTING = &quot;hello&quot;</code> and later close the terminal window. What happens to the value?</strong></p>
+<ul>
+<li>A) It is kept for your user account</li>
+<li>B) It disappears with that window</li>
+<li>C) It is added to PATH</li>
+<li>D) It is saved in the <code>.env</code> file</li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — A value set this way is set for that terminal window only and disappears when you close the window. To keep it for your user account you use <code>[Environment]::SetEnvironmentVariable</code>, then close and reopen the terminal.</p></div></details>
+</div>
+<div class="done-row"><button class="done-btn" type="button" aria-pressed="false">Mark this page as done</button></div>
+<div class="pager">
+<a class="pager-prev" href="study-plan.html"><span>← Previous</span><strong>Study Plan</strong></a>
+<a class="pager-next" href="foundations.html"><span>Next →</span><strong>1. Foundations</strong></a>
+</div>
+</main>
+<footer class="site-footer">AI Learn · A personal learning project by Emanuel Loghin · <a href="about.html">About &amp; feedback</a> · Based on official docs and open course material · Not affiliated with any model provider</footer>
+</div>
+<aside class="toc-rail" aria-label="On this page">
+<div class="toc-title">On this page</div><nav><a href="#1-what-you-need">1. What you need</a>
+<a href="#2-the-terminal-in-five-minutes">2. The terminal in five minutes</a>
+<a href="#3-environment-variables-and-path">3. Environment variables and PATH</a>
+<a href="#4-install-and-check-the-tools">4. Install and check the tools</a>
+<a href="#5-the-ten-git-commands-you-need">5. The ten Git commands you need</a>
+<a href="#6-pull-requests-in-one-minute">6. Pull requests in one minute</a>
+<a href="#7-secrets-keep-them-out-of-git-and-out-of-chat">7. Secrets: keep them out of Git and out of chat</a>
+<a href="#8-your-first-hour-one-path-through-parts-3-and-4">8. Your first hour: one path through Parts 3 and 4</a>
+<a href="#9-if-something-does-not-work">9. If something does not work</a>
+<a href="#recap">Recap</a>
+<a href="#check-your-understanding">Check Your Understanding</a></nav>
+</aside>
+</div>
+<div class="scrim"></div>
+<script src="site.js"></script>
+</body>
+</html>

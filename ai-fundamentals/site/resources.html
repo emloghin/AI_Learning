@@ -4,45 +4,86 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Learning Resources — AI Learn</title>
+<script>try{var t=localStorage.getItem('ailearn:theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<style>.section td code,.callout code,.diagram-caption code{background:var(--primary-light);color:var(--primary);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:13px}.callout p+p{margin-top:8px}.callout ul{margin:8px 0 0 20px}</style>
 </head>
-<body>
-
-<header class="site-header">
-  <div class="header-inner">
-    <div class="header-logo"><span>AI&nbsp;</span>Learn</div>
-    <nav class="header-nav">
-      <a href="index.html">Home</a>
-      <a href="study-plan.html">Study Plan</a>
-      <a href="foundations.html">1. Foundations</a>
-      <a href="neural-networks.html">2. Neural Networks</a>
-      <a href="transformers.html">3. Transformers &amp; LLMs</a>
-      <a href="training.html">4. Training &amp; Tuning</a>
-      <a href="models.html">5. Model Landscape</a>
-      <a href="using-ai.html">6. Using Models</a>
-      <a href="tokens.html">7. Tokens &amp; Cost</a>
-      <a href="best-practices.html">8. Best Practices</a>
-      <a href="ai-at-work.html">9. AI at Work</a>
-      <a href="spec-driven-development.html">10. Spec-Driven Dev</a>
-      <a href="spec-kit.html">10a. Spec Kit</a>
-      <a href="squad.html">10b. Squad</a>
-      <a href="sdd-production.html">10c. Shipping &amp; Reuse</a>
-      <a href="glossary.html">Glossary</a>
-      <a href="resources.html" class="active">Resources</a>
-    </nav>
-  </div>
+<body data-page="resources">
+<div class="read-progress" aria-hidden="true"><div></div></div>
+<header class="topbar">
+  <button class="icon-btn menu-btn" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
+  <a class="header-logo" href="index.html"><span>AI&nbsp;</span>Learn</a>
+  <span class="topbar-crumb">Reference <b>›</b> Resources</span>
+  <span class="topbar-progress" title="Pages you marked as done"></span>
+  <button class="icon-btn theme-btn" type="button" aria-label="Switch between light and dark theme">◐</button>
 </header>
-
+<div class="shell">
+<aside class="sidebar" aria-label="Site navigation">
+<nav>
+<div class="nav-group">
+<div class="nav-group-title">Start here<span class="nav-count"></span></div>
+<a href="index.html" data-page="index">Home</a>
+<a href="study-plan.html" data-page="study-plan">Study Plan</a>
+<a href="setup.html" data-page="setup">Setup &amp; Git Basics</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 1 · Understand AI<span class="nav-count"></span></div>
+<a href="foundations.html" data-page="foundations">1. Foundations</a>
+<a href="neural-networks.html" data-page="neural-networks">2. Neural Networks</a>
+<a href="transformers.html" data-page="transformers">3. Transformers &amp; LLMs</a>
+<a href="training.html" data-page="training">4. Training &amp; Tuning</a>
+<a href="models.html" data-page="models">5. Model Landscape</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 2 · Use AI well<span class="nav-count"></span></div>
+<a href="using-ai.html" data-page="using-ai">6. Using Models</a>
+<a href="connecting-ai.html" data-page="connecting-ai">7. Connecting Models</a>
+<a href="tokens.html" data-page="tokens">8. Tokens &amp; Cost</a>
+<a href="best-practices.html" data-page="best-practices">9. Best Practices</a>
+<a href="ai-at-work.html" data-page="ai-at-work">10. AI at Work</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 3 · Work with agents<span class="nav-count"></span></div>
+<a href="agent-toolkit.html" data-page="agent-toolkit">11. Equip Your Agent</a>
+<a href="agent-guardrails.html" data-page="agent-guardrails">12. Human Control &amp; Guardrails</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 4 · Build with specs<span class="nav-count"></span></div>
+<a href="spec-driven-development.html" data-page="spec-driven-development">13. Spec-Driven Dev</a>
+<a href="spec-kit.html" data-page="spec-kit">14. Spec Kit from Zero</a>
+<a href="sdd-existing-projects.html" data-page="sdd-existing-projects">15. Existing Projects</a>
+<a href="sdd-examples.html" data-page="sdd-examples">16. Real Examples</a>
+<a href="squad.html" data-page="squad">17. Squad</a>
+<a href="sdd-production.html" data-page="sdd-production">18. Shipping &amp; Reuse</a>
+</div>
+<div class="nav-group current">
+<div class="nav-group-title">Reference<span class="nav-count"></span></div>
+<a href="sdd-reference.html" data-page="sdd-reference">Command Reference</a>
+<a href="glossary.html" data-page="glossary">Glossary</a>
+<a href="resources.html" data-page="resources" class="active" aria-current="page">Resources</a>
+<a href="about.html" data-page="about">About &amp; Feedback</a>
+</div>
+</nav>
+</aside>
+<div class="content">
 <section class="hero">
   <div class="hero-badge">Reference · Keep learning</div>
   <h1>Learning Resources</h1>
-  <p>These are hand-picked, free or freely readable resources for going deeper after AI Learn. The original course and model references were checked in October 2026; the Spec Kit and Squad references in section 9 were checked on 25 November 2026. Where a resource has moved or been renamed, the table points to its current home.</p>
+  <p>These are hand-picked, free or freely readable resources for going deeper after AI Learn. The original course and model references were checked in October 2026; the agent, Spec Kit and Squad references in sections 9 and 10 were checked on 27 November 2026. Where a resource has moved or been renamed, the table points to its current home.</p>
+  <div class="hero-meta"><span>⏱ about 14 min of reading</span><span>Page 24 of 25</span></div>
 </section>
-
 <main class="main">
+<details class="toc-inline"><summary>On this page</summary><nav><a href="#1-free-courses">1. Free courses</a>
+<a href="#2-videos">2. Videos</a>
+<a href="#3-interactive-tools">3. Interactive tools</a>
+<a href="#4-official-documentation">4. Official documentation</a>
+<a href="#5-key-papers">5. Key papers</a>
+<a href="#6-security-responsible-ai">6. Security &amp; responsible AI</a>
+<a href="#7-token-saving-references">7. Token-saving references</a>
+<a href="#8-communities">8. Communities</a>
+<a href="#9-agents-customization-mcp-and-guardrails">9. Agents: customization, MCP and guardrails</a>
+<a href="#10-spec-driven-development-with-spec-kit-and-squad">10. Spec-driven development with Spec Kit and Squad</a></nav></details>
 <div class="section">
 <h2 id="1-free-courses">1. Free courses</h2>
 <p>For a week-by-week plan that combines these courses with the chapters of this site, see the <a href="study-plan.html">Study Plan</a>.</p>
@@ -78,18 +119,18 @@
 <td><a href="https://academy.openai.com/" target="_blank" rel="noopener">academy.openai.com</a></td>
 </tr>
 <tr>
-<td>Anthropic Academy: AI Fluency</td>
+<td>Claude Academy (formerly Anthropic Academy): AI Fluency</td>
 <td>Course</td>
 <td>Beginner</td>
 <td>Free courses on working well with AI (<em>AI Fluency: Framework &amp; Foundations</em>, <em>AI Capabilities and Limitations</em>).</td>
 <td><a href="https://academy.claude.com/" target="_blank" rel="noopener">academy.claude.com</a></td>
 </tr>
 <tr>
-<td>Anthropic Academy: product &amp; developer courses</td>
+<td>Claude Academy: product &amp; developer courses</td>
 <td>Course hub</td>
 <td>Beginner → Intermediate</td>
-<td>Free courses with certificates: Claude 101, Claude Code in Action, Building with the Claude API, Model Context Protocol.</td>
-<td><a href="https://anthropic.skilljar.com/" target="_blank" rel="noopener">anthropic.skilljar.com</a></td>
+<td>Free courses with a completion badge: Claude 101, Claude Code in Action, Building with the Claude API, Model Context Protocol.</td>
+<td><a href="https://academy.claude.com/courses" target="_blank" rel="noopener">academy.claude.com</a></td>
 </tr>
 <tr>
 <td>Anthropic Prompt Engineering Interactive Tutorial</td>
@@ -163,7 +204,6 @@
 </tr>
 </tbody></table></div>
 <div class="callout tip"><p><strong>💡 Example:</strong> For using AI at work, start with Elements of AI and one of Google AI Essentials, OpenAI Academy or Anthropic AI Fluency. For how models work inside, a good path is Google&#39;s crash course first, then 3Blue1Brown&#39;s videos, then the Hugging Face LLM Course, and finally Karpathy&#39;s series once you are comfortable with Python.</p></div>
-
 </div>
 <div class="section">
 <h2 id="2-videos">2. Videos</h2>
@@ -199,7 +239,6 @@
 <td><a href="https://www.youtube.com/@mreflow" target="_blank" rel="noopener">YouTube</a> · <a href="https://www.futuretools.io/" target="_blank" rel="noopener">futuretools.io</a></td>
 </tr>
 </tbody></table></div>
-
 </div>
 <div class="section">
 <h2 id="3-interactive-tools">3. Interactive tools</h2>
@@ -242,7 +281,6 @@
 <td><a href="https://bbycroft.net/llm" target="_blank" rel="noopener">bbycroft.net</a></td>
 </tr>
 </tbody></table></div>
-
 </div>
 <div class="section">
 <h2 id="4-official-documentation">4. Official documentation</h2>
@@ -306,7 +344,6 @@
 <td><a href="https://docs.ollama.com/" target="_blank" rel="noopener">docs.ollama.com</a></td>
 </tr>
 </tbody></table></div>
-
 </div>
 <div class="section">
 <h2 id="5-key-papers">5. Key papers</h2>
@@ -371,7 +408,6 @@
 <td><a href="https://arxiv.org/abs/2302.13971" target="_blank" rel="noopener">arXiv:2302.13971</a></td>
 </tr>
 </tbody></table></div>
-
 </div>
 <div class="section">
 <h2 id="6-security-responsible-ai">6. Security &amp; responsible AI</h2>
@@ -386,11 +422,11 @@
 </tr>
 </thead>
 <tbody><tr>
-<td>OWASP Top 10 for LLM Applications (2025)</td>
+<td>OWASP Top 10 for LLM Applications (2026)</td>
 <td>Guide</td>
 <td>Beginner → Intermediate</td>
-<td>The community list of the biggest security risks in LLM apps, from prompt injection to unbounded consumption.</td>
-<td><a href="https://genai.owasp.org/llm-top-10/" target="_blank" rel="noopener">genai.owasp.org</a></td>
+<td>The community list of the biggest security risks in LLM apps, from prompt injection to improper output handling.</td>
+<td><a href="https://genai.owasp.org/top-10-for-llm-applications-2026/" target="_blank" rel="noopener">genai.owasp.org</a></td>
 </tr>
 <tr>
 <td>OWASP LLM01: Prompt Injection</td>
@@ -414,7 +450,6 @@
 <td><a href="https://learn.microsoft.com/en-us/azure/machine-learning/concept-responsible-ai" target="_blank" rel="noopener">learn.microsoft.com</a></td>
 </tr>
 </tbody></table></div>
-
 </div>
 <div class="section">
 <h2 id="7-token-saving-references">7. Token-saving references</h2>
@@ -447,7 +482,7 @@
 <td>Docs</td>
 <td>Intermediate</td>
 <td>Implicit and explicit caching for Gemini models.</td>
-<td><a href="https://ai.google.dev/gemini-api/docs/caching" target="_blank" rel="noopener">ai.google.dev</a></td>
+<td><a href="https://aistudio.google.com/docs/caching" target="_blank" rel="noopener">aistudio.google.com</a></td>
 </tr>
 <tr>
 <td>OpenAI: Batch API</td>
@@ -468,7 +503,7 @@
 <td>Docs</td>
 <td>Intermediate</td>
 <td>Asynchronous batch jobs for Gemini at reduced cost.</td>
-<td><a href="https://ai.google.dev/gemini-api/docs/batch-api" target="_blank" rel="noopener">ai.google.dev</a></td>
+<td><a href="https://aistudio.google.com/docs/batch-api" target="_blank" rel="noopener">aistudio.google.com</a></td>
 </tr>
 <tr>
 <td>Anthropic: Effective context engineering for AI agents</td>
@@ -499,7 +534,6 @@
 <td><a href="https://github.com/openai/tiktoken" target="_blank" rel="noopener">github.com</a></td>
 </tr>
 </tbody></table></div>
-
 </div>
 <div class="section">
 <h2 id="8-communities">8. Communities</h2>
@@ -549,12 +583,89 @@
 <td><a href="https://www.reddit.com/r/LocalLLaMA/" target="_blank" rel="noopener">reddit.com</a></td>
 </tr>
 </tbody></table></div>
-<div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;If a forum post says a model is best, it is best for me.&quot; Community opinions move fast and depend on the poster&#39;s hardware and tasks. Test claims on your own data (see <a href="best-practices.html">Chapter 8</a>).</p></div>
-
+<div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;If a forum post says a model is best, it is best for me.&quot; Community opinions move fast and depend on the poster&#39;s hardware and tasks. Test claims on your own data (see <a href="best-practices.html">Chapter 9</a>).</p></div>
 </div>
 <div class="section">
-<h2 id="9-spec-driven-development-with-spec-kit-and-squad">9. Spec-driven development with Spec Kit and Squad</h2>
-<p>Start with <a href="spec-driven-development.html">Chapter 10&#39;s guided learning path</a>, then use these sources to check the commands and adapt the workflow. Open-source tools do not make model usage free.</p>
+<h2 id="9-agents-customization-mcp-and-guardrails">9. Agents: customization, MCP and guardrails</h2>
+<p>Background reading for <a href="agent-toolkit.html">Chapter 11</a> and <a href="agent-guardrails.html">Chapter 12</a>. Checked on 27 November 2026.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Provenance</th>
+<th>What to use it for</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://docs.github.com/en/copilot/reference/customization-cheat-sheet" target="_blank" rel="noopener">Copilot customization cheat sheet</a></td>
+<td>Official (GitHub)</td>
+<td>One table of instructions, skills, agents, hooks and MCP, and where each is supported</td>
+</tr>
+<tr>
+<td><a href="https://code.visualstudio.com/docs/agent-customization/custom-agents" target="_blank" rel="noopener">Custom agents in VS Code</a> and <a href="https://docs.github.com/en/copilot/reference/custom-agents-configuration" target="_blank" rel="noopener">configuration reference</a></td>
+<td>Official</td>
+<td>Agent file format, fields and tool names</td>
+</tr>
+<tr>
+<td><a href="https://agentskills.io/specification" target="_blank" rel="noopener">Agent Skills specification</a> and <a href="https://code.visualstudio.com/docs/agent-customization/agent-skills" target="_blank" rel="noopener">skills in VS Code</a></td>
+<td>Open standard; official</td>
+<td><code>SKILL.md</code> format, naming rules and how skills are loaded</td>
+</tr>
+<tr>
+<td><a href="https://agents.md/" target="_blank" rel="noopener">AGENTS.md</a></td>
+<td>Open format</td>
+<td>Cross-tool instruction file</td>
+</tr>
+<tr>
+<td><a href="https://modelcontextprotocol.io/specification/latest" target="_blank" rel="noopener">MCP specification</a> and <a href="https://modelcontextprotocol.io/docs/develop/build-server" target="_blank" rel="noopener">build-a-server tutorial</a></td>
+<td>Official</td>
+<td>The protocol and a first server</td>
+</tr>
+<tr>
+<td><a href="https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-mcp-servers" target="_blank" rel="noopener">Add MCP servers in Copilot CLI</a> and <a href="https://github.com/github/github-mcp-server" target="_blank" rel="noopener">GitHub MCP server</a></td>
+<td>Official</td>
+<td>Configuration format; toolsets and read-only mode</td>
+</tr>
+<tr>
+<td><a href="https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices" target="_blank" rel="noopener">MCP security best practices</a></td>
+<td>Official</td>
+<td>Risks of local servers, tool descriptions and tokens</td>
+</tr>
+<tr>
+<td><a href="https://docs.github.com/en/copilot/how-tos/copilot-cli/use-copilot-cli/allowing-tools" target="_blank" rel="noopener">Copilot CLI: allowing tools</a> and <a href="https://docs.github.com/en/copilot/reference/hooks-reference" target="_blank" rel="noopener">hooks reference</a></td>
+<td>Official</td>
+<td>Approval prompts, allow and deny rules, hooks</td>
+</tr>
+<tr>
+<td><a href="https://code.visualstudio.com/docs/agents/run/approvals" target="_blank" rel="noopener">VS Code agent approvals</a> and <a href="https://code.visualstudio.com/docs/agents/run/security" target="_blank" rel="noopener">security</a></td>
+<td>Official</td>
+<td>Permission levels, auto-approve settings, checkpoints, sandbox</td>
+</tr>
+<tr>
+<td><a href="https://docs.github.com/en/copilot/concepts/security-governance-and-network-settings/risks-and-mitigations" target="_blank" rel="noopener">Copilot cloud agent: risks and mitigations</a></td>
+<td>Official</td>
+<td>Built-in limits of the cloud agent</td>
+</tr>
+<tr>
+<td><a href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/" target="_blank" rel="noopener">The lethal trifecta</a> and <a href="https://ai.meta.com/blog/practical-ai-agent-security/" target="_blank" rel="noopener">Agents Rule of Two</a></td>
+<td>Practitioner; vendor engineering blog</td>
+<td>Two simple rules for judging whether an agent setup is dangerous</td>
+</tr>
+<tr>
+<td><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">Building effective agents</a> and <a href="https://www.anthropic.com/engineering/claude-code-sandboxing" target="_blank" rel="noopener">Beyond permission prompts</a></td>
+<td>Vendor engineering blog</td>
+<td>Simple designs, stopping conditions, sandboxing and approval fatigue</td>
+</tr>
+<tr>
+<td><a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-14" target="_blank" rel="noopener">EU AI Act, Article 14</a></td>
+<td>Official (European Commission service desk)</td>
+<td>Human-oversight requirements for high-risk AI systems, as a design benchmark</td>
+</tr>
+</tbody></table></div>
+</div>
+<div class="section">
+<h2 id="10-spec-driven-development-with-spec-kit-and-squad">10. Spec-driven development with Spec Kit and Squad</h2>
+<p>Start with <a href="spec-driven-development.html">Chapter 13&#39;s guided learning path</a>, then use these sources to check the commands and adapt the workflow. Open-source tools do not make model usage free.</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -624,16 +735,70 @@
 <td>Confirms complementary roles; not a specification for an automatic integration</td>
 </tr>
 <tr>
+<td><a href="https://github.github.io/spec-kit/how-to/monorepo.html" target="_blank" rel="noopener">Spec Kit monorepo guide</a>, <a href="https://github.github.io/spec-kit/guides/bugfix.html" target="_blank" rel="noopener">bug-fix guide</a> and <a href="https://github.github.io/spec-kit/guides/assessment.html" target="_blank" rel="noopener">idea assessment</a></td>
+<td>Official</td>
+<td>Several projects in one repository; the opt-in bug and assessment extensions</td>
+</tr>
+<tr>
+<td><a href="https://github.github.io/spec-kit/extensions/cli.html" target="_blank" rel="noopener">Spec Kit extensions</a>, <a href="https://github.github.io/spec-kit/presets/cli.html" target="_blank" rel="noopener">presets</a> and <a href="https://github.github.io/spec-kit/workflows/cli.html" target="_blank" rel="noopener">workflows</a></td>
+<td>Official</td>
+<td>Optional add-ons and their commands; read the security notes before installing community entries</td>
+</tr>
+<tr>
+<td><a href="https://github.github.io/spec-kit/community/walkthroughs.html" target="_blank" rel="noopener">Spec Kit community walkthroughs</a></td>
+<td>Community, listed by the project but not reviewed by GitHub</td>
+<td>Real prompts used on new and large existing codebases; walked through in <a href="sdd-examples.html">Chapter 16</a></td>
+</tr>
+<tr>
+<td><a href="https://github.github.io/squad/docs/scenarios/existing-repo/" target="_blank" rel="noopener">Squad existing-repository</a>, <a href="https://github.github.io/squad/docs/scenarios/mid-project/" target="_blank" rel="noopener">mid-project</a> and <a href="https://github.github.io/squad/docs/scenarios/upgrading/" target="_blank" rel="noopener">upgrading</a> scenarios</td>
+<td>Official; some pages show older commands</td>
+<td>Adding a team to a codebase you already have; upgrading from 1.x</td>
+</tr>
+<tr>
+<td><a href="https://hubreb.github.io/blog/spec-kit-brownfield-setup" target="_blank" rel="noopener">Spec Kit brownfield setup: auditing a generated constitution</a></td>
+<td>Practitioner blog, May 2026, older Spec Kit version</td>
+<td>Why every generated principle needs checking against the repository</td>
+</tr>
+<tr>
+<td><a href="https://www.thoughtworks.com/en-cl/radar/languages-and-frameworks/github-spec-kit" target="_blank" rel="noopener">Thoughtworks Technology Radar: GitHub Spec Kit</a></td>
+<td>Consultancy assessment, April 2026</td>
+<td>An outside view of strengths and rough edges on existing systems</td>
+</tr>
+<tr>
+<td><a href="sdd-existing-projects.html">Existing projects and migration</a> and <a href="sdd-reference.html">command reference</a></td>
+<td>This site</td>
+<td>Step-by-step adoption in a codebase you already have; every command in one place</td>
+</tr>
+<tr>
 <td><a href="sdd-production.html">Community lessons and production examples</a></td>
 <td>This site&#39;s sourced synthesis</td>
 <td>Concrete failure cases, release gates, multi-project reuse and how to weigh practitioner evidence</td>
 </tr>
 </tbody></table></div>
 <div class="callout success"><p><strong>✅ Key takeaway:</strong> Start with one beginner course, one visual series and one interactive tool, then use the official docs as your source of truth whenever you build something real.</p></div>
-<div class="nav-links"><a href="glossary.html">← Glossary</a><a href="study-plan.html">Study Plan →</a></div>
+</div>
+<div class="done-row"><button class="done-btn" type="button" aria-pressed="false">Mark this page as done</button></div>
+<div class="pager">
+<a class="pager-prev" href="glossary.html"><span>← Previous</span><strong>Glossary</strong></a>
+<a class="pager-next" href="about.html"><span>Next →</span><strong>About &amp; Feedback</strong></a>
 </div>
 </main>
-
-<footer class="site-footer">AI Learn · A beginner's guide to how AI models work · Based on official docs and open course material · Not affiliated with any model provider</footer>
+<footer class="site-footer">AI Learn · A personal learning project by Emanuel Loghin · <a href="about.html">About &amp; feedback</a> · Based on official docs and open course material · Not affiliated with any model provider</footer>
+</div>
+<aside class="toc-rail" aria-label="On this page">
+<div class="toc-title">On this page</div><nav><a href="#1-free-courses">1. Free courses</a>
+<a href="#2-videos">2. Videos</a>
+<a href="#3-interactive-tools">3. Interactive tools</a>
+<a href="#4-official-documentation">4. Official documentation</a>
+<a href="#5-key-papers">5. Key papers</a>
+<a href="#6-security-responsible-ai">6. Security &amp; responsible AI</a>
+<a href="#7-token-saving-references">7. Token-saving references</a>
+<a href="#8-communities">8. Communities</a>
+<a href="#9-agents-customization-mcp-and-guardrails">9. Agents: customization, MCP and guardrails</a>
+<a href="#10-spec-driven-development-with-spec-kit-and-squad">10. Spec-driven development with Spec Kit and Squad</a></nav>
+</aside>
+</div>
+<div class="scrim"></div>
+<script src="site.js"></script>
 </body>
 </html>

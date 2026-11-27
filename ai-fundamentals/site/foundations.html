@@ -4,45 +4,87 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Foundations: What AI Models Are — AI Learn</title>
+<script>try{var t=localStorage.getItem('ailearn:theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<style>.section td code,.callout code,.diagram-caption code{background:var(--primary-light);color:var(--primary);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:13px}.callout p+p{margin-top:8px}.callout ul{margin:8px 0 0 20px}</style>
 </head>
-<body>
-
-<header class="site-header">
-  <div class="header-inner">
-    <div class="header-logo"><span>AI&nbsp;</span>Learn</div>
-    <nav class="header-nav">
-      <a href="index.html">Home</a>
-      <a href="study-plan.html">Study Plan</a>
-      <a href="foundations.html" class="active">1. Foundations</a>
-      <a href="neural-networks.html">2. Neural Networks</a>
-      <a href="transformers.html">3. Transformers &amp; LLMs</a>
-      <a href="training.html">4. Training &amp; Tuning</a>
-      <a href="models.html">5. Model Landscape</a>
-      <a href="using-ai.html">6. Using Models</a>
-      <a href="tokens.html">7. Tokens &amp; Cost</a>
-      <a href="best-practices.html">8. Best Practices</a>
-      <a href="ai-at-work.html">9. AI at Work</a>
-      <a href="spec-driven-development.html">10. Spec-Driven Dev</a>
-      <a href="spec-kit.html">10a. Spec Kit</a>
-      <a href="squad.html">10b. Squad</a>
-      <a href="sdd-production.html">10c. Shipping &amp; Reuse</a>
-      <a href="glossary.html">Glossary</a>
-      <a href="resources.html">Resources</a>
-    </nav>
-  </div>
+<body data-page="foundations">
+<div class="read-progress" aria-hidden="true"><div></div></div>
+<header class="topbar">
+  <button class="icon-btn menu-btn" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
+  <a class="header-logo" href="index.html"><span>AI&nbsp;</span>Learn</a>
+  <span class="topbar-crumb">Part 1 · Understand AI <b>›</b> 1. Foundations</span>
+  <span class="topbar-progress" title="Pages you marked as done"></span>
+  <button class="icon-btn theme-btn" type="button" aria-label="Switch between light and dark theme">◐</button>
 </header>
-
+<div class="shell">
+<aside class="sidebar" aria-label="Site navigation">
+<nav>
+<div class="nav-group">
+<div class="nav-group-title">Start here<span class="nav-count"></span></div>
+<a href="index.html" data-page="index">Home</a>
+<a href="study-plan.html" data-page="study-plan">Study Plan</a>
+<a href="setup.html" data-page="setup">Setup &amp; Git Basics</a>
+</div>
+<div class="nav-group current">
+<div class="nav-group-title">Part 1 · Understand AI<span class="nav-count"></span></div>
+<a href="foundations.html" data-page="foundations" class="active" aria-current="page">1. Foundations</a>
+<a href="neural-networks.html" data-page="neural-networks">2. Neural Networks</a>
+<a href="transformers.html" data-page="transformers">3. Transformers &amp; LLMs</a>
+<a href="training.html" data-page="training">4. Training &amp; Tuning</a>
+<a href="models.html" data-page="models">5. Model Landscape</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 2 · Use AI well<span class="nav-count"></span></div>
+<a href="using-ai.html" data-page="using-ai">6. Using Models</a>
+<a href="connecting-ai.html" data-page="connecting-ai">7. Connecting Models</a>
+<a href="tokens.html" data-page="tokens">8. Tokens &amp; Cost</a>
+<a href="best-practices.html" data-page="best-practices">9. Best Practices</a>
+<a href="ai-at-work.html" data-page="ai-at-work">10. AI at Work</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 3 · Work with agents<span class="nav-count"></span></div>
+<a href="agent-toolkit.html" data-page="agent-toolkit">11. Equip Your Agent</a>
+<a href="agent-guardrails.html" data-page="agent-guardrails">12. Human Control &amp; Guardrails</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 4 · Build with specs<span class="nav-count"></span></div>
+<a href="spec-driven-development.html" data-page="spec-driven-development">13. Spec-Driven Dev</a>
+<a href="spec-kit.html" data-page="spec-kit">14. Spec Kit from Zero</a>
+<a href="sdd-existing-projects.html" data-page="sdd-existing-projects">15. Existing Projects</a>
+<a href="sdd-examples.html" data-page="sdd-examples">16. Real Examples</a>
+<a href="squad.html" data-page="squad">17. Squad</a>
+<a href="sdd-production.html" data-page="sdd-production">18. Shipping &amp; Reuse</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Reference<span class="nav-count"></span></div>
+<a href="sdd-reference.html" data-page="sdd-reference">Command Reference</a>
+<a href="glossary.html" data-page="glossary">Glossary</a>
+<a href="resources.html" data-page="resources">Resources</a>
+<a href="about.html" data-page="about">About &amp; Feedback</a>
+</div>
+</nav>
+</aside>
+<div class="content">
 <section class="hero">
   <div class="hero-badge">Chapter 1 · Foundations</div>
   <h1>Foundations: What AI Models Are</h1>
   <p>Before looking inside an AI model, you need a clear map: what &quot;AI&quot;, &quot;machine learning&quot;, &quot;deep learning&quot; and &quot;generative AI&quot; mean, how a computer can learn from examples instead of rules, and what a &quot;model&quot; physically is.</p>
+  <div class="hero-meta"><span>⏱ about 16 min of reading</span><span>Page 4 of 25</span></div>
 </section>
-
 <main class="main">
+<details class="toc-inline"><summary>On this page</summary><nav><a href="#1-ai-machine-learning-deep-learning-and-generative-ai">1. AI, machine learning, deep learning and generative AI</a>
+<a href="#2-writing-rules-vs-learning-from-data">2. Writing rules vs learning from data</a>
+<a href="#3-types-of-learning">3. Types of learning</a>
+<a href="#4-data-features-and-labels">4. Data, features and labels</a>
+<a href="#5-what-a-model-actually-is">5. What a &quot;model&quot; actually is</a>
+<a href="#6-training-vs-inference">6. Training vs inference</a>
+<a href="#7-generalization-overfitting-and-underfitting">7. Generalization, overfitting and underfitting</a>
+<a href="#8-types-of-models-by-task">8. Types of models by task</a>
+<a href="#9-where-models-run">9. Where models run</a>
+<a href="#recap">Recap</a>
+<a href="#check-your-understanding">Check Your Understanding</a></nav></details>
 <div class="section">
 <h2 id="1-ai-machine-learning-deep-learning-and-generative-ai">1. AI, machine learning, deep learning and generative AI</h2>
 <p>These four terms are often used as if they mean the same thing. They do not — each one sits inside the one before it.</p>
@@ -78,16 +120,15 @@
 <div class="diagram-caption">Figure 1 — Each field is a subset of the one around it. Today&#39;s generative AI is built almost entirely with deep learning, but not all AI is generative.</div></div>
 <div class="callout tip"><p><strong>📘 In plain words:</strong> AI is the whole kitchen. Machine learning is cooking by tasting and adjusting rather than following a fixed recipe. Deep learning is a particularly powerful oven. Generative AI is the set of dishes that oven is famous for.</p></div>
 <p>Microsoft Learn&#39;s <a href="https://learn.microsoft.com/training/modules/get-started-ai-fundamentals/" target="_blank" rel="noopener">Introduction to AI concepts</a> and <a href="https://learn.microsoft.com/training/modules/fundamentals-machine-learning/" target="_blank" rel="noopener">Introduction to machine learning concepts</a> modules cover the same map if you want a second explanation.</p>
-
 </div>
 <div class="section">
 <h2 id="2-writing-rules-vs-learning-from-data">2. Writing rules vs learning from data</h2>
 <h3 id="21-the-traditional-way-a-programmer-writes-the-rules">2.1 The traditional way: a programmer writes the rules</h3>
 <p>Suppose you want to filter spam email. The classic approach is to write rules by hand:</p>
-<div class="code-block">IF subject contains &quot;FREE MONEY&quot;      THEN spam
+<div class="code-wrap plain"><div class="code-head"><span class="code-label"></span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">IF subject contains &quot;FREE MONEY&quot;      THEN spam
 IF sender is not in contacts
    AND body contains &quot;click here&quot;      THEN spam
-OTHERWISE                              not spam</div>
+OTHERWISE                              not spam</div></div>
 <p>This works for a week. Then spammers write &quot;FR3E M0NEY&quot;, and you add another rule. And another. Soon you have thousands of fragile rules, and legitimate emails (&quot;Click here to see your receipt&quot;) get blocked.</p>
 <h3 id="22-the-machine-learning-way-the-computer-finds-the-rules">2.2 The machine learning way: the computer finds the rules</h3>
 <p>Instead, you collect 100,000 emails that people have already marked as &quot;spam&quot; or &quot;not spam&quot;, and give them to a learning algorithm. The algorithm discovers, on its own, which combinations of words, senders, links and formatting tend to indicate spam — including patterns no human would think to write down. When spammers change tactics, you retrain on fresh examples.</p>
@@ -127,7 +168,6 @@ OTHERWISE                              not spam</div>
 </tr>
 </tbody></table></div>
 <div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;Machine learning replaces normal programming.&quot; It does not. A real AI product is mostly ordinary code (user interface, databases, security) with a learned model inside for the fuzzy part.</p></div>
-
 </div>
 <div class="section">
 <h2 id="3-types-of-learning">3. Types of learning</h2>
@@ -196,7 +236,6 @@ OTHERWISE                              not spam</div>
 <td>LLM pre-training (predict the next token)</td>
 </tr>
 </tbody></table></div>
-
 </div>
 <div class="section">
 <h2 id="4-data-features-and-labels">4. Data, features and labels</h2>
@@ -243,25 +282,23 @@ OTHERWISE                              not spam</div>
 <p>For text models, the &quot;features&quot; are the tokens of the text so far, and the &quot;label&quot; is the next token. For image models, the features are pixel values.</p>
 <div class="callout tip"><p><strong>💡 Example:</strong> In a spam filter, features might be &quot;number of links&quot;, &quot;sender in contacts (yes/no)&quot; and &quot;contains the word <em>winner</em>&quot;. The label is &quot;spam&quot; or &quot;not spam&quot;.</p></div>
 <div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;More data always fixes everything.&quot; Quality matters as much as quantity. If the labels are wrong, or the data does not represent the real world (for example, only houses from one city), the model learns the wrong lesson. This is the root of many AI bias problems.</p></div>
-
 </div>
 <div class="section">
 <h2 id="5-what-a-model-actually-is">5. What a &quot;model&quot; actually is</h2>
 <p>A <strong>model</strong> is a <em>function with learned numbers</em>. A function is simply a rule that turns an input into an output.</p>
 <p>Here is the simplest possible model for our house prices:</p>
-<div class="code-block">price = w × size + b</div>
+<div class="code-wrap plain"><div class="code-head"><span class="code-label"></span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">price = w × size + b</div></div>
 <ul>
 <li><code>size</code> is the input (a feature).</li>
 <li><code>w</code> and <code>b</code> are <strong>parameters</strong> — numbers the model learns. <code>w</code> is called a <em>weight</em>, <code>b</code> a <em>bias</em>.</li>
 <li>Before training, <code>w</code> and <code>b</code> are just guesses. Training finds values that make the predictions close to the real prices.</li>
 </ul>
 <p>Suppose training finds <code>w = 2.8</code> and <code>b = 10</code>. Then for a 90 m² house:</p>
-<div class="code-block">price = 2.8 × 90 + 10 = 252 + 10 = 262   (thousand)</div>
+<div class="code-wrap plain"><div class="code-head"><span class="code-label"></span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">price = 2.8 × 90 + 10 = 252 + 10 = 262   (thousand)</div></div>
 <p>That is a complete, working (if simple) machine learning model: one formula and two learned numbers.</p>
 <p>A large language model is the same idea at a vastly bigger scale. Instead of one formula with 2 numbers, it is a deep stack of formulas with <em>billions</em> of learned numbers, and instead of predicting a price, it predicts the next token. When you download an open model such as Llama or Mistral, the big file you get is mostly those numbers.</p>
 <div class="callout tip"><p><strong>📘 In plain words:</strong> A model is a recipe (the structure of the formula) plus a long list of learned ingredient amounts (the parameters). The recipe is written by engineers; the amounts are learned from data.</p></div>
 <div class="callout success"><p><strong>✅ Key takeaway:</strong> &quot;Training a model&quot; means finding good values for its parameters. &quot;Running a model&quot; means plugging new inputs into the formula with those values fixed.</p></div>
-
 </div>
 <div class="section">
 <h2 id="6-training-vs-inference">6. Training vs inference</h2>
@@ -311,7 +348,6 @@ OTHERWISE                              not spam</div>
 </tr>
 </tbody></table></div>
 <div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;The chatbot is learning from our conversation right now.&quot; During a conversation, the model&#39;s weights do not change. It only &quot;remembers&quot; what is in the current conversation text. Some providers may use conversations as training data for <em>future</em> model versions, depending on their policies and your settings — which is a privacy question, not live learning.</p></div>
-
 </div>
 <div class="section">
 <h2 id="7-generalization-overfitting-and-underfitting">7. Generalization, overfitting and underfitting</h2>
@@ -358,7 +394,6 @@ OTHERWISE                              not spam</div>
 </tbody></table></div>
 <p>Google&#39;s crash course has an excellent interactive section on <a href="https://developers.google.com/machine-learning/crash-course/overfitting" target="_blank" rel="noopener">overfitting</a>. Chapter 2 shows the specific techniques used to fight it.</p>
 <div class="callout success"><p><strong>✅ Key takeaway:</strong> A model is only as good as its performance on data it has <em>not</em> seen. A perfect score on the training data can be a bad sign.</p></div>
-
 </div>
 <div class="section">
 <h2 id="8-types-of-models-by-task">8. Types of models by task</h2>
@@ -389,7 +424,6 @@ OTHERWISE                              not spam</div>
 </tbody></table></div>
 <p>Others you will meet: <strong>clustering</strong> (grouping without labels), <strong>recommendation</strong> (what to watch next), and <strong>embedding</strong> models, which turn text or images into lists of numbers that capture meaning (used for search — see <a href="transformers.html">Transformers &amp; LLMs</a>).</p>
 <div class="callout tip"><p><strong>💡 Example:</strong> An LLM is, underneath, a classifier repeated many times: at each step it &quot;classifies&quot; which token should come next out of a vocabulary of tens of thousands to a few hundred thousand possible tokens. Chaining those choices together produces generated text.</p></div>
-
 </div>
 <div class="section">
 <h2 id="9-where-models-run">9. Where models run</h2>
@@ -428,7 +462,6 @@ OTHERWISE                              not spam</div>
 </tbody></table></div>
 <div class="callout tip"><p><strong>📘 In plain words:</strong> Cloud = renting a genius over the phone. Local = owning a smart assistant who lives in your house. Edge = a pocket-sized helper that is always with you but knows less.</p></div>
 <p>The difference between <em>proprietary</em> and <em>open-weight</em> models — and what &quot;open source&quot; really means for AI — is covered in <a href="models.html">Model Landscape</a>.</p>
-
 </div>
 <div class="section">
 <h2 id="recap">Recap</h2>
@@ -442,7 +475,6 @@ OTHERWISE                              not spam</div>
 <li>The goal is generalization. Overfitting = memorizing; underfitting = too simple.</li>
 <li>Models classify, predict numbers (regression) or generate new content, and run in the cloud, locally, or on-device.</li>
 </ul>
-
 </div>
 <div class="section">
 <h2 id="check-your-understanding">Check Your Understanding</h2>
@@ -494,10 +526,30 @@ OTHERWISE                              not spam</div>
 <li>D) An unsupervised clustering model</li>
 </ul>
 <details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — Downloading open weights and running them on your own hardware keeps data in-house and avoids per-token API charges, at the cost of buying and managing the hardware.</p></div></details>
-<div class="nav-links"><a href="index.html">← Home</a><a href="neural-networks.html">Chapter 2: Neural Networks →</a></div>
+</div>
+<div class="done-row"><button class="done-btn" type="button" aria-pressed="false">Mark this page as done</button></div>
+<div class="pager">
+<a class="pager-prev" href="setup.html"><span>← Previous</span><strong>Setup &amp; Git Basics</strong></a>
+<a class="pager-next" href="neural-networks.html"><span>Next →</span><strong>2. Neural Networks</strong></a>
 </div>
 </main>
-
-<footer class="site-footer">AI Learn · A beginner's guide to how AI models work · Based on official docs and open course material · Not affiliated with any model provider</footer>
+<footer class="site-footer">AI Learn · A personal learning project by Emanuel Loghin · <a href="about.html">About &amp; feedback</a> · Based on official docs and open course material · Not affiliated with any model provider</footer>
+</div>
+<aside class="toc-rail" aria-label="On this page">
+<div class="toc-title">On this page</div><nav><a href="#1-ai-machine-learning-deep-learning-and-generative-ai">1. AI, machine learning, deep learning and generative AI</a>
+<a href="#2-writing-rules-vs-learning-from-data">2. Writing rules vs learning from data</a>
+<a href="#3-types-of-learning">3. Types of learning</a>
+<a href="#4-data-features-and-labels">4. Data, features and labels</a>
+<a href="#5-what-a-model-actually-is">5. What a &quot;model&quot; actually is</a>
+<a href="#6-training-vs-inference">6. Training vs inference</a>
+<a href="#7-generalization-overfitting-and-underfitting">7. Generalization, overfitting and underfitting</a>
+<a href="#8-types-of-models-by-task">8. Types of models by task</a>
+<a href="#9-where-models-run">9. Where models run</a>
+<a href="#recap">Recap</a>
+<a href="#check-your-understanding">Check Your Understanding</a></nav>
+</aside>
+</div>
+<div class="scrim"></div>
+<script src="site.js"></script>
 </body>
 </html>

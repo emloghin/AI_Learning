@@ -1,25 +1,53 @@
 # Spec-Driven Development: From Idea to Reviewed Change
 
-**Chapter 10 · Build with a spec**
+**Chapter 13 · Build with a spec**
 
-Instead of asking an AI to "build an app" and hoping it guesses correctly, agree on the behaviour first, turn it into a plan, and check the result against that agreement. This four-part guide takes you from your first specification to using Spec Kit and Squad across real projects, with production release gates that remain under human control.
+Instead of asking an AI to "build an app" and hoping it guesses correctly, agree on the behaviour first, turn it into a plan, and check the result against that agreement. This guide takes you from your first specification to adopting Spec Kit in an existing codebase and using Squad across real projects, with production release gates that remain under human control.
 
 > **📘 In plain words:** A spec is the agreement about what you are building. Spec Kit helps you write and carry that agreement through development. Squad helps coordinate a team of AI agents. Neither replaces your judgement, tests, or release process.
 
 ## 1. Your route through this section
 
-| Read | What you will do | Suggested time |
-|---|---|---|
-| **This page: understand the approach** | Learn the vocabulary and decide when a spec is worth writing | ~10 min |
-| [Spec Kit: setup and first feature](spec-kit.md) | Install the tools, write requirements, review a plan, implement, and check for gaps | ~25 min reading, then a hands-on session |
-| [Squad: setup and team workflow](squad.md) | Create an AI team and hand it a bounded piece of approved work | ~20 min reading |
-| [Shipping and reusing the workflow](sdd-production.md) | Handle existing code, multiple projects, production risks, and community lessons | ~25 min reading |
+| Step | Read | What you will do | Suggested time |
+|---|---|---|---|
+| 1 | **This page: understand the approach** | Learn the vocabulary and decide when a spec is worth writing | ~10 min |
+| 2 | [Spec Kit from zero: your first feature](spec-kit.md) | Install the tools, write requirements, review a plan, implement, and check for gaps | ~25 min reading, then a hands-on session |
+| 3 | [Existing projects and migration](sdd-existing-projects.md) | Add Spec Kit to a codebase you already have and move a team over, phase by phase | ~30 min reading |
+| 4 | [Real examples](sdd-examples.md) | Read the prompts and results from public repositories, new and existing | ~20 min reading |
+| 5 | [Squad: setup and team workflow](squad.md) | Create an AI team, in a new or an existing repository, and hand it approved work | ~25 min reading |
+| 6 | [Shipping and reusing the workflow](sdd-production.md) | Production scenarios, multiple projects, release gates and community lessons | ~25 min reading |
+| Any time | [Command reference](sdd-reference.md) | Look up every Spec Kit and Squad command, file and setting | reference |
+
+**One example runs through all of it.** The hands-on chapters follow RoomBook, a small room-booking service for employees:
+
+| Chapter | What happens to RoomBook |
+|---|---|
+| [11](agent-toolkit.md) and [12](agent-guardrails.md) | The repository gets instructions, a skill, a reviewer agent and guardrails |
+| [14](spec-kit.md) | The first feature is specified, planned and built: creating and cancelling bookings without conflicts |
+| [15](sdd-existing-projects.md) | A year later RoomBook is an existing system; Spec Kit is adopted in it and a CSV export is added |
+| [17](squad.md) | A small AI team implements approved tasks |
+| [18](sdd-production.md) | Double bookings are prevented under load and the release is gated |
+
+Chapter 16 and two scenarios in Chapter 18 use other applications on purpose: real public repositories, a payment webhook and a change that spans two repositories.
+
+**Which page do I need?**
+
+| Your situation | Go to |
+|---|---|
+| I have never used Spec Kit | Steps 1 and 2, in a throwaway repository |
+| I want to use it on the project I already work on | Step 2 once for practice, then step 3 |
+| My team should work this way | Step 3, especially the rollout plan |
+| I want to see what real runs look like | Step 4 |
+| One agent is not enough for my tasks | Step 5, after you have a reviewed plan |
+| I forgot a command or a flag | The command reference |
 
 You do **not** have to install Squad to use Spec Kit. Start with one feature and one coding agent; add a team when the work genuinely benefits from separate specialists.
 
+**Read first if you have not yet:** [Chapter 11](agent-toolkit.md) explains skills, MCP and custom agents, which Spec Kit and Squad are built from, and [Chapter 12](agent-guardrails.md) explains approvals and guardrails.
+
 **Before the hands-on pages:** know how to open a terminal, navigate to a project folder, and run that project's tests. Basic Git and programming knowledge are useful. If you have never shipped software, use a throwaway learning repository and get an experienced developer to review the production parts. Knowing how to prompt is not the same as knowing how to operate a service.
 
-**Freshness:** documentation and release references were checked on **25 November 2026**. The walkthrough uses GitHub Copilot's default Spec Kit skills interface. Tool versions and interfaces change; the linked documentation and your installed help take precedence. These are source-checked instructions, not a claim that every tool/platform combination was executed here.
+**Freshness:** documentation and release references were checked on **27 November 2026** (Spec Kit v1.4.5, Squad v2.0.0). The walkthrough uses GitHub Copilot's default Spec Kit skills interface. Tool versions and interfaces change; the linked documentation and your installed help take precedence. These are source-checked instructions, not a claim that every tool/platform combination was executed here.
 
 ## 2. What spec-driven development means
 
@@ -68,6 +96,8 @@ The combined workflow in this guide is a **manual handoff**, not a promised buil
 | **Artifact** | A saved output of a development step | A Markdown spec, a test report, or a migration |
 | **Brownfield / greenfield** | Changing an existing system / starting a new one | Add export to an existing app / build RoomBook |
 | **Spec drift** | Requirements and actual behaviour no longer agree | Code allows cancellations after start, but the spec forbids them |
+| **Characterization test** | A test that records what existing code does today, so you notice if a change alters it | Pin the current filter and paging behaviour before adding export |
+| **Extension** | An optional add-on that gives Spec Kit extra commands | The bundled `bug` and `assess` extensions |
 
 ## 5. The smallest useful development loop
 
@@ -92,7 +122,7 @@ The combined workflow in this guide is a **manual handoff**, not a promised buil
 | Uncertain feasibility | Time-box a prototype; record what it proves before writing a detailed delivery plan |
 | Production incident | Follow the incident process first; make the smallest safe repair and capture the learning afterwards |
 
-Spec Kit also documents separate [bug-fixing](https://github.github.io/spec-kit/guides/bugfix.html) and [idea-assessment](https://github.github.io/spec-kit/guides/assessment.html) processes. They are opt-in extensions, not compulsory steps before every feature. You do not need them for this tutorial.
+Spec Kit also documents separate [bug-fixing](https://github.github.io/spec-kit/guides/bugfix.html) and [idea-assessment](https://github.github.io/spec-kit/guides/assessment.html) processes. They are opt-in extensions, not compulsory steps before every feature. You do not need them for your first feature; the [existing-projects page](sdd-existing-projects.md#7-not-every-backlog-item-needs-a-spec) shows how to install and use both.
 
 ## 7. What remains your responsibility
 
@@ -103,7 +133,7 @@ You own product decisions, access permissions, dependency choices, acceptance cr
 - A constitution is guidance, **not an access-control boundary**. Enforce important rules with permissions, database constraints, required checks and human approvals.
 - Agreement between two models is useful review input, **not proof**. Models can repeat the same outdated documentation or miss the same defect.
 
-The [production guide](sdd-production.md) turns these responsibilities into concrete release gates and shows how to verify claims with sources and executable evidence.
+[Chapter 12](agent-guardrails.md#3-human-decision-points-in-the-spec-driven-workflow) maps the human decision at every step of this workflow and the settings that enforce it. The [production guide](sdd-production.md) turns these responsibilities into concrete release gates and shows how to verify claims with sources and executable evidence.
 
 ## Recap
 
@@ -116,14 +146,47 @@ The [production guide](sdd-production.md) turns these responsibilities into conc
 
 **1. Is "the system must be secure" a sufficient acceptance criterion?**
 
-> **✅ Answer:** No. Name the threat or permission boundary and an observable result, such as rejecting a request to cancel another user's booking.
+- A) Yes, as long as the coding agent confirms that the result is secure
+- B) Yes, because a short requirement is always better than a long one
+- C) No. It should name a permission boundary and an observable result
+- D) No. It needs several pages that describe every implementation detail
+
+> **✅ Answer:** C — Name the threat or permission boundary and an observable result, such as rejecting a request to cancel another user's booking. Short is good only when the requirement is also testable, and more pages do not make it so.
 
 **2. Do you need Squad before trying Spec Kit?**
 
-> **✅ Answer:** No. One coding agent can execute Spec Kit's workflow. Squad is optional coordination for work that benefits from multiple roles.
+- A) No. One coding agent can run Spec Kit's workflow, and Squad is optional
+- B) Yes. Spec Kit's plans and tasks can only be carried out by a Squad team
+- C) Yes. Squad provides the model that Spec Kit uses for its reasoning
+- D) No, but Squad must be installed before the first change is released
+
+> **✅ Answer:** A — One coding agent can execute Spec Kit's workflow. Squad is optional coordination for work that benefits from multiple roles; it is not a model and not a release requirement.
 
 **3. Two models say a change is correct. Is it ready for production?**
 
-> **✅ Answer:** Not on that evidence alone. Check the actual code, run independent tests, verify operational readiness, and obtain the required human approval.
+- A) Yes. Two different models are very unlikely to both miss the same defect
+- B) Yes, provided the build in CI is green as well
+- C) Only after a third model has confirmed the result
+- D) Not on that evidence alone; it still needs tests and human approval
 
-[← Chapter 9: AI at Work](ai-at-work.md) · [Set up Spec Kit →](spec-kit.md)
+> **✅ Answer:** D — Agreement between two models is useful review input, not proof: models can miss the same defect. Check the actual code, run independent tests, verify operational readiness, and obtain the required human approval.
+
+**4. Which statement about the size of a spec matches this page?**
+
+- A) A longer spec is a better spec, so add as much detail as you can
+- B) Write enough to remove consequential ambiguity; short and testable is best
+- C) Write down every implementation detail before any code exists
+- D) Use strong words such as "robust" and "scalable" to set the expected quality level
+
+> **✅ Answer:** B — A short, testable requirement beats three pages of "robust, scalable, enterprise-grade". "A longer spec is a better spec" is the common misconception this page warns about.
+
+**5. You find a small typo in a label of an existing screen. Which approach is proportionate?**
+
+- A) Spec Kit's full reviewed workflow, from constitution to converge
+- B) A Squad team, so that separate specialists can work in parallel
+- C) An existing issue, a focused change and the normal checks
+- D) A time-boxed prototype, followed by a detailed delivery plan
+
+> **✅ Answer:** C — For a small typo or an obvious one-line fix, an existing issue, a focused change and normal checks may be enough. The full workflow is for features with several behaviours or stakeholders, and a prototype is for uncertain feasibility.
+
+[← Chapter 12: Human Control & Guardrails](agent-guardrails.md) · [Chapter 14: Spec Kit from Zero →](spec-kit.md)

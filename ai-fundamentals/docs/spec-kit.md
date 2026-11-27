@@ -1,6 +1,6 @@
 # Spec Kit: Set Up and Deliver Your First Feature
 
-**Chapter 10a · Hands-on Spec Kit**
+**Chapter 14 · Hands-on Spec Kit, from zero**
 
 Use one small room-booking feature to learn the complete cycle: install, specify, clarify, plan, implement and verify. The important habit is not memorizing commands; it is reviewing the artifact from each step before asking the agent to continue.
 
@@ -8,14 +8,16 @@ Use one small room-booking feature to learn the complete cycle: install, specify
 
 ## 1. Prerequisites and version baseline
 
-This walkthrough uses **Spec Kit v1.4.4**, released on 23 November 2026, and the **GitHub Copilot default skills layout**. See the [release](https://github.com/github/spec-kit/releases/tag/v1.4.4), [installation guide](https://github.github.io/spec-kit/installation.html) and [Copilot integration guide](https://github.github.io/spec-kit/integrations/copilot.html).
+If the terminal, Git or environment variables are new to you, read [Setup and Git basics](setup.md) first; it also covers installing the tools in the table below.
+
+This walkthrough uses **Spec Kit v1.4.5**, released on 25 November 2026 (a maintenance update to v1.4.4), and the **GitHub Copilot default skills layout**. See the [release](https://github.com/github/spec-kit/releases/tag/v1.4.5), [installation guide](https://github.github.io/spec-kit/installation.html) and [Copilot integration guide](https://github.github.io/spec-kit/integrations/copilot.html).
 
 | You need | Why / where to get it |
 |---|---|
 | Python 3.11 or newer | Runs Specify; [Python downloads](https://www.python.org/downloads/). uv can also manage Python runtimes. |
 | uv | Installs the CLI in its own tool environment; follow the [official uv installation guide](https://docs.astral.sh/uv/getting-started/installation/) for your OS |
 | Git | Required for the source-based install below and our reviewable branch workflow; [Git downloads](https://git-scm.com/downloads) |
-| A working coding agent | Use [Copilot CLI](https://docs.github.com/en/copilot/how-tos/set-up/install-copilot-cli) or VS Code with Copilot Chat; sign in and confirm your account/organization enables access |
+| A working coding agent | Use [Copilot CLI](https://docs.github.com/en/copilot/how-tos/copilot-cli/set-up-copilot-cli/install-copilot-cli) or VS Code with Copilot Chat; sign in and confirm your account/organization enables access |
 | A safe project folder | A new learning repository, or an existing repository with a clean, backed-up baseline |
 
 Spec Kit supports Windows, macOS and Linux. The commands below choose **PowerShell scripts on Windows** with `--script ps`; use `--script sh` for Bash on macOS/Linux. Python helper scripts are another documented option (`--script py`). Paths in this guide use Windows notation.
@@ -26,23 +28,31 @@ Spec Kit supports Windows, macOS and Linux. The commands below choose **PowerShe
 
 **Terminal — install the pinned CLI:**
 
-```text
-uv tool install specify-cli --from git+https://github.com/github/spec-kit.git@v1.4.4
+```terminal
+uv tool install specify-cli --from git+https://github.com/github/spec-kit.git@v1.4.5
 specify version
 specify check
 ```
 
-Confirm that the reported version is the one you intended. `specify check` checks the surrounding tool environment; it does not prove that your application works. If an older install is already present, follow the [upgrade instructions](https://github.github.io/spec-kit/upgrade.html) rather than mixing several package managers.
+Each command should print information, not an error; `specify version` must show 1.4.5. If it shows an older number, another copy is installed and comes first on your PATH. Confirm that the reported version is the one you intended. `specify check` checks the surrounding tool environment; it does not prove that your application works. If an older install is already present, follow the [upgrade instructions](https://github.github.io/spec-kit/upgrade.html) rather than mixing several package managers.
 
 **Terminal — create a new project:**
 
-```text
+```terminal
 specify init room-book --integration copilot --script ps
 cd room-book
 git init
 ```
 
-Review the generated files, configure your Git author identity if necessary, and make an initial commit through your normal Git workflow. Then run `git switch -c feature/room-bookings`. This gives you a baseline against which to review the feature, not just an empty repository.
+Review the generated files, then save them as a first commit and start a branch for the feature:
+
+```terminal
+git add -A
+git commit -m "Add Spec Kit scaffolding"
+git switch -c feature/room-bookings
+```
+
+This gives you a baseline against which to review the feature, not just an empty repository. If Git asks who you are, set your name and e-mail as shown in [Setup and Git basics](setup.md#4-install-and-check-the-tools).
 
 `specify init` creates the directory and Spec Kit scaffolding; it does **not** create a finished application. Git initialization and automatic feature branching are not core defaults in current Spec Kit. We use ordinary Git ourselves; the optional `git` extension is not needed for this tutorial.
 
@@ -54,13 +64,15 @@ Open the folder in VS Code and use Copilot Chat in Agent mode, or run `copilot` 
 
 Do **not** create another application around it. Save unrelated changes through your normal Git workflow, create an adoption branch, and record the current build/test results first. From the existing repository root:
 
-```text
+```terminal
 specify init --here --force --integration copilot --script ps
 git diff
 git status --short
 ```
 
-`--force` permits initialization in a non-empty directory and can overwrite conflicting managed paths. It is not a safety switch. Review both changed and untracked files before continuing. Initialization does not infer a complete spec for the existing system. Follow the [existing-project guide](https://github.github.io/spec-kit/how-to/existing-projects.html), then choose one bounded change.
+`--force` permits initialization in a non-empty directory and can overwrite conflicting managed paths. It is not a safety switch. Review both changed and untracked files before continuing. Initialization does not infer a complete spec for the existing system.
+
+**Continue on the dedicated page:** [Spec Kit in an existing project](sdd-existing-projects.md) walks through the whole adoption, from a safe baseline and an evidence-based constitution to the first change and a team rollout. Come back here for the details of each workflow command.
 
 ## 3. Know the files you are reviewing
 
@@ -77,7 +89,7 @@ git status --short
 
 **Important current behaviour:** commands select the feature through `.specify\feature.json`, or the `SPECIFY_FEATURE_DIRECTORY` environment override. **Changing Git branches alone does not select a feature.** Before running a skill, check the selected feature directory. Do not copy a feature number from this tutorial and assume it exists in your checkout.
 
-After creating a feature, open `.specify\feature.json` and inspect its `feature_directory` value. To resume an existing feature, update that value to its actual directory, as described in the [quickstart](https://github.github.io/spec-kit/quickstart.html). Feature directories are normally numbered even without the Git extension. `SPECIFY_FEATURE` alone is only a label, not a directory selector.
+After creating a feature, open `.specify\feature.json` and inspect its `feature_directory` value. To resume an existing feature, update that value to its actual directory, written with forward slashes (for example `specs/001-room-bookings`; backslashes are not valid inside this JSON file), as described in the [quickstart](https://github.github.io/spec-kit/quickstart.html). Feature directories are normally numbered even without the Git extension. `SPECIFY_FEATURE` alone is only a label, not a directory selector.
 
 Current initialization supplies a `.specify\.gitignore` for machine-local state such as `feature.json`. Keep the constitution and reviewed shared configuration in version control; choose an explicit policy for feature artifacts in the [reuse guide](sdd-production.md). See the [core reference](https://github.github.io/spec-kit/overview/core.html) for the exact selection rules.
 
@@ -85,7 +97,7 @@ Current initialization supplies a `.specify\.gitignore` for machine-local state 
 
 **Copilot chat:**
 
-```text
+```chat
 /speckit-constitution For RoomBook: keep changes small and reviewable.
 Validate untrusted input at the server boundary. Derive user identity from
 the authenticated session, never from a caller-supplied owner ID.
@@ -95,7 +107,7 @@ Reuse the repository's existing stack and test tools where present.
 Require a human-reviewed migration, rollout and recovery plan before release.
 ```
 
-Read the resulting constitution. Remove invented organizational rules and vague absolutes. For an existing service, make the agent read the README, architecture decisions, contribution guide and CI configuration first.
+Read the resulting constitution. Remove invented organizational rules and vague absolutes. In current versions this command writes the constitution only; it no longer rewrites the templates to match (an optional preset, `constitution-sync`, restores that). For an existing service, make the agent read the README, architecture decisions, contribution guide and CI configuration first.
 
 **Stop here until:** the rules match decisions your team actually supports. A constitution is a reviewed agreement, not a magic policy-enforcement engine.
 
@@ -103,7 +115,7 @@ Read the resulting constitution. Remove invented organizational rules and vague 
 
 **Copilot chat — describe the what and why, not the framework:**
 
-```text
+```chat
 /speckit-specify Build the first RoomBook booking API for employees.
 An authenticated employee can list rooms and create a booking for a room.
 Each booking has a start and end instant, lasts 30 to 120 minutes, and must
@@ -115,9 +127,9 @@ For this slice, exclude recurring meetings, email, calendar sync, an admin
 dashboard and a public sign-up flow. Use synthetic data while learning.
 ```
 
-Then invoke separately:
+Then invoke separately. `clarify` asks up to five targeted questions and writes your answers into `spec.md`:
 
-```text
+```chat
 /speckit-clarify Focus on authorization, time zones, simultaneous requests,
 cancellation boundaries and error responses. Ask me to decide any missing
 business policy rather than inventing it.
@@ -142,7 +154,7 @@ Use future dates when running these examples. They describe intended behaviour; 
 
 **Copilot chat — now name the technology:**
 
-```text
+```chat
 /speckit-plan Read the repository first and reuse its framework, authentication,
 database access and test conventions. If this is the empty learning repo,
 propose Node.js LTS, TypeScript, Fastify and PostgreSQL with pinned compatible
@@ -155,13 +167,13 @@ Document exact local setup, test commands and cleanup in quickstart.md.
 Explain tradeoffs before adding dependencies. Do not implement yet.
 ```
 
-This is **one example stack**, not a requirement of either tool. For a .NET, Java or Python project, keep the stack you already know.
+This is **one example stack**, not a requirement of either tool. It assumes Node.js and a PostgreSQL database you can run locally, neither of which is in the prerequisites table. **For a first practice run, keep it lighter:** tell the plan to use a language you already know and an embedded database such as SQLite, and keep the concurrency test as a requirement. For a .NET, Java or Python project, keep the stack you already know.
 
 Read `plan.md` and the generated supporting artifacts. Check that they explain authentication, database setup, migration order and the actual test commands. A plan saying "check availability, then insert" without an atomic guarantee does not meet the simultaneous-request requirement.
 
 **Copilot chat — create a requirements-quality checklist:**
 
-```text
+```chat
 /speckit-checklist Review authorization, time boundaries, concurrency,
 failure behaviour and operational requirements for completeness and clarity.
 ```
@@ -174,13 +186,13 @@ This checklist is a **review of requirements**, not a suite of executable applic
 
 Run these in chat, **one at a time**:
 
-```text
+```chat
 /speckit-tasks
 ```
 
 Read `tasks.md`, then:
 
-```text
+```chat
 /speckit-analyze
 ```
 
@@ -192,7 +204,7 @@ Tasks should include the tests you requested, not just application code. A usefu
 
 **Copilot chat:**
 
-```text
+```chat
 /speckit-implement
 ```
 
@@ -202,11 +214,13 @@ Run the application and test commands documented in the project's `quickstart.md
 
 Then:
 
-```text
+```chat
 /speckit-converge
 ```
 
 Converge compares implementation with the spec, plan and tasks. When it finds remaining work, it can **append gap tasks to `tasks.md`**. It does not fix the code or rewrite requirements to match the code. Review those tasks, implement them, run the checks, and converge again.
+
+Where a person decides at each of these steps, and which settings back that decision, is mapped in [Chapter 12](agent-guardrails.md#3-human-decision-points-in-the-spec-driven-workflow).
 
 > **⚠️ Common misconception:** "Converged means approved for production." It means the agent's completeness assessment found no remaining gaps. It is not a security certification, a test runner, or your release approval. A failing test still fails, whatever the summary says.
 
@@ -238,7 +252,7 @@ There is **no core command that automatically reconciles all three artifacts**. 
 
 Before upgrading, commit or back up your reviewed configuration, read release notes, and try the change in one learning repository. The documented inspection commands include:
 
-```text
+```terminal
 specify self check
 specify self upgrade --dry-run
 specify integration status
@@ -246,20 +260,61 @@ specify integration status
 
 After updating the CLI through the chosen installation route, refresh the project's integration deliberately with `specify integration upgrade copilot`. Review the diff; update installed extensions separately if you use any. Do not reflexively add `--force` to bypass a warning about customized files.
 
-**Pinning is only part of reproducibility.** In v1.4.4, initialization uses assets bundled with the installed CLI, so pinning it also pins its core templates and scripts. Record the generated integration files, enabled extensions and model/host too: separately installed community components, the coding host and model output are not frozen by that CLI pin.
+**Pinning is only part of reproducibility.** In v1.4.5, initialization uses assets bundled with the installed CLI, so pinning it also pins its core templates and scripts. Record the generated integration files, enabled extensions and model/host too: separately installed community components, the coding host and model output are not frozen by that CLI pin.
+
+## Recap
+
+- `specify` commands run in the terminal and set the project up; `/speckit-*` commands run in the agent's chat and do the work.
+- The order is constitution, specify, clarify, plan, checklist, tasks, analyze, implement, converge. Read the file each step produces before running the next.
+- Describe behaviour in `specify` and technology in `plan`.
+- `analyze` and `converge` report; they do not fix. You run the tests and read the diff.
+- When the requirement changes, change the spec first, then the plan and tasks, then the code.
 
 ## Check Your Understanding
 
 **1. Where do you run `/speckit-plan`?**
 
-> **✅ Answer:** In the coding agent's chat, not in the terminal. The terminal runs `specify` installation and configuration commands.
+- A) In PowerShell, right after `specify init`
+- B) In the coding agent's chat
+- C) In any terminal where `specify check` passes
+- D) In the terminal, from the project root
+
+> **✅ Answer:** B — It runs in the coding agent's chat, not in the terminal. The terminal runs `specify` installation and configuration commands, and pasting a chat command into PowerShell will not run it.
 
 **2. You change Git branches. Does current Spec Kit automatically select the other feature?**
 
-> **✅ Answer:** No. Feature selection uses `.specify\feature.json` or `SPECIFY_FEATURE_DIRECTORY`. Check it explicitly.
+- A) Yes. The name of the current branch selects the feature
+- B) Yes, as long as the feature directories are numbered
+- C) No. You run `specify init` again in the project root to select another feature
+- D) No. It uses `.specify\feature.json` or `SPECIFY_FEATURE_DIRECTORY`
 
-**3. Converge finds a gap. Does it implement the fix?**
+> **✅ Answer:** D — Changing Git branches alone does not select a feature. Feature selection uses `.specify\feature.json` or `SPECIFY_FEATURE_DIRECTORY`, so check it explicitly before running a skill.
 
-> **✅ Answer:** No. It can append work to `tasks.md`. Review that work, implement it, run the checks, and assess again.
+**3. Converge finds a gap. What does it do about it?**
 
-[← Spec-Driven Development](spec-driven-development.md) · [Set up Squad →](squad.md)
+- A) It can append gap tasks to `tasks.md`; it does not fix the code
+- B) It fixes the code and then runs the tests again
+- C) It rewrites the requirements so that they match the code
+- D) It approves the feature for production with a note
+
+> **✅ Answer:** A — Converge does not implement the fix. It can append work to `tasks.md`. Review that work, implement it, run the checks, and assess again. "Converged" is also not your release approval.
+
+**4. In which step do you name the framework and the database?**
+
+- A) `/speckit-constitution`
+- B) `/speckit-specify`
+- C) `/speckit-plan`
+- D) `/speckit-analyze`
+
+> **✅ Answer:** C — Describe behaviour in `specify` (the what and why, not the framework) and technology in `plan`. `analyze` only reports inconsistencies across the spec, plan and tasks.
+
+**5. The product owner now wants a 15-minute minimum instead of 30 minutes. What do you change first?**
+
+- A) The code, and then `converge` updates the spec to match it
+- B) The spec, then the plan and tasks, and then the code
+- C) Only `tasks.md`, because the agent implements from the task list
+- D) Nothing by hand, because `analyze` reconciles the three artifacts
+
+> **✅ Answer:** B — When the requirement changes, change the spec first, then the plan and tasks, then the code. There is no core command that automatically reconciles all three artifacts: `analyze` reports inconsistency and `converge` appends work.
+
+[← Chapter 13: Spec-Driven Development](spec-driven-development.md) · [Chapter 15: Existing Projects →](sdd-existing-projects.md)

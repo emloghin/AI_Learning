@@ -1,6 +1,6 @@
 # Shipping and Reusing the Workflow
 
-**Chapter 10c · Production, multiple projects and community lessons**
+**Chapter 18 · Production, multiple projects and community lessons**
 
 A working demo is the beginning, not the release gate. This page shows how to reuse Spec Kit and Squad without mixing project context, turn real failure modes into acceptance criteria, and collect evidence before shipping. The examples are teaching scenarios, not claims that a generated sample has already passed production review.
 
@@ -23,7 +23,7 @@ Install the CLIs once on your machine, but initialize and review their files **p
 For project B, repeat the same small sequence you used for project A:
 
 1. Open **project B's root** and establish a clean baseline. Record the current test/build commands and results.
-2. Initialize Spec Kit there; for a non-empty repository, use the reviewed `--here --force` flow from the [setup page](spec-kit.md).
+2. Initialize Spec Kit there; for a non-empty repository, use the reviewed `--here --force` flow from the [existing-projects page](sdd-existing-projects.md).
 3. Write the constitution from **B's actual conventions**. Select one feature and verify its active-feature directory.
 4. If Squad is useful, run `squad init --no-workflows --no-vscode-default` in B and form a team for B. Review generated files and run `squad doctor`.
 5. Commit reviewed shared configuration through the normal PR process. Start a fresh session in B and verify the agent identifies B before authorizing edits.
@@ -63,31 +63,34 @@ For a first product, a living spec with ordinary Git history is a reasonable sta
 
 ## 3. Scenario A: add a feature to an existing product
 
-**Situation:** An orders application already serves customers. The sales team wants CSV export. This is a brownfield change, not a reason to rebuild the application or retrospectively specify every screen.
+This scenario continues the RoomBook example from [Chapter 15](sdd-existing-projects.md). Scenario B is also RoomBook; Scenarios C and D use other systems on purpose.
+
+**Situation:** RoomBook has been in use for a year. Facility managers want a CSV export of bookings. This is a brownfield change, not a reason to rebuild the application or retrospectively specify every screen. The step-by-step adoption of Spec Kit in such a repository is on the [existing-projects page](sdd-existing-projects.md); this scenario concentrates on the acceptance checks.
 
 **Spec Kit chat prompt:**
 
-```text
-/speckit-specify Add CSV export to the existing orders page.
-Export only orders the signed-in user is authorized to see, applying the
-same filters as the page. Keep the existing JSON API and permission checks
+```chat
+/speckit-specify Add CSV export to the existing RoomBook bookings list.
+Export only bookings the signed-in user is authorized to see, applying the
+same filters as the list. Keep the existing JSON API and permission checks
 unchanged. Include a header row and a stable, documented column order.
 Specify how to handle an empty result, large exports, Unicode, commas,
 quotes, line breaks and values that spreadsheet apps might interpret
-as formulas. Do not introduce a new UI framework or change order editing.
+as formulas. Do not introduce a new UI framework or change how bookings
+are created or cancelled.
 Ask me to choose the maximum export size and spreadsheet-safety policy.
 ```
 
-Clarify whether export covers the current page or all filtered results. "Same as the page" is otherwise ambiguous. Capture who may export, which sensitive columns are excluded, and what happens if authorization changes during a long-running job.
+Clarify whether export covers the current page or all filtered results. "Same as the list" is otherwise ambiguous. Capture who may export, which sensitive columns are excluded, and what happens if authorization changes during a long-running job.
 
 | Acceptance check | Why it matters |
 |---|---|
-| User A cannot export user B's orders, even by tampering with filters or identifiers | UI filtering is not server-side authorization |
+| User A cannot export bookings they are not allowed to see, even by tampering with filters or identifiers | UI filtering is not server-side authorization |
 | Export agrees with the approved filter/sort semantics | "Export all" and "export current page" are different products |
 | Cells round-trip with commas, quotes, line breaks and non-ASCII text | CSV is a format with edge cases, not `join(",")` |
 | Formula-like cells follow an explicitly reviewed spreadsheet-safety policy | Quoting a CSV value alone does not necessarily neutralize formula interpretation |
 | Empty and oversized results have defined behaviour | Prevent broken files and unbounded memory/work |
-| Existing order-editing and API tests still pass | New capability must not regress existing customers |
+| Existing booking, cancellation and API tests still pass | New capability must not regress existing users |
 
 **Plan:** reuse the existing authorization/query helper and installed CSV support before writing another serializer. Agree on a bounded synchronous export or a background job based on measured size, not speculation. **Squad:** one owner for backend export, one for UI integration after the contract is agreed, a tester working from the spec. **Release:** use the existing rollout mechanism; monitor export failures and resource use.
 
@@ -121,7 +124,7 @@ Run against the real database engine used by the service, not just an in-memory 
 
 **Example specification prompt:**
 
-```text
+```chat
 /speckit-specify Add payment-success webhook handling to the existing service.
 Verify the provider signature before accepting an event. Process repeated
 deliveries without creating duplicate fulfillment or credit. Handle concurrent
@@ -176,7 +179,7 @@ The community does not have one settled recipe or a universal productivity resul
 | [github/spec-kit#75: a practitioner's balanced experience](https://github.com/github/spec-kit/issues/75#issuecomment-3266694509) | Reports value for significant changes but overhead for small changes; warns that planning can ignore the existing architecture | Use a full workflow for consequential changes; require the plan to cite reusable existing components |
 | [github/spec-kit#75: a contrasting experience](https://github.com/github/spec-kit/issues/75#issuecomment-3267488204) | Reports unrequested interfaces, tests and scope despite a detailed feature description | Review the task list for scope creep. More generated artifacts are not automatically more value |
 | [github/spec-kit#581: maintainer follow-up](https://github.com/github/spec-kit/issues/581#issuecomment-5625830594) | Says monorepo support evolved by separating features from Git | Recheck old workaround advice against today's feature-pointer and project-root rules; do not assume every monorepo topology is solved |
-| [Squad Team: upgrade testing report](https://github.com/github/squad/blob/v2.0.0/docs/src/content/blog/029-upgrade-testing-at-scale.md), maintainer retrospective | Describes testing beyond clean fixtures against existing configurations and finding edge cases and misleading messages | Rehearse upgrades on a copy of your own customized repository; compare intended and unintended changes. This is self-reported experience, not a universal reliability guarantee |
+| [Squad Team: upgrade testing report](https://github.com/github/squad/blob/v2.0.0/docs/src/content/blog/029-upgrade-testing-at-scale.md), maintainer retrospective | Describes testing beyond clean fixtures against existing configurations and finding an edge case (a raw stack trace on a read-only file system). Published in March 2026, before 2.0 | Rehearse upgrades on a copy of your own customized repository; compare intended and unintended changes. This is self-reported experience, not a universal reliability guarantee |
 | [github/squad#1033: maintainer reply](https://github.com/github/squad/issues/1033#issuecomment-4658769575) | Describes Spec Kit and Squad as complementary | Use an explicit artifact handoff and a single owner of task reconciliation; do not imply a built-in automatic integration |
 
 ### Turn the reports into a working agreement
@@ -228,7 +231,7 @@ Different models can catch different mistakes, but shared training data, shared 
 
 A useful review prompt:
 
-```text
+```chat
 Independently review this spec, plan and implementation.
 For each issue, report the claim or requirement, severity, exact source
 or file location, and the smallest correction. Distinguish documented
@@ -259,28 +262,65 @@ Measure **review time, rework, escaped defects, elapsed delivery time and total 
 
 ## 11. Sources and verification scope
 
-The four-page section draws on official installation and command references, tagged releases/source, integration and upgrade guides, existing-project and persistence guidance, Squad's host compatibility and hardening documentation, and the community reports above. The [Resources index](resources.md#9-spec-driven-development-with-spec-kit-and-squad) groups the main references.
+This section of the site draws on official installation and command references, tagged releases/source, integration and upgrade guides, existing-project and persistence guidance, Squad's host compatibility and hardening documentation, and the community reports above. The [Resources index](resources.md#10-spec-driven-development-with-spec-kit-and-squad) groups the main references.
 
-**Checked on 25 November 2026:** Spec Kit v1.4.4 and Squad v2.0.0 are the release baselines, not promises that later versions behave identically. Official documentation conflicts are called out where they affect the walkthrough, notably Squad's model-selection claims.
+**Checked on 27 November 2026:** Spec Kit v1.4.5 and Squad v2.0.0 are the release baselines, not promises that later versions behave identically. Official documentation conflicts are called out where they affect the walkthrough, notably Squad's model-selection claims.
 
 The instructions are source-checked, not an executed certification of Spec Kit/Squad setup on every platform. The RoomBook, CSV, webhook and cross-repository scenarios are examples of requirements and verification work, not shipped reference applications. Before relying on the workflow, run a small feature in your own safe environment and record the actual versions, commands, results and unresolved gaps.
+
+## Recap
+
+- Install the tools once; initialize, configure and review them per project. Reuse conventions, not another project's memory.
+- Decide how specifications age, and write the decision down.
+- Turn real failure modes (permissions, concurrency, duplicates, migrations) into acceptance criteria before code is written.
+- A release needs evidence and a named person at every gate; "the agent finished" is neither.
+- Treat community reports as experiences to test, not as rules.
 
 ## Check Your Understanding
 
 **1. Can you safely reuse a customer's full Squad export in another customer's repository?**
 
-> **✅ Answer:** Not without permission and a careful review of histories, decisions and other contents. Reuse sanitized conventions, not confidential context.
+- A) Yes. An export contains only generic role descriptions
+- B) Not without permission and a careful review of its contents
+- C) Yes, if `squad import --force` replaces the existing team
+- D) No. An export can only be imported into its original repository
+
+> **✅ Answer:** B — Not without permission and a careful review of histories, decisions and other contents. Reuse sanitized conventions, not confidential context. `--force` only replaces existing team state; it does not make the contents safe to share.
 
 **2. A webhook handler keeps processed event IDs in memory. Is that enough for production idempotency?**
 
-> **✅ Answer:** No. Restarts, multiple instances, concurrent deliveries and partial failures require a durable design and business-effect checks.
+- A) Yes. The provider delivers every event exactly once anyway
+- B) Yes, as long as the handler answers with a successful response
+- C) No. Restarts, several instances and concurrent duplicates need a durable design
+- D) No. The handler should rely on the order in which the provider's events arrive instead
+
+> **✅ Answer:** C — Restarts, multiple instances, concurrent deliveries and partial failures require a durable design and business-effect checks. Delivery can be repeated or delayed, so neither "exactly once" nor arrival order can be assumed.
 
 **3. Must every project keep every generated spec forever?**
 
-> **✅ Answer:** No. Choose and document a retention policy. Preserve enduring requirements and rationale in an agreed maintained location.
+- A) Yes. Spec Kit has a CLI setting that enforces this
+- B) Yes. Otherwise the constitution has to replace the product specification
+- C) No. Delete them after delivery; nothing from them needs a new home
+- D) No. Choose and document a policy, and keep enduring requirements somewhere maintained
+
+> **✅ Answer:** D — Choose and document a retention policy. Preserve enduring requirements and rationale in an agreed maintained location. The policies are team conventions, not CLI settings, and none of them means the constitution replaces the product specification.
 
 **4. What evidence proves an agent-generated migration can be recovered?**
 
-> **✅ Answer:** A reviewed recovery strategy and a successful rehearsal in an appropriate test environment, not the agent's confidence or a green unit test alone.
+- A) A reviewed recovery strategy and a successful restore or repair rehearsal
+- B) The agent's statement that a down migration exists for the change
+- C) A green run of the unit tests after the migration was written
+- D) A second, different model that reviews the migration and agrees that it is safe
 
-[← Squad walkthrough](squad.md) · [Learning Resources →](resources.md)
+> **✅ Answer:** A — A reviewed recovery strategy and a successful rehearsal in an appropriate test environment, not the agent's confidence or a green unit test alone. Rollback is not always "run the down migration".
+
+**5. RoomBook works in a single-user demo, but two users occasionally reserve the same room. Which fix meets the requirement?**
+
+- A) Another "is available?" check in the browser before the form is sent
+- B) An application-wide in-memory lock around the code that creates bookings
+- C) Enforcing the rule atomically in the database, or an equivalent transaction design
+- D) A second availability check on the server, run just before the booking record is inserted
+
+> **✅ Answer:** C — The invariant must be enforced atomically in the database, or with an equivalent correctly scoped transaction/locking design. Two requests can both see an available room before either inserts a record, and an in-memory lock does not coordinate several server instances.
+
+[← Chapter 17: Squad](squad.md) · [Command Reference →](sdd-reference.md)

@@ -1,6 +1,6 @@
 # Tokens, Cost & How to Use Fewer of Them
 
-**Chapter 7 · Tokens & Cost**
+**Chapter 8 · Tokens & Cost**
 
 Every time you talk to an AI model you pay in tokens: tokens decide what fits in the model's memory, how long you wait, and how much the bill says at the end of the month. This chapter turns that invisible meter into something you can read, predict and shrink, first for apps that call model APIs directly and then for everyday work with GitHub Copilot and other coding agents.
 
@@ -118,20 +118,23 @@ A bigger window is not a free pass either. Anthropic describes **context rot**: 
 
 ### 6.2 Usage fields (after you send)
 
+<!-- optional -->
+
 Every API response reports what you actually used. Field names differ by provider and endpoint:
 
 | Provider / endpoint | Input | Output | Cache | Reasoning |
 |---|---|---|---|---|
 | OpenAI Responses API | `usage.input_tokens` | `usage.output_tokens` | `usage.input_tokens_details.cached_tokens` | `usage.output_tokens_details.reasoning_tokens` |
 | OpenAI Chat Completions | `usage.prompt_tokens` | `usage.completion_tokens` | `usage.prompt_tokens_details.cached_tokens` | `usage.completion_tokens_details.reasoning_tokens` |
-| Anthropic Messages API | `usage.input_tokens` (only tokens **after** the last cache breakpoint) | `usage.output_tokens` | `cache_read_input_tokens`, `cache_creation_input_tokens` | — |
-| Gemini API | — | — | `usage.total_cached_tokens` | — |
+| Anthropic Messages API | `usage.input_tokens` (only tokens **after** the last cache breakpoint) | `usage.output_tokens` | `cache_read_input_tokens`, `cache_creation_input_tokens` | `usage.output_tokens_details.thinking_tokens` (already included in `output_tokens`) |
 
-Sources: [OpenAI Reasoning](https://developers.openai.com/api/docs/guides/reasoning), [OpenAI Prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching), [Anthropic Prompt caching](https://platform.claude.com/docs/en/build-with-claude/prompt-caching), [Gemini Context caching](https://ai.google.dev/gemini-api/docs/caching).
+Sources: [OpenAI Reasoning](https://developers.openai.com/api/docs/guides/reasoning), [OpenAI Prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching), [Anthropic Prompt caching](https://platform.claude.com/docs/en/build-with-claude/prompt-caching), [Gemini Context caching](https://aistudio.google.com/docs/caching).
 
 > **⚠️ Common misconception:** On Anthropic, `input_tokens` is **not** your total input when caching is on. The docs give the formula `total_input_tokens = cache_read_input_tokens + cache_creation_input_tokens + input_tokens`.
 
 ### 6.3 Counting locally with `tiktoken`
+
+<!-- optional -->
 
 [`tiktoken`](https://github.com/openai/tiktoken) is OpenAI's open-source tokenizer library for Python. Install it with `pip install tiktoken`, then run:
 
@@ -183,7 +186,7 @@ Each technique below lists **why** it works, **how** to do it, a short **example
 | Lifetime | Model-dependent: minutes to hours, refreshed on reuse | 5 minutes by default, refreshed on each hit; optional 1 hour | Short; send similar prefixes close together |
 | Order that matters | Whole rendered prefix, including tools | `tools` → `system` → `messages` | Large, common content at the beginning |
 
-Sources: [OpenAI Prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching), [Anthropic Prompt caching](https://platform.claude.com/docs/en/build-with-claude/prompt-caching), [Gemini Context caching](https://ai.google.dev/gemini-api/docs/caching).
+Sources: [OpenAI Prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching), [Anthropic Prompt caching](https://platform.claude.com/docs/en/build-with-claude/prompt-caching), [Gemini Context caching](https://aistudio.google.com/docs/caching).
 
 > **⚠️ Common misconception:** "Caching changes the answer." It does not. Anthropic states that prompt caching "has no effect on output token generation," and OpenAI says the same. It only changes how the input is processed and billed.
 
@@ -193,7 +196,7 @@ Sources: [OpenAI Prompt caching](https://developers.openai.com/api/docs/guides/p
 - **How:**
   - Set a hard cap: `max_output_tokens` (OpenAI Responses), `max_completion_tokens` (OpenAI Chat Completions), `max_tokens` (Anthropic), "max output tokens" (Gemini).
   - Ask for brevity explicitly: "Answer in at most 3 sentences", "Return only the code".
-  - Use **stop sequences** so generation ends at a known marker (Gemini documents `stop_sequences` in its [prompt design guide](https://ai.google.dev/gemini-api/docs/prompting-strategies)).
+  - Use **stop sequences** so generation ends at a known marker (Gemini documents `stop_sequences` in its [prompt design guide](https://aistudio.google.com/docs/prompting-strategies)).
 - **Example:** A classifier only needs one word ("Positive", "Negative" or "Neutral"). Saying so and capping output at a few tokens turns a paragraph-long reply into a single token.
 - **Trade-off:** On reasoning models the cap includes hidden reasoning tokens; set it too low and you can get an empty, incomplete answer that you still pay for ([OpenAI](https://developers.openai.com/api/docs/guides/reasoning)).
 
@@ -207,7 +210,7 @@ Sources: [OpenAI Prompt caching](https://developers.openai.com/api/docs/guides/p
 ### 7.5 Control reasoning effort and thinking budgets
 
 - **Why:** Reasoning tokens are billed as output and add latency.
-- **How:** Use the provider's effort or thinking setting. OpenAI's `reasoning.effort` supports model-dependent values such as `none`, `minimal`, `low`, `medium`, `high`, `xhigh` and `max`; "lower effort favors speed and lower token usage" ([OpenAI](https://developers.openai.com/api/docs/guides/reasoning)). Anthropic exposes an effort setting and a thinking configuration, and Gemini models also "think" internally ([Gemini prompt design](https://ai.google.dev/gemini-api/docs/prompting-strategies)).
+- **How:** Use the provider's effort or thinking setting. OpenAI's `reasoning.effort` supports model-dependent values such as `none`, `minimal`, `low`, `medium`, `high`, `xhigh` and `max`; "lower effort favors speed and lower token usage" ([OpenAI](https://developers.openai.com/api/docs/guides/reasoning)). Anthropic exposes an effort setting and a thinking configuration, and Gemini models also "think" internally ([Gemini prompt design](https://aistudio.google.com/docs/prompting-strategies)).
 - **Example:** Use `low` effort for drafting emails, `high` only for a tricky multi-file debugging session.
 - **Trade-off:** Changing effort or thinking settings mid-conversation can invalidate the prompt cache on several providers ([Anthropic](https://platform.claude.com/docs/en/build-with-claude/prompt-caching), [OpenAI](https://developers.openai.com/api/docs/guides/prompt-caching)). Pick a level before you start.
 
@@ -225,21 +228,23 @@ Sources: [OpenAI Prompt caching](https://developers.openai.com/api/docs/guides/p
 ### 7.7 Do RAG right instead of pasting whole documents
 
 - **Why:** Pasting an entire manual into every request is expensive and can bury the relevant part (context rot).
-- **How:** With [Retrieval-Augmented Generation](using-ai.md) you store documents in chunks, retrieve only the few chunks most related to the question, and optionally **rerank** them so the best 3–5 go into the prompt. Anthropic also describes "just in time" retrieval, where an agent keeps lightweight references (file paths, links) and loads data only when needed ([Anthropic](https://www.anthropic.com/research/effective-context-engineering-for-ai-agents)).
+- **How:** With [Retrieval-Augmented Generation](connecting-ai.md#2-rag-retrieval-augmented-generation) you store documents in chunks, retrieve only the few chunks most related to the question, and optionally **rerank** them so the best 3–5 go into the prompt. Anthropic also describes "just in time" retrieval, where an agent keeps lightweight references (file paths, links) and loads data only when needed ([Anthropic](https://www.anthropic.com/research/effective-context-engineering-for-ai-agents)).
 - **Example:** Instead of a 120-page HR handbook (≈80,000 tokens), send the 4 chunks about "parental leave" (≈2,000 tokens).
 - **Trade-off:** Retrieval can miss the right chunk. Test retrieval quality separately from answer quality.
 
 ### 7.8 Trim tool definitions and exposed MCP tools
 
 - **Why:** Every tool you offer the model is described in JSON schema, and **those descriptions are input tokens on every request**. Anthropic's token-counting example shows a single weather tool pushing a one-line question to about 400 input tokens ([Anthropic](https://platform.claude.com/docs/en/build-with-claude/token-counting)).
-- **How:** Enable only the tools the task needs, keep descriptions short, and avoid overlapping tools. OpenAI offers `allowed_tools` and tool search with deferred loading so large tool sets do not all load up front ([OpenAI Prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching)). See [Chapter 6](using-ai.md) for what MCP is.
+- **How:** Enable only the tools the task needs, keep descriptions short, and avoid overlapping tools. OpenAI offers `allowed_tools` and tool search with deferred loading so large tool sets do not all load up front ([OpenAI Prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching)). See [Chapter 7](connecting-ai.md) for what MCP is.
 - **Example:** An agent connected to an MCP server exposing 60 tools only needs 3 for "summarize my open pull requests". Disable the rest for that session.
 - **Trade-off:** Too few tools and the agent cannot finish the job. Anthropic's test: "If a human engineer can't definitively say which tool should be used in a given situation, an AI agent can't be expected to do better."
 
 ### 7.9 Use batch APIs for non-urgent work
 
+<!-- optional -->
+
 - **Why:** All three major providers charge **50% of the standard price** for batch jobs.
-- **How:** Collect requests in a file and submit them as a batch: [OpenAI Batch API](https://developers.openai.com/api/docs/guides/batch) (results within 24 hours), [Anthropic Message Batches](https://platform.claude.com/docs/en/build-with-claude/batch-processing) (most finish within 1 hour, up to 24), [Gemini Batch API](https://ai.google.dev/gemini-api/docs/batch-api) (target 24 hours).
+- **How:** Collect requests in a file and submit them as a batch: [OpenAI Batch API](https://developers.openai.com/api/docs/guides/batch) (results within 24 hours), [Anthropic Message Batches](https://platform.claude.com/docs/en/build-with-claude/batch-processing) (most finish within 1 hour, up to 24), [Gemini Batch API](https://aistudio.google.com/docs/batch-api) (target 24 hours).
 - **Example:** Classifying 50,000 product reviews overnight, running evaluation suites, or generating embeddings for a document library.
 - **Trade-off:** No instant answers, results can come back in any order (match them by `custom_id` or key), and caching inside batches is best-effort.
 
@@ -265,6 +270,8 @@ Sources: [OpenAI Prompt caching](https://developers.openai.com/api/docs/guides/p
 
 ### 7.12 Compress data formats
 
+<!-- optional -->
+
 - **Why:** Formats with repeated keys and lots of punctuation cost more tokens for the same information.
 - **How:** For tabular data, prefer CSV or a compact table over verbose JSON; drop fields the model does not need; round long decimals; shorten IDs when you can map them back.
 - **Example:** The same three records:
@@ -287,6 +294,8 @@ C-0003,Spain,7
 
 ### 7.13 Deduplicate and cache your own responses
 
+<!-- optional -->
+
 - **Why:** The cheapest request is the one you never send.
 - **How:** Store answers to frequent, identical questions (exact-match cache) in your own app, and remove duplicate documents or chunks before they reach the prompt.
 - **Example:** An FAQ bot caches the answer to "What are your opening hours?" for a day.
@@ -294,10 +303,10 @@ C-0003,Spain,7
 
 ### 7.14 Measure, then set budgets and alerts
 
-- **Why:** You cannot shrink what you do not measure, and runaway loops (an agent that keeps calling tools) can burn budget fast. OWASP lists **Unbounded Consumption** as one of the top 10 risks for LLM apps ([OWASP](https://genai.owasp.org/llm-top-10/)).
+- **Why:** You cannot shrink what you do not measure, and runaway loops (an agent that keeps calling tools) can burn budget fast. OWASP lists **Unbounded Consumption** as one of the top 10 risks for LLM apps ([OWASP](https://genai.owasp.org/top-10-for-llm-applications-2026/)).
 - **How:** Log token usage per request, user and feature; track your cache-hit rate (OpenAI suggests "total cached tokens ÷ total input tokens"); set spend limits and alerts in the provider console; cap the number of steps an agent may take.
 - **Example:** A daily report shows that one feature uses 70% of your tokens because it re-sends a full catalog each time. Fixing that one prompt halves the bill.
-- **Trade-off:** Logging prompts can capture sensitive data; see [Chapter 8](best-practices.md) for safe observability.
+- **Trade-off:** Logging prompts can capture sensitive data; see [Chapter 9](best-practices.md) for safe observability.
 
 ## 8. Saving tokens with GitHub Copilot & coding agents
 
@@ -312,6 +321,8 @@ The older **premium request** system, where each prompt cost one premium request
 > **📘 In plain words:** Copilot now works like the APIs in this chapter: more tokens and bigger models use more credits. Every technique in section 7 also helps you inside your editor.
 
 ### 8.2 The Copilot token-saving checklist
+
+The files and features named in this table (custom instructions, `AGENTS.md`, custom agents, MCP tools) are explained step by step in [Chapter 11](agent-toolkit.md). Come back to this checklist after reading it.
 
 | Technique | What to do | Source |
 |---|---|---|
@@ -429,4 +440,4 @@ The second prompt is about **half as long**, but the bigger saving is everything
 
 > **✅ Answer:** C — A fresh session avoids re-sending irrelevant history, focused references keep context lean, and a stopping condition prevents extra agent work and retries.
 
-[← Chapter 6: Using Models](using-ai.md) · [Chapter 8: Best Practices →](best-practices.md)
+[← Chapter 7: Connecting Models](connecting-ai.md) · [Chapter 9: Best Practices →](best-practices.md)

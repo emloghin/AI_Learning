@@ -4,45 +4,91 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Community Best Practices — AI Learn</title>
+<script>try{var t=localStorage.getItem('ailearn:theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<style>.section td code,.callout code,.diagram-caption code{background:var(--primary-light);color:var(--primary);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:13px}.callout p+p{margin-top:8px}.callout ul{margin:8px 0 0 20px}</style>
 </head>
-<body>
-
-<header class="site-header">
-  <div class="header-inner">
-    <div class="header-logo"><span>AI&nbsp;</span>Learn</div>
-    <nav class="header-nav">
-      <a href="index.html">Home</a>
-      <a href="study-plan.html">Study Plan</a>
-      <a href="foundations.html">1. Foundations</a>
-      <a href="neural-networks.html">2. Neural Networks</a>
-      <a href="transformers.html">3. Transformers &amp; LLMs</a>
-      <a href="training.html">4. Training &amp; Tuning</a>
-      <a href="models.html">5. Model Landscape</a>
-      <a href="using-ai.html">6. Using Models</a>
-      <a href="tokens.html">7. Tokens &amp; Cost</a>
-      <a href="best-practices.html" class="active">8. Best Practices</a>
-      <a href="ai-at-work.html">9. AI at Work</a>
-      <a href="spec-driven-development.html">10. Spec-Driven Dev</a>
-      <a href="spec-kit.html">10a. Spec Kit</a>
-      <a href="squad.html">10b. Squad</a>
-      <a href="sdd-production.html">10c. Shipping &amp; Reuse</a>
-      <a href="glossary.html">Glossary</a>
-      <a href="resources.html">Resources</a>
-    </nav>
-  </div>
+<body data-page="best-practices">
+<div class="read-progress" aria-hidden="true"><div></div></div>
+<header class="topbar">
+  <button class="icon-btn menu-btn" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
+  <a class="header-logo" href="index.html"><span>AI&nbsp;</span>Learn</a>
+  <span class="topbar-crumb">Part 2 · Use AI well <b>›</b> 9. Best Practices</span>
+  <span class="topbar-progress" title="Pages you marked as done"></span>
+  <button class="icon-btn theme-btn" type="button" aria-label="Switch between light and dark theme">◐</button>
 </header>
-
+<div class="shell">
+<aside class="sidebar" aria-label="Site navigation">
+<nav>
+<div class="nav-group">
+<div class="nav-group-title">Start here<span class="nav-count"></span></div>
+<a href="index.html" data-page="index">Home</a>
+<a href="study-plan.html" data-page="study-plan">Study Plan</a>
+<a href="setup.html" data-page="setup">Setup &amp; Git Basics</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 1 · Understand AI<span class="nav-count"></span></div>
+<a href="foundations.html" data-page="foundations">1. Foundations</a>
+<a href="neural-networks.html" data-page="neural-networks">2. Neural Networks</a>
+<a href="transformers.html" data-page="transformers">3. Transformers &amp; LLMs</a>
+<a href="training.html" data-page="training">4. Training &amp; Tuning</a>
+<a href="models.html" data-page="models">5. Model Landscape</a>
+</div>
+<div class="nav-group current">
+<div class="nav-group-title">Part 2 · Use AI well<span class="nav-count"></span></div>
+<a href="using-ai.html" data-page="using-ai">6. Using Models</a>
+<a href="connecting-ai.html" data-page="connecting-ai">7. Connecting Models</a>
+<a href="tokens.html" data-page="tokens">8. Tokens &amp; Cost</a>
+<a href="best-practices.html" data-page="best-practices" class="active" aria-current="page">9. Best Practices</a>
+<a href="ai-at-work.html" data-page="ai-at-work">10. AI at Work</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 3 · Work with agents<span class="nav-count"></span></div>
+<a href="agent-toolkit.html" data-page="agent-toolkit">11. Equip Your Agent</a>
+<a href="agent-guardrails.html" data-page="agent-guardrails">12. Human Control &amp; Guardrails</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 4 · Build with specs<span class="nav-count"></span></div>
+<a href="spec-driven-development.html" data-page="spec-driven-development">13. Spec-Driven Dev</a>
+<a href="spec-kit.html" data-page="spec-kit">14. Spec Kit from Zero</a>
+<a href="sdd-existing-projects.html" data-page="sdd-existing-projects">15. Existing Projects</a>
+<a href="sdd-examples.html" data-page="sdd-examples">16. Real Examples</a>
+<a href="squad.html" data-page="squad">17. Squad</a>
+<a href="sdd-production.html" data-page="sdd-production">18. Shipping &amp; Reuse</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Reference<span class="nav-count"></span></div>
+<a href="sdd-reference.html" data-page="sdd-reference">Command Reference</a>
+<a href="glossary.html" data-page="glossary">Glossary</a>
+<a href="resources.html" data-page="resources">Resources</a>
+<a href="about.html" data-page="about">About &amp; Feedback</a>
+</div>
+</nav>
+</aside>
+<div class="content">
 <section class="hero">
-  <div class="hero-badge">Chapter 8 · Best Practices</div>
+  <div class="hero-badge">Chapter 9 · Best Practices</div>
   <h1>Community Best Practices</h1>
   <p>Knowing how models work is half the job; the other half is using them safely, reliably and responsibly. This chapter collects the habits that model providers, security groups and experienced builders keep recommending: how to prompt, how to test, how to defend against attacks, how to protect people&#39;s data, and how to keep an AI feature working after launch day.</p>
+  <div class="hero-meta"><span>⏱ about 20 min of reading</span><span>Page 12 of 25</span></div>
 </section>
-
 <main class="main">
+<details class="toc-inline"><summary>On this page</summary><nav><a href="#1-prompting-best-practices">1. Prompting best practices</a>
+<a href="#2-context-engineering">2. Context engineering</a>
+<a href="#3-evaluation-driven-development">3. Evaluation-driven development</a>
+<a href="#4-security-the-owasp-top-10-for-llm-applications">4. Security: the OWASP Top 10 for LLM Applications</a>
+<a href="#5-privacy-data-handling">5. Privacy &amp; data handling</a>
+<a href="#6-responsible-ai">6. Responsible AI</a>
+<a href="#7-reliability">7. Reliability</a>
+<a href="#8-observability">8. Observability</a>
+<a href="#9-human-in-the-loop-for-high-stakes-actions">9. Human-in-the-loop for high-stakes actions</a>
+<a href="#10-working-with-ai-coding-assistants">10. Working with AI coding assistants</a>
+<a href="#11-open-model-specific-practices">11. Open-model specific practices</a>
+<a href="#12-do-avoid-summary">12. Do / avoid summary</a>
+<a href="#13-learning-habits">13. Learning habits</a>
+<a href="#recap">Recap</a>
+<a href="#check-your-understanding">Check Your Understanding</a></nav></details>
 <div class="section">
 <h2 id="1-prompting-best-practices">1. Prompting best practices</h2>
 <p>OpenAI, Anthropic and Google each publish a prompting guide. They use different words, but they agree on most points. The checklist below merges them; links go to the original guides.</p>
@@ -62,7 +108,7 @@
 <tr>
 <td><strong>Be clear and specific</strong></td>
 <td>State the task, the audience, constraints (length, tone, language) and the output format.</td>
-<td><a href="https://ai.google.dev/gemini-api/docs/prompting-strategies" target="_blank" rel="noopener">Google</a>, <a href="https://developers.openai.com/api/docs/guides/prompt-engineering" target="_blank" rel="noopener">OpenAI</a></td>
+<td><a href="https://aistudio.google.com/docs/prompting-strategies" target="_blank" rel="noopener">Google</a>, <a href="https://developers.openai.com/api/docs/guides/prompt-engineering" target="_blank" rel="noopener">OpenAI</a></td>
 </tr>
 <tr>
 <td><strong>Use roles correctly</strong></td>
@@ -72,22 +118,22 @@
 <tr>
 <td><strong>Structure the prompt</strong></td>
 <td>Separate sections with Markdown headings or XML tags (<code>&lt;context&gt;</code>, <code>&lt;task&gt;</code>), and keep the format consistent.</td>
-<td><a href="https://developers.openai.com/api/docs/guides/prompt-engineering" target="_blank" rel="noopener">OpenAI</a>, <a href="https://ai.google.dev/gemini-api/docs/prompting-strategies" target="_blank" rel="noopener">Google</a></td>
+<td><a href="https://developers.openai.com/api/docs/guides/prompt-engineering" target="_blank" rel="noopener">OpenAI</a>, <a href="https://aistudio.google.com/docs/prompting-strategies" target="_blank" rel="noopener">Google</a></td>
 </tr>
 <tr>
 <td><strong>Show examples (few-shot)</strong></td>
 <td>A few diverse, consistently formatted input/output examples teach format and style better than long rule lists.</td>
-<td><a href="https://ai.google.dev/gemini-api/docs/prompting-strategies" target="_blank" rel="noopener">Google</a>, <a href="https://developers.openai.com/api/docs/guides/prompt-engineering" target="_blank" rel="noopener">OpenAI</a></td>
+<td><a href="https://aistudio.google.com/docs/prompting-strategies" target="_blank" rel="noopener">Google</a>, <a href="https://developers.openai.com/api/docs/guides/prompt-engineering" target="_blank" rel="noopener">OpenAI</a></td>
 </tr>
 <tr>
 <td><strong>Give the needed context</strong></td>
 <td>Provide the facts the model needs instead of assuming it knows them; for long documents, put the context first and the question last.</td>
-<td><a href="https://ai.google.dev/gemini-api/docs/prompting-strategies" target="_blank" rel="noopener">Google</a></td>
+<td><a href="https://aistudio.google.com/docs/prompting-strategies" target="_blank" rel="noopener">Google</a></td>
 </tr>
 <tr>
 <td><strong>Break big tasks down</strong></td>
 <td>Split complex work into steps or chained prompts, each with its own clear input and output.</td>
-<td><a href="https://ai.google.dev/gemini-api/docs/prompting-strategies" target="_blank" rel="noopener">Google</a></td>
+<td><a href="https://aistudio.google.com/docs/prompting-strategies" target="_blank" rel="noopener">Google</a></td>
 </tr>
 <tr>
 <td><strong>Prompt reasoning models differently</strong></td>
@@ -97,7 +143,7 @@
 <tr>
 <td><strong>Iterate and measure</strong></td>
 <td>Change one thing at a time and re-run your test set.</td>
-<td><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview" target="_blank" rel="noopener">Anthropic</a>, <a href="https://ai.google.dev/gemini-api/docs/prompting-strategies" target="_blank" rel="noopener">Google</a></td>
+<td><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview" target="_blank" rel="noopener">Anthropic</a>, <a href="https://aistudio.google.com/docs/prompting-strategies" target="_blank" rel="noopener">Google</a></td>
 </tr>
 <tr>
 <td><strong>Pin versions and keep prompts in code</strong></td>
@@ -107,11 +153,10 @@
 </tbody></table></div>
 <div class="callout tip"><p><strong>💡 Example:</strong> Instead of &quot;Write something about our product,&quot; try: &quot;Write a 3-sentence product description of the Acme Mug for busy parents. Friendly tone. Mention: dishwasher safe, keeps drinks hot for 6 hours. Return plain text only.&quot;</p></div>
 <p>For a deeper walk-through of prompting techniques, see <a href="using-ai.html">Chapter 6</a>.</p>
-
 </div>
 <div class="section">
 <h2 id="2-context-engineering">2. Context engineering</h2>
-<p><strong>Context engineering</strong> is the next step after prompt engineering. Anthropic defines it as &quot;the set of strategies for curating and maintaining the optimal set of tokens (information) during LLM inference,&quot; which covers the system prompt, tools, examples, message history and any retrieved data (<a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener">Anthropic: Effective context engineering for AI agents</a>).</p>
+<p><strong>Context engineering</strong> is the next step after prompt engineering. Anthropic defines it as &quot;the set of strategies for curating and maintaining the optimal set of tokens (information) during LLM inference,&quot; which covers the system prompt, tools, examples, message history and any retrieved data (<a href="https://www.anthropic.com/research/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener">Anthropic: Effective context engineering for AI agents</a>).</p>
 <p>Key ideas from that guide:</p>
 <ul>
 <li><strong>Context is a budget.</strong> Because of <em>context rot</em>, recall gets worse as the context grows, so aim for &quot;the smallest possible set of high-signal tokens that maximize the likelihood of some desired outcome.&quot;</li>
@@ -121,8 +166,7 @@
 <li><strong>For long tasks,</strong> use compaction (summarize and restart the context), structured note-taking (an agent memory file), or sub-agents that return short summaries.</li>
 </ul>
 <div class="callout tip"><p><strong>📘 In plain words:</strong> Prompt engineering is writing a good question. Context engineering is deciding what else goes in the model&#39;s backpack on every step, and taking things out when they stop being useful.</p></div>
-<p><a href="tokens.html">Chapter 7</a> shows how the same habits also cut cost.</p>
-
+<p><a href="tokens.html">Chapter 8</a> shows how the same habits also cut cost.</p>
 </div>
 <div class="section">
 <h2 id="3-evaluation-driven-development">3. Evaluation-driven development</h2>
@@ -136,7 +180,7 @@
 <h3 id="32-treat-it-as-regression-testing">3.2 Treat it as regression testing</h3>
 <p>Run the evaluation automatically whenever a prompt, model version, retrieval setting or tool changes, just like unit tests for code. A change that fixes one example but breaks five others should fail the check.</p>
 <p>A tiny example of an automated check:</p>
-<div class="code-block">import json
+<div class="code-wrap file"><div class="code-head"><span class="code-label">Python</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">import json
 
 def check_answer(output: str) -&gt; bool:
     &quot;&quot;&quot;Pass if the model returned valid JSON with an allowed sentiment label.&quot;&quot;&quot;
@@ -150,7 +194,15 @@ def check_answer(output: str) -&gt; bool:
 cases = [
     (&quot;The mug broke after one day.&quot;, &quot;negative&quot;),
     (&quot;Arrived on time, works fine.&quot;, &quot;positive&quot;),
-]</div>
+]
+
+def passes(output: str, expected: str) -&gt; bool:
+    &quot;&quot;&quot;Pass only if the format is valid AND the label matches the human one.&quot;&quot;&quot;
+    return check_answer(output) and json.loads(output)[&quot;sentiment&quot;] == expected
+
+# In a real run, `ask_model(text)` would call your model and return its reply.
+# results = [passes(ask_model(text), expected) for text, expected in cases]
+# print(f&quot;{sum(results)}/{len(results)} cases passed&quot;)</div></div>
 <p>The <code>check_answer</code> function is a <strong>deterministic</strong> grader: it catches broken formats without needing another model. Use checks like this wherever you can, and add human or model-based grading only for qualities code cannot measure.</p>
 <h3 id="33-llm-as-judge-useful-with-pitfalls">3.3 LLM-as-judge: useful, with pitfalls</h3>
 <p>Using a second model to grade answers (&quot;Is this summary faithful to the source? Score 1–5&quot;) scales well, but practitioners report recurring problems:</p>
@@ -189,11 +241,10 @@ cases = [
 </tr>
 </tbody></table></div>
 <div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;A high benchmark score means the model is right for my app.&quot; Public benchmarks measure someone else&#39;s tasks. Your own test set is the benchmark that matters (see <a href="training.html">Chapter 4</a> on benchmarks).</p></div>
-
 </div>
 <div class="section">
 <h2 id="4-security-the-owasp-top-10-for-llm-applications">4. Security: the OWASP Top 10 for LLM Applications</h2>
-<p>The <a href="https://genai.owasp.org/llm-top-10/" target="_blank" rel="noopener">OWASP Top 10 for LLM Applications (2025)</a> is the community&#39;s shared list of the most important risks:</p>
+<p>The <a href="https://genai.owasp.org/top-10-for-llm-applications-2026/" target="_blank" rel="noopener">OWASP Top 10 for LLM Applications (2026)</a> is the community&#39;s shared list of the most important risks:</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -214,45 +265,46 @@ cases = [
 </tr>
 <tr>
 <td>LLM03</td>
-<td>Supply Chain</td>
-<td>Compromised models, datasets, plugins or dependencies.</td>
-</tr>
-<tr>
-<td>LLM04</td>
-<td>Data and Model Poisoning</td>
-<td>Training, fine-tuning or embedding data is manipulated.</td>
-</tr>
-<tr>
-<td>LLM05</td>
-<td>Improper Output Handling</td>
-<td>Model output is trusted and passed to other systems without validation.</td>
-</tr>
-<tr>
-<td>LLM06</td>
 <td>Excessive Agency</td>
 <td>The model has more permissions or autonomy than it needs.</td>
 </tr>
 <tr>
+<td>LLM04</td>
+<td>Supply Chain</td>
+<td>Compromised models, datasets, plugins or dependencies.</td>
+</tr>
+<tr>
+<td>LLM05</td>
+<td>Data and Model Poisoning</td>
+<td>Training, fine-tuning or embedding data is manipulated.</td>
+</tr>
+<tr>
+<td>LLM06</td>
+<td>Unbounded Consumption</td>
+<td>Uncontrolled usage drives up cost or causes denial of service.</td>
+</tr>
+<tr>
 <td>LLM07</td>
-<td>System Prompt Leakage</td>
-<td>Secrets or rules in the system prompt are exposed.</td>
-</tr>
-<tr>
-<td>LLM08</td>
-<td>Vector and Embedding Weaknesses</td>
-<td>Flaws in RAG stores, such as data leaking across users.</td>
-</tr>
-<tr>
-<td>LLM09</td>
 <td>Misinformation</td>
 <td>The model produces confident but false content.</td>
 </tr>
 <tr>
+<td>LLM08</td>
+<td>Hidden Context Exposure</td>
+<td>Hidden context, such as a system prompt, is extracted, inferred or reconstructed without permission.</td>
+</tr>
+<tr>
+<td>LLM09</td>
+<td>Vector and Embedding Weaknesses</td>
+<td>Flaws in RAG stores, such as data leaking across users.</td>
+</tr>
+<tr>
 <td>LLM10</td>
-<td>Unbounded Consumption</td>
-<td>Uncontrolled usage drives up cost or causes denial of service.</td>
+<td>Improper Output Handling</td>
+<td>Model output is trusted and passed to other systems without validation.</td>
 </tr>
 </tbody></table></div>
+<p>The 2026 edition, published in August 2026, reordered the list and moved excessive agency up to third place; older material uses the 2025 numbering. For systems that act through tools, OWASP also maintains a separate <a href="https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/" target="_blank" rel="noopener">Top 10 for Agentic Applications</a>, and <a href="agent-guardrails.html">Chapter 12</a> turns these risks into concrete settings.</p>
 <p>The sections below go deeper on the five risks beginners meet first.</p>
 <h3 id="41-prompt-injection-llm01">4.1 Prompt injection (LLM01)</h3>
 <p>OWASP describes two types (<a href="https://genai.owasp.org/llmrisk/llm01-prompt-injection/" target="_blank" rel="noopener">LLM01: Prompt Injection</a>):</p>
@@ -273,19 +325,18 @@ cases = [
 </ol>
 <h3 id="42-sensitive-information-disclosure-llm02">4.2 Sensitive information disclosure (LLM02)</h3>
 <p>Models can repeat secrets they were given in the prompt, in retrieved documents or, for custom-trained models, in training data. Mitigations: keep secrets and credentials out of prompts entirely; apply access control <strong>before</strong> retrieval so users only get documents they are allowed to see; redact personal data; and filter outputs.</p>
-<h3 id="43-excessive-agency-llm06">4.3 Excessive agency (LLM06)</h3>
+<h3 id="43-excessive-agency-llm03">4.3 Excessive agency (LLM03)</h3>
 <p>An agent with a &quot;delete any file&quot; tool and no approvals is an accident waiting to happen. Give each agent <strong>only the tools it needs</strong>, with the <strong>narrowest permissions</strong> (read-only where possible), and require confirmation for anything destructive, financial or external.</p>
-<h3 id="44-improper-output-handling-llm05">4.4 Improper output handling (LLM05)</h3>
+<h3 id="44-improper-output-handling-llm10">4.4 Improper output handling (LLM10)</h3>
 <p>Treat model output as <strong>untrusted user input</strong>. If you insert it into a web page, a SQL query or a shell command without validation, you inherit classic vulnerabilities such as cross-site scripting (XSS), SQL injection and command injection.</p>
-<div class="code-block">import html
+<div class="code-wrap file"><div class="code-head"><span class="code-label">Python</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">import html
 
 def render_reply(model_output: str) -&gt; str:
     # Escape before inserting into HTML so injected &lt;script&gt; tags are shown, not run
-    return f&quot;&lt;div class=&#39;reply&#39;&gt;{html.escape(model_output)}&lt;/div&gt;&quot;</div>
+    return f&quot;&lt;div class=&#39;reply&#39;&gt;{html.escape(model_output)}&lt;/div&gt;&quot;</div></div>
 <p>The function escapes the model&#39;s text so that any HTML or JavaScript it contains is displayed as plain text instead of executed. Apply the same idea everywhere: parameterized SQL queries, allow-listed commands, and schema validation for JSON.</p>
-<h3 id="45-supply-chain-and-model-provenance-llm03">4.5 Supply chain and model provenance (LLM03)</h3>
+<h3 id="45-supply-chain-and-model-provenance-llm04">4.5 Supply chain and model provenance (LLM04)</h3>
 <p>Downloaded models, datasets, plugins and MCP servers are code and data from someone else. Use trusted sources, check the <a href="https://huggingface.co/docs/hub/model-cards" target="_blank" rel="noopener">model card</a> and license, prefer safe weight formats such as Safetensors over formats that can run code when loaded, pin versions, and review what an MCP server or plugin can access before enabling it.</p>
-
 </div>
 <div class="section">
 <h2 id="5-privacy-data-handling">5. Privacy &amp; data handling</h2>
@@ -297,11 +348,10 @@ def render_reply(model_output: str) -&gt; str:
 <li>Confidential source code, contracts, unreleased financials, security reports</li>
 </ul>
 <h3 id="52-enterprise-data-controls">5.2 Enterprise data controls</h3>
-<p>Before using an AI service with real data, check its <strong>data-retention</strong>, <strong>training-use</strong> and <strong>data-residency</strong> settings. Providers document these in their API docs (for example Anthropic&#39;s notes on zero data retention in its <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank" rel="noopener">prompt caching</a> and <a href="https://platform.claude.com/docs/en/build-with-claude/batch-processing" target="_blank" rel="noopener">batch</a> pages). GitHub Copilot offers <strong>content exclusion</strong> so Copilot does not use certain files, but it is not supported everywhere (for example, not in Edit and Agent modes of Copilot Chat in VS Code), so check the support table (<a href="https://docs.github.com/en/copilot/concepts/context/content-exclusion" target="_blank" rel="noopener">GitHub Docs: Content exclusion</a>).</p>
+<p>Before using an AI service with real data, check its <strong>data-retention</strong>, <strong>training-use</strong> and <strong>data-residency</strong> settings. Providers document these in their API docs (for example Anthropic&#39;s notes on zero data retention in its <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank" rel="noopener">prompt caching</a> and <a href="https://platform.claude.com/docs/en/build-with-claude/batch-processing" target="_blank" rel="noopener">batch</a> pages). GitHub Copilot offers <strong>content exclusion</strong> so Copilot does not use certain files, but it is not supported in every editor and feature, and it is not a security boundary, so check the current support table (<a href="https://docs.github.com/en/copilot/concepts/context/content-exclusion" target="_blank" rel="noopener">GitHub Docs: Content exclusion</a>).</p>
 <h3 id="53-pii-redaction">5.3 PII redaction</h3>
 <p>Remove or mask personal data <strong>before</strong> it reaches the model or the logs, for example replacing <code>jane.doe@contoso.com</code> with <code>[EMAIL_1]</code> and keeping the mapping on your side if you need to restore it later.</p>
 <div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;Deleting the chat deletes the data.&quot; Logs, caches, batch storage and backups can keep copies for a defined period. Read the retention policy rather than assuming.</p></div>
-
 </div>
 <div class="section">
 <h2 id="6-responsible-ai">6. Responsible AI</h2>
@@ -372,7 +422,6 @@ def render_reply(model_output: str) -&gt; str:
 <li><strong>Transparency:</strong> tell users when they are talking to AI, what it can and cannot do, and where its information comes from (citations).</li>
 <li><strong>Human oversight:</strong> keep a person able to review, override and switch off the system.</li>
 </ul>
-
 </div>
 <div class="section">
 <h2 id="7-reliability">7. Reliability</h2>
@@ -398,7 +447,7 @@ def render_reply(model_output: str) -&gt; str:
 </tr>
 <tr>
 <td><strong>Versioned prompts in code</strong></td>
-<td>Prompts change behaviour like code does; review, test and roll them out like code. OpenAI is deprecating reusable prompt objects and recommends storing &quot;production prompts in your application code&quot; (<a href="https://developers.openai.com/api/docs/guides/prompt-engineering" target="_blank" rel="noopener">OpenAI</a>).</td>
+<td>Prompts change behaviour like code does; review, test and roll them out like code. OpenAI deprecated reusable prompt objects (shutdown date: 30 November 2026) and recommends storing &quot;production prompts in your application code&quot; (<a href="https://developers.openai.com/api/docs/guides/prompt-engineering" target="_blank" rel="noopener">OpenAI</a>).</td>
 </tr>
 <tr>
 <td><strong>Pin model versions</strong></td>
@@ -410,7 +459,7 @@ def render_reply(model_output: str) -&gt; str:
 </tr>
 </tbody></table></div>
 <p>A minimal retry helper:</p>
-<div class="code-block">import random
+<div class="code-wrap file"><div class="code-head"><span class="code-label">Python</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">import random
 import time
 
 def call_with_retries(call, max_attempts=4, base_delay=1.0):
@@ -421,9 +470,8 @@ def call_with_retries(call, max_attempts=4, base_delay=1.0):
         except Exception:
             if attempt == max_attempts:
                 raise
-            time.sleep(base_delay * 2 ** (attempt - 1) + random.uniform(0, 0.5))</div>
+            time.sleep(base_delay * 2 ** (attempt - 1) + random.uniform(0, 0.5))</div></div>
 <p>The helper waits longer after each failure and adds a small random delay so many clients do not retry at the same instant. In real code, retry only errors that are safe to retry (timeouts, rate limits, server errors) and not invalid requests.</p>
-
 </div>
 <div class="section">
 <h2 id="8-observability">8. Observability</h2>
@@ -436,9 +484,8 @@ def call_with_retries(call, max_attempts=4, base_delay=1.0):
 <li><strong>Tool calls</strong> and their results, for agents</li>
 <li><strong>User feedback</strong> (thumbs up/down) and evaluation scores</li>
 </ul>
-<p>Use <strong>tracing</strong> to connect the steps of one request (retrieval → model → tool → model) into a single timeline, so you can see where time, tokens and errors come from. Many platforms support OpenTelemetry-based tracing, including <a href="https://learn.microsoft.com/en-us/azure/foundry/" target="_blank" rel="noopener">Microsoft Foundry</a> and GitHub Copilot&#39;s agents in VS Code (<a href="https://code.visualstudio.com/docs/copilot/guides/monitoring-agents" target="_blank" rel="noopener">VS Code: Monitor agent usage with OpenTelemetry</a>).</p>
+<p>Use <strong>tracing</strong> to connect the steps of one request (retrieval → model → tool → model) into a single timeline, so you can see where time, tokens and errors come from. Many platforms support OpenTelemetry-based tracing, including <a href="https://learn.microsoft.com/en-us/azure/foundry/" target="_blank" rel="noopener">Microsoft Foundry</a> and GitHub Copilot&#39;s agents in VS Code (<a href="https://code.visualstudio.com/docs/agents/guides/monitoring-agents" target="_blank" rel="noopener">VS Code: Monitor agent usage with OpenTelemetry</a>).</p>
 <div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;Log everything forever.&quot; Prompts and outputs can contain personal data. Redact, restrict access and set retention limits on your logs too.</p></div>
-
 </div>
 <div class="section">
 <h2 id="9-human-in-the-loop-for-high-stakes-actions">9. Human-in-the-loop for high-stakes actions</h2>
@@ -467,12 +514,11 @@ def call_with_retries(call, max_attempts=4, base_delay=1.0):
 <td>AI suggests, a qualified human decides</td>
 </tr>
 </tbody></table></div>
-<p>OWASP lists &quot;require human approval for high-risk actions&quot; as a core mitigation for prompt injection (<a href="https://genai.owasp.org/llmrisk/llm01-prompt-injection/" target="_blank" rel="noopener">OWASP LLM01</a>), and Microsoft&#39;s accountability principle says humans must &quot;maintain meaningful control over highly autonomous systems.&quot;</p>
-
+<p><a href="agent-guardrails.html">Chapter 12</a> applies this to coding agents step by step. OWASP lists &quot;require human approval for high-risk actions&quot; as a core mitigation for prompt injection (<a href="https://genai.owasp.org/llmrisk/llm01-prompt-injection/" target="_blank" rel="noopener">OWASP LLM01</a>), and Microsoft&#39;s accountability principle says humans must &quot;maintain meaningful control over highly autonomous systems.&quot;</p>
 </div>
 <div class="section">
 <h2 id="10-working-with-ai-coding-assistants">10. Working with AI coding assistants</h2>
-<p>The VS Code team&#39;s guidance is to &quot;always treat AI output as a starting point that needs review&quot; (<a href="https://code.visualstudio.com/docs/copilot/best-practices" target="_blank" rel="noopener">VS Code: Best practices</a>). In practice:</p>
+<p>The VS Code team&#39;s guidance is to &quot;always treat AI output as a starting point that needs review&quot; (<a href="https://code.visualstudio.com/docs/agents/best-practices" target="_blank" rel="noopener">VS Code: Best practices</a>). In practice:</p>
 <ul>
 <li><strong>Review all code</strong> before committing: edge cases, error handling, security, licensing.</li>
 <li><strong>Ask for tests and run them.</strong> Including expected results in the prompt lets the agent verify its own work; run the tests yourself before moving on.</li>
@@ -482,8 +528,7 @@ def call_with_retries(call, max_attempts=4, base_delay=1.0):
 <li><strong>Add deterministic guardrails</strong> (unit tests, linters, security scans). GitHub notes these reduce retries and wasted tokens (<a href="https://docs.github.com/en/copilot/tutorials/optimize-ai-usage" target="_blank" rel="noopener">GitHub: Optimize AI usage</a>).</li>
 </ul>
 <div class="callout success"><p><strong>✅ Key takeaway:</strong> You are the author of record for every line you commit, whether you typed it or an agent did.</p></div>
-<p>For a complete worked workflow, continue with <a href="spec-driven-development.html">Spec-Driven Development</a>: set up Spec Kit, optionally coordinate implementation with Squad, and apply production release gates.</p>
-
+<p>To go further: <a href="agent-toolkit.html">Chapter 11</a> shows how to equip an agent with instructions, skills, MCP servers and custom agents; <a href="agent-guardrails.html">Chapter 12</a> covers the settings that keep a person in control; and <a href="spec-driven-development.html">Spec-Driven Development</a> is a complete worked workflow with Spec Kit and Squad.</p>
 </div>
 <div class="section">
 <h2 id="11-open-model-specific-practices">11. Open-model specific practices</h2>
@@ -495,7 +540,6 @@ def call_with_retries(call, max_attempts=4, base_delay=1.0):
 <li><strong>Check safety tuning.</strong> Some community fine-tunes remove safety training; add your own input/output filtering if needed.</li>
 <li><strong>Verify provenance.</strong> Download from the official organization page, prefer safe formats, and pin the exact version or file hash.</li>
 </ul>
-
 </div>
 <div class="section">
 <h2 id="12-do-avoid-summary">12. Do / avoid summary</h2>
@@ -547,7 +591,6 @@ def call_with_retries(call, max_attempts=4, base_delay=1.0):
 <td>Trusting public benchmarks over your own evals</td>
 </tr>
 </tbody></table></div>
-
 </div>
 <div class="section">
 <h2 id="13-learning-habits">13. Learning habits</h2>
@@ -558,7 +601,6 @@ def call_with_retries(call, max_attempts=4, base_delay=1.0):
 <li><strong>Keep a prompt and eval notebook.</strong> Record what you tried, the scores, and why you chose the final version.</li>
 <li><strong>Share and learn in communities,</strong> and stay skeptical of viral claims until you can test them.</li>
 </ul>
-
 </div>
 <div class="section">
 <h2 id="recap">Recap</h2>
@@ -571,7 +613,6 @@ def call_with_retries(call, max_attempts=4, base_delay=1.0):
 <li>Make AI features reliable and observable with retries, timeouts, fallbacks, pinned versions, versioned prompts, tracing and monitoring.</li>
 <li>Review every line an AI assistant writes, keep tasks small, run tests, and never commit secrets.</li>
 </ul>
-
 </div>
 <div class="section">
 <h2 id="check-your-understanding">Check Your Understanding</h2>
@@ -615,10 +656,34 @@ def call_with_retries(call, max_attempts=4, base_delay=1.0):
 <li>D) It disables prompt caching</li>
 </ul>
 <details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — Model updates can change outputs, so pinning a snapshot keeps behaviour predictable until you test and approve a new version.</p></div></details>
-<div class="nav-links"><a href="tokens.html">← Chapter 7: Tokens &amp; Cost</a><a href="ai-at-work.html">Chapter 9: AI at Work →</a></div>
+</div>
+<div class="done-row"><button class="done-btn" type="button" aria-pressed="false">Mark this page as done</button></div>
+<div class="pager">
+<a class="pager-prev" href="tokens.html"><span>← Previous</span><strong>8. Tokens &amp; Cost</strong></a>
+<a class="pager-next" href="ai-at-work.html"><span>Next →</span><strong>10. AI at Work</strong></a>
 </div>
 </main>
-
-<footer class="site-footer">AI Learn · A beginner's guide to how AI models work · Based on official docs and open course material · Not affiliated with any model provider</footer>
+<footer class="site-footer">AI Learn · A personal learning project by Emanuel Loghin · <a href="about.html">About &amp; feedback</a> · Based on official docs and open course material · Not affiliated with any model provider</footer>
+</div>
+<aside class="toc-rail" aria-label="On this page">
+<div class="toc-title">On this page</div><nav><a href="#1-prompting-best-practices">1. Prompting best practices</a>
+<a href="#2-context-engineering">2. Context engineering</a>
+<a href="#3-evaluation-driven-development">3. Evaluation-driven development</a>
+<a href="#4-security-the-owasp-top-10-for-llm-applications">4. Security: the OWASP Top 10 for LLM Applications</a>
+<a href="#5-privacy-data-handling">5. Privacy &amp; data handling</a>
+<a href="#6-responsible-ai">6. Responsible AI</a>
+<a href="#7-reliability">7. Reliability</a>
+<a href="#8-observability">8. Observability</a>
+<a href="#9-human-in-the-loop-for-high-stakes-actions">9. Human-in-the-loop for high-stakes actions</a>
+<a href="#10-working-with-ai-coding-assistants">10. Working with AI coding assistants</a>
+<a href="#11-open-model-specific-practices">11. Open-model specific practices</a>
+<a href="#12-do-avoid-summary">12. Do / avoid summary</a>
+<a href="#13-learning-habits">13. Learning habits</a>
+<a href="#recap">Recap</a>
+<a href="#check-your-understanding">Check Your Understanding</a></nav>
+</aside>
+</div>
+<div class="scrim"></div>
+<script src="site.js"></script>
 </body>
 </html>

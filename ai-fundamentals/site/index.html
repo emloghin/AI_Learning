@@ -4,152 +4,148 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Learn: How AI Models Really Work — AI Learn</title>
+<script>try{var t=localStorage.getItem('ailearn:theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<style>.section td code,.callout code,.diagram-caption code{background:var(--primary-light);color:var(--primary);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:13px}.callout p+p{margin-top:8px}.callout ul{margin:8px 0 0 20px}</style>
 </head>
-<body>
-
-<header class="site-header">
-  <div class="header-inner">
-    <div class="header-logo"><span>AI&nbsp;</span>Learn</div>
-    <nav class="header-nav">
-      <a href="index.html" class="active">Home</a>
-      <a href="study-plan.html">Study Plan</a>
-      <a href="foundations.html">1. Foundations</a>
-      <a href="neural-networks.html">2. Neural Networks</a>
-      <a href="transformers.html">3. Transformers &amp; LLMs</a>
-      <a href="training.html">4. Training &amp; Tuning</a>
-      <a href="models.html">5. Model Landscape</a>
-      <a href="using-ai.html">6. Using Models</a>
-      <a href="tokens.html">7. Tokens &amp; Cost</a>
-      <a href="best-practices.html">8. Best Practices</a>
-      <a href="ai-at-work.html">9. AI at Work</a>
-      <a href="spec-driven-development.html">10. Spec-Driven Dev</a>
-      <a href="spec-kit.html">10a. Spec Kit</a>
-      <a href="squad.html">10b. Squad</a>
-      <a href="sdd-production.html">10c. Shipping &amp; Reuse</a>
-      <a href="glossary.html">Glossary</a>
-      <a href="resources.html">Resources</a>
-    </nav>
-  </div>
+<body data-page="index">
+<div class="read-progress" aria-hidden="true"><div></div></div>
+<header class="topbar">
+  <button class="icon-btn menu-btn" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
+  <a class="header-logo" href="index.html"><span>AI&nbsp;</span>Learn</a>
+  <span class="topbar-crumb">Start here <b>›</b> Home</span>
+  <span class="topbar-progress" title="Pages you marked as done"></span>
+  <button class="icon-btn theme-btn" type="button" aria-label="Switch between light and dark theme">◐</button>
 </header>
-
+<div class="shell">
+<aside class="sidebar" aria-label="Site navigation">
+<nav>
+<div class="nav-group current">
+<div class="nav-group-title">Start here<span class="nav-count"></span></div>
+<a href="index.html" data-page="index" class="active" aria-current="page">Home</a>
+<a href="study-plan.html" data-page="study-plan">Study Plan</a>
+<a href="setup.html" data-page="setup">Setup &amp; Git Basics</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 1 · Understand AI<span class="nav-count"></span></div>
+<a href="foundations.html" data-page="foundations">1. Foundations</a>
+<a href="neural-networks.html" data-page="neural-networks">2. Neural Networks</a>
+<a href="transformers.html" data-page="transformers">3. Transformers &amp; LLMs</a>
+<a href="training.html" data-page="training">4. Training &amp; Tuning</a>
+<a href="models.html" data-page="models">5. Model Landscape</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 2 · Use AI well<span class="nav-count"></span></div>
+<a href="using-ai.html" data-page="using-ai">6. Using Models</a>
+<a href="connecting-ai.html" data-page="connecting-ai">7. Connecting Models</a>
+<a href="tokens.html" data-page="tokens">8. Tokens &amp; Cost</a>
+<a href="best-practices.html" data-page="best-practices">9. Best Practices</a>
+<a href="ai-at-work.html" data-page="ai-at-work">10. AI at Work</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 3 · Work with agents<span class="nav-count"></span></div>
+<a href="agent-toolkit.html" data-page="agent-toolkit">11. Equip Your Agent</a>
+<a href="agent-guardrails.html" data-page="agent-guardrails">12. Human Control &amp; Guardrails</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 4 · Build with specs<span class="nav-count"></span></div>
+<a href="spec-driven-development.html" data-page="spec-driven-development">13. Spec-Driven Dev</a>
+<a href="spec-kit.html" data-page="spec-kit">14. Spec Kit from Zero</a>
+<a href="sdd-existing-projects.html" data-page="sdd-existing-projects">15. Existing Projects</a>
+<a href="sdd-examples.html" data-page="sdd-examples">16. Real Examples</a>
+<a href="squad.html" data-page="squad">17. Squad</a>
+<a href="sdd-production.html" data-page="sdd-production">18. Shipping &amp; Reuse</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Reference<span class="nav-count"></span></div>
+<a href="sdd-reference.html" data-page="sdd-reference">Command Reference</a>
+<a href="glossary.html" data-page="glossary">Glossary</a>
+<a href="resources.html" data-page="resources">Resources</a>
+<a href="about.html" data-page="about">About &amp; Feedback</a>
+</div>
+</nav>
+</aside>
+<div class="content">
 <section class="hero">
   <div class="hero-badge">Beginner guide · Start here</div>
   <h1>AI Learn: How AI Models Really Work</h1>
-  <p>A friendly, from-zero guide to how AI models like ChatGPT, Claude, Gemini, Llama and Mistral actually work — no math or programming background needed, just curiosity.</p>
+  <p>A from-zero guide in four parts: how AI models work, how to use them well, how to equip and control AI agents, and how to build software with them. Start with curiosity; no math needed.</p>
+  <div class="hero-meta"><span>⏱ about 10 min of reading</span><span>Page 1 of 25</span></div>
 </section>
-
 <main class="main">
+<details class="toc-inline"><summary>On this page</summary><nav><a href="#1-choose-your-route">1. Choose your route</a>
+<a href="#2-all-chapters">2. All chapters</a>
+<a href="#3-how-to-use-this-site">3. How to use this site</a>
+<a href="#4-what-this-site-is">4. What this site is</a>
+<a href="#5-the-big-picture-in-60-seconds">5. The big picture in 60 seconds</a>
+<a href="#6-ten-terms-to-know-first">6. Ten terms to know first</a></nav></details>
 <div class="section">
-<h2 id="1-what-this-site-is">1. What this site is</h2>
-<p>AI Learn is a step-by-step course that explains what happens <em>inside</em> an AI model: how it learns from data, what its &quot;billions of parameters&quot; really are, why it writes one word-piece at a time, and why it sometimes gets things confidently wrong.</p>
-<p>Every chapter uses plain language first, then a small worked example with real numbers, then a picture. Where a fact matters, we link to the source — mainly the <a href="https://developers.google.com/machine-learning/crash-course" target="_blank" rel="noopener">Google Machine Learning Crash Course</a>, <a href="https://learn.microsoft.com/training/modules/get-started-ai-fundamentals/" target="_blank" rel="noopener">Microsoft Learn: Introduction to AI concepts</a>, the <a href="https://huggingface.co/learn/llm-course" target="_blank" rel="noopener">Hugging Face LLM Course</a>, the <a href="https://www.3blue1brown.com/topics/neural-networks" target="_blank" rel="noopener">3Blue1Brown neural network series</a>, and the original research papers.</p>
-<div class="callout tip"><p><strong>📘 In plain words:</strong> Chapters 1–8 are the &quot;how does the engine work&quot; manual. Chapter 9 and the <a href="study-plan.html">Study Plan</a> are the driving lessons: they connect this site with the best free courses from Google, Microsoft, OpenAI, Anthropic and the University of Helsinki, and show you how to apply AI to your own daily work. <a href="spec-driven-development.html">Chapter 10</a> is the software-building workshop: use Spec Kit and Squad to turn an idea into a reviewed change, then learn what it takes to ship it.</p></div>
-
+<h2 id="1-choose-your-route">1. Choose your route</h2>
+<p>Pick the goal that matches you today. The numbers are chapters; follow them in order. You can switch routes at any time.</p>
+<div class="card-grid routes">
+<div class="card route"><div class="card-num">Route A</div><h4>I want to understand AI</h4><p>For anyone curious about what happens behind the text box.</p><p class="route-steps"><a href="foundations.html">1</a> → <a href="neural-networks.html">2</a> → <a href="transformers.html">3</a> → <a href="training.html">4</a> → <a href="models.html">5</a> → <a href="using-ai.html">6</a> → <a href="connecting-ai.html">7</a> → <a href="tokens.html">8</a> → <a href="best-practices.html">9</a> → <a href="ai-at-work.html">10</a></p><span class="card-time">about 5 hours</span></div>
+<div class="card route"><div class="card-num">Route B</div><h4>I want to use agents safely</h4><p>For people who already use an AI coding assistant.</p><p class="route-steps"><a href="using-ai.html">6</a> → <a href="connecting-ai.html">7</a> → <a href="best-practices.html">9</a> → <a href="agent-toolkit.html">11</a> → <a href="agent-guardrails.html">12</a></p><span class="card-time">about 2 hours</span></div>
+<div class="card route"><div class="card-num">Route C</div><h4>I want to build something new</h4><p>For developers starting a project with Spec Kit.</p><p class="route-steps"><a href="agent-toolkit.html">11</a> → <a href="agent-guardrails.html">12</a> → <a href="spec-driven-development.html">13</a> → <a href="spec-kit.html">14</a> → <a href="sdd-examples.html">16</a> → <a href="sdd-production.html">18</a></p><span class="card-time">about 2 hours + practice</span></div>
+<div class="card route"><div class="card-num">Route D</div><h4>I already have a project</h4><p>For teams adopting the workflow in an existing codebase.</p><p class="route-steps"><a href="spec-driven-development.html">13</a> → <a href="spec-kit.html">14</a> → <a href="sdd-existing-projects.html">15</a> → <a href="sdd-examples.html">16</a> → <a href="agent-guardrails.html">12</a> → <a href="squad.html">17</a></p><span class="card-time">about 2.5 hours + practice</span></div>
+</div><p>Not sure? Start with Route A, or let the <a href="study-plan.html">Study Plan</a> give you a week-by-week schedule.</p>
+<p><strong>Routes B, C and D are hands-on.</strong> Before you start them, spend half an hour on <a href="setup.html">Setup and Git basics</a>: the terminal, the tools to install and the ten Git commands the later chapters assume.</p>
 </div>
 <div class="section">
-<h2 id="2-who-it-is-for">2. Who it is for</h2>
-<ul>
-<li><strong>Curious beginners</strong> who use AI chat tools and want to know what is going on behind the text box.</li>
-<li><strong>Professionals</strong> (managers, analysts, writers, IT staff) who need to make decisions about AI and want a solid mental model instead of buzzwords.</li>
-<li><strong>Future builders</strong> who plan to go on to coding courses and want the concepts in place first.</li>
-</ul>
-<p>You do <strong>not</strong> need to know calculus, statistics, or programming. When a formula appears, it is explained in words and followed by a tiny example you can check with a phone calculator.</p>
-
+<h2 id="2-all-chapters">2. All chapters</h2>
+<p class="part-label">Part 1 · Understand AI</p>
+<div class="card-grid">
+<a class="card" href="foundations.html"><div class="card-num">Chapter 1</div><h4>Foundations</h4><p>AI, machine learning, deep learning and generative AI; what a model is; training and inference.</p><span class="card-time">~25 min</span></a>
+<a class="card" href="neural-networks.html"><div class="card-num">Chapter 2</div><h4>Neural Networks</h4><p>Neurons, weights, layers, loss and gradient descent, with a worked example.</p><span class="card-time">~40 min</span></a>
+<a class="card" href="transformers.html"><div class="card-num">Chapter 3</div><h4>Transformers &amp; LLMs</h4><p>Embeddings, attention and how a language model predicts the next token.</p><span class="card-time">~40 min</span></a>
+<a class="card" href="training.html"><div class="card-num">Chapter 4</div><h4>Training &amp; Tuning</h4><p>Pre-training, fine-tuning, instruction tuning, RLHF and why training is expensive.</p><span class="card-time">~30 min</span></a>
+<a class="card" href="models.html"><div class="card-num">Chapter 5</div><h4>Model Landscape</h4><p>Proprietary and open-weight models, licences, sizes, model cards and how to choose.</p><span class="card-time">~30 min</span></a>
+</div><p class="part-label">Part 2 · Use AI well</p>
+<div class="card-grid">
+<a class="card" href="using-ai.html"><div class="card-num">Chapter 6</div><h4>Using Models</h4><p>The anatomy of a request, prompting, structured outputs, multimodal input, evaluation and speed.</p><span class="card-time">~20 min</span></a>
+<a class="card" href="connecting-ai.html"><div class="card-num">Chapter 7</div><h4>Connecting Models</h4><p>Embeddings, RAG, tool calling, agents, what MCP is, failure modes and a mini project.</p><span class="card-time">~25 min</span></a>
+<a class="card" href="tokens.html"><div class="card-num">Chapter 8</div><h4>Tokens &amp; Cost</h4><p>Tokens, context windows, how pricing works and how to estimate cost.</p><span class="card-time">~25 min</span></a>
+<a class="card" href="best-practices.html"><div class="card-num">Chapter 9</div><h4>Best Practices</h4><p>Context engineering, evaluation, security, privacy, responsible AI and reliability.</p><span class="card-time">~30 min</span></a>
+<a class="card" href="ai-at-work.html"><div class="card-num">Chapter 10</div><h4>AI at Work</h4><p>Finding AI-ready tasks, the delegate-review-refine loop and measuring impact.</p><span class="card-time">~15 min</span></a>
+</div><p class="part-label">Part 3 · Work with agents</p>
+<div class="card-grid">
+<a class="card" href="agent-toolkit.html"><div class="card-num">Chapter 11</div><h4>Equip Your Agent</h4><p>Instructions, skills, MCP servers and custom agents, with complete files you can copy.</p><span class="card-time">~25 min</span></a>
+<a class="card" href="agent-guardrails.html"><div class="card-num">Chapter 12</div><h4>Human Control &amp; Guardrails</h4><p>Where a person decides, which settings really stop an agent, and what the community recommends.</p><span class="card-time">~25 min</span></a>
+</div><p class="part-label">Part 4 · Build with specs</p>
+<div class="card-grid">
+<a class="card" href="spec-driven-development.html"><div class="card-num">Chapter 13</div><h4>Spec-Driven Development</h4><p>What a spec is, when it is worth writing, and your route through this part.</p><span class="card-time">~10 min</span></a>
+<a class="card" href="spec-kit.html"><div class="card-num">Chapter 14</div><h4>Spec Kit from Zero</h4><p>Install, specify, clarify, plan, implement and verify one small feature.</p><span class="card-time">~25 min + practice</span></a>
+<a class="card" href="sdd-existing-projects.html"><div class="card-num">Chapter 15</div><h4>Existing Projects &amp; Migration</h4><p>Add Spec Kit to a codebase you already have and move a team over, phase by phase.</p><span class="card-time">~30 min</span></a>
+<a class="card" href="sdd-examples.html"><div class="card-num">Chapter 16</div><h4>Real Examples</h4><p>The actual prompts and results from public repositories, new and existing.</p><span class="card-time">~20 min</span></a>
+<a class="card" href="squad.html"><div class="card-num">Chapter 17</div><h4>Squad</h4><p>Create a small AI team, in a new or existing repository, and hand it approved work.</p><span class="card-time">~25 min</span></a>
+<a class="card" href="sdd-production.html"><div class="card-num">Chapter 18</div><h4>Shipping &amp; Reuse</h4><p>Production scenarios, release gates, multiple projects and community lessons.</p><span class="card-time">~25 min</span></a>
+</div><p class="part-label">Plan and look things up</p>
+<div class="card-grid">
+<a class="card" href="setup.html"><div class="card-num">Prepare</div><h4>Setup &amp; Git Basics</h4><p>Terminal, tools, environment variables, Git and a first-hour path. Read before Part 3.</p><span class="card-time">~30 min</span></a>
+<a class="card" href="study-plan.html"><div class="card-num">Plan</div><h4>Study Plan</h4><p>Three week-by-week paths that combine these chapters with free external courses.</p><span class="card-time">plan</span></a>
+<a class="card" href="sdd-reference.html"><div class="card-num">Reference</div><h4>Command Reference</h4><p>Every Spec Kit and Squad command, file and setting in one place.</p><span class="card-time">reference</span></a>
+<a class="card" href="glossary.html"><div class="card-num">Reference</div><h4>Glossary</h4><p>Every key term in one place.</p><span class="card-time">reference</span></a>
+<a class="card" href="resources.html"><div class="card-num">Reference</div><h4>Resources</h4><p>Free courses, videos, papers and tools for going further.</p><span class="card-time">reference</span></a>
+</div><p>Chapters 1–10 take about five hours to read. Parts 3 and 4 add about three hours of reading plus hands-on practice. The times on the cards include working through the examples; the time shown at the top of each page counts reading only. Mark a page as done at the bottom of each chapter; the menu then shows your progress.</p>
 </div>
 <div class="section">
-<h2 id="3-how-to-use-it">3. How to use it</h2>
+<h2 id="3-how-to-use-this-site">3. How to use this site</h2>
 <ol>
-<li><strong>Pick a path.</strong> The <a href="study-plan.html">Study Plan</a> offers three week-by-week paths — AI-literate professional, AI power user and AI builder — that mix these chapters with external courses and practice on your own work.</li>
-<li><strong>Read in order.</strong> Each chapter builds on the previous one. Chapter 3 (Transformers) makes much more sense after Chapter 2 (Neural Networks).</li>
+<li><strong>Read in order within a route.</strong> Each chapter builds on the previous one. Chapter 3 (Transformers) makes much more sense after Chapter 2 (Neural Networks).</li>
 <li><strong>Look for the callouts.</strong> 📘 boxes restate an idea in plain words, 💡 boxes give examples, ⚠️ boxes flag common misconceptions, ✅ boxes summarize, and 🎯 boxes suggest something to try.</li>
-<li><strong>Do the quiz.</strong> Each chapter ends with &quot;Check Your Understanding&quot;. If you miss a question, reread that section — it is the fastest way to make ideas stick.</li>
+<li><strong>Watch the code block labels.</strong> A green <strong>Terminal</strong> block is typed in a shell. A purple <strong>Agent chat</strong> block is typed in the AI assistant&#39;s chat. Use the Copy button.</li>
+<li><strong>Open the deep dives when you want them.</strong> Sections marked <strong>Optional deep dive</strong> are collapsed. They add detail and can be skipped on a first read; nothing later in the course depends on them.</li>
+<li><strong>Do the quiz.</strong> Each chapter ends with &quot;Check Your Understanding&quot;. If you miss a question, reread that section.</li>
 <li><strong>Use the glossary.</strong> Any unfamiliar word is probably in the <a href="glossary.html">Glossary</a>.</li>
 </ol>
 <div class="callout tip"><p><strong>🎯 Try it:</strong> Keep an AI chat tool open while you read. When a chapter explains an idea (for example, tokens or temperature), try it out and see the effect for yourself.</p></div>
-
 </div>
 <div class="section">
-<h2 id="4-the-learning-path">4. The learning path</h2>
-<div class="table-wrap"><table>
-<thead>
-<tr>
-<th>Chapter</th>
-<th>What you will learn</th>
-<th>Reading time</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><a href="foundations.html">1. Foundations</a></td>
-<td>AI vs machine learning vs deep learning vs generative AI; what a &quot;model&quot; is; training vs inference; overfitting</td>
-<td>~25 min</td>
-</tr>
-<tr>
-<td><a href="neural-networks.html">2. Neural Networks</a></td>
-<td>Neurons, weights, layers, parameters, loss, gradient descent, backpropagation — with a worked example</td>
-<td>~40 min</td>
-</tr>
-<tr>
-<td><a href="transformers.html">3. Transformers &amp; LLMs</a></td>
-<td>Embeddings, attention, the Transformer architecture, and how a large language model predicts the next token</td>
-<td>~40 min</td>
-</tr>
-<tr>
-<td><a href="training.html">4. Training &amp; Tuning</a></td>
-<td>Pre-training, fine-tuning, instruction tuning, RLHF, and why training is so expensive</td>
-<td>~30 min</td>
-</tr>
-<tr>
-<td><a href="models.html">5. Model Landscape</a></td>
-<td>Proprietary vs open-weight models, licenses, model families and sizes, model cards, running models locally, how to choose</td>
-<td>~30 min</td>
-</tr>
-<tr>
-<td><a href="using-ai.html">6. Using Models</a></td>
-<td>Prompting, temperature, system prompts, structured outputs, RAG, tools, agents and MCP</td>
-<td>~35 min</td>
-</tr>
-<tr>
-<td><a href="tokens.html">7. Tokens &amp; Cost</a></td>
-<td>What tokens are, context windows, how pricing works, and how to estimate cost</td>
-<td>~25 min</td>
-</tr>
-<tr>
-<td><a href="best-practices.html">8. Best Practices</a></td>
-<td>Prompting and context engineering, evaluation, security, privacy, responsible AI and reliability</td>
-<td>~30 min</td>
-</tr>
-<tr>
-<td><a href="ai-at-work.html">9. AI at Work</a></td>
-<td>Finding AI-ready tasks, the delegate-review-refine loop, measuring impact, a prompt library, and building your own learning plan</td>
-<td>~15 min</td>
-</tr>
-<tr>
-<td><a href="spec-driven-development.html">10. Spec-Driven Development</a></td>
-<td>A beginner&#39;s introduction, <a href="spec-kit.html">Spec Kit setup and workflow</a>, <a href="squad.html">Squad teams</a>, and <a href="sdd-production.html">production examples, community lessons and multi-project reuse</a></td>
-<td>~80 min across four pages</td>
-</tr>
-<tr>
-<td><a href="study-plan.html">Study Plan</a></td>
-<td>Three week-by-week learning paths combining these chapters with Elements of AI, Google AI Essentials, OpenAI Academy, Anthropic Academy and Microsoft AI-901</td>
-<td>plan</td>
-</tr>
-<tr>
-<td><a href="glossary.html">Glossary</a></td>
-<td>Every key term in one place</td>
-<td>reference</td>
-</tr>
-<tr>
-<td><a href="resources.html">Resources</a></td>
-<td>Free courses, videos, papers, and tools for going further</td>
-<td>reference</td>
-</tr>
-</tbody></table></div>
-<p>Chapters 1–9 take about four and a half hours to read. The optional software-building section adds about 80 minutes plus hands-on practice. The Study Plan paths add external courses and practice, from 4 to 8 weeks depending on the path.</p>
-
+<h2 id="4-what-this-site-is">4. What this site is</h2>
+<p>AI Learn is a step-by-step course in four parts. Parts 1 and 2 explain what happens <em>inside</em> an AI model and how to use one well. Part 3 shows how to equip a coding agent and keep a person in control of it. Part 4 is a software-building workshop: turn an idea into a reviewed change with Spec Kit and Squad, adopt that workflow in a project you already have, and learn what it takes to ship.</p>
+<p>Every chapter uses plain language first, then a small worked example, then a picture. Where a fact matters, we link to the source: mainly the <a href="https://developers.google.com/machine-learning/crash-course" target="_blank" rel="noopener">Google Machine Learning Crash Course</a>, <a href="https://learn.microsoft.com/training/modules/get-started-ai-fundamentals/" target="_blank" rel="noopener">Microsoft Learn: Introduction to AI concepts</a>, the <a href="https://huggingface.co/learn/llm-course" target="_blank" rel="noopener">Hugging Face LLM Course</a>, the <a href="https://www.3blue1brown.com/topics/neural-networks" target="_blank" rel="noopener">3Blue1Brown neural network series</a>, the original research papers, and the official documentation of the tools.</p>
+<p>Found a mistake or something unclear? <a href="about.html#2-how-to-give-feedback">Tell the author</a>: corrections are welcome.</p>
+<p><strong>Who it is for:</strong> curious beginners who use AI chat tools; professionals (managers, analysts, writers, IT staff) who need a solid mental model instead of buzzwords; and developers who want to work with AI agents on real projects. You do <strong>not</strong> need calculus or statistics for Parts 1 and 2. Parts 3 and 4 assume you can open a terminal and use Git.</p>
 </div>
 <div class="section">
 <h2 id="5-the-big-picture-in-60-seconds">5. The big picture in 60 seconds</h2>
@@ -213,9 +209,8 @@
   <text x="30" y="302" font-family="Inter,sans-serif" font-size="12" fill="#475569">a message, and the weights do not change.</text>
 </svg>
 <div class="diagram-caption">Figure 1 — The life of a model: build once (data and training), then use many times (inference).</div></div>
-<div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;The AI looks up answers in a database of everything it read.&quot; It does not. A plain language model has no search index of its training data. It generates text from patterns stored in its weights, which is why it can be fluent and wrong at the same time. (Some products <em>add</em> a search step on top — you will learn about that, called RAG, in <a href="using-ai.html">Using Models</a>.)</p></div>
+<div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;The AI looks up answers in a database of everything it read.&quot; It does not. A plain language model has no search index of its training data. It generates text from patterns stored in its weights, which is why it can be fluent and wrong at the same time. (Some products <em>add</em> a search step on top — you will learn about that, called RAG, in <a href="connecting-ai.html">Connecting Models</a>.)</p></div>
 <div class="callout success"><p><strong>✅ Key takeaway:</strong> Data → training → weights → inference. Almost every question about AI (&quot;Why is it expensive?&quot;, &quot;Why does it make things up?&quot;, &quot;Why does it have a knowledge cut-off?&quot;) traces back to one of these four stages.</p></div>
-
 </div>
 <div class="section">
 <h2 id="6-ten-terms-to-know-first">6. Ten terms to know first</h2>
@@ -268,10 +263,25 @@
 <td>The maximum number of tokens a model can consider at once, including both your prompt and its reply.</td>
 </tr>
 </tbody></table></div>
-<div class="nav-links"><a href="study-plan.html">Choose your path in the Study Plan →</a><a href="foundations.html">Start Chapter 1: Foundations →</a></div>
+</div>
+<div class="done-row"><button class="done-btn" type="button" aria-pressed="false">Mark this page as done</button></div>
+<div class="pager">
+<span></span>
+<a class="pager-next" href="study-plan.html"><span>Next →</span><strong>Study Plan</strong></a>
 </div>
 </main>
-
-<footer class="site-footer">AI Learn · A beginner's guide to how AI models work · Based on official docs and open course material · Not affiliated with any model provider</footer>
+<footer class="site-footer">AI Learn · A personal learning project by Emanuel Loghin · <a href="about.html">About &amp; feedback</a> · Based on official docs and open course material · Not affiliated with any model provider</footer>
+</div>
+<aside class="toc-rail" aria-label="On this page">
+<div class="toc-title">On this page</div><nav><a href="#1-choose-your-route">1. Choose your route</a>
+<a href="#2-all-chapters">2. All chapters</a>
+<a href="#3-how-to-use-this-site">3. How to use this site</a>
+<a href="#4-what-this-site-is">4. What this site is</a>
+<a href="#5-the-big-picture-in-60-seconds">5. The big picture in 60 seconds</a>
+<a href="#6-ten-terms-to-know-first">6. Ten terms to know first</a></nav>
+</aside>
+</div>
+<div class="scrim"></div>
+<script src="site.js"></script>
 </body>
 </html>

@@ -2,7 +2,7 @@
 
 **Reference · Keep learning**
 
-These are hand-picked, free or freely readable resources for going deeper after AI Learn. The original course and model references were checked in October 2026; the Spec Kit and Squad references in section 9 were checked on 25 November 2026. Where a resource has moved or been renamed, the table points to its current home.
+These are hand-picked, free or freely readable resources for going deeper after AI Learn. The original course and model references were checked in October 2026; the agent, Spec Kit and Squad references in sections 9 and 10 were checked on 27 November 2026. Where a resource has moved or been renamed, the table points to its current home.
 
 ## 1. Free courses
 
@@ -13,8 +13,8 @@ For a week-by-week plan that combines these courses with the chapters of this si
 | Elements of AI (University of Helsinki & MinnaLearn) | Course | Beginner | Free, non-technical introduction to what AI is, how it works and its societal impact, with a free certificate; local sites for NL, BE, RO and LT. Part 2, *Building AI*, adds basic Python. | [elementsofai.com](https://www.elementsofai.com/) |
 | Google AI Essentials | Course + certificate | Beginner | Five short courses on using generative AI tools at work, prompting and responsible use; Coursera subscription required for the certificate. | [coursera.org](https://www.coursera.org/specializations/ai-essentials-google) |
 | OpenAI Academy | Course hub | Beginner → Intermediate | Free self-paced courses by audience: Apply AI at Work, Build with AI, Lead AI Adoption, Teach and Learn with AI. Needs a ChatGPT account. | [academy.openai.com](https://academy.openai.com/) |
-| Anthropic Academy: AI Fluency | Course | Beginner | Free courses on working well with AI (*AI Fluency: Framework & Foundations*, *AI Capabilities and Limitations*). | [academy.claude.com](https://academy.claude.com/) |
-| Anthropic Academy: product & developer courses | Course hub | Beginner → Intermediate | Free courses with certificates: Claude 101, Claude Code in Action, Building with the Claude API, Model Context Protocol. | [anthropic.skilljar.com](https://anthropic.skilljar.com/) |
+| Claude Academy (formerly Anthropic Academy): AI Fluency | Course | Beginner | Free courses on working well with AI (*AI Fluency: Framework & Foundations*, *AI Capabilities and Limitations*). | [academy.claude.com](https://academy.claude.com/) |
+| Claude Academy: product & developer courses | Course hub | Beginner → Intermediate | Free courses with a completion badge: Claude 101, Claude Code in Action, Building with the Claude API, Model Context Protocol. | [academy.claude.com](https://academy.claude.com/courses) |
 | Anthropic Prompt Engineering Interactive Tutorial | GitHub course | Beginner → Intermediate | Nine hands-on chapters from basic prompt structure to avoiding hallucinations; examples use Claude 3 model names, but the techniques still apply. | [github.com](https://github.com/anthropics/prompt-eng-interactive-tutorial) |
 | Google Machine Learning Crash Course | Course | Beginner | Short lessons, visuals and exercises covering regression, neural networks, overfitting and gradient descent. | [developers.google.com](https://developers.google.com/machine-learning/crash-course) |
 | Microsoft Learn: AI learning hub | Course hub | Beginner | Microsoft's starting point for AI training, including an introduction to generative AI and Responsible AI. | [learn.microsoft.com/ai](https://learn.microsoft.com/en-us/ai/) |
@@ -75,7 +75,7 @@ You do not need to read these to use AI, but each one changed the field. The arX
 
 | Resource | Type | Level | Why it's useful | Link |
 |---|---|---|---|---|
-| OWASP Top 10 for LLM Applications (2025) | Guide | Beginner → Intermediate | The community list of the biggest security risks in LLM apps, from prompt injection to unbounded consumption. | [genai.owasp.org](https://genai.owasp.org/llm-top-10/) |
+| OWASP Top 10 for LLM Applications (2026) | Guide | Beginner → Intermediate | The community list of the biggest security risks in LLM apps, from prompt injection to improper output handling. | [genai.owasp.org](https://genai.owasp.org/top-10-for-llm-applications-2026/) |
 | OWASP LLM01: Prompt Injection | Guide | Intermediate | Explains direct and indirect prompt injection with attack scenarios and mitigations. | [genai.owasp.org](https://genai.owasp.org/llmrisk/llm01-prompt-injection/) |
 | NIST AI Risk Management Framework | Framework | Intermediate | A voluntary framework (Govern, Map, Measure, Manage) plus a Generative AI Profile for managing AI risk. | [nist.gov](https://www.nist.gov/itl/ai-risk-management-framework) |
 | Microsoft: What is Responsible AI? | Docs | Beginner | Microsoft's six Responsible AI principles explained with practical tooling. | [learn.microsoft.com](https://learn.microsoft.com/en-us/azure/machine-learning/concept-responsible-ai) |
@@ -86,10 +86,10 @@ You do not need to read these to use AI, but each one changed the field. The arX
 |---|---|---|---|---|
 | OpenAI: Prompt caching | Docs | Intermediate | How automatic caching works, minimum sizes, pricing and how to keep prefixes stable. | [developers.openai.com](https://developers.openai.com/api/docs/guides/prompt-caching) |
 | Anthropic: Prompt caching | Docs | Intermediate | Cache breakpoints, lifetimes and how to read cache usage fields. | [platform.claude.com](https://platform.claude.com/docs/en/build-with-claude/prompt-caching) |
-| Gemini: Context caching | Docs | Intermediate | Implicit and explicit caching for Gemini models. | [ai.google.dev](https://ai.google.dev/gemini-api/docs/caching) |
+| Gemini: Context caching | Docs | Intermediate | Implicit and explicit caching for Gemini models. | [aistudio.google.com](https://aistudio.google.com/docs/caching) |
 | OpenAI: Batch API | Docs | Intermediate | Run large non-urgent jobs at a discount. | [developers.openai.com](https://developers.openai.com/api/docs/guides/batch) |
 | Anthropic: Batch processing | Docs | Intermediate | Message Batches for asynchronous, discounted processing. | [platform.claude.com](https://platform.claude.com/docs/en/build-with-claude/batch-processing) |
-| Gemini: Batch API | Docs | Intermediate | Asynchronous batch jobs for Gemini at reduced cost. | [ai.google.dev](https://ai.google.dev/gemini-api/docs/batch-api) |
+| Gemini: Batch API | Docs | Intermediate | Asynchronous batch jobs for Gemini at reduced cost. | [aistudio.google.com](https://aistudio.google.com/docs/batch-api) |
 | Anthropic: Effective context engineering for AI agents | Article | Intermediate | Why context is a finite budget and how to curate it for agents. | [anthropic.com](https://www.anthropic.com/research/effective-context-engineering-for-ai-agents) |
 | GitHub: Optimizing your AI usage | Docs | Beginner | Practical habits for spending fewer AI credits in Copilot. | [docs.github.com](https://docs.github.com/en/copilot/tutorials/optimize-ai-usage) |
 | VS Code: Optimize AI credit usage | Docs | Beginner | Editor-specific tips: compacting chats, tool sets, cache explorer and usage indicators. | [code.visualstudio.com](https://code.visualstudio.com/docs/agents/guides/optimize-usage) |
@@ -105,11 +105,31 @@ You do not need to read these to use AI, but each one changed the field. The arX
 | Google AI Developers Forum | Forum | All levels | Discussion and help for the Gemini API and Google AI tools. | [discuss.ai.google.dev](https://discuss.ai.google.dev/) |
 | r/LocalLLaMA | Reddit community | Intermediate | Active community for running open-weight models on your own hardware. | [reddit.com](https://www.reddit.com/r/LocalLLaMA/) |
 
-> **⚠️ Common misconception:** "If a forum post says a model is best, it is best for me." Community opinions move fast and depend on the poster's hardware and tasks. Test claims on your own data (see [Chapter 8](best-practices.md)).
+> **⚠️ Common misconception:** "If a forum post says a model is best, it is best for me." Community opinions move fast and depend on the poster's hardware and tasks. Test claims on your own data (see [Chapter 9](best-practices.md)).
 
-## 9. Spec-driven development with Spec Kit and Squad
+## 9. Agents: customization, MCP and guardrails
 
-Start with [Chapter 10's guided learning path](spec-driven-development.md), then use these sources to check the commands and adapt the workflow. Open-source tools do not make model usage free.
+Background reading for [Chapter 11](agent-toolkit.md) and [Chapter 12](agent-guardrails.md). Checked on 27 November 2026.
+
+| Resource | Provenance | What to use it for |
+|---|---|---|
+| [Copilot customization cheat sheet](https://docs.github.com/en/copilot/reference/customization-cheat-sheet) | Official (GitHub) | One table of instructions, skills, agents, hooks and MCP, and where each is supported |
+| [Custom agents in VS Code](https://code.visualstudio.com/docs/agent-customization/custom-agents) and [configuration reference](https://docs.github.com/en/copilot/reference/custom-agents-configuration) | Official | Agent file format, fields and tool names |
+| [Agent Skills specification](https://agentskills.io/specification) and [skills in VS Code](https://code.visualstudio.com/docs/agent-customization/agent-skills) | Open standard; official | `SKILL.md` format, naming rules and how skills are loaded |
+| [AGENTS.md](https://agents.md/) | Open format | Cross-tool instruction file |
+| [MCP specification](https://modelcontextprotocol.io/specification/latest) and [build-a-server tutorial](https://modelcontextprotocol.io/docs/develop/build-server) | Official | The protocol and a first server |
+| [Add MCP servers in Copilot CLI](https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-mcp-servers) and [GitHub MCP server](https://github.com/github/github-mcp-server) | Official | Configuration format; toolsets and read-only mode |
+| [MCP security best practices](https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices) | Official | Risks of local servers, tool descriptions and tokens |
+| [Copilot CLI: allowing tools](https://docs.github.com/en/copilot/how-tos/copilot-cli/use-copilot-cli/allowing-tools) and [hooks reference](https://docs.github.com/en/copilot/reference/hooks-reference) | Official | Approval prompts, allow and deny rules, hooks |
+| [VS Code agent approvals](https://code.visualstudio.com/docs/agents/run/approvals) and [security](https://code.visualstudio.com/docs/agents/run/security) | Official | Permission levels, auto-approve settings, checkpoints, sandbox |
+| [Copilot cloud agent: risks and mitigations](https://docs.github.com/en/copilot/concepts/security-governance-and-network-settings/risks-and-mitigations) | Official | Built-in limits of the cloud agent |
+| [The lethal trifecta](https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/) and [Agents Rule of Two](https://ai.meta.com/blog/practical-ai-agent-security/) | Practitioner; vendor engineering blog | Two simple rules for judging whether an agent setup is dangerous |
+| [Building effective agents](https://www.anthropic.com/engineering/building-effective-agents) and [Beyond permission prompts](https://www.anthropic.com/engineering/claude-code-sandboxing) | Vendor engineering blog | Simple designs, stopping conditions, sandboxing and approval fatigue |
+| [EU AI Act, Article 14](https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-14) | Official (European Commission service desk) | Human-oversight requirements for high-risk AI systems, as a design benchmark |
+
+## 10. Spec-driven development with Spec Kit and Squad
+
+Start with [Chapter 13's guided learning path](spec-driven-development.md), then use these sources to check the commands and adapt the workflow. Open-source tools do not make model usage free.
 
 | Resource | Provenance | What to use it for |
 |---|---|---|
@@ -125,8 +145,15 @@ Start with [Chapter 10's guided learning path](spec-driven-development.md), then
 | [Understanding SDD: Kiro, spec-kit and Tessl](https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html) | Independent practitioner analysis, October 2025 | Lifecycle taxonomy and evaluation questions; not a current CLI tutorial |
 | [squad-sdd-workshop](https://github.com/ananegru/squad-sdd-workshop) (public template) | Community workshop | Hour-long hands-on lab that builds a Rock-Paper-Scissors CLI with Spec Kit and Squad; presented in the 21 August 2026 GitHub Copilot Summer Bootcamp. Not checked line by line; verify commands against the current Squad version before use |
 | [Combining Spec Kit and Squad: github/squad#1033](https://github.com/github/squad/issues/1033#issuecomment-4658769575) | Maintainer reply | Confirms complementary roles; not a specification for an automatic integration |
+| [Spec Kit monorepo guide](https://github.github.io/spec-kit/how-to/monorepo.html), [bug-fix guide](https://github.github.io/spec-kit/guides/bugfix.html) and [idea assessment](https://github.github.io/spec-kit/guides/assessment.html) | Official | Several projects in one repository; the opt-in bug and assessment extensions |
+| [Spec Kit extensions](https://github.github.io/spec-kit/extensions/cli.html), [presets](https://github.github.io/spec-kit/presets/cli.html) and [workflows](https://github.github.io/spec-kit/workflows/cli.html) | Official | Optional add-ons and their commands; read the security notes before installing community entries |
+| [Spec Kit community walkthroughs](https://github.github.io/spec-kit/community/walkthroughs.html) | Community, listed by the project but not reviewed by GitHub | Real prompts used on new and large existing codebases; walked through in [Chapter 16](sdd-examples.md) |
+| [Squad existing-repository](https://github.github.io/squad/docs/scenarios/existing-repo/), [mid-project](https://github.github.io/squad/docs/scenarios/mid-project/) and [upgrading](https://github.github.io/squad/docs/scenarios/upgrading/) scenarios | Official; some pages show older commands | Adding a team to a codebase you already have; upgrading from 1.x |
+| [Spec Kit brownfield setup: auditing a generated constitution](https://hubreb.github.io/blog/spec-kit-brownfield-setup) | Practitioner blog, May 2026, older Spec Kit version | Why every generated principle needs checking against the repository |
+| [Thoughtworks Technology Radar: GitHub Spec Kit](https://www.thoughtworks.com/en-cl/radar/languages-and-frameworks/github-spec-kit) | Consultancy assessment, April 2026 | An outside view of strengths and rough edges on existing systems |
+| [Existing projects and migration](sdd-existing-projects.md) and [command reference](sdd-reference.md) | This site | Step-by-step adoption in a codebase you already have; every command in one place |
 | [Community lessons and production examples](sdd-production.md) | This site's sourced synthesis | Concrete failure cases, release gates, multi-project reuse and how to weigh practitioner evidence |
 
 > **✅ Key takeaway:** Start with one beginner course, one visual series and one interactive tool, then use the official docs as your source of truth whenever you build something real.
 
-[← Glossary](glossary.md) · [Study Plan →](study-plan.md)
+[← Glossary](glossary.md) · [About & Feedback →](about.md)

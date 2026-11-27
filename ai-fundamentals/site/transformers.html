@@ -4,45 +4,93 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Transformers & Large Language Models — AI Learn</title>
+<script>try{var t=localStorage.getItem('ailearn:theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<style>.section td code,.callout code,.diagram-caption code{background:var(--primary-light);color:var(--primary);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:13px}.callout p+p{margin-top:8px}.callout ul{margin:8px 0 0 20px}</style>
 </head>
-<body>
-
-<header class="site-header">
-  <div class="header-inner">
-    <div class="header-logo"><span>AI&nbsp;</span>Learn</div>
-    <nav class="header-nav">
-      <a href="index.html">Home</a>
-      <a href="study-plan.html">Study Plan</a>
-      <a href="foundations.html">1. Foundations</a>
-      <a href="neural-networks.html">2. Neural Networks</a>
-      <a href="transformers.html" class="active">3. Transformers &amp; LLMs</a>
-      <a href="training.html">4. Training &amp; Tuning</a>
-      <a href="models.html">5. Model Landscape</a>
-      <a href="using-ai.html">6. Using Models</a>
-      <a href="tokens.html">7. Tokens &amp; Cost</a>
-      <a href="best-practices.html">8. Best Practices</a>
-      <a href="ai-at-work.html">9. AI at Work</a>
-      <a href="spec-driven-development.html">10. Spec-Driven Dev</a>
-      <a href="spec-kit.html">10a. Spec Kit</a>
-      <a href="squad.html">10b. Squad</a>
-      <a href="sdd-production.html">10c. Shipping &amp; Reuse</a>
-      <a href="glossary.html">Glossary</a>
-      <a href="resources.html">Resources</a>
-    </nav>
-  </div>
+<body data-page="transformers">
+<div class="read-progress" aria-hidden="true"><div></div></div>
+<header class="topbar">
+  <button class="icon-btn menu-btn" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
+  <a class="header-logo" href="index.html"><span>AI&nbsp;</span>Learn</a>
+  <span class="topbar-crumb">Part 1 · Understand AI <b>›</b> 3. Transformers &amp; LLMs</span>
+  <span class="topbar-progress" title="Pages you marked as done"></span>
+  <button class="icon-btn theme-btn" type="button" aria-label="Switch between light and dark theme">◐</button>
 </header>
-
+<div class="shell">
+<aside class="sidebar" aria-label="Site navigation">
+<nav>
+<div class="nav-group">
+<div class="nav-group-title">Start here<span class="nav-count"></span></div>
+<a href="index.html" data-page="index">Home</a>
+<a href="study-plan.html" data-page="study-plan">Study Plan</a>
+<a href="setup.html" data-page="setup">Setup &amp; Git Basics</a>
+</div>
+<div class="nav-group current">
+<div class="nav-group-title">Part 1 · Understand AI<span class="nav-count"></span></div>
+<a href="foundations.html" data-page="foundations">1. Foundations</a>
+<a href="neural-networks.html" data-page="neural-networks">2. Neural Networks</a>
+<a href="transformers.html" data-page="transformers" class="active" aria-current="page">3. Transformers &amp; LLMs</a>
+<a href="training.html" data-page="training">4. Training &amp; Tuning</a>
+<a href="models.html" data-page="models">5. Model Landscape</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 2 · Use AI well<span class="nav-count"></span></div>
+<a href="using-ai.html" data-page="using-ai">6. Using Models</a>
+<a href="connecting-ai.html" data-page="connecting-ai">7. Connecting Models</a>
+<a href="tokens.html" data-page="tokens">8. Tokens &amp; Cost</a>
+<a href="best-practices.html" data-page="best-practices">9. Best Practices</a>
+<a href="ai-at-work.html" data-page="ai-at-work">10. AI at Work</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 3 · Work with agents<span class="nav-count"></span></div>
+<a href="agent-toolkit.html" data-page="agent-toolkit">11. Equip Your Agent</a>
+<a href="agent-guardrails.html" data-page="agent-guardrails">12. Human Control &amp; Guardrails</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 4 · Build with specs<span class="nav-count"></span></div>
+<a href="spec-driven-development.html" data-page="spec-driven-development">13. Spec-Driven Dev</a>
+<a href="spec-kit.html" data-page="spec-kit">14. Spec Kit from Zero</a>
+<a href="sdd-existing-projects.html" data-page="sdd-existing-projects">15. Existing Projects</a>
+<a href="sdd-examples.html" data-page="sdd-examples">16. Real Examples</a>
+<a href="squad.html" data-page="squad">17. Squad</a>
+<a href="sdd-production.html" data-page="sdd-production">18. Shipping &amp; Reuse</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Reference<span class="nav-count"></span></div>
+<a href="sdd-reference.html" data-page="sdd-reference">Command Reference</a>
+<a href="glossary.html" data-page="glossary">Glossary</a>
+<a href="resources.html" data-page="resources">Resources</a>
+<a href="about.html" data-page="about">About &amp; Feedback</a>
+</div>
+</nav>
+</aside>
+<div class="content">
 <section class="hero">
   <div class="hero-badge">Chapter 3 · Transformers & LLMs</div>
   <h1>Transformers &amp; Large Language Models</h1>
   <p>A large language model (LLM) like ChatGPT, Claude, or Gemini looks like magic, but underneath it does one surprisingly simple job over and over: it guesses the next small piece of text. This chapter opens the box. You will see how text becomes numbers, how &quot;attention&quot; lets words look at each other, how the transformer architecture stacks these ideas together, and how the model writes a whole answer one token at a time. No math background needed — every formula comes with plain words and a tiny worked example.</p>
+  <div class="hero-meta"><span>⏱ about 24 min of reading</span><span>+ 4 min optional</span><span>Page 6 of 25</span></div>
 </section>
-
 <main class="main">
+<details class="toc-inline"><summary>On this page</summary><nav><a href="#1-what-a-language-model-actually-does">1. What a Language Model Actually Does</a>
+<a href="#2-tokens-how-text-becomes-numbers">2. Tokens: How Text Becomes Numbers</a>
+<a href="#3-embeddings-words-as-points-in-space">3. Embeddings: Words as Points in Space</a>
+<a href="#4-keeping-track-of-word-order">4. Keeping Track of Word Order</a>
+<a href="#5-attention-how-words-look-at-each-other">5. Attention: How Words Look at Each Other</a>
+<a href="#6-multi-head-attention">6. Multi-Head Attention</a>
+<a href="#7-the-transformer-block">7. The Transformer Block</a>
+<a href="#8-three-shapes-of-transformer">8. Three Shapes of Transformer</a>
+<a href="#9-the-generation-loop">9. The Generation Loop</a>
+<a href="#10-sampling-choosing-the-next-token">10. Sampling: Choosing the Next Token</a>
+<a href="#11-the-context-window">11. The Context Window</a>
+<a href="#12-the-kv-cache">12. The KV Cache</a>
+<a href="#13-why-llms-hallucinate">13. Why LLMs Hallucinate</a>
+<a href="#14-multimodal-models">14. Multimodal Models</a>
+<a href="#15-reasoning-models">15. Reasoning Models</a>
+<a href="#recap">Recap</a>
+<a href="#check-your-understanding">Check Your Understanding</a></nav></details>
 <div class="section">
 <h2 id="1-what-a-language-model-actually-does">1. What a Language Model Actually Does</h2>
 <p>A <strong>language model</strong> is a program that, given some text, predicts what text is likely to come next. That is the whole job. Everything else — answering questions, writing code, translating, summarizing — emerges from doing this one job extremely well.</p>
@@ -85,7 +133,6 @@
 <p>All the probabilities add up to 100%. &quot;Mat&quot; is most likely because the model has seen &quot;the cat sat on the mat&quot; many times; &quot;roof&quot; is possible but less common. The model never &quot;looks up&quot; an answer — it only knows which continuations are likely given what it learned in training (covered in <a href="training.html">Chapter 4</a>).</p>
 <div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;The model searches a database of facts.&quot; It does not. A plain LLM has no database. Its knowledge is stored indirectly in its <strong>parameters</strong> (the billions of weights you met in <a href="neural-networks.html">Chapter 2</a>), and it reconstructs answers from patterns. That is why it can be fluent and still wrong.</p></div>
 <div class="callout success"><p><strong>✅ Key takeaway:</strong> An LLM is a next-token predictor. Long, smart-looking answers are built from many single next-token guesses chained together.</p></div>
-
 </div>
 <div class="section">
 <h2 id="2-tokens-how-text-becomes-numbers">2. Tokens: How Text Becomes Numbers</h2>
@@ -96,7 +143,7 @@
 <li><strong>Single letters:</strong> every text becomes very long, which makes the model slow and makes learning meaning harder.</li>
 <li><strong>Sub-word pieces (the winner):</strong> common words get one token, rare words are built from a few pieces. Nothing is ever &quot;unknown&quot;, because in the worst case a word can be spelled out from tiny pieces.</li>
 </ul>
-<h3 id="byte-pair-encoding-bpe-the-intuition">Byte Pair Encoding (BPE) — the intuition</h3>
+<details class="optional sub"><summary><h3 id="byte-pair-encoding-bpe-the-intuition">Byte Pair Encoding (BPE) — the intuition</h3><span class="optional-pill">Optional deep dive</span></summary>
 <p>Most modern tokenizers use a method called <strong>Byte Pair Encoding (BPE)</strong> or a close relative. The idea:</p>
 <ol>
 <li>Start with single characters (or bytes) as the vocabulary.</li>
@@ -108,6 +155,7 @@
 <div class="callout tip"><p><strong>💡 Example:</strong> A tokenizer <em>might</em> split the sentence <code>Tokenization isn&#39;t magic!</code> like this (the exact split depends on the specific tokenizer):</p>
 <p><code>Token</code> · <code>ization</code> · <code> isn</code> · <code>&#39;t</code> · <code> magic</code> · <code>!</code></p>
 <p>That is 6 tokens for 25 characters. Notice that spaces usually attach to the <em>start</em> of the following word (<code> magic</code>), and that a long word like &quot;Tokenization&quot; becomes two pieces.</p></div>
+</details>
 <h3 id="rules-of-thumb">Rules of thumb</h3>
 <p>OpenAI&#39;s help center gives these rough estimates for <strong>English</strong> text (<a href="https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them" target="_blank" rel="noopener">source</a>):</p>
 <ul>
@@ -119,8 +167,7 @@
 <p><strong>Other languages and code usually differ.</strong> Tokenizers are trained mostly on English-heavy text, so English words tend to be stored as whole tokens. Text in many other languages (especially ones with non-Latin scripts) is often split into more, smaller pieces — the same sentence can cost noticeably more tokens. Code is also different: indentation, brackets, and unusual variable names can all become separate tokens.</p>
 <div class="callout tip"><p><strong>🎯 Try it:</strong> Paste a sentence into the <a href="https://platform.openai.com/tokenizer" target="_blank" rel="noopener">OpenAI Tokenizer</a> and watch it get colored into tokens. Then try the same sentence in another language, a long URL, and a few lines of code. Compare the token counts.</p></div>
 <div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;The model sees letters.&quot; It sees token IDs. That is why LLMs sometimes struggle with letter-level tasks like counting the <code>r</code>s in &quot;strawberry&quot; — the word may be just one or two tokens, and the individual letters are not directly visible to the model.</p></div>
-<p>Tokens matter in everyday use because <strong>models are priced and limited in tokens</strong>. See <a href="tokens.html">Chapter 7: Tokens &amp; Cost</a> for the practical side.</p>
-
+<p>Tokens matter in everyday use because <strong>models are priced and limited in tokens</strong>. See <a href="tokens.html">Chapter 8: Tokens &amp; Cost</a> for the practical side.</p>
 </div>
 <div class="section">
 <h2 id="3-embeddings-words-as-points-in-space">3. Embeddings: Words as Points in Space</h2>
@@ -129,20 +176,21 @@
 <p>The model is not told where to put words. It <strong>learns</strong> the positions during training, because placing similar words near each other helps it predict the next token.</p>
 <h3 id="measuring-similarity">Measuring similarity</h3>
 <p>To check whether two embeddings are &quot;close&quot;, a common measure is <strong>cosine similarity</strong>: it compares the <em>direction</em> two vectors point in. A value near 1 means &quot;very similar direction&quot;, near 0 means &quot;unrelated&quot;.</p>
-<div class="code-block">cosine_similarity(a, b) = (a · b) / (|a| × |b|)
+<div class="code-wrap plain"><div class="code-head"><span class="code-label"></span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">cosine_similarity(a, b) = (a · b) / (|a| × |b|)
 
 a · b  = multiply matching numbers and add them up (the &quot;dot product&quot;)
-|a|    = the length of vector a = square root of (sum of each number squared)</div>
+|a|    = the length of vector a = square root of (sum of each number squared)</div></div>
 <div class="callout tip"><p><strong>💡 Example:</strong> Use a toy 2-number embedding where the first number means &quot;animal-ness&quot; and the second means &quot;machine-ness&quot;:</p>
 <p><code>cat = [0.9, 0.1]</code>, <code>dog = [0.8, 0.2]</code>, <code>car = [0.1, 0.9]</code></p>
 <p><strong>cat vs dog:</strong> dot product = 0.9×0.8 + 0.1×0.2 = 0.74. Lengths: |cat| = √(0.81 + 0.01) ≈ 0.906, |dog| = √(0.64 + 0.04) ≈ 0.825. Similarity = 0.74 ÷ (0.906 × 0.825) ≈ <strong>0.99</strong> — nearly identical direction.</p>
 <p><strong>cat vs car:</strong> dot product = 0.9×0.1 + 0.1×0.9 = 0.18. Similarity = 0.18 ÷ (0.906 × 0.906) ≈ <strong>0.22</strong> — mostly unrelated.</p></div>
-<p>Real embeddings have no human-readable labels like &quot;animal-ness&quot;; the directions are learned and usually mix many ideas at once. But the &quot;closeness&quot; idea is exactly the same, and it powers features like semantic search (see <a href="using-ai.html">Chapter 6</a>).</p>
-<h3 id="the-famous-king-man-woman-example">The famous king − man + woman example</h3>
+<p>Real embeddings have no human-readable labels like &quot;animal-ness&quot;; the directions are learned and usually mix many ideas at once. But the &quot;closeness&quot; idea is exactly the same, and it powers features like semantic search (see <a href="connecting-ai.html">Chapter 7</a>).</p>
+<details class="optional sub"><summary><h3 id="the-famous-king-man-woman-example">The famous king − man + woman example</h3><span class="optional-pill">Optional deep dive</span></summary>
 <p>Researchers working on earlier word embeddings (word2vec, <a href="https://arxiv.org/abs/1301.3781" target="_blank" rel="noopener">Mikolov et al., 2013</a>) found that directions in the space can capture relationships. Taking the vector for <strong>king</strong>, subtracting <strong>man</strong>, and adding <strong>woman</strong> lands close to <strong>queen</strong>.</p>
-<div class="code-block">king − man + woman ≈ queen</div>
+<div class="code-wrap plain"><div class="code-head"><span class="code-label"></span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">king − man + woman ≈ queen</div></div>
 <p>In words: &quot;the difference between king and man&quot; is roughly a &quot;royalty&quot; direction; adding it to &quot;woman&quot; points at a royal woman.</p>
 <div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;Embedding arithmetic always works this neatly.&quot; The king/queen example is a famous best case from older word-level embeddings. Real embedding spaces are messier, and many analogies only <em>roughly</em> work.</p></div>
+</details>
 
 </div>
 <div class="section">
@@ -153,7 +201,6 @@ a · b  = multiply matching numbers and add them up (the &quot;dot product&quot;
 <li>Many modern models use <strong>RoPE (rotary position embedding)</strong>, which encodes position by slightly <em>rotating</em> the vectors depending on where the token sits (<a href="https://arxiv.org/abs/2104.09864" target="_blank" rel="noopener">Su et al.</a>). It helps the model reason about <em>relative</em> distance (&quot;these two words are 3 apart&quot;).</li>
 </ul>
 <div class="callout tip"><p><strong>📘 In plain words:</strong> Before the words enter the main network, each one gets a seat number. Without seat numbers, the model would see a bag of words instead of a sentence.</p></div>
-
 </div>
 <div class="section">
 <h2 id="5-attention-how-words-look-at-each-other">5. Attention: How Words Look at Each Other</h2>
@@ -193,7 +240,7 @@ a · b  = multiply matching numbers and add them up (the &quot;dot product&quot;
 </tbody></table></div>
 <p>Each token compares its <strong>query</strong> with every other token&#39;s <strong>key</strong>. A good match means &quot;pay attention to this one&quot;. Then it takes a weighted blend of the matching tokens&#39; <strong>values</strong>.</p>
 <p>The formula from the paper:</p>
-<div class="code-block">Attention(Q, K, V) = softmax( Q · Kᵀ / √d ) · V</div>
+<div class="code-wrap plain"><div class="code-head"><span class="code-label"></span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">Attention(Q, K, V) = softmax( Q · Kᵀ / √d ) · V</div></div>
 <p>In words:</p>
 <ol>
 <li><strong>Q · Kᵀ</strong> — score how well my query matches each key (a dot product: multiply and add).</li>
@@ -235,14 +282,12 @@ a · b  = multiply matching numbers and add them up (the &quot;dot product&quot;
 <div class="callout tip"><p><strong>🎬 Watch:</strong> 3Blue1Brown&#39;s video series on <a href="https://www.3blue1brown.com/topics/neural-networks" target="_blank" rel="noopener">transformers and attention</a> animates queries, keys, and values beautifully.</p></div>
 <h3 id="masking-no-peeking-at-the-future">Masking: no peeking at the future</h3>
 <p>When a model like GPT is trained to predict the next token, a token is only allowed to attend to tokens <strong>before</strong> it. Otherwise it could just &quot;look ahead&quot; at the answer. This is called <strong>causal masking</strong>.</p>
-
 </div>
 <div class="section">
 <h2 id="6-multi-head-attention">6. Multi-Head Attention</h2>
 <p>One spotlight can only focus on one kind of relationship at a time. So transformers run several attention operations in parallel, called <strong>heads</strong>. The original transformer used 8 heads; large models use dozens.</p>
 <div class="callout tip"><p><strong>📘 In plain words:</strong> Instead of one reader, you have a team of readers going over the same sentence at once. One tracks &quot;who did what&quot;, another tracks &quot;which noun does this pronoun mean&quot;, another tracks grammar or nearby words. Their notes are then combined.</p></div>
 <p>Researchers have found heads that appear to specialize (for example, heads that track the previous token or copy patterns), but most heads do not map cleanly onto human concepts. Each head learns whatever turns out to be useful for predicting the next token.</p>
-
 </div>
 <div class="section">
 <h2 id="7-the-transformer-block">7. The Transformer Block</h2>
@@ -326,10 +371,8 @@ a · b  = multiply matching numbers and add them up (the &quot;dot product&quot;
 <h3 id="the-output-layer">The output layer</h3>
 <p>After the last block, an output layer turns the final vector of the <strong>last</strong> token into a score for every token in the vocabulary, and softmax turns those scores into the probabilities you saw in section 1.</p>
 <div class="callout success"><p><strong>✅ Key takeaway:</strong> Attention = &quot;look around and gather context&quot;. Feed-forward = &quot;think about what you gathered&quot;. Repeat dozens of times, and each layer builds a richer understanding than the last.</p></div>
-
 </div>
-<div class="section">
-<h2 id="8-three-shapes-of-transformer">8. Three Shapes of Transformer</h2>
+<details class="section optional"><summary><h2 id="8-three-shapes-of-transformer">8. Three Shapes of Transformer</h2><span class="optional-pill">Optional deep dive</span></summary>
 <p>The original 2017 transformer had two halves: an <strong>encoder</strong> that reads the input and a <strong>decoder</strong> that writes the output (it was built for translation). Later models kept one or both halves.</p>
 <div class="table-wrap"><table>
 <thead>
@@ -366,8 +409,7 @@ a · b  = multiply matching numbers and add them up (the &quot;dot product&quot;
 </ul>
 <div class="callout tip"><p><strong>📘 In plain words:</strong> Encoder = a careful reader. Decoder = a writer. Encoder-decoder = a reader who hands notes to a writer. Today&#39;s chatbots are writers that have read a <em>lot</em>.</p></div>
 <p>The Hugging Face <a href="https://huggingface.co/learn/llm-course" target="_blank" rel="noopener">LLM course</a> has a clear chapter comparing these three families.</p>
-
-</div>
+</details>
 <div class="section">
 <h2 id="9-the-generation-loop">9. The Generation Loop</h2>
 <p>An LLM writes its answer <strong>one token at a time</strong>. Each new token requires a full pass through the whole network.</p>
@@ -424,7 +466,6 @@ a · b  = multiply matching numbers and add them up (the &quot;dot product&quot;
 <div class="diagram-caption">Figure 2 — Generation is a loop. A 500-token answer means 500 trips around this loop.</div></div>
 <p>This is why answers appear word-by-word when <strong>streaming</strong> is on: you are literally watching the loop run. It also explains why output tokens are usually priced higher than input tokens — each output token needs its own pass, while the prompt can be processed in one go.</p>
 <div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;The model plans the whole answer, then types it out.&quot; There is no hidden finished draft. Each token is chosen based only on the tokens before it. (Models do develop internal representations that look ahead somewhat, but the text is still committed one token at a time.)</p></div>
-
 </div>
 <div class="section">
 <h2 id="10-sampling-choosing-the-next-token">10. Sampling: Choosing the Next Token</h2>
@@ -433,7 +474,7 @@ a · b  = multiply matching numbers and add them up (the &quot;dot product&quot;
 <p>Always pick the single most likely token. With the &quot;cat sat on the&quot; example, greedy always picks <code> mat</code>. It is predictable, but on long texts it can become repetitive and dull.</p>
 <h3 id="temperature">Temperature</h3>
 <p><strong>Temperature</strong> reshapes the probabilities before picking. The model&#39;s raw scores (called <strong>logits</strong>) are divided by the temperature <code>T</code> before softmax:</p>
-<div class="code-block">p(token) = e^(score / T) / sum over all tokens of e^(score / T)</div>
+<div class="code-wrap plain"><div class="code-head"><span class="code-label"></span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">p(token) = e^(score / T) / sum over all tokens of e^(score / T)</div></div>
 <ul>
 <li><code>T</code> below 1 → sharper: the favorite becomes even more likely (more focused, more repeatable).</li>
 <li><code>T</code> = 1 → the model&#39;s original probabilities.</li>
@@ -499,7 +540,6 @@ a · b  = multiply matching numbers and add them up (the &quot;dot product&quot;
 </tbody></table></div>
 <p>Provider docs usually recommend adjusting temperature <strong>or</strong> top-p, not both at once. Some newer models (especially reasoning models) ignore or restrict these settings, so check the model&#39;s documentation.</p>
 <div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;Temperature 0 makes the model always correct.&quot; It only makes the choice of token less random. A confident wrong answer is still wrong — and even at temperature 0, outputs are not always perfectly identical between runs because of tiny numerical differences on the servers.</p></div>
-
 </div>
 <div class="section">
 <h2 id="11-the-context-window">11. The Context Window</h2>
@@ -516,16 +556,13 @@ a · b  = multiply matching numbers and add them up (the &quot;dot product&quot;
 <h3 id="lost-in-the-middle">&quot;Lost in the middle&quot;</h3>
 <p>A bigger window does not mean the model uses all of it equally well. The study <a href="https://arxiv.org/abs/2307.03172" target="_blank" rel="noopener">&quot;Lost in the Middle&quot;</a> (Liu et al., 2023) found that models were often best at using information near the <strong>beginning or end</strong> of a long context, and performance dropped significantly when the key information sat in the <strong>middle</strong>. Newer models have improved, but it is still wise to put the most important instructions and facts at the start or end.</p>
 <div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;The model remembers our earlier chats.&quot; A plain model has no memory between requests. Chat apps create the <em>feeling</em> of memory by re-sending the conversation (and sometimes saved notes) inside the context window every time.</p></div>
-
 </div>
-<div class="section">
-<h2 id="12-the-kv-cache">12. The KV Cache</h2>
+<details class="section optional"><summary><h2 id="12-the-kv-cache">12. The KV Cache</h2><span class="optional-pill">Optional deep dive</span></summary>
 <p>Recall the generation loop: every new token needs a pass through the model, and attention needs the <strong>keys</strong> and <strong>values</strong> of all earlier tokens. Recomputing those for the whole text at every step would be wasteful — the earlier tokens have not changed.</p>
 <p>The <strong>KV cache</strong> (key-value cache) stores the keys and values of tokens already processed. Each new step only computes them for the <strong>one new token</strong> and reuses the rest.</p>
 <div class="callout tip"><p><strong>💡 Example:</strong> Writing token number 1,001 <em>without</em> a cache means recomputing keys and values for all 1,000 earlier tokens again. <em>With</em> a cache, it computes them for just 1 token and reads the other 1,000 from memory.</p></div>
-<p>The trade-off: the cache uses GPU memory that grows with context length (and with the number of users served at once), which is one reason long contexts are expensive to serve. A related idea, <strong>prompt caching</strong>, lets providers reuse the processed start of a prompt across requests and often charge less for those cached tokens — see <a href="tokens.html">Chapter 7</a>.</p>
-
-</div>
+<p>The trade-off: the cache uses GPU memory that grows with context length (and with the number of users served at once), which is one reason long contexts are expensive to serve. A related idea, <strong>prompt caching</strong>, lets providers reuse the processed start of a prompt across requests and often charge less for those cached tokens — see <a href="tokens.html">Chapter 8</a>.</p>
+</details>
 <div class="section">
 <h2 id="13-why-llms-hallucinate">13. Why LLMs Hallucinate</h2>
 <p>A <strong>hallucination</strong> is when a model states something false or made-up with full confidence — a fake citation, a wrong date, a non-existent function name. It is a natural side-effect of how LLMs work:</p>
@@ -538,11 +575,9 @@ a · b  = multiply matching numbers and add them up (the &quot;dot product&quot;
 <li><strong>Sampling randomness</strong> can occasionally pick a less likely — and wrong — token, and the following tokens then build on that mistake.</li>
 </ol>
 <div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;If it sounds confident, it is probably right.&quot; Confidence of tone is not evidence. LLMs sound equally confident when right and wrong.</p></div>
-<div class="callout success"><p><strong>✅ Key takeaway:</strong> Reduce hallucinations by <strong>grounding</strong> the model — give it the source material in the prompt (or via retrieval, RAG), ask it to quote or cite that material, explicitly allow it to admit uncertainty, and verify important facts. See <a href="using-ai.html">Chapter 6</a> and <a href="best-practices.html">Chapter 8</a>.</p></div>
-
+<div class="callout success"><p><strong>✅ Key takeaway:</strong> Reduce hallucinations by <strong>grounding</strong> the model — give it the source material in the prompt (or via retrieval, RAG), ask it to quote or cite that material, explicitly allow it to admit uncertainty, and verify important facts. See <a href="connecting-ai.html">Chapter 7</a> and <a href="best-practices.html">Chapter 9</a>.</p></div>
 </div>
-<div class="section">
-<h2 id="14-multimodal-models">14. Multimodal Models</h2>
+<details class="section optional"><summary><h2 id="14-multimodal-models">14. Multimodal Models</h2><span class="optional-pill">Optional deep dive</span></summary>
 <p>A <strong>multimodal</strong> model can take in (and sometimes produce) more than text: images, audio, even video. The trick is to turn every kind of input into token-like vectors that the same transformer can process.</p>
 <ul>
 <li><strong>Images:</strong> the picture is cut into small square <strong>patches</strong> (the Vision Transformer paper, <a href="https://arxiv.org/abs/2010.11929" target="_blank" rel="noopener">&quot;An Image is Worth 16x16 Words&quot;</a>, used 16×16-pixel patches). Each patch is converted into an embedding and treated like a token. A larger or more detailed image produces more tokens.</li>
@@ -551,11 +586,10 @@ a · b  = multiply matching numbers and add them up (the &quot;dot product&quot;
 </ul>
 <div class="callout tip"><p><strong>📘 In plain words:</strong> To a multimodal model, a photo is just another &quot;sentence&quot; — made of image patches instead of word pieces. Once everything is a sequence of vectors, attention can relate a word in your question to a region of the picture.</p></div>
 <p>Because images and audio become tokens, they <strong>count against the context window and cost</strong> just like text.</p>
-
-</div>
+</details>
 <div class="section">
 <h2 id="15-reasoning-models">15. Reasoning Models</h2>
-<p>Some recent models — for example OpenAI&#39;s o-series and GPT-5 (<a href="https://openai.com/index/learning-to-reason-with-llms/" target="_blank" rel="noopener">Learning to reason with LLMs</a>), DeepSeek-R1 (<a href="https://arxiv.org/abs/2501.12948" target="_blank" rel="noopener">paper</a>), and Claude or Gemini models with &quot;thinking&quot; modes — are trained to <strong>think before they answer</strong>.</p>
+<p>Some recent models — for example OpenAI&#39;s o-series and later GPT models (<a href="https://openai.com/index/learning-to-reason-with-llms/" target="_blank" rel="noopener">Learning to reason with LLMs</a>), DeepSeek-R1 (<a href="https://arxiv.org/abs/2501.12948" target="_blank" rel="noopener">paper</a>), and Claude or Gemini models with &quot;thinking&quot; modes — are trained to <strong>think before they answer</strong>.</p>
 <p>Conceptually, a reasoning model is still a next-token predictor. The difference is that before writing the final answer, it generates a long stream of extra <strong>reasoning tokens</strong>: breaking the problem down, trying an approach, checking it, backtracking. These models are typically trained with <strong>reinforcement learning</strong> on problems whose answers can be checked (math, code tests, logic puzzles), so the model is rewarded for reasoning paths that actually reach correct answers.</p>
 <div class="callout tip"><p><strong>💡 Example:</strong> Asked &quot;A bat and a ball cost $1.10 in total; the bat costs $1.00 more than the ball. How much is the ball?&quot;, a fast model may blurt the intuitive &quot;10 cents&quot;. A reasoning model&#39;s hidden thinking might go: <em>&quot;If the ball is 0.10, the bat is 1.10, total 1.20 — too much. Let ball = x, bat = x + 1.00, so 2x + 1.00 = 1.10, x = 0.05.&quot;</em> Then it answers <strong>5 cents</strong>.</p></div>
 <p>Trade-offs to know:</p>
@@ -565,7 +599,6 @@ a · b  = multiply matching numbers and add them up (the &quot;dot product&quot;
 <li><strong>Overkill</strong> for simple tasks like rewording a sentence or extracting a name.</li>
 </ul>
 <div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;The thinking text is exactly how the model reached its answer.&quot; The visible reasoning (when shown) is helpful, but research shows it is not always a faithful record of the computation inside the network. Treat it as a useful explanation, not a guaranteed one.</p></div>
-
 </div>
 <div class="section">
 <h2 id="recap">Recap</h2>
@@ -582,7 +615,6 @@ a · b  = multiply matching numbers and add them up (the &quot;dot product&quot;
 <li><strong>Hallucinations</strong> come from training for plausible text, rewarded guessing, weakly stored facts, and no built-in fact check.</li>
 <li><strong>Multimodal</strong> models turn images and audio into tokens; <strong>reasoning</strong> models spend extra thinking tokens to solve harder problems.</li>
 </ul>
-
 </div>
 <div class="section">
 <h2 id="check-your-understanding">Check Your Understanding</h2>
@@ -626,10 +658,36 @@ a · b  = multiply matching numbers and add them up (the &quot;dot product&quot;
 <li>D) Long prompts always use a higher temperature</li>
 </ul>
 <details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> A — Each token in the context is billed and processed, attention compares tokens pairwise (about n × n comparisons), and the KV cache memory grows with length.</p></div></details>
-<div class="nav-links"><a href="neural-networks.html">← Chapter 2: Neural Networks</a><a href="training.html">Chapter 4: Training &amp; Tuning →</a></div>
+</div>
+<div class="done-row"><button class="done-btn" type="button" aria-pressed="false">Mark this page as done</button></div>
+<div class="pager">
+<a class="pager-prev" href="neural-networks.html"><span>← Previous</span><strong>2. Neural Networks</strong></a>
+<a class="pager-next" href="training.html"><span>Next →</span><strong>4. Training &amp; Tuning</strong></a>
 </div>
 </main>
-
-<footer class="site-footer">AI Learn · A beginner's guide to how AI models work · Based on official docs and open course material · Not affiliated with any model provider</footer>
+<footer class="site-footer">AI Learn · A personal learning project by Emanuel Loghin · <a href="about.html">About &amp; feedback</a> · Based on official docs and open course material · Not affiliated with any model provider</footer>
+</div>
+<aside class="toc-rail" aria-label="On this page">
+<div class="toc-title">On this page</div><nav><a href="#1-what-a-language-model-actually-does">1. What a Language Model Actually Does</a>
+<a href="#2-tokens-how-text-becomes-numbers">2. Tokens: How Text Becomes Numbers</a>
+<a href="#3-embeddings-words-as-points-in-space">3. Embeddings: Words as Points in Space</a>
+<a href="#4-keeping-track-of-word-order">4. Keeping Track of Word Order</a>
+<a href="#5-attention-how-words-look-at-each-other">5. Attention: How Words Look at Each Other</a>
+<a href="#6-multi-head-attention">6. Multi-Head Attention</a>
+<a href="#7-the-transformer-block">7. The Transformer Block</a>
+<a href="#8-three-shapes-of-transformer">8. Three Shapes of Transformer</a>
+<a href="#9-the-generation-loop">9. The Generation Loop</a>
+<a href="#10-sampling-choosing-the-next-token">10. Sampling: Choosing the Next Token</a>
+<a href="#11-the-context-window">11. The Context Window</a>
+<a href="#12-the-kv-cache">12. The KV Cache</a>
+<a href="#13-why-llms-hallucinate">13. Why LLMs Hallucinate</a>
+<a href="#14-multimodal-models">14. Multimodal Models</a>
+<a href="#15-reasoning-models">15. Reasoning Models</a>
+<a href="#recap">Recap</a>
+<a href="#check-your-understanding">Check Your Understanding</a></nav>
+</aside>
+</div>
+<div class="scrim"></div>
+<script src="site.js"></script>
 </body>
 </html>

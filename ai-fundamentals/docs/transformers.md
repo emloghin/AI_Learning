@@ -43,6 +43,8 @@ Neural networks only work with numbers. So the first step is to chop text into p
 
 ### Byte Pair Encoding (BPE) — the intuition
 
+<!-- optional -->
+
 Most modern tokenizers use a method called **Byte Pair Encoding (BPE)** or a close relative. The idea:
 
 1. Start with single characters (or bytes) as the vocabulary.
@@ -74,7 +76,7 @@ So a 1,500-word article is roughly 1,500 ÷ 0.75 ≈ 2,000 tokens.
 
 > **⚠️ Common misconception:** "The model sees letters." It sees token IDs. That is why LLMs sometimes struggle with letter-level tasks like counting the `r`s in "strawberry" — the word may be just one or two tokens, and the individual letters are not directly visible to the model.
 
-Tokens matter in everyday use because **models are priced and limited in tokens**. See [Chapter 7: Tokens & Cost](tokens.md) for the practical side.
+Tokens matter in everyday use because **models are priced and limited in tokens**. See [Chapter 8: Tokens & Cost](tokens.md) for the practical side.
 
 ## 3. Embeddings: Words as Points in Space
 
@@ -103,9 +105,11 @@ a · b  = multiply matching numbers and add them up (the "dot product")
 >
 > **cat vs car:** dot product = 0.9×0.1 + 0.1×0.9 = 0.18. Similarity = 0.18 ÷ (0.906 × 0.906) ≈ **0.22** — mostly unrelated.
 
-Real embeddings have no human-readable labels like "animal-ness"; the directions are learned and usually mix many ideas at once. But the "closeness" idea is exactly the same, and it powers features like semantic search (see [Chapter 6](using-ai.md)).
+Real embeddings have no human-readable labels like "animal-ness"; the directions are learned and usually mix many ideas at once. But the "closeness" idea is exactly the same, and it powers features like semantic search (see [Chapter 7](connecting-ai.md)).
 
 ### The famous king − man + woman example
+
+<!-- optional -->
 
 Researchers working on earlier word embeddings (word2vec, [Mikolov et al., 2013](https://arxiv.org/abs/1301.3781)) found that directions in the space can capture relationships. Taking the vector for **king**, subtracting **man**, and adding **woman** lands close to **queen**.
 
@@ -222,6 +226,8 @@ After the last block, an output layer turns the final vector of the **last** tok
 
 ## 8. Three Shapes of Transformer
 
+<!-- optional -->
+
 The original 2017 transformer had two halves: an **encoder** that reads the input and a **decoder** that writes the output (it was built for translation). Later models kept one or both halves.
 
 | Shape | Sees | Good at | Famous example |
@@ -335,13 +341,15 @@ A bigger window does not mean the model uses all of it equally well. The study [
 
 ## 12. The KV Cache
 
+<!-- optional -->
+
 Recall the generation loop: every new token needs a pass through the model, and attention needs the **keys** and **values** of all earlier tokens. Recomputing those for the whole text at every step would be wasteful — the earlier tokens have not changed.
 
 The **KV cache** (key-value cache) stores the keys and values of tokens already processed. Each new step only computes them for the **one new token** and reuses the rest.
 
 > **💡 Example:** Writing token number 1,001 *without* a cache means recomputing keys and values for all 1,000 earlier tokens again. *With* a cache, it computes them for just 1 token and reads the other 1,000 from memory.
 
-The trade-off: the cache uses GPU memory that grows with context length (and with the number of users served at once), which is one reason long contexts are expensive to serve. A related idea, **prompt caching**, lets providers reuse the processed start of a prompt across requests and often charge less for those cached tokens — see [Chapter 7](tokens.md).
+The trade-off: the cache uses GPU memory that grows with context length (and with the number of users served at once), which is one reason long contexts are expensive to serve. A related idea, **prompt caching**, lets providers reuse the processed start of a prompt across requests and often charge less for those cached tokens — see [Chapter 8](tokens.md).
 
 ## 13. Why LLMs Hallucinate
 
@@ -356,9 +364,11 @@ A **hallucination** is when a model states something false or made-up with full 
 
 > **⚠️ Common misconception:** "If it sounds confident, it is probably right." Confidence of tone is not evidence. LLMs sound equally confident when right and wrong.
 
-> **✅ Key takeaway:** Reduce hallucinations by **grounding** the model — give it the source material in the prompt (or via retrieval, RAG), ask it to quote or cite that material, explicitly allow it to admit uncertainty, and verify important facts. See [Chapter 6](using-ai.md) and [Chapter 8](best-practices.md).
+> **✅ Key takeaway:** Reduce hallucinations by **grounding** the model — give it the source material in the prompt (or via retrieval, RAG), ask it to quote or cite that material, explicitly allow it to admit uncertainty, and verify important facts. See [Chapter 7](connecting-ai.md) and [Chapter 9](best-practices.md).
 
 ## 14. Multimodal Models
+
+<!-- optional -->
 
 A **multimodal** model can take in (and sometimes produce) more than text: images, audio, even video. The trick is to turn every kind of input into token-like vectors that the same transformer can process.
 
@@ -372,7 +382,7 @@ Because images and audio become tokens, they **count against the context window 
 
 ## 15. Reasoning Models
 
-Some recent models — for example OpenAI's o-series and GPT-5 ([Learning to reason with LLMs](https://openai.com/index/learning-to-reason-with-llms/)), DeepSeek-R1 ([paper](https://arxiv.org/abs/2501.12948)), and Claude or Gemini models with "thinking" modes — are trained to **think before they answer**.
+Some recent models — for example OpenAI's o-series and later GPT models ([Learning to reason with LLMs](https://openai.com/index/learning-to-reason-with-llms/)), DeepSeek-R1 ([paper](https://arxiv.org/abs/2501.12948)), and Claude or Gemini models with "thinking" modes — are trained to **think before they answer**.
 
 Conceptually, a reasoning model is still a next-token predictor. The difference is that before writing the final answer, it generates a long stream of extra **reasoning tokens**: breaking the problem down, trying an approach, checking it, backtracking. These models are typically trained with **reinforcement learning** on problems whose answers can be checked (math, code tests, logic puzzles), so the model is rewarded for reasoning paths that actually reach correct answers.
 

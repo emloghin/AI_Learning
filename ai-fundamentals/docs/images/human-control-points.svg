@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 500" role="img" aria-labelledby="hc-title hc-desc">
+  <title id="hc-title">Human decision points in a spec-driven workflow</title>
+  <desc id="hc-desc">Five stages from left to right: intent, design, build, integrate and release. In each stage the agent produces something and a human makes a named decision. Under the stages, two bands show what backs the decision: soft guidance such as instructions and the constitution, and hard enforcement such as permissions, sandboxing, required reviews and protected environments.</desc>
+  <rect width="760" height="500" rx="16" fill="#f8fafc"/>
+  <g font-family="Inter,sans-serif" text-anchor="middle">
+    <text x="380" y="34" font-size="18" font-weight="700" fill="#0f172a">The agent proposes. A person decides, at every stage.</text>
+
+    <g font-size="13" font-weight="700" fill="#475569">
+      <text x="88" y="66">1. INTENT</text>
+      <text x="234" y="66">2. DESIGN</text>
+      <text x="380" y="66">3. BUILD</text>
+      <text x="526" y="66">4. INTEGRATE</text>
+      <text x="672" y="66">5. RELEASE</text>
+    </g>
+
+    <text x="20" y="100" font-size="11" font-weight="700" fill="#7c3aed" text-anchor="start">AGENT PRODUCES</text>
+    <g fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5">
+      <rect x="20" y="108" width="136" height="70" rx="10"/>
+      <rect x="166" y="108" width="136" height="70" rx="10"/>
+      <rect x="312" y="108" width="136" height="70" rx="10"/>
+      <rect x="458" y="108" width="136" height="70" rx="10"/>
+      <rect x="604" y="108" width="136" height="70" rx="10"/>
+    </g>
+    <g font-size="12.5" fill="#4c1d95">
+      <text x="88" y="138">Constitution draft</text><text x="88" y="158">Spec, questions</text>
+      <text x="234" y="138">Plan, checklist</text><text x="234" y="158">Tasks, analysis</text>
+      <text x="380" y="138">Code and tool calls</text><text x="380" y="158">Gap report</text>
+      <text x="526" y="138">Pull request</text><text x="526" y="158">Check results</text>
+      <text x="672" y="138">Release notes</text><text x="672" y="158">Rollout steps</text>
+    </g>
+
+    <text x="20" y="212" font-size="11" font-weight="700" fill="#059669" text-anchor="start">HUMAN DECIDES</text>
+    <g fill="#d1fae5" stroke="#059669" stroke-width="2">
+      <rect x="20" y="220" width="136" height="84" rx="10"/>
+      <rect x="166" y="220" width="136" height="84" rx="10"/>
+      <rect x="312" y="220" width="136" height="84" rx="10"/>
+      <rect x="458" y="220" width="136" height="84" rx="10"/>
+      <rect x="604" y="220" width="136" height="84" rx="10"/>
+    </g>
+    <g font-size="12.5" fill="#064e3b">
+      <text x="88" y="246">Which rules are true</text><text x="88" y="266">What to build</text><text x="88" y="286">Policy answers</text>
+      <text x="234" y="246">Is the design right?</text><text x="234" y="266">What is out of scope</text><text x="234" y="286">Tick the checklist</text>
+      <text x="380" y="246">Approve each action</text><text x="380" y="266">Run the tests</text><text x="380" y="286">Which gaps are real</text>
+      <text x="526" y="246">Review the diff</text><text x="526" y="266">Approve, or</text><text x="526" y="286">request changes</text>
+      <text x="672" y="246">Go or no-go</text><text x="672" y="266">Watch the rollout</text><text x="672" y="286">Roll back if needed</text>
+    </g>
+
+    <rect x="20" y="334" width="720" height="58" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+    <text x="34" y="358" font-size="12" font-weight="700" fill="#78350f" text-anchor="start">SOFT GUIDANCE: the agent usually follows it</text>
+    <text x="34" y="379" font-size="12.5" fill="#78350f" text-anchor="start">Instructions, constitution, agent charters, prompts, "do not edit" sentences</text>
+
+    <rect x="20" y="404" width="720" height="58" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+    <text x="34" y="428" font-size="12" font-weight="700" fill="#1e3a8a" text-anchor="start">HARD ENFORCEMENT: the agent cannot get past it</text>
+    <text x="34" y="449" font-size="12.5" fill="#1e3a8a" text-anchor="start">Tool permissions, sandbox, hooks, protected branches, required reviews, deployment approvals</text>
+
+    <text x="380" y="486" font-size="12.5" fill="#475569">Use guidance to steer. Use enforcement for anything you cannot afford to get wrong.</text>
+  </g>
+</svg>

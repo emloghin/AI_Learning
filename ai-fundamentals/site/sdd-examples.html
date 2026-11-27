@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learn from Real Repositories: Spec Kit and Squad in Practice — AI Learn</title>
+<script>try{var t=localStorage.getItem('ailearn:theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="sdd-examples">
+<div class="read-progress" aria-hidden="true"><div></div></div>
+<header class="topbar">
+  <button class="icon-btn menu-btn" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
+  <a class="header-logo" href="index.html"><span>AI&nbsp;</span>Learn</a>
+  <span class="topbar-crumb">Part 4 · Build with specs <b>›</b> 16. Real Examples</span>
+  <span class="topbar-progress" title="Pages you marked as done"></span>
+  <button class="icon-btn theme-btn" type="button" aria-label="Switch between light and dark theme">◐</button>
+</header>
+<div class="shell">
+<aside class="sidebar" aria-label="Site navigation">
+<nav>
+<div class="nav-group">
+<div class="nav-group-title">Start here<span class="nav-count"></span></div>
+<a href="index.html" data-page="index">Home</a>
+<a href="study-plan.html" data-page="study-plan">Study Plan</a>
+<a href="setup.html" data-page="setup">Setup &amp; Git Basics</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 1 · Understand AI<span class="nav-count"></span></div>
+<a href="foundations.html" data-page="foundations">1. Foundations</a>
+<a href="neural-networks.html" data-page="neural-networks">2. Neural Networks</a>
+<a href="transformers.html" data-page="transformers">3. Transformers &amp; LLMs</a>
+<a href="training.html" data-page="training">4. Training &amp; Tuning</a>
+<a href="models.html" data-page="models">5. Model Landscape</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 2 · Use AI well<span class="nav-count"></span></div>
+<a href="using-ai.html" data-page="using-ai">6. Using Models</a>
+<a href="connecting-ai.html" data-page="connecting-ai">7. Connecting Models</a>
+<a href="tokens.html" data-page="tokens">8. Tokens &amp; Cost</a>
+<a href="best-practices.html" data-page="best-practices">9. Best Practices</a>
+<a href="ai-at-work.html" data-page="ai-at-work">10. AI at Work</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 3 · Work with agents<span class="nav-count"></span></div>
+<a href="agent-toolkit.html" data-page="agent-toolkit">11. Equip Your Agent</a>
+<a href="agent-guardrails.html" data-page="agent-guardrails">12. Human Control &amp; Guardrails</a>
+</div>
+<div class="nav-group current">
+<div class="nav-group-title">Part 4 · Build with specs<span class="nav-count"></span></div>
+<a href="spec-driven-development.html" data-page="spec-driven-development">13. Spec-Driven Dev</a>
+<a href="spec-kit.html" data-page="spec-kit">14. Spec Kit from Zero</a>
+<a href="sdd-existing-projects.html" data-page="sdd-existing-projects">15. Existing Projects</a>
+<a href="sdd-examples.html" data-page="sdd-examples" class="active" aria-current="page">16. Real Examples</a>
+<a href="squad.html" data-page="squad">17. Squad</a>
+<a href="sdd-production.html" data-page="sdd-production">18. Shipping &amp; Reuse</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Reference<span class="nav-count"></span></div>
+<a href="sdd-reference.html" data-page="sdd-reference">Command Reference</a>
+<a href="glossary.html" data-page="glossary">Glossary</a>
+<a href="resources.html" data-page="resources">Resources</a>
+<a href="about.html" data-page="about">About &amp; Feedback</a>
+</div>
+</nav>
+</aside>
+<div class="content">
+<section class="hero">
+  <div class="hero-badge">Chapter 16 · Real examples</div>
+  <h1>Learn from Real Repositories: Spec Kit and Squad in Practice</h1>
+  <p>Reading someone else&#39;s finished work is the fastest way to see what &quot;good enough&quot; looks like. This page walks through public repositories where people used Spec Kit from an empty folder and on large existing codebases, quotes the prompts they actually typed, and points you to projects that ship real releases with their specs committed.</p>
+  <div class="hero-meta"><span>⏱ about 17 min of reading</span><span>Page 19 of 25</span></div>
+</section>
+<main class="main">
+<details class="toc-inline"><summary>On this page</summary><nav><a href="#1-before-you-open-them">1. Before you open them</a>
+<a href="#2-which-example-should-i-open">2. Which example should I open?</a>
+<a href="#3-from-zero-two-greenfield-runs">3. From zero: two greenfield runs</a>
+<a href="#4-existing-code-three-brownfield-runs">4. Existing code: three brownfield runs</a>
+<a href="#5-what-a-finished-feature-looks-like">5. What a finished feature looks like</a>
+<a href="#6-projects-that-ship-releases-with-specs-committed">6. Projects that ship releases with specs committed</a>
+<a href="#7-squad-in-practice">7. Squad in practice</a>
+<a href="#8-patterns-worth-copying-and-mistakes-worth-avoiding">8. Patterns worth copying, and mistakes worth avoiding</a>
+<a href="#9-your-turn-repeat-an-example-in-an-hour">9. Your turn: repeat an example in an hour</a>
+<a href="#recap">Recap</a>
+<a href="#check-your-understanding">Check Your Understanding</a></nav></details>
+<div class="section">
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Every example here is a public repository you can open in your browser. Nothing needs to be installed to learn from them. Read the prompts, open the generated <code>spec.md</code> and <code>tasks.md</code>, and compare them with what you would have written.</p></div>
+</div>
+<div class="section">
+<h2 id="1-before-you-open-them">1. Before you open them</h2>
+<p><strong>They are examples, not gold standards.</strong> The official <a href="https://github.github.io/spec-kit/community/walkthroughs.html" target="_blank" rel="noopener">community walkthroughs page</a> says its entries are &quot;<strong>not reviewed, nor endorsed, nor supported by GitHub</strong>&quot; and are &quot;not official golden outputs for generated specs, plans, or tasks&quot;. All seven walkthroughs were written by one Spec Kit collaborator as demonstrations. Treat them as worked homework from a knowledgeable colleague.</p>
+<p><strong>They use an older version.</strong> The walkthrough repositories were created in March 2026 and refreshed in July 2026 for Spec Kit 0.14.3. This guide uses v1.4.5. The ideas carry over; some spellings do not.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>In the example you may see</th>
+<th>With current Spec Kit and Copilot skills, use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>speckit.specify</code>, <code>/speckit.specify</code>, or picking an agent called <code>speckit.specify</code></td>
+<td><code>/speckit-specify</code></td>
+</tr>
+<tr>
+<td><code>/agent speckit.constitution</code> followed by a prompt (Copilot CLI, older layout)</td>
+<td><code>/speckit-constitution</code> followed by the prompt</td>
+</tr>
+<tr>
+<td><code>specify init . --integration copilot --integration-options=&quot;--skills&quot;</code></td>
+<td><code>specify init --here --integration copilot --script ps</code> in an empty folder; add <code>--force</code> only in a folder that already has files (skills are now the default layout)</td>
+</tr>
+<tr>
+<td><code>uv tool install specify-cli --from git+https://github.com/github/spec-kit.git</code> (no version)</td>
+<td>The pinned install from the <a href="spec-kit.html#2-install-once-initialize-each-project">setup page</a></td>
+</tr>
+<tr>
+<td>A prompt that is just <code>Execute</code></td>
+<td>Still valid: it means &quot;run this step with no extra instructions&quot;</td>
+</tr>
+</tbody></table></div>
+<p>None of the walkthroughs states which AI model was used, so do not expect identical output when you repeat them.</p>
+</div>
+<div class="section">
+<h2 id="2-which-example-should-i-open">2. Which example should I open?</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>I want to see…</th>
+<th>Open</th>
+<th>Size of the starting code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>The shortest complete run from an empty folder</td>
+<td><a href="https://github.com/mnriem/spec-kit-dotnet-cli-demo" target="_blank" rel="noopener">.NET command-line tool</a></td>
+<td>Empty</td>
+</tr>
+<tr>
+<td>A from-zero run that includes clarify and analyze</td>
+<td><a href="https://github.com/mnriem/spec-kit-spring-react-demo" target="_blank" rel="noopener">Spring Boot + React platform</a></td>
+<td>Empty</td>
+</tr>
+<tr>
+<td>Two features added to a large existing .NET application</td>
+<td><a href="https://github.com/mnriem/spec-kit-aspnet-brownfield-demo" target="_blank" rel="noopener">ASP.NET CMS</a></td>
+<td>About 307,000 lines</td>
+</tr>
+<tr>
+<td>A feature added to a very large Java project, with a naming correction</td>
+<td><a href="https://github.com/mnriem/spec-kit-java-brownfield-demo" target="_blank" rel="noopener">Java runtime</a></td>
+<td>About 420,000 lines, 180 modules</td>
+</tr>
+<tr>
+<td>An honest list of what went wrong, plus a step-by-step workshop</td>
+<td><a href="https://github.com/mnriem/spec-kit-go-brownfield-demo" target="_blank" rel="noopener">Go and React dashboard</a></td>
+<td>About 98,500 lines</td>
+</tr>
+<tr>
+<td>Real products that ship releases with specs in the repository</td>
+<td><a href="#6-projects-that-ship-releases-with-specs-committed">Section 6</a></td>
+<td>Varies</td>
+</tr>
+<tr>
+<td>A real AI team definition in a production repository</td>
+<td><a href="#7-squad-in-practice">Section 7</a></td>
+<td>—</td>
+</tr>
+</tbody></table></div>
+</div>
+<div class="section">
+<h2 id="3-from-zero-two-greenfield-runs">3. From zero: two greenfield runs</h2>
+<h3 id="example-a-a-command-line-tool-in-five-prompts">Example A — a command-line tool in five prompts</h3>
+<p>Repository: <a href="https://github.com/mnriem/spec-kit-dotnet-cli-demo" target="_blank" rel="noopener">spec-kit-dotnet-cli-demo</a>. A time-zone utility built from a blank directory. This is the minimal path: constitution, specify, plan, tasks, implement. The prompts below are quoted from its README, rewritten only in the command spelling.</p>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">/speckit-constitution Create principles focused on code quality, testing
+standards, user experience consistency, and performance requirements. Include
+governance for how these principles should guide technical decisions and
+implementation choices.</div></div>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">/speckit-specify Create a command utility that I can use to determine the
+current date and time for a given location using the timezone, the name of the
+location, a zip code if in the US or whatever else would work to make it easy
+to use. Add anything that would be relevant to be able to schedule meetings
+across timezones easily.</div></div>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">/speckit-plan Use .NET core for a single binary deployment and make sure we can
+generate it for various OS-es and architectures</div></div>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">/speckit-tasks Execute</div></div>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">/speckit-implement Execute</div></div>
+<p><strong>What came out:</strong> a spec of about 1,870 words, and a task list of <strong>69 tasks</strong>. Implementation needed <strong>three</strong> <code>implement</code> runs before every task was ticked.</p>
+<p><strong>What to notice:</strong></p>
+<ul>
+<li>The <code>specify</code> prompt contains no technology at all. &quot;.NET&quot; appears only in the <code>plan</code> prompt. That separation of <em>what</em> from <em>how</em> is the core habit.</li>
+<li>Two sentences of request became 69 tasks. This is why you read <code>tasks.md</code> before implementing: the agent filled in a great deal (&quot;add anything that would be relevant&quot;) and you should decide whether you want all of it.</li>
+<li>One <code>implement</code> run is often not enough. Repeating it is normal, not a failure.</li>
+</ul>
+<h3 id="example-b-a-web-platform-with-clarify-and-analyze">Example B — a web platform, with clarify and analyze</h3>
+<p>Repository: <a href="https://github.com/mnriem/spec-kit-spring-react-demo" target="_blank" rel="noopener">spec-kit-spring-react-demo</a>. An analytics platform with a REST API, a database and a web front end. The sequence adds the two optional checks: specify → <strong>clarify</strong> → plan → tasks → <strong>analyze</strong> → implement (twice).</p>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">/speckit-specify Create a web-based platform that can be used to capture
+performance analysis for LLM interactions / chats using prompt sent, tokens in,
+tokens out, time started, time ended, tools called, etceteras. Make it possible
+to store different iterations and make it possible to show graphs and all the
+other relevant ways that one can determine performance. Include a REST API so
+results can be uploaded. Include sample data so we can see how it would look like.</div></div>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">/speckit-plan Use Spring Boot with an embedded React frontend using PostgreSQL
+and Docker compose</div></div>
+<p><strong>What came out:</strong> a spec of about 2,650 words, an OpenAPI contract, and <strong>85 tasks</strong>. The analyze step found gaps, which were resolved before implementing.</p>
+<p><strong>The author&#39;s own lesson</strong>, quoted from the README:</p>
+<div class="callout tip"><p><strong>💡 Example:</strong> &quot;Additional agent-assisted Copilot work was needed to resolve runtime and integration issues stemming from context that was not provided to spec-kit upfront: JDK version, environment variable conventions, and API client configuration details. Providing that context in the plan prompt would have eliminated most of this work.&quot;</p></div>
+<p>A one-line plan prompt is quick to type and expensive later. Compare it with the plan prompt in <a href="spec-kit.html#6-plan-the-implementation-and-the-verification">our walkthrough</a>, which names versions, test strategy and constraints.</p>
+</div>
+<div class="section">
+<h2 id="4-existing-code-three-brownfield-runs">4. Existing code: three brownfield runs</h2>
+<p>All three start the same way: clone a real open-source project, initialize Spec Kit inside it, and ask for a constitution based on the code. Each README notes that the project had no constitution or specification before.</p>
+<p><strong>The constitution prompt used in all three:</strong></p>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">/speckit-constitution As this is a pre-existing brownfield project I need you
+to analyze the codebase exhaustive and in-depth. Do NOT skim over but use
+multiple iterations to do a deep analysis and use or create principles focused
+on code quality, testing standards, user experience consistency, and
+performance requirements. Include governance for how these principles should
+guide technical decisions and implementation choices.</div></div>
+<div class="callout warning"><p><strong>⚠️ Compare with this guide&#39;s advice:</strong> this prompt lets the agent &quot;use or create&quot; principles. That is fine for a demonstration. For a project your team must live with, add the checking step from the <a href="sdd-existing-projects.html#5-phase-2-write-a-constitution-from-evidence">existing-projects page</a>: ask for the evidence behind each rule and delete the ones nobody actually agreed to.</p></div>
+<h3 id="example-c-two-features-in-a-307000-line-aspnet-application">Example C — two features in a 307,000-line ASP.NET application</h3>
+<p>Repository: <a href="https://github.com/mnriem/spec-kit-aspnet-brownfield-demo" target="_blank" rel="noopener">spec-kit-aspnet-brownfield-demo</a>, built on the open-source CarrotCakeCMS. The generated constitution has seven principles, including &quot;Layered Architecture Fidelity&quot;, &quot;Plugin Contract Compliance&quot; and &quot;Security by Default&quot;: names that clearly come from reading this particular codebase.</p>
+<p><strong>Feature 1: local development infrastructure.</strong> The specify prompt (about 170 words in full) asks for Docker Compose support so developers can run the database without installing SQL Server, and ends with an explicit boundary: &quot;Containerizing CMSAdmin itself is out of scope.&quot; Result: <strong>15 tasks</strong>, three implement passes. One task was flagged as manual twice, and the third pass used the prompt <code>Perform the manual steps</code>.</p>
+<p><strong>Feature 2: a read-only REST API.</strong></p>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">/speckit-specify Add a public read-only REST API to the CMS that exposes pages,
+blog posts, navigation trees, content snippets, and widget zones as JSON
+endpoints. API consumers should be able to query content by URL slug, category,
+tag, date range, and site ID for multi-site setups. Secure the API with
+token-based authentication so it can serve as a headless backend for SPAs,
+static site generators, or mobile apps.</div></div>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">/speckit-plan Execute and keep in mind that we also need simple scripts to test
+the API ourselves</div></div>
+<p>Result: a spec of about 2,360 words, a 502-line plan, <strong>45 tasks</strong>, plus contract documents for authentication and endpoints and the requested test scripts.</p>
+<p><strong>What to notice:</strong> the first feature was small infrastructure, not a headline capability. That is a sensible first change: low risk, easy to verify, and it made the second feature testable. Neither feature ran clarify or analyze.</p>
+<h3 id="example-d-a-420000-line-java-project-and-a-correction">Example D — a 420,000-line Java project, and a correction</h3>
+<p>Repository: <a href="https://github.com/mnriem/spec-kit-java-brownfield-demo" target="_blank" rel="noopener">spec-kit-java-brownfield-demo</a>, built on the Piranha Jakarta EE runtime. The feature is a password-protected admin console.</p>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">/speckit-specify I want to be able to manage the applications hosted using the
+Piranha Server distribution and as such I need a web application for that I can
+use to manage it. It must be password protected and allow starting / stopping a
+web application, show JVM memory statistics, and make it possible to deploy and
+undeploy a web application.</div></div>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">/speckit-plan Store the web application module you will use to create the WAR
+project in webapp/server-admin. Use JSP pages for the UI so we have minimal web
+dependencies. Piranha Server already has JSP available as part of its runtime
+stack. Use or create a global ServerPiranha or something similar to be able to
+interact with the Piranha Server distribution. When creating the module make
+the Piranha Server API a provided dependency.</div></div>
+<p>After reading the plan, the author saw that a proposed class name did not follow the project&#39;s existing naming convention, and went back with one question:</p>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">/speckit-clarify Should we call it MultiPiranhaSingleton though?</div></div>
+<p>Result: <strong>24 tasks</strong>. The implement prompt added a practical reminder about how to test inside the real server.</p>
+<p><strong>What to notice:</strong> this is the brownfield review habit in action. The plan prompt points at existing folders and existing capabilities (&quot;already has JSP available&quot;), and the human caught a convention violation by <em>reading the plan</em> before any code existed. Fixing a name in a plan costs one sentence.</p>
+<h3 id="example-e-a-98000-line-go-project-and-an-honest-retrospective">Example E — a 98,000-line Go project, and an honest retrospective</h3>
+<p>Repository: <a href="https://github.com/mnriem/spec-kit-go-brownfield-demo" target="_blank" rel="noopener">spec-kit-go-brownfield-demo</a>, built on NASA&#39;s Hermes and driven entirely from the Copilot CLI. The whole feature request was a title and a single sentence, and plan, tasks and implement were each just <code>Execute</code>. It produced <strong>31 tasks</strong> and then a series of follow-up chats to get the result running, including a cross-origin bug.</p>
+<p>The README&#39;s section &quot;What Could Have Been Done Better&quot; is the most useful part of the repository. Its headings:</p>
+<ul>
+<li>&quot;The feature spec was too thin.&quot;</li>
+<li>&quot;<code>speckit.plan</code> received no guidance.&quot;</li>
+<li>&quot;<code>speckit.analyze</code> was skipped.&quot;</li>
+<li>&quot;YOLO mode was required but not anticipated.&quot;</li>
+<li>&quot;The simulator was throwaway.&quot;</li>
+</ul>
+<p>Its conclusion says: &quot;Treat <code>speckit.specify</code>, <code>speckit.plan</code>, and <code>speckit.analyze</code> as investments, not formalities.&quot;</p>
+<p>The same repository contains a <code>WORKSHOP.md</code> that repeats the exercise properly, adding clarify and analyze and replacing the empty plan prompt with this one:</p>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">/speckit-plan Use React for the frontend, reuse the existing src/modules/ where
+possible. Serve the dashboard from the Go backend on port 8080. Use gRPC-web for
+communication. Keep dependencies minimal.</div></div>
+<p>That run added about 1,580 lines to the existing 98,500. Its tips include &quot;Brownfield is the default.&quot; and &quot;Constitution first, always.&quot;</p>
+<div class="callout warning"><p><strong>⚠️ One trap in this repository:</strong> its committed <code>.specify\memory\constitution.md</code> is still the unfilled template. Do not use it as a model. Look at the ASP.NET or Java repository for a completed constitution.</p></div>
+</div>
+<div class="section">
+<h2 id="5-what-a-finished-feature-looks-like">5. What a finished feature looks like</h2>
+<p>Open any <code>specs\</code> folder in the examples and you will find the same shape. This is the second feature of the ASP.NET example:</p>
+<div class="code-wrap file"><div class="code-head"><span class="code-label">File</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">specs/002-headless-rest-api/
+├── spec.md              what and why (198 lines)
+├── plan.md              how (502 lines)
+├── tasks.md             45 tasks, all ticked
+├── research.md          options considered
+├── data-model.md        entities and fields
+├── quickstart.md        how to run and test it
+├── checklists/
+│   └── requirements.md  quality check of the requirements
+├── contracts/
+│   ├── auth.md
+│   └── endpoints.md
+└── test-scripts/        the scripts requested in the plan prompt</div></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Example</th>
+<th>Request length</th>
+<th>Spec length</th>
+<th>Tasks</th>
+<th>Implement runs</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A. .NET CLI (new)</td>
+<td>2 sentences</td>
+<td>~1,870 words</td>
+<td>69</td>
+<td>3</td>
+</tr>
+<tr>
+<td>B. Spring + React (new)</td>
+<td>4 sentences</td>
+<td>~2,650 words</td>
+<td>85</td>
+<td>2</td>
+</tr>
+<tr>
+<td>C1. ASP.NET, Docker infrastructure</td>
+<td>~170 words</td>
+<td>~2,000 words</td>
+<td>15</td>
+<td>3</td>
+</tr>
+<tr>
+<td>C2. ASP.NET, REST API</td>
+<td>3 sentences</td>
+<td>~2,360 words</td>
+<td>45</td>
+<td>1</td>
+</tr>
+<tr>
+<td>D. Java admin console</td>
+<td>2 sentences</td>
+<td>~2,300 words</td>
+<td>24</td>
+<td>1</td>
+</tr>
+<tr>
+<td>E. Go dashboard</td>
+<td>3 lines</td>
+<td>~1,660 words</td>
+<td>31</td>
+<td>1, plus follow-up chats</td>
+</tr>
+</tbody></table></div>
+<p>The counts are from the committed files. Two things stand out. First, a few sentences reliably expand into about two thousand words of specification, so <strong>reading time is the real cost</strong> of this workflow. Second, the most detailed request (C1) produced the fewest tasks: precision about scope keeps the work small.</p>
+</div>
+<div class="section">
+<h2 id="6-projects-that-ship-releases-with-specs-committed">6. Projects that ship releases with specs committed</h2>
+<p>The repositories below are ordinary open-source projects, not demonstrations. Each has a filled-in constitution under <code>.specify\memory\</code> and feature folders under <code>specs\</code>, and each published a release in 2026. We confirmed that the files exist; we did not review the quality of their specs or check which Spec Kit version produced them.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Project</th>
+<th>What it is</th>
+<th>What to look at</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://github.com/Azure/missionlz" target="_blank" rel="noopener">Azure/missionlz</a></td>
+<td>Microsoft&#39;s landing-zone infrastructure project; release v2.0.0 in October 2026</td>
+<td>Adoption in an existing project. Three feature folders, each with the full artifact set; the first is a test-coverage ratchet. Constitution at v1.2.0, so it has been amended since adoption</td>
+</tr>
+<tr>
+<td><a href="https://github.com/sitkoru/Sitko.Core" target="_blank" rel="noopener">sitkoru/Sitko.Core</a></td>
+<td>A .NET application framework with frequent releases</td>
+<td>Twelve spec folders with <strong>timestamp</strong> names instead of numbers. Most hold only <code>spec.md</code>, and none has a plan or task list: a lightweight convention</td>
+</tr>
+<tr>
+<td><a href="https://github.com/alfredoperez/ngx-dev-toolbar" target="_blank" rel="noopener">alfredoperez/ngx-dev-toolbar</a></td>
+<td>An Angular developer toolbar</td>
+<td>Twenty numbered feature folders, most with spec, plan and tasks. Constitution at v3.0.0: the rules evolved with the project</td>
+</tr>
+<tr>
+<td><a href="https://github.com/lausser/coshsh" target="_blank" rel="noopener">lausser/coshsh</a></td>
+<td>A long-lived Python tool for monitoring configuration</td>
+<td>Spec Kit on a legacy codebase. One folder also keeps the author&#39;s original sketch next to the generated spec</td>
+</tr>
+<tr>
+<td><a href="https://github.com/galax-io/gatling-picatinny" target="_blank" rel="noopener">galax-io/gatling-picatinny</a></td>
+<td>A Scala testing library</td>
+<td>Fifteen feature folders, including a build-tool upgrade handled as a spec</td>
+</tr>
+</tbody></table></div>
+<p><strong>What these show:</strong> teams keep different amounts. Some commit spec, plan and tasks for every feature; one keeps only the spec. All of them kept their constitution, and four of the five have amended it since. That matches the official position that <a href="sdd-production.html#2-decide-how-specifications-age">how specs age</a> is a team choice.</p>
+<p><strong>Spec Kit uses Spec Kit, selectively.</strong> The project&#39;s <a href="https://github.com/github/spec-kit/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">contributing guide</a> answers the question &quot;Does Spec Kit use Spec Kit?&quot; with: &quot;Yes — we dogfood Spec Kit while developing Spec Kit, especially for substantial features and changes to the development workflow.&quot; It continues: &quot;This does not mean every change goes through the full workflow. Small fixes can use the normal issue, pull request, review, and test process.&quot; Its own <a href="https://github.com/github/spec-kit/blob/main/.specify/memory/constitution.md" target="_blank" rel="noopener">constitution</a> was added to the existing codebase in June 2026 and describes itself as derived from an analysis of the source tree, tests, CI pipelines and conventions: a brownfield constitution written by the people who build the tool.</p>
+</div>
+<div class="section">
+<h2 id="7-squad-in-practice">7. Squad in practice</h2>
+<div class="callout tip"><p><strong>📘 Reading order:</strong> this section previews <a href="squad.html">Chapter 17</a>. If terms such as coordinator, Scribe or routing are new to you, read that chapter first and come back.</p></div>
+<p><strong>A real team in a production repository.</strong> The Squad project develops itself with Squad and commits its team: see <a href="https://github.com/github/squad/tree/dev/.squad" target="_blank" rel="noopener"><code>.squad</code> in github/squad</a>. Open <code>team.md</code> and you will find a coordinator and eighteen specialists with plain, descriptive roles: among them a lead architect, a CLI engineer, a Git specialist, a unit and contract tester, an integration and end-to-end tester, a security reviewer, a release engineer and a documentation engineer. The built-in members (Scribe, Ralph, Rai, Fact Checker) are listed too, and the Copilot coding agent appears with a table of which work is a good fit, which needs review and which is not suitable, with automatic assignment switched <strong>off</strong>.</p>
+<p>This is useful for two reasons. It shows that a large team is something you grow into over months, not something to create on day one. And it shows what committed team state looks like: <code>routing.md</code>, <code>decisions.md</code>, <code>ceremonies.md</code>, per-member charters and a governance file.</p>
+<p><strong>Prompts for an existing codebase</strong>, quoted from the official <a href="https://github.github.io/squad/docs/scenarios/existing-repo/" target="_blank" rel="noopener">existing-repository</a>, <a href="https://github.github.io/squad/docs/scenarios/large-codebase/" target="_blank" rel="noopener">large-codebase</a> and <a href="https://github.github.io/squad/docs/scenarios/mid-project/" target="_blank" rel="noopener">mid-project</a> scenarios:</p>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">This is a 200k line codebase — help me understand the architecture before we
+start making changes</div></div>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">Team, review the codebase and tell me what you find.</div></div>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">We always use Zod for API validation. Never use any/unknown casts in
+TypeScript. All database queries go through Prisma — no raw SQL. The payment
+integration with Stripe is fragile, be careful around it.</div></div>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">Route all payment code work to the specialist who knows that domain</div></div>
+<p>Those scenario pages still show some output from older versions, such as <code>.ai-team\</code> paths. The prompts themselves are current.</p>
+<p><strong>Squad driving Spec Kit.</strong> The community <a href="https://github.com/ananegru/squad-sdd-workshop" target="_blank" rel="noopener">squad-sdd-workshop</a> is a set of instructions (no generated files are committed) that builds a small game in about an hour. Its key idea is one dedicated &quot;spec-kit expert&quot; on the team who owns the workflow, with a rule that nobody plans before a spec exists or codes before tasks exist. Prompts from the workshop:</p>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">Begin the build. Have the spec-kit expert drive the Spec Kit workflow end to end.</div></div>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">Spec-kit expert: review the current spec against Spec Kit standards and against
+our objective: a very simple, interactive, CLI-based Rock-Paper-Scissors game.
+Point out anything ambiguous, missing, or over-scoped, and suggest improvements
+before we implement.</div></div>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">Add a very simple score counter. Run it through Spec Kit the same way: specify
+the feature, update the plan and tasks, then implement.</div></div>
+<p>The workshop is deliberately tuned for a throwaway proof of concept: it skips analyze and accepts a smoke test as &quot;done&quot;. It uses unpinned install commands and the dotted command spelling. Our <a href="squad.html#5-combine-spec-kit-and-squad-explicitly">Squad page</a> keeps the same structure with the checks left in. We found no public repository that commits the artifacts of Spec Kit and Squad used together (searched in November 2026).</p>
+</div>
+<div class="section">
+<h2 id="8-patterns-worth-copying-and-mistakes-worth-avoiding">8. Patterns worth copying, and mistakes worth avoiding</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Seen in the examples</th>
+<th>Take away</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>In the from-zero examples, technology appears in <code>plan</code>, not in <code>specify</code></td>
+<td>Keep <em>what</em> and <em>how</em> in separate steps</td>
+</tr>
+<tr>
+<td>The best plan prompts name existing folders, existing capabilities and constraints (D, the workshop in E)</td>
+<td>Tell the plan what to reuse</td>
+</tr>
+<tr>
+<td>Thin plan prompts (one line in B, a bare <code>Execute</code> in E) led to later repair work</td>
+<td>Put versions, conventions and environment details in the plan prompt</td>
+</tr>
+<tr>
+<td>A human caught a naming problem by reading the plan (D)</td>
+<td>Review the plan against your codebase before generating tasks</td>
+</tr>
+<tr>
+<td>An explicit &quot;out of scope&quot; sentence produced the smallest task list (C1)</td>
+<td>State boundaries; they shrink the work</td>
+</tr>
+<tr>
+<td>Two sentences became 69 tasks (A)</td>
+<td>Read <code>tasks.md</code> and delete what you did not ask for</td>
+</tr>
+<tr>
+<td>Analyze was skipped, and the author later regretted it (E)</td>
+<td>Run <code>/speckit-analyze</code>; it is read-only and cheap</td>
+</tr>
+<tr>
+<td>Several implement runs were needed (A, B, C1)</td>
+<td>Expect to repeat implement, then run converge</td>
+</tr>
+<tr>
+<td>Tool approvals blocked progress until allow-all was switched on (E)</td>
+<td>Decide your permission settings in advance; see <a href="agent-guardrails.html">human control and guardrails</a></td>
+</tr>
+<tr>
+<td>Most real projects revise their constitution (versions 1.2.0, 3.0.0)</td>
+<td>Treat the constitution as a living agreement</td>
+</tr>
+<tr>
+<td>Even the Spec Kit project skips the workflow for small fixes</td>
+<td>Use the full process for consequential changes only</td>
+</tr>
+</tbody></table></div>
+</div>
+<div class="section">
+<h2 id="9-your-turn-repeat-an-example-in-an-hour">9. Your turn: repeat an example in an hour</h2>
+<ol>
+<li>Create an empty folder and follow the <a href="spec-kit.html#2-install-once-initialize-each-project">setup steps</a> to initialize it.</li>
+<li>Use the five prompts from <strong>Example A</strong>, but change the request to something you understand well, such as a tip calculator or a unit converter. Name your own familiar technology in the plan prompt.</li>
+<li>Before <code>/speckit-plan</code>, add <code>/speckit-clarify</code>. Before <code>/speckit-implement</code>, add <code>/speckit-analyze</code>.</li>
+<li>Open <code>tasks.md</code> and count the tasks. Remove at least one that you did not ask for.</li>
+<li>Run implement, run the tests yourself, then run <code>/speckit-converge</code>.</li>
+<li>Compare your <code>specs\</code> folder with the one in the example repository. What did the agent add that you would not have thought of? What did it add that you do not want?</li>
+</ol>
+<p>Then do the same in a <strong>copy</strong> of a project you already work on, using the <a href="sdd-existing-projects.html">existing-projects page</a> as the guide and Examples C to E as reference.</p>
+</div>
+<div class="section">
+<h2 id="recap">Recap</h2>
+<ul>
+<li>Real runs follow the same few prompts: constitution, specify, plan, tasks, implement. The optional steps (clarify, analyze, converge) are where the reported problems would have been caught.</li>
+<li>A couple of sentences become about two thousand words of spec and dozens of tasks. Budget time for reading.</li>
+<li>On existing code, the best results came from plan prompts that named what to reuse and from a person reading the plan against the codebase.</li>
+<li>Projects that ship keep different amounts of spec material, and even the Spec Kit project skips the workflow for small fixes.</li>
+</ul>
+</div>
+<div class="section">
+<h2 id="check-your-understanding">Check Your Understanding</h2>
+<p><strong>1. An example README says to select the agent <code>speckit.plan</code>. What do you type with the current Copilot skills layout?</strong></p>
+<ul>
+<li>A) <code>/speckit.plan</code> in the chat</li>
+<li>B) <code>/speckit-plan</code> in the chat</li>
+<li>C) <code>/agent speckit.plan</code> in the chat</li>
+<li>D) <code>speckit.plan</code> in the terminal</li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — Type <code>/speckit-plan</code> in the chat. The examples were written for an older version that used dotted names, and <code>/agent</code> followed by a dotted name belongs to the older Copilot CLI layout.</p></div></details>
+<p><strong>2. In the Java example, at which step was the naming problem caught, and why does that matter?</strong></p>
+<ul>
+<li>A) While reading the plan, before code existed; the fix cost one sentence</li>
+<li>B) In the pull request review; the fix needed a refactoring of the module</li>
+<li>C) During <code>/speckit-analyze</code>; the tool reported the name automatically</li>
+<li>D) After the first implement run; the tests failed on the class name</li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> A — A person caught it while reading the plan, before tasks or code existed. A correction at that point cost one sentence instead of a refactoring.</p></div></details>
+<p><strong>3. The Go example&#39;s author lists &quot;the feature spec was too thin&quot; as a lesson. What was the visible consequence?</strong></p>
+<ul>
+<li>A) The agent could not produce a task list from the request</li>
+<li>B) The run produced the longest spec of all the examples</li>
+<li>C) The implement step had to be run three times</li>
+<li>D) Follow-up chats were needed to get the result running</li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> D — Extra follow-up work after implementation was needed to get the feature running, which better context in the spec and plan prompts would largely have avoided. The run still produced 31 tasks and a single implement run.</p></div></details>
+<p><strong>4. Does the Spec Kit project itself run every change through the full workflow?</strong></p>
+<ul>
+<li>A) Yes. Dogfooding means every change gets a spec, a plan and tasks</li>
+<li>B) No. The project does not use Spec Kit on its own code at all</li>
+<li>C) No. Substantial features use it; small fixes follow the normal process</li>
+<li>D) Yes, but it works without a constitution of its own</li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> C — Its contributing guide says substantial features use it, while small fixes follow the normal issue, pull request, review and test process.</p></div></details>
+<p><strong>5. In Example A, a request of two sentences became 69 tasks. What does this page tell you to do with such a list?</strong></p>
+<ul>
+<li>A) Read <code>tasks.md</code> and remove what you did not ask for</li>
+<li>B) Implement all of it, because the agent knows what is relevant</li>
+<li>C) Start again with a much longer constitution prompt</li>
+<li>D) Skip reading it and repeat implement until all is ticked</li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> A — The agent filled in a great deal (&quot;add anything that would be relevant&quot;), so you read <code>tasks.md</code> before implementing and decide whether you want all of it. Repeating implement is normal, but it does not replace reading the list.</p></div></details>
+</div>
+<div class="done-row"><button class="done-btn" type="button" aria-pressed="false">Mark this page as done</button></div>
+<div class="pager">
+<a class="pager-prev" href="sdd-existing-projects.html"><span>← Previous</span><strong>15. Existing Projects</strong></a>
+<a class="pager-next" href="squad.html"><span>Next →</span><strong>17. Squad</strong></a>
+</div>
+</main>
+<footer class="site-footer">AI Learn · A personal learning project by Emanuel Loghin · <a href="about.html">About &amp; feedback</a> · Based on official docs and open course material · Not affiliated with any model provider</footer>
+</div>
+<aside class="toc-rail" aria-label="On this page">
+<div class="toc-title">On this page</div><nav><a href="#1-before-you-open-them">1. Before you open them</a>
+<a href="#2-which-example-should-i-open">2. Which example should I open?</a>
+<a href="#3-from-zero-two-greenfield-runs">3. From zero: two greenfield runs</a>
+<a href="#4-existing-code-three-brownfield-runs">4. Existing code: three brownfield runs</a>
+<a href="#5-what-a-finished-feature-looks-like">5. What a finished feature looks like</a>
+<a href="#6-projects-that-ship-releases-with-specs-committed">6. Projects that ship releases with specs committed</a>
+<a href="#7-squad-in-practice">7. Squad in practice</a>
+<a href="#8-patterns-worth-copying-and-mistakes-worth-avoiding">8. Patterns worth copying, and mistakes worth avoiding</a>
+<a href="#9-your-turn-repeat-an-example-in-an-hour">9. Your turn: repeat an example in an hour</a>
+<a href="#recap">Recap</a>
+<a href="#check-your-understanding">Check Your Understanding</a></nav>
+</aside>
+</div>
+<div class="scrim"></div>
+<script src="site.js"></script>
+</body>
+</html>

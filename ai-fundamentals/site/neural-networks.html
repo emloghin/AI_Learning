@@ -4,51 +4,95 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Neural Networks: The Engine Inside AI — AI Learn</title>
+<script>try{var t=localStorage.getItem('ailearn:theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<style>.section td code,.callout code,.diagram-caption code{background:var(--primary-light);color:var(--primary);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:13px}.callout p+p{margin-top:8px}.callout ul{margin:8px 0 0 20px}</style>
 </head>
-<body>
-
-<header class="site-header">
-  <div class="header-inner">
-    <div class="header-logo"><span>AI&nbsp;</span>Learn</div>
-    <nav class="header-nav">
-      <a href="index.html">Home</a>
-      <a href="study-plan.html">Study Plan</a>
-      <a href="foundations.html">1. Foundations</a>
-      <a href="neural-networks.html" class="active">2. Neural Networks</a>
-      <a href="transformers.html">3. Transformers &amp; LLMs</a>
-      <a href="training.html">4. Training &amp; Tuning</a>
-      <a href="models.html">5. Model Landscape</a>
-      <a href="using-ai.html">6. Using Models</a>
-      <a href="tokens.html">7. Tokens &amp; Cost</a>
-      <a href="best-practices.html">8. Best Practices</a>
-      <a href="ai-at-work.html">9. AI at Work</a>
-      <a href="spec-driven-development.html">10. Spec-Driven Dev</a>
-      <a href="spec-kit.html">10a. Spec Kit</a>
-      <a href="squad.html">10b. Squad</a>
-      <a href="sdd-production.html">10c. Shipping &amp; Reuse</a>
-      <a href="glossary.html">Glossary</a>
-      <a href="resources.html">Resources</a>
-    </nav>
-  </div>
+<body data-page="neural-networks">
+<div class="read-progress" aria-hidden="true"><div></div></div>
+<header class="topbar">
+  <button class="icon-btn menu-btn" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
+  <a class="header-logo" href="index.html"><span>AI&nbsp;</span>Learn</a>
+  <span class="topbar-crumb">Part 1 · Understand AI <b>›</b> 2. Neural Networks</span>
+  <span class="topbar-progress" title="Pages you marked as done"></span>
+  <button class="icon-btn theme-btn" type="button" aria-label="Switch between light and dark theme">◐</button>
 </header>
-
+<div class="shell">
+<aside class="sidebar" aria-label="Site navigation">
+<nav>
+<div class="nav-group">
+<div class="nav-group-title">Start here<span class="nav-count"></span></div>
+<a href="index.html" data-page="index">Home</a>
+<a href="study-plan.html" data-page="study-plan">Study Plan</a>
+<a href="setup.html" data-page="setup">Setup &amp; Git Basics</a>
+</div>
+<div class="nav-group current">
+<div class="nav-group-title">Part 1 · Understand AI<span class="nav-count"></span></div>
+<a href="foundations.html" data-page="foundations">1. Foundations</a>
+<a href="neural-networks.html" data-page="neural-networks" class="active" aria-current="page">2. Neural Networks</a>
+<a href="transformers.html" data-page="transformers">3. Transformers &amp; LLMs</a>
+<a href="training.html" data-page="training">4. Training &amp; Tuning</a>
+<a href="models.html" data-page="models">5. Model Landscape</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 2 · Use AI well<span class="nav-count"></span></div>
+<a href="using-ai.html" data-page="using-ai">6. Using Models</a>
+<a href="connecting-ai.html" data-page="connecting-ai">7. Connecting Models</a>
+<a href="tokens.html" data-page="tokens">8. Tokens &amp; Cost</a>
+<a href="best-practices.html" data-page="best-practices">9. Best Practices</a>
+<a href="ai-at-work.html" data-page="ai-at-work">10. AI at Work</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 3 · Work with agents<span class="nav-count"></span></div>
+<a href="agent-toolkit.html" data-page="agent-toolkit">11. Equip Your Agent</a>
+<a href="agent-guardrails.html" data-page="agent-guardrails">12. Human Control &amp; Guardrails</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 4 · Build with specs<span class="nav-count"></span></div>
+<a href="spec-driven-development.html" data-page="spec-driven-development">13. Spec-Driven Dev</a>
+<a href="spec-kit.html" data-page="spec-kit">14. Spec Kit from Zero</a>
+<a href="sdd-existing-projects.html" data-page="sdd-existing-projects">15. Existing Projects</a>
+<a href="sdd-examples.html" data-page="sdd-examples">16. Real Examples</a>
+<a href="squad.html" data-page="squad">17. Squad</a>
+<a href="sdd-production.html" data-page="sdd-production">18. Shipping &amp; Reuse</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Reference<span class="nav-count"></span></div>
+<a href="sdd-reference.html" data-page="sdd-reference">Command Reference</a>
+<a href="glossary.html" data-page="glossary">Glossary</a>
+<a href="resources.html" data-page="resources">Resources</a>
+<a href="about.html" data-page="about">About &amp; Feedback</a>
+</div>
+</nav>
+</aside>
+<div class="content">
 <section class="hero">
   <div class="hero-badge">Chapter 2 · Neural Networks</div>
   <h1>Neural Networks: The Engine Inside AI</h1>
   <p>Almost every modern AI model you hear about — from your phone&#39;s face unlock to the largest chatbot — is a neural network: layers of tiny calculators connected by adjustable numbers, tuned by showing it examples and correcting its mistakes millions of times.</p>
+  <div class="hero-meta"><span>⏱ about 20 min of reading</span><span>Page 5 of 25</span></div>
 </section>
-
 <main class="main">
+<details class="toc-inline"><summary>On this page</summary><nav><a href="#1-inspired-by-the-brain-loosely">1. Inspired by the brain (loosely)</a>
+<a href="#2-the-artificial-neuron">2. The artificial neuron</a>
+<a href="#3-layers-and-depth">3. Layers and depth</a>
+<a href="#4-weights-parameters-and-what-7b-means">4. Weights, parameters, and what &quot;7B&quot; means</a>
+<a href="#5-the-forward-pass">5. The forward pass</a>
+<a href="#6-measuring-mistakes-the-loss-function">6. Measuring mistakes: the loss function</a>
+<a href="#7-gradient-descent-walking-downhill">7. Gradient descent: walking downhill</a>
+<a href="#8-backpropagation-assigning-the-blame">8. Backpropagation: assigning the blame</a>
+<a href="#9-the-training-loop-epochs-batches-iterations">9. The training loop: epochs, batches, iterations</a>
+<a href="#10-overfitting-and-regularization">10. Overfitting and regularization</a>
+<a href="#11-why-gpus-it-is-all-matrix-multiplication">11. Why GPUs: it is all matrix multiplication</a>
+<a href="#12-worked-example-one-training-step-by-hand">12. Worked example: one training step, by hand</a>
+<a href="#recap">Recap</a>
+<a href="#check-your-understanding">Check Your Understanding</a></nav></details>
 <div class="section">
 <h2 id="1-inspired-by-the-brain-loosely">1. Inspired by the brain (loosely)</h2>
 <p>Your brain contains roughly 86 billion nerve cells called <em>neurons</em>. Each one receives signals from other neurons, and if the combined signal is strong enough, it &quot;fires&quot; and passes a signal on. Learning, roughly speaking, changes how strongly neurons influence each other.</p>
 <p>In 1943, Warren McCulloch and Walter Pitts proposed a mathematical model of a neuron, and in 1958 Frank Rosenblatt built the <em>perceptron</em>, an early learning machine based on the same idea. Today&#39;s artificial neural networks descend from that work.</p>
 <div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;Neural networks work like the human brain.&quot; They borrow a single loose idea — many simple units passing weighted signals — and nothing more. Real neurons are electrochemical cells with complex timing and chemistry. An artificial neuron is a line of arithmetic. AI models do not think, feel, or learn the way people do.</p></div>
-
 </div>
 <div class="section">
 <h2 id="2-the-artificial-neuron">2. The artificial neuron</h2>
@@ -59,16 +103,16 @@
 <li><strong>Pass</strong> the total through an <em>activation function</em>, which decides what comes out.</li>
 </ol>
 <p>In symbols:</p>
-<div class="code-block">z      = (x₁ × w₁) + (x₂ × w₂) + (x₃ × w₃) + b      ← weighted sum
-output = activation(z)</div>
+<div class="code-wrap plain"><div class="code-head"><span class="code-label"></span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">z      = (x₁ × w₁) + (x₂ × w₂) + (x₃ × w₃) + b      ← weighted sum
+output = activation(z)</div></div>
 <p>In words: &quot;multiply each input by how important it is, add them up with a baseline, then apply a simple rule to decide the output.&quot;</p>
 <h3 id="21-a-worked-example-with-three-inputs">2.1 A worked example with three inputs</h3>
 <p>Inputs: <code>x₁ = 2</code>, <code>x₂ = 1</code>, <code>x₃ = 3</code>
 Weights: <code>w₁ = 0.5</code>, <code>w₂ = -1</code>, <code>w₃ = 0.25</code>
 Bias: <code>b = 0.5</code></p>
-<div class="code-block">z = (2 × 0.5) + (1 × -1) + (3 × 0.25) + 0.5
+<div class="code-wrap plain"><div class="code-head"><span class="code-label"></span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">z = (2 × 0.5) + (1 × -1) + (3 × 0.25) + 0.5
   =    1.0    +   -1.0   +    0.75    + 0.5
-  = 1.25</div>
+  = 1.25</div></div>
 <p>A negative weight (like <code>w₂ = -1</code>) means &quot;this input pushes the answer <em>down</em>&quot;. A large weight means &quot;this input matters a lot&quot;.</p>
 <div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 340" role="img" aria-label="An artificial neuron: three inputs are multiplied by weights, summed with a bias, passed through an activation function, and produce one output">
   <defs>
@@ -149,14 +193,13 @@ Bias: <code>b = 0.5</code></p>
 </tbody></table></div>
 <p>Checking the sigmoid: <code>e^(−1.25) ≈ 0.287</code>, so <code>1 / (1 + 0.287) = 1 / 1.287 ≈ 0.78</code>. (Here <code>e ≈ 2.718</code> is a fixed mathematical constant.)</p>
 <p><strong>Softmax example.</strong> A network deciding whether a photo shows a cat, a dog or a bird produces raw scores <code>[2.0, 1.0, 0.1]</code>:</p>
-<div class="code-block">e^2.0 = 7.39     e^1.0 = 2.72     e^0.1 = 1.11     total = 11.22
+<div class="code-wrap plain"><div class="code-head"><span class="code-label"></span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">e^2.0 = 7.39     e^1.0 = 2.72     e^0.1 = 1.11     total = 11.22
 
 cat  = 7.39 / 11.22 ≈ 0.66   (66%)
 dog  = 2.72 / 11.22 ≈ 0.24   (24%)
-bird = 1.11 / 11.22 ≈ 0.10   (10%)</div>
+bird = 1.11 / 11.22 ≈ 0.10   (10%)</div></div>
 <p>The biggest score gets the biggest probability, and all the probabilities add up to 100%. A language model does exactly this at every step — over a vocabulary of tens of thousands (often over a hundred thousand) of tokens instead of three animals.</p>
 <div class="callout tip"><p><strong>📘 In plain words:</strong> Why bother with an activation? Without it, stacking layers would be pointless: a chain of &quot;multiply and add&quot; steps can always be collapsed into a single &quot;multiply and add&quot;. The activation adds a bend (a <em>non-linearity</em>), and stacking many bends lets the network model curvy, complex patterns like language and images. Google&#39;s crash course explains this in <a href="https://developers.google.com/machine-learning/crash-course/neural-networks/activation-functions" target="_blank" rel="noopener">Activation functions</a>.</p></div>
-
 </div>
 <div class="section">
 <h2 id="3-layers-and-depth">3. Layers and depth</h2>
@@ -223,7 +266,6 @@ bird = 1.11 / 11.22 ≈ 0.10   (10%)</div>
 <div class="diagram-caption">Figure 2 — A small fully connected network: 3 inputs, one hidden layer of 4 neurons, 2 outputs.</div></div>
 <p><strong>Depth</strong> is the number of layers. &quot;Deep learning&quot; simply means networks with many hidden layers. Early layers tend to learn simple patterns, later layers combine them into complex ones. In an image network, early layers may react to edges, middle layers to shapes like eyes or wheels, and late layers to whole objects. The <a href="https://www.3blue1brown.com/lessons/neural-networks" target="_blank" rel="noopener">3Blue1Brown video &quot;But what is a neural network?&quot;</a> shows this idea beautifully with handwritten digits.</p>
 <div class="callout tip"><p><strong>💡 Example:</strong> In the house network of Figure 2, one hidden neuron might end up acting as a &quot;spacious family home&quot; detector (big size, many rooms), another as an &quot;old fixer-upper&quot; detector (high age). Nobody programs those roles — they emerge during training because they help decide between the two outputs, &quot;cheap&quot; and &quot;expensive&quot;.</p></div>
-
 </div>
 <div class="section">
 <h2 id="4-weights-parameters-and-what-7b-means">4. Weights, parameters, and what &quot;7B&quot; means</h2>
@@ -231,13 +273,13 @@ bird = 1.11 / 11.22 ≈ 0.10   (10%)</div>
 <h3 id="41-counting-parameters-in-a-tiny-network">4.1 Counting parameters in a tiny network</h3>
 <p>For a fully connected layer: <code>parameters = (inputs × outputs) + outputs</code>. The first part counts the weights (one per connection); the second counts the biases (one per neuron).</p>
 <p>For the network in Figure 2 (3 → 4 → 2):</p>
-<div class="code-block">Input → hidden:   3 × 4 = 12 weights  +  4 biases  =  16
+<div class="code-wrap plain"><div class="code-head"><span class="code-label"></span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">Input → hidden:   3 × 4 = 12 weights  +  4 biases  =  16
 Hidden → output:  4 × 2 =  8 weights  +  2 biases  =  10
-                                          Total     =  26 parameters</div>
+                                          Total     =  26 parameters</div></div>
 <p>Twenty-six numbers. A modern LLM has billions — GPT-3, described in 2020, had 175 billion (<a href="https://arxiv.org/abs/2005.14165" target="_blank" rel="noopener">Brown et al., 2020</a>). The principle is identical; there are just vastly more neurons, layers, and connections.</p>
 <h3 id="42-what-7b-parameters-means-for-memory">4.2 What &quot;7B parameters&quot; means for memory</h3>
 <p>&quot;7B&quot; means about 7 billion parameters. Each parameter is stored as a number that takes a certain number of bytes, depending on its <strong>precision</strong> (how many digits it keeps):</p>
-<div class="code-block">memory for weights ≈ number of parameters × bytes per parameter</div>
+<div class="code-wrap plain"><div class="code-head"><span class="code-label"></span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">memory for weights ≈ number of parameters × bytes per parameter</div></div>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -276,22 +318,20 @@ Hidden → output:  4 × 2 =  8 weights  +  2 biases  =  10
 <p><strong>Quantization</strong> means storing each parameter with fewer bits — like rounding 0.123456 to 0.12. It shrinks the model and speeds it up, usually at a small cost in quality. This is why a 4-bit 7B model can run on an ordinary laptop with 8–16 GB of memory, while the same model in FP32 cannot.</p>
 <div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;If the weights fit, the model will run.&quot; Running a model also needs memory for the text being processed (the context) and temporary calculations, so plan for extra headroom on top of the table above. <em>Training</em> needs far more: a commonly cited estimate for standard mixed-precision training with the Adam optimizer is about 16 bytes per parameter before counting activations (<a href="https://arxiv.org/abs/1910.02054" target="_blank" rel="noopener">Rajbhandari et al., ZeRO, 2019</a>) — over 100 GB for a 7B model.</p></div>
 <div class="callout success"><p><strong>✅ Key takeaway:</strong> Parameters = learned numbers. More parameters usually means more capability but also more memory, slower responses and higher cost. Memory ≈ parameters × bytes per parameter.</p></div>
-
 </div>
 <div class="section">
 <h2 id="5-the-forward-pass">5. The forward pass</h2>
 <p>Running data through the network from input to output is called the <strong>forward pass</strong>. Every time you use a model (inference), you are doing forward passes.</p>
 <p>Take our three inputs <code>[2, 1, 3]</code> and a hidden layer of two neurons, A and B, followed by one output neuron:</p>
-<div class="code-block">Hidden neuron A:  weights [0.5, -1, 0.25], bias 0.5
+<div class="code-wrap plain"><div class="code-head"><span class="code-label"></span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">Hidden neuron A:  weights [0.5, -1, 0.25], bias 0.5
                   z = 1 - 1 + 0.75 + 0.5 = 1.25   → ReLU → 1.25
 
 Hidden neuron B:  weights [1, 0, -0.5], bias -1
                   z = 2 + 0 - 1.5 - 1 = -0.5      → ReLU → 0
 
 Output neuron:    weights [2, 1], bias 0.1
-                  z = (1.25 × 2) + (0 × 1) + 0.1 = 2.6   → final answer 2.6</div>
+                  z = (1.25 × 2) + (0 × 1) + 0.1 = 2.6   → final answer 2.6</div></div>
 <p>Notice that neuron B&#39;s negative total was switched off by ReLU — that is how a network &quot;decides&quot; which features matter for this particular input.</p>
-
 </div>
 <div class="section">
 <h2 id="6-measuring-mistakes-the-loss-function">6. Measuring mistakes: the loss function</h2>
@@ -334,7 +374,7 @@ Output neuron:    weights [2, 1], bias 0.1
 <p>In words: square each mistake (so negatives do not cancel positives, and big mistakes count much more than small ones), then average them. See Google&#39;s <a href="https://developers.google.com/machine-learning/crash-course/linear-regression/loss" target="_blank" rel="noopener">Loss</a> page for more.</p>
 <h3 id="62-classification-cross-entropy">6.2 Classification: cross-entropy</h3>
 <p>For &quot;pick one category&quot; problems — including predicting the next token — the usual loss is <strong>cross-entropy</strong>. The idea: look at the probability the model gave to the <em>correct</em> answer, and penalize it if that probability is low.</p>
-<div class="code-block">loss = −log(probability given to the correct answer)</div>
+<div class="code-wrap plain"><div class="code-head"><span class="code-label"></span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">loss = −log(probability given to the correct answer)</div></div>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -356,7 +396,6 @@ Output neuron:    weights [2, 1], bias 0.1
 </tr>
 </tbody></table></div>
 <p>(<code>log</code> here is the natural logarithm, a calculator button usually labelled &quot;ln&quot;.) Confidently wrong answers are punished heavily. When an LLM is trained on the sentence &quot;The cat sat on the mat&quot;, the loss at the last step is −log of the probability it gave to &quot;mat&quot;.</p>
-
 </div>
 <div class="section">
 <h2 id="7-gradient-descent-walking-downhill">7. Gradient descent: walking downhill</h2>
@@ -369,7 +408,7 @@ Output neuron:    weights [2, 1], bias 0.1
 <li>The <em>slope</em> under your feet is the <strong>gradient</strong> — for each parameter, it says &quot;if you increase this number a little, does the loss go up or down, and how fast?&quot;</li>
 <li>Each <em>step</em> updates every parameter a little in the downhill direction.</li>
 </ul>
-<div class="code-block">new weight = old weight − learning rate × gradient</div>
+<div class="code-wrap plain"><div class="code-head"><span class="code-label"></span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">new weight = old weight − learning rate × gradient</div></div>
 <p>In words: &quot;move each weight a small step in the direction that lowers the loss.&quot; The minus sign means &quot;go <em>against</em> the uphill direction&quot;.</p>
 <div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 380" role="img" aria-label="Gradient descent: a curve of loss against a weight value, with steps going downhill toward the lowest point, taking smaller steps as the slope flattens">
   <defs>
@@ -421,7 +460,6 @@ Output neuron:    weights [2, 1], bias 0.1
 </ul>
 <p>You will see this happen with real numbers in the worked example in section 12. Google&#39;s crash course page on <a href="https://developers.google.com/machine-learning/crash-course/linear-regression/gradient-descent" target="_blank" rel="noopener">Gradient descent</a> and the <a href="https://www.3blue1brown.com/lessons/gradient-descent" target="_blank" rel="noopener">3Blue1Brown lesson on gradient descent</a> are excellent companions.</p>
 <div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;Gradient descent finds the perfect answer.&quot; For big networks the landscape has billions of dimensions and many dips. Gradient descent finds <em>good enough</em> low points, not a guaranteed best one — and in practice that works remarkably well.</p></div>
-
 </div>
 <div class="section">
 <h2 id="8-backpropagation-assigning-the-blame">8. Backpropagation: assigning the blame</h2>
@@ -435,7 +473,6 @@ Output neuron:    weights [2, 1], bias 0.1
 <li>Hand those gradients to gradient descent, which nudges every weight.</li>
 </ol>
 <div class="callout tip"><p><strong>📘 In plain words:</strong> Backpropagation figures out <em>who is to blame and by how much</em>. Gradient descent <em>does the correcting</em>. Together, they are how almost every neural network learns. The <a href="https://www.3blue1brown.com/lessons/backpropagation" target="_blank" rel="noopener">3Blue1Brown lesson &quot;What is backpropagation really doing?&quot;</a> visualizes this without heavy math, and Google covers it in <a href="https://developers.google.com/machine-learning/crash-course/neural-networks/backpropagation" target="_blank" rel="noopener">Training using backpropagation</a>.</p></div>
-
 </div>
 <div class="section">
 <h2 id="9-the-training-loop-epochs-batches-iterations">9. The training loop: epochs, batches, iterations</h2>
@@ -446,7 +483,7 @@ Output neuron:    weights [2, 1], bias 0.1
 <li><strong>Epoch</strong> — one full pass through the entire training dataset.</li>
 </ul>
 <p><em>Numeric example:</em> 10,000 training examples with a batch size of 100 means 10,000 / 100 = <strong>100 iterations per epoch</strong>. Training for 5 epochs is 500 updates.</p>
-<div class="code-block">initialize all weights with small random numbers
+<div class="code-wrap plain"><div class="code-head"><span class="code-label"></span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">initialize all weights with small random numbers
 
 for epoch in 1 to number_of_epochs:
     shuffle the training data
@@ -456,9 +493,8 @@ for epoch in 1 to number_of_epochs:
         gradients   = backpropagation(loss)
         for each weight:
             weight = weight - learning_rate * gradient_of(weight)
-    check the loss on the validation set</div>
+    check the loss on the validation set</div></div>
 <div class="callout tip"><p><strong>💡 Example:</strong> Large language models are often trained for about one epoch (or a few) over a dataset of trillions of tokens, because the dataset is so large that one pass already takes weeks on thousands of GPUs. Small models on small datasets may run for hundreds of epochs.</p></div>
-
 </div>
 <div class="section">
 <h2 id="10-overfitting-and-regularization">10. Overfitting and regularization</h2>
@@ -499,19 +535,18 @@ for epoch in 1 to number_of_epochs:
 </tbody></table></div>
 <p>Google&#39;s crash course covers these in <a href="https://developers.google.com/machine-learning/crash-course/overfitting/overfitting" target="_blank" rel="noopener">Overfitting</a> and <a href="https://developers.google.com/machine-learning/crash-course/overfitting/regularization" target="_blank" rel="noopener">L2 regularization</a>.</p>
 <div class="callout success"><p><strong>✅ Key takeaway:</strong> If training loss keeps falling but validation loss starts rising, the model has begun memorizing. Stop, add data, or add regularization.</p></div>
-
 </div>
 <div class="section">
 <h2 id="11-why-gpus-it-is-all-matrix-multiplication">11. Why GPUs: it is all matrix multiplication</h2>
 <p>A layer of neurons is really one big table operation. Put the inputs in a row and the weights in a grid (a <strong>matrix</strong>), and computing every neuron at once is a <em>matrix multiplication</em>:</p>
-<div class="code-block">inputs [2, 1, 3]  ×  weight matrix        =  sums for each neuron
+<div class="code-wrap plain"><div class="code-head"><span class="code-label"></span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">inputs [2, 1, 3]  ×  weight matrix        =  sums for each neuron
                      neuron A  neuron B
                      [ 0.5      1   ]
                      [ -1       0   ]
                      [ 0.25    -0.5 ]
 
 neuron A: 2×0.5 + 1×(−1) + 3×0.25 = 0.75
-neuron B: 2×1   + 1×0    + 3×(−0.5) = 0.5</div>
+neuron B: 2×1   + 1×0    + 3×(−0.5) = 0.5</div></div>
 <p>(Then add the biases and apply the activation, as in section 5.) Each neuron&#39;s sum is independent of the others, so they can all be computed <em>at the same time</em>.</p>
 <ul>
 <li>A <strong>CPU</strong> has a handful of powerful cores — great for doing different, complicated tasks one after another.</li>
@@ -519,7 +554,6 @@ neuron B: 2×1   + 1×0    + 3×(−0.5) = 0.5</div>
 </ul>
 <p>A large model needs billions of multiply-and-add operations for every token it reads or writes, which is exactly the kind of work GPUs (and specialised AI chips such as Google&#39;s TPUs) excel at. The 2012 <em>AlexNet</em> image-recognition network, trained on two consumer GPUs, is often credited with kicking off the deep learning boom.</p>
 <div class="callout tip"><p><strong>📘 In plain words:</strong> A CPU is a few expert chefs; a GPU is a thousand line cooks all chopping onions at once. Neural networks need a mountain of chopped onions.</p></div>
-
 </div>
 <div class="section">
 <h2 id="12-worked-example-one-training-step-by-hand">12. Worked example: one training step, by hand</h2>
@@ -548,22 +582,22 @@ neuron B: 2×1   + 1×0    + 3×(−0.5) = 0.5</div>
 <p><strong>Model:</strong> <code>prediction = w × x + b</code>. The perfect answer is <code>w = 2</code>, <code>b = 0</code>, but the model does not know that.</p>
 <p><strong>Start:</strong> random-ish values <code>w = 0.5</code>, <code>b = 0</code>. <strong>Learning rate:</strong> 0.01. <strong>Loss:</strong> squared error, <code>(prediction − y)²</code>.</p>
 <h3 id="step-1-forward-pass-take-the-example-x-3-y-6">Step 1 — Forward pass (take the example x = 3, y = 6)</h3>
-<div class="code-block">prediction = 0.5 × 3 + 0 = 1.5
+<div class="code-wrap plain"><div class="code-head"><span class="code-label"></span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">prediction = 0.5 × 3 + 0 = 1.5
 error      = prediction − y = 1.5 − 6 = −4.5
-loss       = (−4.5)² = 20.25</div>
+loss       = (−4.5)² = 20.25</div></div>
 <p>The model guessed 1.5 instead of 6 — far too low.</p>
 <h3 id="step-2-backpropagation-compute-the-gradients">Step 2 — Backpropagation (compute the gradients)</h3>
 <p>Calculus gives simple rules for this model:</p>
-<div class="code-block">gradient for w = 2 × error × x = 2 × (−4.5) × 3 = −27
-gradient for b = 2 × error     = 2 × (−4.5)     = −9</div>
+<div class="code-wrap plain"><div class="code-head"><span class="code-label"></span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">gradient for w = 2 × error × x = 2 × (−4.5) × 3 = −27
+gradient for b = 2 × error     = 2 × (−4.5)     = −9</div></div>
 <p>In words: both gradients are negative, which means &quot;increasing w and b would <em>reduce</em> the loss&quot;. The gradient for <code>w</code> is bigger because the input (3) amplifies <code>w</code>&#39;s effect.</p>
 <h3 id="step-3-gradient-descent-update">Step 3 — Gradient descent (update)</h3>
-<div class="code-block">new w = 0.5 − 0.01 × (−27) = 0.5 + 0.27 = 0.77
-new b = 0   − 0.01 × (−9)  = 0   + 0.09 = 0.09</div>
+<div class="code-wrap plain"><div class="code-head"><span class="code-label"></span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">new w = 0.5 − 0.01 × (−27) = 0.5 + 0.27 = 0.77
+new b = 0   − 0.01 × (−9)  = 0   + 0.09 = 0.09</div></div>
 <h3 id="step-4-check-did-it-improve">Step 4 — Check: did it improve?</h3>
-<div class="code-block">new prediction = 0.77 × 3 + 0.09 = 2.40
+<div class="code-wrap plain"><div class="code-head"><span class="code-label"></span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">new prediction = 0.77 × 3 + 0.09 = 2.40
 new error      = 2.40 − 6 = −3.60
-new loss       = (−3.60)² = 12.96</div>
+new loss       = (−3.60)² = 12.96</div></div>
 <p>The loss fell from <strong>20.25 to 12.96</strong> in one step. The model learned something.</p>
 <h3 id="repeating-the-step">Repeating the step</h3>
 <p>Doing the same calculation again on the same example:</p>
@@ -609,13 +643,12 @@ new loss       = (−3.60)² = 12.96</div>
 <p>Each step shrinks the loss. In real training you would cycle through <em>all three</em> examples (an epoch) many times; using all of them forces the model toward <code>w ≈ 2</code>, <code>b ≈ 0</code>, the rule that fits every example — not just one.</p>
 <h3 id="what-if-the-learning-rate-is-too-big">What if the learning rate is too big?</h3>
 <p>Try the very first update with a learning rate of <strong>0.1</strong> instead of 0.01:</p>
-<div class="code-block">new w = 0.5 − 0.1 × (−27) = 3.2
+<div class="code-wrap plain"><div class="code-head"><span class="code-label"></span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">new w = 0.5 − 0.1 × (−27) = 3.2
 new b = 0   − 0.1 × (−9)  = 0.9
-new prediction = 3.2 × 3 + 0.9 = 10.5   → error 4.5, loss 20.25</div>
+new prediction = 3.2 × 3 + 0.9 = 10.5   → error 4.5, loss 20.25</div></div>
 <p>The model jumped from far too low (1.5) to far too high (10.5) — overshooting the valley — and the loss did not improve at all. This is exactly the &quot;too large&quot; learning rate from section 7.1.</p>
 <div class="callout success"><p><strong>✅ Key takeaway:</strong> That is all training is: forward pass → loss → gradients → small update → repeat. An LLM does the same four steps, just with billions of parameters, cross-entropy loss over tokens, and trillions of examples.</p></div>
 <div class="callout tip"><p><strong>🎯 Try it:</strong> Open Google&#39;s interactive <a href="https://developers.google.com/machine-learning/crash-course/neural-networks/interactive-exercises" target="_blank" rel="noopener">Neural networks exercises</a> or the free <a href="https://playground.tensorflow.org/" target="_blank" rel="noopener">TensorFlow Playground</a>, change the learning rate and the number of hidden neurons, and watch the loss curve respond.</p></div>
-
 </div>
 <div class="section">
 <h2 id="recap">Recap</h2>
@@ -632,7 +665,6 @@ new prediction = 3.2 × 3 + 0.9 = 10.5   → error 4.5, loss 20.25</div>
 <li>Regularization (more data, early stopping, dropout, weight decay) fights overfitting.</li>
 <li>GPUs excel because neural networks are mostly giant matrix multiplications.</li>
 </ul>
-
 </div>
 <div class="section">
 <h2 id="check-your-understanding">Check Your Understanding</h2>
@@ -684,10 +716,33 @@ new prediction = 3.2 × 3 + 0.9 = 10.5   → error 4.5, loss 20.25</div>
 <li>D) 50,000</li>
 </ul>
 <details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — One epoch processes every example once: 50,000 / 500 = 100 batches, so 100 iterations (parameter updates).</p></div></details>
-<div class="nav-links"><a href="foundations.html">← Chapter 1: Foundations</a><a href="transformers.html">Chapter 3: Transformers &amp; LLMs →</a></div>
+</div>
+<div class="done-row"><button class="done-btn" type="button" aria-pressed="false">Mark this page as done</button></div>
+<div class="pager">
+<a class="pager-prev" href="foundations.html"><span>← Previous</span><strong>1. Foundations</strong></a>
+<a class="pager-next" href="transformers.html"><span>Next →</span><strong>3. Transformers &amp; LLMs</strong></a>
 </div>
 </main>
-
-<footer class="site-footer">AI Learn · A beginner's guide to how AI models work · Based on official docs and open course material · Not affiliated with any model provider</footer>
+<footer class="site-footer">AI Learn · A personal learning project by Emanuel Loghin · <a href="about.html">About &amp; feedback</a> · Based on official docs and open course material · Not affiliated with any model provider</footer>
+</div>
+<aside class="toc-rail" aria-label="On this page">
+<div class="toc-title">On this page</div><nav><a href="#1-inspired-by-the-brain-loosely">1. Inspired by the brain (loosely)</a>
+<a href="#2-the-artificial-neuron">2. The artificial neuron</a>
+<a href="#3-layers-and-depth">3. Layers and depth</a>
+<a href="#4-weights-parameters-and-what-7b-means">4. Weights, parameters, and what &quot;7B&quot; means</a>
+<a href="#5-the-forward-pass">5. The forward pass</a>
+<a href="#6-measuring-mistakes-the-loss-function">6. Measuring mistakes: the loss function</a>
+<a href="#7-gradient-descent-walking-downhill">7. Gradient descent: walking downhill</a>
+<a href="#8-backpropagation-assigning-the-blame">8. Backpropagation: assigning the blame</a>
+<a href="#9-the-training-loop-epochs-batches-iterations">9. The training loop: epochs, batches, iterations</a>
+<a href="#10-overfitting-and-regularization">10. Overfitting and regularization</a>
+<a href="#11-why-gpus-it-is-all-matrix-multiplication">11. Why GPUs: it is all matrix multiplication</a>
+<a href="#12-worked-example-one-training-step-by-hand">12. Worked example: one training step, by hand</a>
+<a href="#recap">Recap</a>
+<a href="#check-your-understanding">Check Your Understanding</a></nav>
+</aside>
+</div>
+<div class="scrim"></div>
+<script src="site.js"></script>
 </body>
 </html>

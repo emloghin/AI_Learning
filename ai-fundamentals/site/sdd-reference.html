@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Command Reference: Spec Kit and Squad — AI Learn</title>
+<script>try{var t=localStorage.getItem('ailearn:theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="sdd-reference">
+<div class="read-progress" aria-hidden="true"><div></div></div>
+<header class="topbar">
+  <button class="icon-btn menu-btn" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
+  <a class="header-logo" href="index.html"><span>AI&nbsp;</span>Learn</a>
+  <span class="topbar-crumb">Reference <b>›</b> Command Reference</span>
+  <span class="topbar-progress" title="Pages you marked as done"></span>
+  <button class="icon-btn theme-btn" type="button" aria-label="Switch between light and dark theme">◐</button>
+</header>
+<div class="shell">
+<aside class="sidebar" aria-label="Site navigation">
+<nav>
+<div class="nav-group">
+<div class="nav-group-title">Start here<span class="nav-count"></span></div>
+<a href="index.html" data-page="index">Home</a>
+<a href="study-plan.html" data-page="study-plan">Study Plan</a>
+<a href="setup.html" data-page="setup">Setup &amp; Git Basics</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 1 · Understand AI<span class="nav-count"></span></div>
+<a href="foundations.html" data-page="foundations">1. Foundations</a>
+<a href="neural-networks.html" data-page="neural-networks">2. Neural Networks</a>
+<a href="transformers.html" data-page="transformers">3. Transformers &amp; LLMs</a>
+<a href="training.html" data-page="training">4. Training &amp; Tuning</a>
+<a href="models.html" data-page="models">5. Model Landscape</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 2 · Use AI well<span class="nav-count"></span></div>
+<a href="using-ai.html" data-page="using-ai">6. Using Models</a>
+<a href="connecting-ai.html" data-page="connecting-ai">7. Connecting Models</a>
+<a href="tokens.html" data-page="tokens">8. Tokens &amp; Cost</a>
+<a href="best-practices.html" data-page="best-practices">9. Best Practices</a>
+<a href="ai-at-work.html" data-page="ai-at-work">10. AI at Work</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 3 · Work with agents<span class="nav-count"></span></div>
+<a href="agent-toolkit.html" data-page="agent-toolkit">11. Equip Your Agent</a>
+<a href="agent-guardrails.html" data-page="agent-guardrails">12. Human Control &amp; Guardrails</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 4 · Build with specs<span class="nav-count"></span></div>
+<a href="spec-driven-development.html" data-page="spec-driven-development">13. Spec-Driven Dev</a>
+<a href="spec-kit.html" data-page="spec-kit">14. Spec Kit from Zero</a>
+<a href="sdd-existing-projects.html" data-page="sdd-existing-projects">15. Existing Projects</a>
+<a href="sdd-examples.html" data-page="sdd-examples">16. Real Examples</a>
+<a href="squad.html" data-page="squad">17. Squad</a>
+<a href="sdd-production.html" data-page="sdd-production">18. Shipping &amp; Reuse</a>
+</div>
+<div class="nav-group current">
+<div class="nav-group-title">Reference<span class="nav-count"></span></div>
+<a href="sdd-reference.html" data-page="sdd-reference" class="active" aria-current="page">Command Reference</a>
+<a href="glossary.html" data-page="glossary">Glossary</a>
+<a href="resources.html" data-page="resources">Resources</a>
+<a href="about.html" data-page="about">About &amp; Feedback</a>
+</div>
+</nav>
+</aside>
+<div class="content">
+<section class="hero">
+  <div class="hero-badge">Reference · Cheat sheet</div>
+  <h1>Command Reference: Spec Kit and Squad</h1>
+  <p>Every command from this section in one place, grouped by where you type it and what it is for. Use the walkthroughs to learn; come back here when you have forgotten a name or a flag.</p>
+  <div class="hero-meta"><span>⏱ about 19 min of reading</span><span>Page 22 of 25</span></div>
+</section>
+<main class="main">
+<details class="toc-inline"><summary>On this page</summary><nav><a href="#1-how-to-read-this-page">1. How to read this page</a>
+<a href="#2-spec-kit-the-nine-workflow-commands-agent-chat">2. Spec Kit — the nine workflow commands (agent chat)</a>
+<a href="#3-spec-kit-terminal-commands">3. Spec Kit — terminal commands</a>
+<a href="#4-spec-kit-optional-extension-commands-agent-chat">4. Spec Kit — optional extension commands (agent chat)</a>
+<a href="#5-spec-kit-files-folders-and-settings">5. Spec Kit — files, folders and settings</a>
+<a href="#6-squad-terminal-commands">6. Squad — terminal commands</a>
+<a href="#7-squad-talking-to-the-team-agent-chat">7. Squad — talking to the team (agent chat)</a>
+<a href="#8-squad-files-and-folders">8. Squad — files and folders</a>
+<a href="#9-which-command-when">9. Which command when?</a>
+<a href="#check-your-understanding">Check Your Understanding</a></nav></details>
+<div class="section">
+<div class="callout tip"><p><strong>📘 In plain words:</strong> There are only two places to type. The <strong>terminal</strong> runs the <code>specify</code> and <code>squad</code> programs, which set things up. The <strong>agent chat</strong> runs <code>/speckit-*</code> skills and your conversation with the Squad coordinator, which do the development work. If a command starts with a slash, it belongs in chat.</p></div>
+</div>
+<div class="section">
+<h2 id="1-how-to-read-this-page">1. How to read this page</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Marker in this guide</th>
+<th>Where you type it</th>
+<th>Looks like</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Green <strong>Terminal</strong> block</td>
+<td>PowerShell, or another shell, in the project folder</td>
+<td><code>specify init …</code>, <code>squad doctor</code></td>
+</tr>
+<tr>
+<td>Purple <strong>Agent chat</strong> block</td>
+<td>Copilot Chat in VS Code, or the <code>copilot</code> CLI session</td>
+<td><code>/speckit-plan …</code>, &quot;Team, review the codebase&quot;</td>
+</tr>
+</tbody></table></div>
+<p><strong>Baseline:</strong> Spec Kit <strong>v1.4.5</strong> (25 November 2026) and Squad <strong>v2.0.0</strong> (19 November 2026), checked on 27 November 2026 against the official documentation and the tagged source. Your installed <code>specify --help</code> and <code>squad --help</code> are the final authority for your version. Nothing on this page was executed as a certification; it is a source-checked summary.</p>
+<p><strong>One command, several spellings.</strong> The same Spec Kit command is written differently depending on the coding agent. This guide uses the first row.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Integration</th>
+<th>You type</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GitHub Copilot, default skills layout</td>
+<td><code>/speckit-&lt;name&gt;</code></td>
+<td><code>/speckit-specify</code>, <code>/speckit-bug-assess</code></td>
+</tr>
+<tr>
+<td>Official reference pages and many older tutorials</td>
+<td><code>/speckit.&lt;name&gt;</code></td>
+<td><code>/speckit.specify</code>, <code>/speckit.bug.assess</code></td>
+</tr>
+<tr>
+<td>Codex and some other skill-based agents</td>
+<td><code>$speckit-&lt;name&gt;</code></td>
+<td><code>$speckit-specify</code></td>
+</tr>
+<tr>
+<td>Kimi</td>
+<td><code>/skill:speckit-&lt;name&gt;</code></td>
+<td><code>/skill:speckit-specify</code></td>
+</tr>
+</tbody></table></div>
+<p>Source: <a href="https://github.github.io/spec-kit/integrations/cli.html#command-invocation" target="_blank" rel="noopener">command invocation</a>. If a tutorial&#39;s spelling does not work, type <code>/speckit</code> in chat and pick from the list your installation offers.</p>
+</div>
+<div class="section">
+<h2 id="2-spec-kit-the-nine-workflow-commands-agent-chat">2. Spec Kit — the nine workflow commands (agent chat)</h2>
+<p>These are the core of spec-driven development, in the order the <a href="https://github.github.io/spec-kit/reference/agentic-sdd.html" target="_blank" rel="noopener">official reference</a> lists them.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Command</th>
+<th>What it does</th>
+<th>Reads</th>
+<th>Writes</th>
+<th>Needed?</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><code>/speckit-constitution</code></td>
+<td>Records project-wide principles</td>
+<td>Your description</td>
+<td><code>.specify\memory\constitution.md</code></td>
+<td>Once per project</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>/speckit-specify</code></td>
+<td>Describes <strong>what</strong> to build and <strong>why</strong></td>
+<td>Your description</td>
+<td><code>specs\&lt;NNN-name&gt;\spec.md</code>, a requirements checklist, the active-feature pointer</td>
+<td><strong>Required</strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>/speckit-clarify</code></td>
+<td>Asks up to five targeted questions about gaps</td>
+<td><code>spec.md</code></td>
+<td>Answers go into <code>spec.md</code></td>
+<td>Optional, recommended</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>/speckit-plan</code></td>
+<td>Chooses the technical approach (<strong>how</strong>)</td>
+<td>Spec, constitution, your stack notes</td>
+<td><code>plan.md</code> plus research, data model, contracts and <code>quickstart.md</code></td>
+<td><strong>Required</strong></td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>/speckit-checklist</code></td>
+<td>Reviews the quality of the requirements</td>
+<td>Spec</td>
+<td>A checklist that the reviewer owns and ticks</td>
+<td>Optional gate</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>/speckit-tasks</code></td>
+<td>Breaks the plan into ordered tasks</td>
+<td>Plan and design files</td>
+<td><code>tasks.md</code></td>
+<td><strong>Required</strong></td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>/speckit-analyze</code></td>
+<td>Reports contradictions between spec, plan and tasks</td>
+<td>All three</td>
+<td>Nothing. Read-only</td>
+<td>Optional, recommended</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>/speckit-implement</code></td>
+<td>Carries out the tasks</td>
+<td><code>tasks.md</code>, checklist state</td>
+<td>Your source code</td>
+<td><strong>Required</strong></td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>/speckit-converge</code></td>
+<td>Checks the code against spec, plan and tasks</td>
+<td>All of them plus the code</td>
+<td>Only appends remaining work to <code>tasks.md</code></td>
+<td>Recommended; repeat with implement until nothing remains</td>
+</tr>
+</tbody></table></div>
+<p><strong>Shortest documented path:</strong> specify → plan → tasks → implement → converge. Only <code>specify</code> is strictly required before <code>plan</code>. The extra steps are the points where you catch mistakes cheaply.</p>
+<div class="callout warning"><p><strong>⚠️ Things people assume that are not true:</strong> <code>analyze</code> does not fix anything. <code>converge</code> does not edit code or rewrite the spec. <code>checklist</code> is not a test suite. The constitution command no longer rewrites templates; an optional preset (<code>constitution-sync</code>) restores that behaviour. (One upstream reference page still describes the old behaviour.)</p></div>
+<p><strong>Moved out of core:</strong> creating GitHub issues from tasks now lives in the optional <code>github</code> extension (see section 4), not in the core command set.</p>
+</div>
+<div class="section">
+<h2 id="3-spec-kit-terminal-commands">3. Spec Kit — terminal commands</h2>
+<h3 id="everyday-commands">Everyday commands</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Purpose</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>specify init &lt;name&gt;</code></td>
+<td>Create a new project folder with Spec Kit files</td>
+<td><code>specify init room-book --integration copilot --script ps</code></td>
+</tr>
+<tr>
+<td><code>specify init --here --force</code></td>
+<td>Add Spec Kit to the current, non-empty folder</td>
+<td><code>specify init --here --force --integration copilot --script ps</code></td>
+</tr>
+<tr>
+<td><code>specify version</code></td>
+<td>Show the installed version</td>
+<td><code>specify version</code></td>
+</tr>
+<tr>
+<td><code>specify check</code></td>
+<td>Check that the surrounding tools are available</td>
+<td><code>specify check</code></td>
+</tr>
+<tr>
+<td><code>specify self check</code></td>
+<td>See whether a newer release exists. Read-only</td>
+<td><code>specify self check</code></td>
+</tr>
+<tr>
+<td><code>specify self upgrade</code></td>
+<td>Upgrade the CLI itself. On Windows with a uv installation it only <strong>prints</strong> the command to run; copy and run that command</td>
+<td><code>specify self upgrade --dry-run</code></td>
+</tr>
+<tr>
+<td><code>specify integration status</code></td>
+<td>Show which agent integration the project uses and its state</td>
+<td><code>specify integration status</code></td>
+</tr>
+<tr>
+<td><code>specify integration upgrade &lt;key&gt;</code></td>
+<td>Refresh the project&#39;s generated agent files after a CLI upgrade</td>
+<td><code>specify integration upgrade copilot</code></td>
+</tr>
+</tbody></table></div>
+<p><strong>Important <code>init</code> options</strong> (<a href="https://github.github.io/spec-kit/overview/core.html" target="_blank" rel="noopener">core reference</a>):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--integration &lt;key&gt;</code></td>
+<td>Which coding agent to set up, for example <code>copilot</code>, <code>claude</code>, <code>codex</code>, <code>gemini</code></td>
+</tr>
+<tr>
+<td><code>--script sh</code> / <code>ps</code> / <code>py</code></td>
+<td>Helper script flavour. Default is <code>ps</code> on Windows and <code>sh</code> elsewhere</td>
+</tr>
+<tr>
+<td><code>--here</code></td>
+<td>Use the current folder instead of creating one</td>
+</tr>
+<tr>
+<td><code>--force</code></td>
+<td>Allow a non-empty folder; may replace Spec Kit&#39;s own managed files</td>
+</tr>
+<tr>
+<td><code>--integration-options=&quot;…&quot;</code></td>
+<td>Agent-specific options, for example <code>--no-model-invocation</code> for Copilot</td>
+</tr>
+<tr>
+<td><code>--preset &lt;id&gt;</code></td>
+<td>Apply a preset during initialization</td>
+</tr>
+<tr>
+<td><code>--non-interactive</code></td>
+<td>Do not prompt; useful in scripts</td>
+</tr>
+</tbody></table></div>
+<h3 id="managing-integrations">Managing integrations</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>specify integration list</code></td>
+<td>List available integrations</td>
+</tr>
+<tr>
+<td><code>specify integration info &lt;id&gt;</code></td>
+<td>Show details of one</td>
+</tr>
+<tr>
+<td><code>specify integration install &lt;key&gt;</code></td>
+<td>Add an integration to the project</td>
+</tr>
+<tr>
+<td><code>specify integration use &lt;key&gt;</code> / <code>switch &lt;key&gt;</code></td>
+<td>Change which integration is the default / switch the project to another agent</td>
+</tr>
+<tr>
+<td><code>specify integration uninstall [&lt;key&gt;]</code></td>
+<td>Remove one</td>
+</tr>
+<tr>
+<td><code>specify integration upgrade [&lt;key&gt;]</code></td>
+<td>Refresh generated files; stops on locally modified files unless you pass <code>--force</code></td>
+</tr>
+</tbody></table></div>
+<p>More than forty integration keys exist, including <code>copilot</code>, <code>claude</code>, <code>codex</code>, <code>cursor-agent</code>, <code>gemini</code>, <code>kiro-cli</code>, <code>opencode</code>, <code>junie</code>, <code>zed</code>, <code>none</code> and <code>generic</code>. See the <a href="https://github.github.io/spec-kit/integrations/index.html" target="_blank" rel="noopener">integrations index</a> for the current list. Teams whose members use different agents can initialize with <code>none</code> and let each developer switch locally.</p>
+<h3 id="extensions-presets-workflows-and-bundles">Extensions, presets, workflows and bundles</h3>
+<p>These are optional building blocks. A beginner needs at most <code>extension add</code> for the bug and assessment flows.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>What it is</th>
+<th>Bundled with Spec Kit</th>
+<th>Key commands</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Extension</strong></td>
+<td>Adds commands and hooks</td>
+<td><code>git</code>, <code>bug</code>, <code>assess</code>, <code>github</code>, <code>agent-context</code> (none installed by default)</td>
+<td><code>specify extension list</code>, <code>add &lt;name&gt;</code>, <code>add --from &lt;url&gt;</code>, <code>remove &lt;name&gt;</code>, <code>update</code>, <code>enable</code> / <code>disable &lt;name&gt;</code>, <code>info &lt;name&gt;</code>, <code>search</code></td>
+</tr>
+<tr>
+<td><strong>Preset</strong></td>
+<td>Stackable customization of templates, commands and scripts</td>
+<td><code>lean</code>, <code>constitution-sync</code></td>
+<td><code>specify preset list</code>, <code>add &lt;id&gt;</code>, <code>remove &lt;id&gt;</code>, <code>info &lt;id&gt;</code>, <code>resolve &lt;template-name&gt;</code>, <code>enable</code> / <code>disable &lt;id&gt;</code></td>
+</tr>
+<tr>
+<td><strong>Workflow</strong></td>
+<td>A scripted, resumable run of several steps with review gates</td>
+<td><code>speckit</code>, <code>bugfix</code>, <code>assess</code></td>
+<td><code>specify workflow list</code>, <code>run &lt;id&gt; --input key=value</code> (short form <code>-i</code>), <code>status</code>, <code>resume &lt;run_id&gt;</code></td>
+</tr>
+<tr>
+<td><strong>Bundle</strong></td>
+<td>A package of extensions, presets and workflows installed together</td>
+<td><code>bugfix</code>, <code>assess</code></td>
+<td><code>specify bundle list</code>, <code>install &lt;id&gt;</code>, <code>update &lt;id&gt;</code>, <code>remove &lt;id&gt;</code></td>
+</tr>
+</tbody></table></div>
+<div class="code-wrap term"><div class="code-head"><span class="code-label">Terminal</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">specify extension search
+specify extension add bug
+specify workflow run speckit --input spec=&quot;Add CSV export to the RoomBook bookings list&quot;</div></div>
+<p>Sources: <a href="https://github.github.io/spec-kit/extensions/cli.html" target="_blank" rel="noopener">extensions</a>, <a href="https://github.github.io/spec-kit/presets/cli.html" target="_blank" rel="noopener">presets</a>, <a href="https://github.github.io/spec-kit/workflows/cli.html" target="_blank" rel="noopener">workflows</a>, <a href="https://github.github.io/spec-kit/bundles/cli.html" target="_blank" rel="noopener">bundles</a>.</p>
+<div class="callout warning"><p><strong>⚠️ Before installing anything from a catalog:</strong> the maintainers state they &quot;do <strong>not review, audit, endorse, or support the extension code itself</strong>&quot;. Community entries install by URL, and custom workflow steps &quot;contain executable Python&quot;. Read the source, and try it in a copy of your repository. Unattended Copilot workflow runs add an allow-all-tools flag by default unless you set <code>SPECKIT_COPILOT_ALLOW_ALL_TOOLS=0</code>.</p></div>
+<p>Two smaller commands exist for tooling: <code>specify artifact list --json</code> and <code>specify artifact info &lt;name&gt; --json</code> (read-only inspection of installed commands and templates), and <code>specify mcp</code> (an experimental, read-only MCP server). You can ignore both while learning.</p>
+</div>
+<div class="section">
+<h2 id="4-spec-kit-optional-extension-commands-agent-chat">4. Spec Kit — optional extension commands (agent chat)</h2>
+<p>Install the extension in the terminal first (<code>specify extension add &lt;name&gt;</code>), then use its commands in chat.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Extension</th>
+<th>Commands</th>
+<th>What you get</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>bug</strong></td>
+<td><code>/speckit-bug-assess &quot;&lt;symptom&gt;&quot; slug=&lt;name&gt;</code> → <code>/speckit-bug-fix slug=&lt;name&gt;</code> → <code>/speckit-bug-test slug=&lt;name&gt;</code></td>
+<td>Records in <code>.specify\bugs\&lt;slug&gt;\</code>. Only the fix stage edits code. Final verdict: verified, partial or failed</td>
+</tr>
+<tr>
+<td><strong>assess</strong></td>
+<td><code>/speckit-assess-intake &quot;&lt;idea&gt;&quot; slug=&lt;name&gt;</code> → <code>-research</code> → <code>-define</code> → <code>-shape</code> → <code>-decide</code></td>
+<td>Records in <code>.specify\assessments\&lt;slug&gt;\</code>. No code changes. Verdict: go, needs-clarification or kill</td>
+</tr>
+<tr>
+<td><strong>git</strong></td>
+<td>Initialize a repository, create a feature branch, validate, detect the remote URL, commit</td>
+<td>Automatic feature branches before <code>specify</code>; optional auto-commit hooks, all off by default</td>
+</tr>
+<tr>
+<td><strong>github</strong></td>
+<td>Tasks-to-issues</td>
+<td>Creates GitHub issues from <code>tasks.md</code>. Needs a GitHub remote and the GitHub MCP server</td>
+</tr>
+<tr>
+<td><strong>agent-context</strong></td>
+<td>Update agent context</td>
+<td>Keeps the agent&#39;s context file in step with the project</td>
+</tr>
+</tbody></table></div>
+<p>Guides: <a href="https://github.github.io/spec-kit/guides/bugfix.html" target="_blank" rel="noopener">bug fixing</a>, <a href="https://github.github.io/spec-kit/guides/assessment.html" target="_blank" rel="noopener">idea assessment</a>. Worked examples are on the <a href="sdd-existing-projects.html#7-not-every-backlog-item-needs-a-spec">existing-projects page</a>.</p>
+</div>
+<div class="section">
+<h2 id="5-spec-kit-files-folders-and-settings">5. Spec Kit — files, folders and settings</h2>
+<p>The &quot;Commit it?&quot; column is this guide&#39;s recommendation, except where the documentation says a file is machine-local.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Path</th>
+<th>What it holds</th>
+<th>Commit it?</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.specify\memory\constitution.md</code></td>
+<td>Project principles</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>.specify\templates\</code>, <code>.specify\scripts\</code></td>
+<td>Managed templates and helper scripts</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>.specify\templates\overrides\</code></td>
+<td>Your own template changes, which survive upgrades</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>.specify\feature.json</code></td>
+<td>Pointer to the active feature on <strong>this machine</strong></td>
+<td>No. Ignored by the managed <code>.specify\.gitignore</code></td>
+</tr>
+<tr>
+<td><code>.specify\extensions\</code>, <code>.specify\presets\</code></td>
+<td>Installed extensions and presets</td>
+<td>Yes, except per-machine <code>local-config.yml</code></td>
+</tr>
+<tr>
+<td><code>.specify\bugs\</code>, <code>.specify\assessments\</code></td>
+<td>Records from the bug and assessment extensions</td>
+<td>Team decision</td>
+</tr>
+<tr>
+<td><code>.github\skills\speckit-*\SKILL.md</code></td>
+<td>The Copilot skills</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>specs\&lt;NNN-name&gt;\</code></td>
+<td><code>spec.md</code>, <code>plan.md</code>, <code>tasks.md</code>, checklists and design files for one feature</td>
+<td>Team decision. See <a href="sdd-production.html#2-decide-how-specifications-age">how specs age</a></td>
+</tr>
+</tbody></table></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Environment variable</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>SPECIFY_FEATURE_DIRECTORY</code></td>
+<td>Select the feature folder explicitly; wins over <code>feature.json</code>. PowerShell: <code>$env:SPECIFY_FEATURE_DIRECTORY = &quot;specs/001-my-feature&quot;</code>, set before you start the agent</td>
+</tr>
+<tr>
+<td><code>SPECIFY_INIT_DIR</code></td>
+<td>Select which project (folder containing <code>.specify\</code>) a command applies to, for monorepos. Not used by <code>init</code></td>
+</tr>
+<tr>
+<td><code>SPECIFY_FEATURE_NO_PERSIST</code></td>
+<td>Set to <code>1</code> so scripts do not overwrite the shared <code>feature.json</code></td>
+</tr>
+<tr>
+<td><code>SPECIFY_FEATURE</code></td>
+<td>A label only. It does not select a folder</td>
+</tr>
+<tr>
+<td><code>SPECKIT_COPILOT_ALLOW_ALL_TOOLS</code></td>
+<td>Set to <code>0</code> to stop unattended Copilot workflow runs from allowing all tools</td>
+</tr>
+<tr>
+<td><code>SPECKIT_INTEGRATION_DEFAULT</code></td>
+<td>Which integration <code>init</code> uses when it cannot ask</td>
+</tr>
+</tbody></table></div>
+<p><strong>Upgrade in three steps</strong> (<a href="https://github.github.io/spec-kit/upgrade.html" target="_blank" rel="noopener">upgrade guide</a>): update the CLI (<code>specify self upgrade</code>, or reinstall the pinned version with <code>uv tool install specify-cli --force --from git+https://github.com/github/spec-kit.git@vX.Y.Z</code>), then <code>specify integration upgrade copilot</code> in each project, then <code>specify extension update</code> if you use extensions. Your <code>specs\</code>, source code and constitution are not touched. Restart the editor afterwards.</p>
+</div>
+<div class="section">
+<h2 id="6-squad-terminal-commands">6. Squad — terminal commands</h2>
+<p>Squad&#39;s CLI is large. The first table is everything a beginner needs for the Copilot-hosted path used in this guide.</p>
+<h3 id="start-here">Start here</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Purpose</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>squad init</code></td>
+<td>Add the coordinator and <code>.squad\</code> scaffolding to the repository. Safe to repeat</td>
+<td><code>squad init --no-workflows --no-vscode-default</code></td>
+</tr>
+<tr>
+<td><code>copilot --agent squad</code></td>
+<td>Start a session with the Squad coordinator (this is a Copilot CLI command)</td>
+<td><code>copilot --agent squad</code></td>
+</tr>
+<tr>
+<td><code>squad doctor</code></td>
+<td>Check that the setup is intact</td>
+<td><code>squad doctor</code></td>
+</tr>
+<tr>
+<td><code>squad status</code> / <code>squad health</code></td>
+<td>Quick status and health report</td>
+<td><code>squad health --json</code></td>
+</tr>
+<tr>
+<td><code>squad upgrade</code></td>
+<td>Refresh Squad-owned files in this project after a CLI update. It can also <strong>add</strong> workflow files, even if you initialized with <code>--no-workflows</code>; check the dry run</td>
+<td><code>squad upgrade --dry-run</code></td>
+</tr>
+<tr>
+<td><code>squad upgrade --self</code></td>
+<td>Update the CLI itself</td>
+<td><code>squad upgrade --self</code></td>
+</tr>
+<tr>
+<td><code>squad roles</code></td>
+<td>Browse the built-in role catalogue</td>
+<td><code>squad roles --search test</code></td>
+</tr>
+<tr>
+<td><code>squad cast</code></td>
+<td>Add a team member from the terminal (alias: <code>hire</code>)</td>
+<td><code>squad cast --name Ada --role &quot;Backend developer&quot;</code></td>
+</tr>
+<tr>
+<td><code>squad roster add</code> / <code>remove</code></td>
+<td>Add the reviewers <code>rai</code> and <code>fact-checker</code> to a team upgraded from an older version; <code>remove</code> only undoes what <code>roster add</code> added</td>
+<td><code>squad roster add fact-checker --dry-run</code></td>
+</tr>
+<tr>
+<td><code>squad nap</code></td>
+<td>Compress and tidy team memory</td>
+<td><code>squad nap --dry-run</code></td>
+</tr>
+<tr>
+<td><code>squad export</code> / <code>squad import &lt;file&gt;</code></td>
+<td>Save a team to a file / load one</td>
+<td><code>squad export --out team.json</code></td>
+</tr>
+</tbody></table></div>
+<p><strong>Useful <code>init</code> options:</strong> <code>--no-workflows</code> skips installing GitHub Actions workflows; <code>--no-vscode-default</code> leaves your VS Code default chat mode alone; <code>--roles</code> and <code>--preset &lt;name&gt;</code> start from predefined roles; <code>--client &lt;list&gt;</code> sets up hosts other than Copilot.</p>
+<h3 id="automation-and-scale-add-later-deliberately">Automation and scale (add later, deliberately)</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Purpose</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>squad triage</code> (alias <code>watch</code>)</td>
+<td>&quot;Ralph&quot; work loop: polls GitHub issues and routes them</td>
+<td>Add <code>--execute</code> only when you want it to act. Stop with a <code>.squad\ralph-stop</code> file</td>
+</tr>
+<tr>
+<td><code>squad loop</code></td>
+<td>Run a prepared <code>loop.md</code> prompt repeatedly</td>
+<td>The file must be marked as configured first</td>
+</tr>
+<tr>
+<td><code>squad schedule list</code> / <code>run</code> / <code>status</code></td>
+<td>Scheduled jobs</td>
+<td></td>
+</tr>
+<tr>
+<td><code>squad copilot</code></td>
+<td>Add or remove the Copilot coding agent as a team member</td>
+<td><code>--auto-assign</code> needs a repository secret</td>
+</tr>
+<tr>
+<td><code>squad economy on</code> / <code>off</code></td>
+<td>Prefer cheaper models</td>
+<td></td>
+</tr>
+<tr>
+<td><code>squad cost</code></td>
+<td>Usage summary</td>
+<td><strong>Not populated</strong> for Copilot CLI or VS Code sessions; use Copilot&#39;s own usage reporting</td>
+</tr>
+<tr>
+<td><code>squad memory …</code>, <code>squad lockout …</code></td>
+<td>Inspect memory; manage the reviewer lock-out protocol</td>
+<td>Advanced</td>
+</tr>
+<tr>
+<td><code>squad upstream add</code> / <code>list</code> / <code>sync</code></td>
+<td>Inherit conventions from a shared source</td>
+<td>After a 2.0 upgrade, run <code>squad upstream sync</code></td>
+</tr>
+<tr>
+<td><code>squad preset list</code> / <code>apply</code> / <code>save</code></td>
+<td>Reusable team presets</td>
+<td></td>
+</tr>
+<tr>
+<td><code>squad plugin marketplace …</code>, <code>squad skill …</code></td>
+<td>Add plugins and skills from external sources</td>
+<td>Review before installing; treat like any third-party code</td>
+</tr>
+<tr>
+<td><code>squad subsquads</code>, <code>squad registry</code>, <code>squad discover</code>, <code>squad delegate</code></td>
+<td>Several squads working together</td>
+<td>Advanced</td>
+</tr>
+<tr>
+<td><code>squad migrate</code></td>
+<td>Convert between formats or from the old <code>.ai-team</code> folder. The folder rename is <strong>not</strong> previewed by <code>--dry-run</code></td>
+<td>See the <a href="squad.html#10-upgrading-and-migrating-from-older-squad-setups">Squad page</a></td>
+</tr>
+<tr>
+<td><code>squad scrub-emails .squad</code></td>
+<td>Remove e-mail addresses from team files. Name the folder: without it, the command targets the legacy <code>.ai-team</code> folder</td>
+<td>Worth running before <code>squad export</code> (this guide&#39;s suggestion)</td>
+</tr>
+</tbody></table></div>
+<p><strong>Deprecated or removed in 2.0:</strong> the bare <code>squad</code> interactive shell and <code>squad shell</code> (use <code>copilot --agent squad</code>), <code>squad start</code> and <code>squad rc</code>, and the personal-squad, consult-mode and <code>--global</code> features. Older tutorials that rely on them will not work as written.</p>
+<p>Sources: <a href="https://github.github.io/squad/docs/reference/cli/" target="_blank" rel="noopener">CLI reference</a> and the <a href="https://github.com/github/squad/blob/v2.0.0/packages/squad-cli/src/cli-entry.ts" target="_blank" rel="noopener">v2.0.0 command source</a>. The reference page lists fewer commands than the program accepts; commands that appear only in the source are left out of this table or marked advanced.</p>
+</div>
+<div class="section">
+<h2 id="7-squad-talking-to-the-team-agent-chat">7. Squad — talking to the team (agent chat)</h2>
+<p>You direct the team in plain sentences, and the coordinator recognizes certain patterns. Squad adds a single slash command, <code>/squad</code>, which opens its command menu; it exists only if Squad&#39;s starter skills were installed (see the caveat on the <a href="squad.html#2-install-and-initialize">Squad page</a>).</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>You want to…</th>
+<th>Say something like</th>
+<th>What happens</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>See what is possible</td>
+<td>&quot;squad commands&quot; or <code>/squad</code></td>
+<td>A categorized menu. Needs Squad&#39;s starter skills</td>
+</tr>
+<tr>
+<td>Ask one member</td>
+<td>&quot;Ada, review the booking endpoint&quot;</td>
+<td>That member answers; names are case-insensitive</td>
+</tr>
+<tr>
+<td>Ask everyone</td>
+<td>&quot;Team, review the codebase and tell me what you find&quot;</td>
+<td>Work fans out in parallel</td>
+</tr>
+<tr>
+<td>Let Squad choose</td>
+<td>Any general request</td>
+<td>Routed using <code>.squad\routing.md</code></td>
+</tr>
+<tr>
+<td>Set a standing rule</td>
+<td>&quot;Always use the existing test runner.&quot; &quot;Never log personal data.&quot;</td>
+<td>Saved as a directive in the decisions inbox, then merged into <code>decisions.md</code></td>
+</tr>
+<tr>
+<td>Add or remove a member</td>
+<td>&quot;I need a DevOps person.&quot; &quot;Remove the designer.&quot;</td>
+<td>Roster changes; removed members are archived, not deleted</td>
+</tr>
+<tr>
+<td>Add a human</td>
+<td>&quot;Add Sarah as design reviewer&quot;</td>
+<td>Squad pauses for that person&#39;s input and you relay it</td>
+</tr>
+<tr>
+<td>Run a ceremony</td>
+<td>&quot;Run a design meeting.&quot; &quot;Run a retro.&quot;</td>
+<td>Design review before shared work; retrospective after failures</td>
+</tr>
+<tr>
+<td>Work from issues</td>
+<td>&quot;Show the backlog.&quot; &quot;Work on #12.&quot;</td>
+<td>Uses GitHub issues through <code>gh</code></td>
+</tr>
+<tr>
+<td>Read an existing spec</td>
+<td>&quot;Read the PRD at docs\product-spec.md and suggest implementation slices&quot;</td>
+<td>Ingests the document; it is not a tracker</td>
+</tr>
+<tr>
+<td>Change models</td>
+<td>&quot;Use a stronger model for the planner in this session&quot;</td>
+<td>Check the label on each spawned agent; host support varies</td>
+</tr>
+<tr>
+<td>Start or stop monitoring</td>
+<td>&quot;Ralph, go.&quot; &quot;Ralph, status.&quot; &quot;Ralph, idle.&quot;</td>
+<td>Controls the work monitor</td>
+</tr>
+<tr>
+<td>Tidy memory</td>
+<td>Run <code>squad nap</code> in the terminal</td>
+<td>Compresses and tidies team memory. (The docs also describe &quot;Team, reskill&quot;, but say it is not yet shipped through the normal installation)</td>
+</tr>
+</tbody></table></div>
+<p><strong>Built-in members.</strong> A new v2.0.0 team has four: <em>Scribe</em> silently records decisions, <em>Ralph</em> monitors the work queue, <em>Rai</em> is a responsible-AI reviewer and <em>Fact Checker</em> verifies claims. On a team upgraded from an older version, Rai and Fact Checker are opt-in and are added with <code>squad roster add</code>. Their approval is review input, not a release decision.</p>
+</div>
+<div class="section">
+<h2 id="8-squad-files-and-folders">8. Squad — files and folders</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Path</th>
+<th>What it holds</th>
+<th>Commit it?</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.squad\team.md</code></td>
+<td>Roster and roles, including human members</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>.squad\routing.md</code></td>
+<td>Who handles which kind of work</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>.squad\decisions.md</code></td>
+<td>Shared decisions and directives, append-only</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>.squad\decisions\inbox\</code></td>
+<td>Proposed decisions waiting to be merged</td>
+<td>No (ignored)</td>
+</tr>
+<tr>
+<td><code>.squad\agents\&lt;name&gt;\charter.md</code>, <code>history.md</code></td>
+<td>Each member&#39;s role description and memory</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>.squad\casting\</code></td>
+<td>Name and role registry. Do not edit by hand</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>.squad\skills\</code>, <code>.squad\ceremonies.md</code>, <code>.squad\config.json</code></td>
+<td>Skills, ceremony settings, model and client settings</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>.squad\log\</code>, <code>orchestration-log\</code>, <code>sessions\</code>, <code>.scratch\</code>, <code>.cache\</code></td>
+<td>Run logs and temporary state</td>
+<td>No (ignored)</td>
+</tr>
+<tr>
+<td><code>.github\agents\squad.agent.md</code></td>
+<td>The coordinator. Owned by Squad; do not edit</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>.github\workflows\squad-*.yml</code>, <code>sync-squad-labels.yml</code></td>
+<td>Optional automation; skipped by <code>init --no-workflows</code></td>
+<td>Only after review</td>
+</tr>
+<tr>
+<td><code>.mcp.json</code> (repository root)</td>
+<td>Registers Squad&#39;s state server</td>
+<td>Yes, after review</td>
+</tr>
+<tr>
+<td><code>.gitattributes</code></td>
+<td>Merge rules so decision and history files combine instead of conflicting</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>.vscode\settings.json</code></td>
+<td>Sets Squad as the default chat mode unless you used <code>--no-vscode-default</code></td>
+<td>Your choice</td>
+</tr>
+</tbody></table></div>
+<p>Review team files before committing: memory can contain internal decisions, paths, copied prompts or personal data.</p>
+</div>
+<div class="section">
+<h2 id="9-which-command-when">9. Which command when?</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Reach for</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>I have an idea but it is vague</td>
+<td>Assessment extension: <code>/speckit-assess-intake</code></td>
+</tr>
+<tr>
+<td>I know what I want to build</td>
+<td><code>/speckit-specify</code>, then <code>/speckit-clarify</code></td>
+</tr>
+<tr>
+<td>The spec feels incomplete</td>
+<td><code>/speckit-clarify</code>, <code>/speckit-checklist</code></td>
+</tr>
+<tr>
+<td>I want to choose the technology</td>
+<td><code>/speckit-plan</code></td>
+</tr>
+<tr>
+<td>Spec, plan and tasks may disagree</td>
+<td><code>/speckit-analyze</code></td>
+</tr>
+<tr>
+<td>The agent says it is finished</td>
+<td>Run the tests yourself, read the diff, then <code>/speckit-converge</code></td>
+</tr>
+<tr>
+<td>The requirement changed</td>
+<td>Edit <code>spec.md</code>, update plan and tasks, <code>/speckit-analyze</code>, implement, converge</td>
+</tr>
+<tr>
+<td>A bug was reported</td>
+<td>Bug extension: <code>/speckit-bug-assess</code>, <code>-fix</code>, <code>-test</code></td>
+</tr>
+<tr>
+<td>A skill is working on the wrong feature</td>
+<td>Check <code>.specify\feature.json</code></td>
+</tr>
+<tr>
+<td>I upgraded the Spec Kit CLI</td>
+<td><code>specify integration upgrade copilot</code> in each project</td>
+</tr>
+<tr>
+<td>The work splits into independent parts</td>
+<td>Hand reviewed tasks to Squad: <code>copilot --agent squad</code></td>
+</tr>
+<tr>
+<td>Squad seems broken</td>
+<td><code>squad doctor</code>, then check <code>.github\agents\squad.agent.md</code> exists</td>
+</tr>
+<tr>
+<td>I upgraded the Squad CLI</td>
+<td><code>squad upgrade</code>, then <code>squad doctor</code>, in each project</td>
+</tr>
+<tr>
+<td>The team&#39;s memory is getting long or contradictory</td>
+<td><code>squad nap --dry-run</code>, then correct <code>decisions.md</code></td>
+</tr>
+</tbody></table></div>
+</div>
+<div class="section">
+<h2 id="check-your-understanding">Check Your Understanding</h2>
+<p><strong>1. A tutorial says to type <code>/speckit.plan</code>, but nothing happens in Copilot Chat. What is the likely reason?</strong></p>
+<ul>
+<li>A) It is the dotted spelling; the default Copilot skills layout uses hyphens</li>
+<li>B) A command that starts with a slash has to be typed in the terminal, not in chat</li>
+<li>C) The plan command only works after <code>/speckit-clarify</code> has been run</li>
+<li>D) The plan command has moved into the optional <code>github</code> extension</li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> A — That is the dotted spelling. The default Copilot skills layout uses hyphens: <code>/speckit-plan</code>. Type <code>/speckit</code> and choose from the list. A command that starts with a slash belongs in chat, and only <code>specify</code> is strictly required before <code>plan</code>.</p></div></details>
+<p><strong>2. Which of the nine workflow commands writes to your source code?</strong></p>
+<ul>
+<li>A) <code>/speckit-constitution</code></li>
+<li>B) <code>/speckit-analyze</code></li>
+<li>C) <code>/speckit-converge</code></li>
+<li>D) <code>/speckit-implement</code></li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> D — None of them changes your source code except <code>implement</code> (and, in the bug extension, the fix stage). <code>analyze</code> is read-only, and <code>converge</code> can only append tasks to <code>tasks.md</code>.</p></div></details>
+<p><strong>3. You updated the <code>specify</code> CLI. Are the skills in your project updated too?</strong></p>
+<ul>
+<li>A) Yes. The skills are part of the CLI, so they change with it</li>
+<li>B) No. Run <code>specify integration upgrade copilot</code> in the project</li>
+<li>C) No. Run <code>specify self check</code> in the project to refresh them</li>
+<li>D) Yes, as soon as you have restarted the editor</li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — The CLI and the project&#39;s generated files are separate. Run <code>specify integration upgrade copilot</code> in the project and review the diff. <code>specify self check</code> only shows whether a newer release exists.</p></div></details>
+<p><strong>4. Why is <code>squad cost</code> not a reliable bill for the workflow in this guide?</strong></p>
+<ul>
+<li>A) It only counts sessions after <code>squad economy on</code></li>
+<li>B) It only counts runs that were started with <code>--execute</code></li>
+<li>C) It is not populated by Copilot CLI or VS Code sessions</li>
+<li>D) It was removed from the CLI in version 2.0</li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> C — Its ledger is not written by Copilot CLI or VS Code sessions. Use Copilot&#39;s own usage reporting.</p></div></details>
+<p><strong>5. You suspect that the spec, the plan and the tasks contradict each other. What does <code>/speckit-analyze</code> do?</strong></p>
+<ul>
+<li>A) It reports the contradictions and writes nothing</li>
+<li>B) It rewrites the plan and the tasks to match the spec</li>
+<li>C) It appends the remaining work to <code>tasks.md</code></li>
+<li>D) It asks five questions and updates <code>spec.md</code></li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> A — <code>analyze</code> reports contradictions between spec, plan and tasks and is read-only; it does not fix anything. Appending work to <code>tasks.md</code> is what <code>converge</code> does, and the questions belong to <code>clarify</code>.</p></div></details>
+</div>
+<div class="done-row"><button class="done-btn" type="button" aria-pressed="false">Mark this page as done</button></div>
+<div class="pager">
+<a class="pager-prev" href="sdd-production.html"><span>← Previous</span><strong>18. Shipping &amp; Reuse</strong></a>
+<a class="pager-next" href="glossary.html"><span>Next →</span><strong>Glossary</strong></a>
+</div>
+</main>
+<footer class="site-footer">AI Learn · A personal learning project by Emanuel Loghin · <a href="about.html">About &amp; feedback</a> · Based on official docs and open course material · Not affiliated with any model provider</footer>
+</div>
+<aside class="toc-rail" aria-label="On this page">
+<div class="toc-title">On this page</div><nav><a href="#1-how-to-read-this-page">1. How to read this page</a>
+<a href="#2-spec-kit-the-nine-workflow-commands-agent-chat">2. Spec Kit — the nine workflow commands (agent chat)</a>
+<a href="#3-spec-kit-terminal-commands">3. Spec Kit — terminal commands</a>
+<a href="#4-spec-kit-optional-extension-commands-agent-chat">4. Spec Kit — optional extension commands (agent chat)</a>
+<a href="#5-spec-kit-files-folders-and-settings">5. Spec Kit — files, folders and settings</a>
+<a href="#6-squad-terminal-commands">6. Squad — terminal commands</a>
+<a href="#7-squad-talking-to-the-team-agent-chat">7. Squad — talking to the team (agent chat)</a>
+<a href="#8-squad-files-and-folders">8. Squad — files and folders</a>
+<a href="#9-which-command-when">9. Which command when?</a>
+<a href="#check-your-understanding">Check Your Understanding</a></nav>
+</aside>
+</div>
+<div class="scrim"></div>
+<script src="site.js"></script>
+</body>
+</html>

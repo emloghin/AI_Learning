@@ -216,7 +216,7 @@ Fine-tuning is often the *last* tool to reach for, not the first. It needs good 
 | A narrow, repetitive task at high volume (e.g. classification) | **fine-tuning** a smaller model | can be cheaper and faster than a big model with long prompts |
 | Teach brand-new knowledge that changes often | **RAG** (not fine-tuning) | fine-tuned facts go stale and can still be hallucinated |
 
-> **✅ Key takeaway:** Prompting → RAG → fine-tuning, in that order. Move to the next step only when the previous one clearly falls short. See [Chapter 6](using-ai.md) for prompting and RAG in practice.
+> **✅ Key takeaway:** Prompting → RAG → fine-tuning, in that order. Move to the next step only when the previous one clearly falls short. See [Chapter 6](using-ai.md) for prompting and [Chapter 7](connecting-ai.md) for RAG in practice.
 
 ## 9. Distillation: Teacher and Student
 
@@ -292,7 +292,7 @@ How do we know if a model is good? Labs publish scores on **benchmarks** — sta
 - **Teaching to the test:** once a number becomes a target, labs optimize for it, and it can stop reflecting real-world quality.
 - **Human-vote leaderboards** capture what people *like*, which can reward style (length, formatting, confidence) as well as correctness.
 
-> **✅ Key takeaway:** Treat benchmarks as a rough first filter. The best evaluation is your own: a small set of real examples from **your** task, scored the same way for every model you try. See [Chapter 8](best-practices.md).
+> **✅ Key takeaway:** Treat benchmarks as a rough first filter. The best evaluation is your own: a small set of real examples from **your** task, scored the same way for every model you try. See [Chapter 9](best-practices.md).
 
 ## 13. Knowledge Cutoff
 
@@ -314,7 +314,7 @@ Facts close to the cutoff are often weaker too, because less had been written ab
 
 There are real trade-offs. A model tuned to refuse too much becomes unhelpful ("over-refusal"); one that refuses too little can be misused. And no training is perfect: **jailbreaks** (cleverly worded prompts) and **prompt injection** (malicious instructions hidden in documents or web pages the model reads) can still get through, which is why safety is layered rather than left to the model alone.
 
-> **✅ Key takeaway:** Safety comes from many layers working together — careful data, alignment training, testing, and safeguards in the application. When you build with models, you are responsible for the application layer. See [Chapter 8](best-practices.md).
+> **✅ Key takeaway:** Safety comes from many layers working together — careful data, alignment training, testing, and safeguards in the application. When you build with models, you are responsible for the application layer. See [Chapter 9](best-practices.md).
 
 ## Recap
 

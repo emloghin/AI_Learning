@@ -1,10 +1,10 @@
 # AI at Work: From Knowing to Doing
 
-**Chapter 9 · AI at Work**
+**Chapter 10 · AI at Work**
 
 Courses teach you what AI can do; daily practice is what turns that into a skill people notice. This chapter is a practical playbook: find the tasks in your own week where AI helps, use a simple delegate-review-refine loop, measure the effect, build a personal prompt library, and even use an AI assistant to design your own learning plan.
 
-> **📘 In plain words:** Chapters 1–8 explain the engine. This chapter is about driving: picking real trips, building the habit, and showing where you got to.
+> **📘 In plain words:** Chapters 1–9 explain the engine. This chapter is about driving: picking real trips, building the habit, and showing where you got to.
 
 ## 1. Why practice beats certificates
 
@@ -47,7 +47,7 @@ Almost every useful work task fits one of these eight patterns:
 
 | Role | AI-ready tasks to try first |
 |---|---|
-| **Developer** | Explain unfamiliar code, write unit tests, draft commit messages and PR descriptions, convert scripts between languages (see [Chapter 8, §10](best-practices.md)) |
+| **Developer** | Explain unfamiliar code, write unit tests, draft commit messages and PR descriptions, convert scripts between languages (see [Chapter 9, §10](best-practices.md)) |
 | **Consultant / analyst** | Summarise requirement documents, draft workshop agendas, turn interview notes into themes, review a proposal for gaps |
 | **Project manager / scrum master** | Turn meeting notes into action lists, draft release notes, prepare risk registers, rewrite updates for different audiences |
 | **Tester** | Generate test-case ideas from user stories, find edge cases, turn bug reports into clear reproduction steps |
@@ -74,10 +74,10 @@ Treat an AI assistant like a fast, well-read new colleague who has never seen yo
 Before using any AI tool on work material, know your organisation's rules. In general:
 
 - **Use approved tools only.** Company-approved assistants usually come with enterprise data controls (no training on your data, retention limits). Personal accounts usually do not.
-- **Do not paste what you may not share.** Customer data, personal data, credentials, secrets and confidential documents stay out unless the tool and your policy explicitly allow it. Use synthetic or anonymised examples instead (see [Chapter 8, §5](best-practices.md)).
+- **Do not paste what you may not share.** Customer data, personal data, credentials, secrets and confidential documents stay out unless the tool and your policy explicitly allow it. Use synthetic or anonymised examples instead (see [Chapter 9, §5](best-practices.md)).
 - **Be transparent.** If AI substantially wrote something, say so where your policy or your audience expects it.
 - **Keep a human decision.** AI output is a draft. Decisions about people, money, contracts or compliance are made by a person who has checked the facts.
-- **Know the regulation.** In the EU, [Article 4 of the AI Act](https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-4) requires providers and deployers of AI systems — which includes most organisations that use AI at work — to take measures to support the AI literacy of their staff. Since the 2026 "Digital Omnibus" amendment, no specific level is mandated, but the obligation remains — one more reason structured learning is worth the time.
+- **Know the regulation.** In the EU, [Article 4 of the AI Act](https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-4) requires providers and deployers of AI systems — which includes most organisations that use AI at work — to take measures to support the AI literacy of their staff. Since the 2026 "Digital Omnibus" amendment, no specific level is mandated, but the obligation, which has applied since 2 February 2025, remains ([Commission AI literacy Q&A](https://digital-strategy.ec.europa.eu/en/faqs/ai-literacy-questions-answers)) — one more reason structured learning is worth the time.
 
 ## 5. Measure the effect
 
@@ -213,4 +213,4 @@ Then use the assistant as a tutor while you learn:
 
 > **✅ Answer:** B — Personal data needs an approved tool and a policy that allows it; otherwise use anonymised or synthetic input. Removing one name rarely anonymises a document.
 
-[← Chapter 8: Best Practices](best-practices.md) · [Chapter 10: Spec-Driven Development →](spec-driven-development.md)
+[← Chapter 9: Best Practices](best-practices.md) · [Chapter 11: Equip Your Agent →](agent-toolkit.md)

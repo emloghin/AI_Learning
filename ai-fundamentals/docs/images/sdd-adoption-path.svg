@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 470" role="img" aria-labelledby="adopt-title adopt-desc">
+  <title id="adopt-title">Adopting Spec Kit in an existing project, phase by phase</title>
+  <desc id="adopt-desc">Six phases. Prepare a safe baseline, add Spec Kit files on a branch, write a constitution from evidence, run one bounded change through the workflow, decide how specs age, then roll out to the team. Documenting existing modules is an optional side step. The application code is not rewritten at any point.</desc>
+  <defs>
+    <marker id="adopt-arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect width="760" height="470" rx="16" fill="#f8fafc"/>
+  <g font-family="Inter,sans-serif" text-anchor="middle">
+    <text x="380" y="34" font-size="18" font-weight="700" fill="#0f172a">Add the workflow around your code. Do not rebuild the code.</text>
+
+    <rect x="25" y="60" width="220" height="104" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+    <text x="135" y="88" font-size="15" font-weight="700" fill="#1e3a8a">0. Prepare</text>
+    <text x="135" y="113" font-size="13" fill="#1e3a8a">Clean Git state, new branch</text>
+    <text x="135" y="135" font-size="13" fill="#1e3a8a">Record today's test results</text>
+
+    <rect x="270" y="60" width="220" height="104" rx="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+    <text x="380" y="88" font-size="15" font-weight="700" fill="#4c1d95">1. Add Spec Kit</text>
+    <text x="380" y="113" font-size="13" fill="#4c1d95">specify init --here --force</text>
+    <text x="380" y="135" font-size="13" fill="#4c1d95">Review the diff, then commit</text>
+
+    <rect x="515" y="60" width="220" height="104" rx="12" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+    <text x="625" y="88" font-size="15" font-weight="700" fill="#78350f">2. Constitution</text>
+    <text x="625" y="113" font-size="13" fill="#78350f">Rules that are already true</text>
+    <text x="625" y="135" font-size="13" fill="#78350f">Each rule cites its evidence</text>
+
+    <rect x="515" y="220" width="220" height="104" rx="12" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+    <text x="625" y="248" font-size="15" font-weight="700" fill="#064e3b">3. First bounded change</text>
+    <text x="625" y="273" font-size="13" fill="#064e3b">Specify, plan, tasks,</text>
+    <text x="625" y="295" font-size="13" fill="#064e3b">implement, converge</text>
+
+    <rect x="270" y="220" width="220" height="104" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+    <text x="380" y="248" font-size="15" font-weight="700" fill="#1e3a8a">4. Decide how specs age</text>
+    <text x="380" y="273" font-size="13" fill="#1e3a8a">What you keep and commit</text>
+    <text x="380" y="295" font-size="13" fill="#1e3a8a">Write the rule down</text>
+
+    <rect x="25" y="220" width="220" height="104" rx="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+    <text x="135" y="248" font-size="15" font-weight="700" fill="#4c1d95">5. Roll out to the team</text>
+    <text x="135" y="273" font-size="13" fill="#4c1d95">One team, a few changes</text>
+    <text x="135" y="295" font-size="13" fill="#4c1d95">Measure, then widen</text>
+
+    <rect x="120" y="372" width="520" height="64" rx="12" fill="#ffffff" stroke="#64748b" stroke-width="2" stroke-dasharray="6 4"/>
+    <text x="380" y="398" font-size="14" font-weight="700" fill="#334155">Optional: document one existing module at a time</text>
+    <text x="380" y="420" font-size="13" fill="#475569">Only where it pays off. Treat generated "as-built" specs as drafts to verify.</text>
+  </g>
+  <g fill="none" stroke="#475569" stroke-width="2" marker-end="url(#adopt-arrow)">
+    <path d="M245,112 H266"/>
+    <path d="M490,112 H511"/>
+    <path d="M625,164 V216"/>
+    <path d="M515,272 H494"/>
+    <path d="M270,272 H249"/>
+    <path d="M380,324 V368" stroke-dasharray="5 4"/>
+  </g>
+</svg>

@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spec Kit in an Existing Project: Adoption and Migration — AI Learn</title>
+<script>try{var t=localStorage.getItem('ailearn:theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="sdd-existing-projects">
+<div class="read-progress" aria-hidden="true"><div></div></div>
+<header class="topbar">
+  <button class="icon-btn menu-btn" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
+  <a class="header-logo" href="index.html"><span>AI&nbsp;</span>Learn</a>
+  <span class="topbar-crumb">Part 4 · Build with specs <b>›</b> 15. Existing Projects</span>
+  <span class="topbar-progress" title="Pages you marked as done"></span>
+  <button class="icon-btn theme-btn" type="button" aria-label="Switch between light and dark theme">◐</button>
+</header>
+<div class="shell">
+<aside class="sidebar" aria-label="Site navigation">
+<nav>
+<div class="nav-group">
+<div class="nav-group-title">Start here<span class="nav-count"></span></div>
+<a href="index.html" data-page="index">Home</a>
+<a href="study-plan.html" data-page="study-plan">Study Plan</a>
+<a href="setup.html" data-page="setup">Setup &amp; Git Basics</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 1 · Understand AI<span class="nav-count"></span></div>
+<a href="foundations.html" data-page="foundations">1. Foundations</a>
+<a href="neural-networks.html" data-page="neural-networks">2. Neural Networks</a>
+<a href="transformers.html" data-page="transformers">3. Transformers &amp; LLMs</a>
+<a href="training.html" data-page="training">4. Training &amp; Tuning</a>
+<a href="models.html" data-page="models">5. Model Landscape</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 2 · Use AI well<span class="nav-count"></span></div>
+<a href="using-ai.html" data-page="using-ai">6. Using Models</a>
+<a href="connecting-ai.html" data-page="connecting-ai">7. Connecting Models</a>
+<a href="tokens.html" data-page="tokens">8. Tokens &amp; Cost</a>
+<a href="best-practices.html" data-page="best-practices">9. Best Practices</a>
+<a href="ai-at-work.html" data-page="ai-at-work">10. AI at Work</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 3 · Work with agents<span class="nav-count"></span></div>
+<a href="agent-toolkit.html" data-page="agent-toolkit">11. Equip Your Agent</a>
+<a href="agent-guardrails.html" data-page="agent-guardrails">12. Human Control &amp; Guardrails</a>
+</div>
+<div class="nav-group current">
+<div class="nav-group-title">Part 4 · Build with specs<span class="nav-count"></span></div>
+<a href="spec-driven-development.html" data-page="spec-driven-development">13. Spec-Driven Dev</a>
+<a href="spec-kit.html" data-page="spec-kit">14. Spec Kit from Zero</a>
+<a href="sdd-existing-projects.html" data-page="sdd-existing-projects" class="active" aria-current="page">15. Existing Projects</a>
+<a href="sdd-examples.html" data-page="sdd-examples">16. Real Examples</a>
+<a href="squad.html" data-page="squad">17. Squad</a>
+<a href="sdd-production.html" data-page="sdd-production">18. Shipping &amp; Reuse</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Reference<span class="nav-count"></span></div>
+<a href="sdd-reference.html" data-page="sdd-reference">Command Reference</a>
+<a href="glossary.html" data-page="glossary">Glossary</a>
+<a href="resources.html" data-page="resources">Resources</a>
+<a href="about.html" data-page="about">About &amp; Feedback</a>
+</div>
+</nav>
+</aside>
+<div class="content">
+<section class="hero">
+  <div class="hero-badge">Chapter 15 · Existing projects</div>
+  <h1>Spec Kit in an Existing Project: Adoption and Migration</h1>
+  <p>You already have an application, a backlog and habits. This page shows how to bring spec-driven development into that project step by step: what to run, what changes in your repository, what to type in chat, and how to move a team over without stopping delivery.</p>
+  <div class="hero-meta"><span>⏱ about 25 min of reading</span><span>Page 18 of 25</span></div>
+</section>
+<main class="main">
+<details class="toc-inline"><summary>On this page</summary><nav><a href="#1-what-migration-really-means">1. What &quot;migration&quot; really means</a>
+<a href="#2-the-whole-path-on-one-screen">2. The whole path on one screen</a>
+<a href="#3-phase-0-prepare-a-safe-baseline">3. Phase 0 — Prepare a safe baseline</a>
+<a href="#4-phase-1-add-spec-kit-to-the-repository">4. Phase 1 — Add Spec Kit to the repository</a>
+<a href="#5-phase-2-write-a-constitution-from-evidence">5. Phase 2 — Write a constitution from evidence</a>
+<a href="#6-phase-3-run-your-first-change">6. Phase 3 — Run your first change</a>
+<a href="#7-not-every-backlog-item-needs-a-spec">7. Not every backlog item needs a spec</a>
+<a href="#8-phase-4-decide-how-specs-age-and-what-you-commit">8. Phase 4 — Decide how specs age and what you commit</a>
+<a href="#9-migrating-from-what-you-use-today">9. Migrating from what you use today</a>
+<a href="#10-optional-documenting-what-already-exists">10. Optional — documenting what already exists</a>
+<a href="#11-monorepos-and-several-applications-in-one-repository">11. Monorepos and several applications in one repository</a>
+<a href="#12-phase-5-roll-it-out-to-the-team">12. Phase 5 — Roll it out to the team</a>
+<a href="#13-pitfalls-and-how-to-recover">13. Pitfalls and how to recover</a>
+<a href="#14-adoption-checklist">14. Adoption checklist</a>
+<a href="#recap">Recap</a>
+<a href="#check-your-understanding">Check Your Understanding</a></nav></details>
+<div class="section">
+<div class="callout"><p><strong>🧭 The running example:</strong> RoomBook, the room-booking service built in <a href="spec-kit.html">Chapter 14</a>, is now a year old. It has real users, a backlog, and code written before anyone on the team used Spec Kit. In this chapter the team adopts Spec Kit in that repository and adds one feature: a CSV export of bookings. Read &quot;RoomBook&quot; as &quot;your existing application&quot;.</p></div>
+<div class="callout tip"><p><strong>📘 In plain words:</strong> Migrating to Spec Kit does <strong>not</strong> mean rewriting your application or writing specifications for everything it already does. You add a few folders next to your code, write down the rules your project already follows, and send your <em>next</em> change through the workflow. The old code stays as it is.</p></div>
+</div>
+<div class="section">
+<h2 id="1-what-migration-really-means">1. What &quot;migration&quot; really means</h2>
+<p>The official <a href="https://github.github.io/spec-kit/how-to/existing-projects.html" target="_blank" rel="noopener">existing-project guide</a> starts with one sentence that removes most of the fear: <em>&quot;You do not need to recreate an existing system from specifications before using Spec Kit.&quot;</em></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>You might expect</th>
+<th>What actually happens</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Spec Kit scans my code and writes specs for it</td>
+<td>No. Initialization &quot;does not rewrite your application or infer specifications for existing behavior&quot;</td>
+</tr>
+<tr>
+<td>I must document the whole system first</td>
+<td>No. The guide says not to make &quot;document the entire existing system&quot; your first feature, unless that inventory is the deliverable you actually want</td>
+</tr>
+<tr>
+<td>My source code gets changed during setup</td>
+<td>No. Setup adds Spec Kit&#39;s own files. Your code changes only later, when you approve an implementation step</td>
+</tr>
+<tr>
+<td>The team must switch on one day</td>
+<td>No. One person can run one change this way while everyone else works as before</td>
+</tr>
+<tr>
+<td>Old tickets and documents become useless</td>
+<td>No. They become the input you paste into a spec</td>
+</tr>
+</tbody></table></div>
+<p><strong>Three levels of adoption.</strong> The levels are this guide&#39;s way of organizing the choice, not official terminology. Pick the lowest level that solves your problem. You can stop at any level.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Level</th>
+<th>What you do</th>
+<th>Good for</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>1. One change</strong></td>
+<td>Run a single feature through the workflow on a branch</td>
+<td>Trying it out with no commitment</td>
+</tr>
+<tr>
+<td><strong>2. Team habit</strong></td>
+<td>Every consequential change gets a spec; small fixes use the normal process</td>
+<td>Most teams; this is the usual meaning of &quot;we migrated&quot;</td>
+</tr>
+<tr>
+<td><strong>3. As-built specs</strong></td>
+<td>Additionally document selected existing modules</td>
+<td>Risky or poorly understood areas you change often. Optional, and outside the official core workflow</td>
+</tr>
+</tbody></table></div>
+<div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 470" role="img" aria-labelledby="adopt-title adopt-desc">
+  <title id="adopt-title">Adopting Spec Kit in an existing project, phase by phase</title>
+  <desc id="adopt-desc">Six phases. Prepare a safe baseline, add Spec Kit files on a branch, write a constitution from evidence, run one bounded change through the workflow, decide how specs age, then roll out to the team. Documenting existing modules is an optional side step. The application code is not rewritten at any point.</desc>
+  <defs>
+    <marker id="adopt-arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect width="760" height="470" rx="16" fill="#f8fafc"/>
+  <g font-family="Inter,sans-serif" text-anchor="middle">
+    <text x="380" y="34" font-size="18" font-weight="700" fill="#0f172a">Add the workflow around your code. Do not rebuild the code.</text>
+
+    <rect x="25" y="60" width="220" height="104" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+    <text x="135" y="88" font-size="15" font-weight="700" fill="#1e3a8a">0. Prepare</text>
+    <text x="135" y="113" font-size="13" fill="#1e3a8a">Clean Git state, new branch</text>
+    <text x="135" y="135" font-size="13" fill="#1e3a8a">Record today's test results</text>
+
+    <rect x="270" y="60" width="220" height="104" rx="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+    <text x="380" y="88" font-size="15" font-weight="700" fill="#4c1d95">1. Add Spec Kit</text>
+    <text x="380" y="113" font-size="13" fill="#4c1d95">specify init --here --force</text>
+    <text x="380" y="135" font-size="13" fill="#4c1d95">Review the diff, then commit</text>
+
+    <rect x="515" y="60" width="220" height="104" rx="12" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+    <text x="625" y="88" font-size="15" font-weight="700" fill="#78350f">2. Constitution</text>
+    <text x="625" y="113" font-size="13" fill="#78350f">Rules that are already true</text>
+    <text x="625" y="135" font-size="13" fill="#78350f">Each rule cites its evidence</text>
+
+    <rect x="515" y="220" width="220" height="104" rx="12" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+    <text x="625" y="248" font-size="15" font-weight="700" fill="#064e3b">3. First bounded change</text>
+    <text x="625" y="273" font-size="13" fill="#064e3b">Specify, plan, tasks,</text>
+    <text x="625" y="295" font-size="13" fill="#064e3b">implement, converge</text>
+
+    <rect x="270" y="220" width="220" height="104" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+    <text x="380" y="248" font-size="15" font-weight="700" fill="#1e3a8a">4. Decide how specs age</text>
+    <text x="380" y="273" font-size="13" fill="#1e3a8a">What you keep and commit</text>
+    <text x="380" y="295" font-size="13" fill="#1e3a8a">Write the rule down</text>
+
+    <rect x="25" y="220" width="220" height="104" rx="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+    <text x="135" y="248" font-size="15" font-weight="700" fill="#4c1d95">5. Roll out to the team</text>
+    <text x="135" y="273" font-size="13" fill="#4c1d95">One team, a few changes</text>
+    <text x="135" y="295" font-size="13" fill="#4c1d95">Measure, then widen</text>
+
+    <rect x="120" y="372" width="520" height="64" rx="12" fill="#ffffff" stroke="#64748b" stroke-width="2" stroke-dasharray="6 4"/>
+    <text x="380" y="398" font-size="14" font-weight="700" fill="#334155">Optional: document one existing module at a time</text>
+    <text x="380" y="420" font-size="13" fill="#475569">Only where it pays off. Treat generated "as-built" specs as drafts to verify.</text>
+  </g>
+  <g fill="none" stroke="#475569" stroke-width="2" marker-end="url(#adopt-arrow)">
+    <path d="M245,112 H266"/>
+    <path d="M490,112 H511"/>
+    <path d="M625,164 V216"/>
+    <path d="M515,272 H494"/>
+    <path d="M270,272 H249"/>
+    <path d="M380,324 V368" stroke-dasharray="5 4"/>
+  </g>
+</svg>
+<div class="diagram-caption">Figure 1 — The adoption path. Each phase ends with something you can review in Git before you continue.</div></div>
+</div>
+<div class="section">
+<h2 id="2-the-whole-path-on-one-screen">2. The whole path on one screen</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>You do</th>
+<th>You end up with</th>
+<th>Rough effort</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>0. Prepare</strong></td>
+<td>Clean Git state, new branch, record current test results</td>
+<td>A baseline you can compare against</td>
+<td>15 min</td>
+</tr>
+<tr>
+<td><strong>1. Add Spec Kit</strong></td>
+<td>Run <code>specify init --here --force</code>, review the diff, commit</td>
+<td><code>.specify\</code> and the agent skills in your repository</td>
+<td>30 min</td>
+</tr>
+<tr>
+<td><strong>2. Constitution</strong></td>
+<td>Let the agent draft rules from your real files, then check every rule</td>
+<td>A short, true <code>constitution.md</code></td>
+<td>1–2 hours</td>
+</tr>
+<tr>
+<td><strong>3. First change</strong></td>
+<td>Take one bounded change through specify → converge</td>
+<td>A reviewed pull request and your first <code>specs\</code> folder</td>
+<td>Half a day to two days</td>
+</tr>
+<tr>
+<td><strong>4. Ageing policy</strong></td>
+<td>Decide what happens to specs after delivery and what you commit</td>
+<td>One paragraph in the constitution or onboarding notes</td>
+<td>30 min</td>
+</tr>
+<tr>
+<td><strong>5. Team rollout</strong></td>
+<td>Repeat with a few more changes and people, measure, adjust</td>
+<td>A working agreement the team actually follows</td>
+<td>3–4 weeks</td>
+</tr>
+</tbody></table></div>
+<p>The effort figures are this guide&#39;s planning estimates for a small service, not measurements. A large or unfamiliar codebase takes longer, mostly in Phase 2.</p>
+<p><strong>Before you start</strong> you need the tools from the <a href="spec-kit.html#1-prerequisites-and-version-baseline">Spec Kit setup page</a> and you should have completed one practice feature in a throwaway repository. Learning the commands and learning your legacy system at the same time is harder than doing them one after the other.</p>
+</div>
+<div class="section">
+<h2 id="3-phase-0-prepare-a-safe-baseline">3. Phase 0 — Prepare a safe baseline</h2>
+<p>Everything Spec Kit adds should arrive in a single, reviewable commit. That only works if you start clean.</p>
+<div class="code-wrap term"><div class="code-head"><span class="code-label">Terminal</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">git status --short</div></div>
+<p>If this lists any changes, commit or stash them <strong>before</strong> going on, so that your unfinished work does not end up on the adoption branch. When the output is empty, create the branch:</p>
+<div class="code-wrap term"><div class="code-head"><span class="code-label">Terminal</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">git switch -c chore/adopt-spec-kit</div></div>
+<p>Then run your project&#39;s normal build and test commands and <strong>write down the result</strong>, including failures that already exist. Later, when a test fails, you need to know whether it was failing before you started.</p>
+<div class="callout tip"><p><strong>💡 Example:</strong> Your test run shows 412 passed, 3 failed. Note the three names in the pull request description. They are existing problems, not something Spec Kit or the agent introduced, and nobody should &quot;fix&quot; them as a side effect of the adoption branch.</p></div>
+</div>
+<div class="section">
+<h2 id="4-phase-1-add-spec-kit-to-the-repository">4. Phase 1 — Add Spec Kit to the repository</h2>
+<p>Run this <strong>from the root of the existing repository</strong>. Do not create a new project folder around it.</p>
+<div class="code-wrap term"><div class="code-head"><span class="code-label">Terminal</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">specify init --here --force --integration copilot --script ps
+git status --short
+git diff</div></div>
+<p>Use <code>--script sh</code> on macOS or Linux. <code>--here</code> means &quot;this folder&quot;. <code>--force</code> allows initialization in a folder that is not empty.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>What happens to…</th>
+<th>Result</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Your application code, <code>.git\</code>, existing <code>specs\</code></td>
+<td>Not touched</td>
+<td><a href="https://github.github.io/spec-kit/upgrade.html" target="_blank" rel="noopener">Upgrade guide</a></td>
+</tr>
+<tr>
+<td><code>.specify\templates\</code> and <code>.specify\scripts\</code></td>
+<td>Created; overwritten if they already exist</td>
+<td>Upgrade guide</td>
+</tr>
+<tr>
+<td><code>.github\skills\speckit-*\</code> (Copilot skills)</td>
+<td>Created; overwritten if they already exist</td>
+<td><a href="https://github.github.io/spec-kit/integrations/copilot.html" target="_blank" rel="noopener">Copilot integration</a></td>
+</tr>
+<tr>
+<td>An existing <code>.specify\memory\constitution.md</code></td>
+<td>Preserved</td>
+<td>Upgrade guide</td>
+</tr>
+<tr>
+<td>Git branches</td>
+<td>None created. Branch handling is the optional <code>git</code> extension</td>
+<td><a href="https://github.github.io/spec-kit/how-to/existing-projects.html" target="_blank" rel="noopener">Existing projects</a></td>
+</tr>
+</tbody></table></div>
+<div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;<code>--force</code> is the safe option.&quot; It is the opposite of a safety switch: it &quot;may replace files at conflicting managed paths&quot;. That is harmless on first adoption and matters later, if you have customized templates or skills. Always read <code>git diff</code> and <code>git status</code> afterwards.</p></div>
+<p><strong>Things to check in the diff before you commit:</strong></p>
+<ul>
+<li>Only Spec Kit paths appear: <code>.specify\</code>, <code>.github\skills\speckit-*</code> and possibly a Spec Kit hooks file under <code>.github\hooks\</code>. Anything else is a surprise worth understanding.</li>
+<li>If your repository already has <code>.github\copilot-instructions.md</code> or <code>AGENTS.md</code>, confirm they are unchanged. This guide did not test how initialization treats them; your diff is the authority.</li>
+<li><code>.specify\.gitignore</code> exists. It keeps machine-local state such as <code>feature.json</code> out of version control.</li>
+</ul>
+<p>Commit the result as its own change with a plain message such as &quot;Add Spec Kit scaffolding (no application changes)&quot;. A reviewer can then approve the tooling separately from any feature.</p>
+<p><strong>Later refreshes use a different command.</strong> <code>init --here --force</code> is for first adoption. When you upgrade Spec Kit afterwards, prefer <code>specify integration upgrade copilot</code>, which stops if you have locally modified managed files. See <a href="spec-kit.html#10-troubleshooting-and-deliberate-upgrades">upgrades</a>.</p>
+</div>
+<div class="section">
+<h2 id="5-phase-2-write-a-constitution-from-evidence">5. Phase 2 — Write a constitution from evidence</h2>
+<p>In a new project you invent the rules. In an existing project the rules already exist, scattered across the README, the CI configuration, the linter settings and people&#39;s heads. Your job is to collect them, not to invent better ones. The official guide is direct about this: <em>&quot;Do not invent standards merely to fill the constitution template.&quot;</em></p>
+<p><strong>Step 1 — let the agent gather evidence, without writing anything yet:</strong></p>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">Read this repository before proposing anything: README, CONTRIBUTING,
+docs\ and any architecture decision records, the CI workflow files,
+linter and formatter configuration, the test setup and the dependency
+manifests. List the engineering rules this project ALREADY follows.
+For every rule, name the file and line that proves it.
+Mark anything you are inferring from only one or two examples as a guess.
+Do not write or change any file.</div></div>
+<p><strong>Step 2 — check the list.</strong> Open the files it cites. Delete rules whose evidence is missing or weak. Add the rules everyone knows but nobody wrote down, such as &quot;never change the public API without a deprecation period&quot;.</p>
+<p><strong>Step 3 — create the constitution from the checked list:</strong></p>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">/speckit-constitution Use only the rules I confirmed below. Keep each one
+short and testable. Do not add principles that are not in this list.
+- Preserve public API compatibility; breaking changes need an approved
+  deprecation plan.
+- Follow the existing service boundaries in src\; do not add a new layer.
+- Every database migration includes a rollback or repair plan.
+- Run the existing unit and integration test suites; new behaviour needs tests.
+- Search for existing functionality before writing new helpers or classes.
+- Reuse the current frameworks and libraries; justify any new dependency.</div></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Weak principle (remove or rewrite)</th>
+<th>Usable principle</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&quot;Code must be clean and maintainable&quot;</td>
+<td>&quot;New code passes the existing linter configuration with no new suppressions&quot;</td>
+</tr>
+<tr>
+<td>&quot;Performance is critical&quot; (no measurement exists)</td>
+<td>Leave it out until you have an agreed, measured target</td>
+</tr>
+<tr>
+<td>&quot;Legacy modules are frozen&quot; (nobody decided this)</td>
+<td>Leave it out, or ask the team and record the real decision</td>
+</tr>
+<tr>
+<td>&quot;Use best practices for security&quot;</td>
+<td>&quot;Derive the user from the authenticated session; never trust a caller-supplied user ID&quot;</td>
+</tr>
+</tbody></table></div>
+<div class="callout warning"><p><strong>⚠️ Why the checking step matters:</strong> One practitioner <a href="https://hubreb.github.io/blog/spec-kit-brownfield-setup" target="_blank" rel="noopener">audited a reverse-engineered constitution against the project&#39;s Git history</a> (May 2026, an older Spec Kit version with a different agent). Of the six mandates it produced, four were correct and two had no evidence behind them; a seventh, real rule was missing. A scan can also treat a pattern seen in a few files as if it were a universal rule. These are single experiences, not statistics, but they show the failure mode: a confident, tidy constitution that describes a project you do not have.</p></div>
+<p><strong>Stop here until</strong> a second team member has read the constitution and agrees it describes the project as it is today.</p>
+</div>
+<div class="section">
+<h2 id="6-phase-3-run-your-first-change">6. Phase 3 — Run your first change</h2>
+<h3 id="choose-the-right-first-change">Choose the right first change</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Good first candidates</th>
+<th>Poor first candidates</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A new, self-contained capability in an area with tests</td>
+<td>&quot;Document the whole system&quot;</td>
+</tr>
+<tr>
+<td>A change with clear users and clear acceptance examples</td>
+<td>A large refactoring with no behaviour change</td>
+</tr>
+<tr>
+<td>Something worth one to three days of work</td>
+<td>A one-line fix (too small to learn from)</td>
+</tr>
+<tr>
+<td>An area one team member knows well</td>
+<td>The most fragile module in the system</td>
+</tr>
+<tr>
+<td>Normal priority</td>
+<td>A production incident or a hard deadline</td>
+</tr>
+</tbody></table></div>
+<h3 id="describe-the-change-in-four-parts">Describe the change in four parts</h3>
+<p>For existing code, a good request states what must <strong>stay the same</strong> as clearly as what should change. A simple structure, borrowed from a <a href="https://www.augmentcode.com/guides/spec-driven-development-brownfield-codebases" target="_blank" rel="noopener">vendor guide to brownfield specs</a>:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Question it answers</th>
+<th>Example (RoomBook, one year on)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Current behaviour</strong></td>
+<td>What happens today?</td>
+<td>The bookings list shows bookings with filters by room and date; results exist only on screen</td>
+</tr>
+<tr>
+<td><strong>Target behaviour</strong></td>
+<td>What should be possible afterwards?</td>
+<td>A signed-in user can download the filtered list as CSV</td>
+</tr>
+<tr>
+<td><strong>Invariants</strong></td>
+<td>What must not change?</td>
+<td>Permission checks, the JSON API response, existing filters</td>
+</tr>
+<tr>
+<td><strong>Out of scope</strong></td>
+<td>What are we deliberately not doing?</td>
+<td>Scheduled exports, Excel format, changes to how bookings are created or cancelled</td>
+</tr>
+</tbody></table></div>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">/speckit-specify Add CSV export to the existing RoomBook bookings list.
+Current behaviour: the list shows bookings using the existing room and date filters.
+Target: a signed-in user can download the currently filtered bookings as CSV,
+limited to rows that user is already authorized to see.
+Must not change: the existing JSON API response, the permission checks, the
+filter behaviour and the booking-conflict rule.
+Out of scope: scheduled exports, other file formats, creating or cancelling bookings.
+Ask me to decide the maximum export size instead of choosing one.</div></div>
+<p>The resulting <code>spec.md</code> &quot;defines the change you intend to make, not a retroactive specification of every existing behavior&quot;. The full set of acceptance checks for this example is in <a href="sdd-production.html#3-scenario-a-add-a-feature-to-an-existing-product">Scenario A of the shipping guide</a>.</p>
+<h3 id="pin-down-todays-behaviour-first">Pin down today&#39;s behaviour first</h3>
+<p>This step is this guide&#39;s recommendation; it is not part of the official Spec Kit procedure. A <strong>characterization test</strong> records what the code does <em>now</em>, right or wrong, so you notice when a change alters it. If the area you are about to touch has few tests, add some before the feature work:</p>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">Before any feature work: write characterization tests for the current
+behaviour of the bookings list endpoint, covering filters, sorting,
+paging and the permission checks. Assert what the code does today,
+even where that looks odd, and list the odd cases for me separately.
+Use the existing test framework. Do not change production code.</div></div>
+<p>Run them, confirm they pass against the untouched code, and commit them separately.</p>
+<h3 id="then-follow-the-normal-workflow-with-brownfield-checks">Then follow the normal workflow, with brownfield checks</h3>
+<p>The command order is the same as in the <a href="spec-kit.html">first-feature walkthrough</a>. What changes is what you look for at each stop.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Extra check in an existing project</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/speckit-clarify</code></td>
+<td>Questions about existing behaviour are answered from the code or by a person who knows it, not guessed</td>
+</tr>
+<tr>
+<td><code>/speckit-plan</code></td>
+<td>The plan names the <strong>existing</strong> files, helpers and libraries it will reuse. A plan that introduces a new framework or a parallel data-access layer is a red flag</td>
+</tr>
+<tr>
+<td><code>/speckit-tasks</code></td>
+<td>No task recreates something that already exists. Tests are included. The list has not grown beyond the spec</td>
+</tr>
+<tr>
+<td><code>/speckit-analyze</code></td>
+<td>Contradictions are fixed in the documents before any code is written</td>
+</tr>
+<tr>
+<td><code>/speckit-implement</code></td>
+<td>The diff touches only the expected area. Characterization tests still pass</td>
+</tr>
+<tr>
+<td><code>/speckit-converge</code></td>
+<td>Review any tasks it appends; repeat implement and converge until nothing remains</td>
+</tr>
+</tbody></table></div>
+<p>A plan prompt that works well for existing code:</p>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">/speckit-plan Read the repository first. Reuse the existing authorization
+and query helpers, the installed CSV library if there is one, and the
+current test conventions. For every new file you propose, name the existing
+file you considered and explain why it could not be extended.
+Do not add a dependency or a framework without asking. Do not implement yet.</div></div>
+<div class="callout tip"><p><strong>💡 Example:</strong> The plan proposes a new <code>ExportService</code> class and a new CSV writer. You search the RoomBook repository and find <code>ReportWriter</code>, which already produces escaped CSV for the monthly room-usage report. You send the plan back with one sentence: &quot;Reuse <code>ReportWriter</code>; extend it if needed.&quot; Duplicating something that already exists is a problem several practitioners report when agents work in existing code, which is why the check is in the table above.</p></div>
+</div>
+<div class="section">
+<h2 id="7-not-every-backlog-item-needs-a-spec">7. Not every backlog item needs a spec</h2>
+<p>Trying to push every ticket through the full workflow is the fastest way to make a team abandon it. Match the process to the item.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Backlog item</th>
+<th>Proportionate route</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>New feature with several behaviours</td>
+<td>Full workflow: specify → clarify → plan → tasks → analyze → implement → converge</td>
+</tr>
+<tr>
+<td>Small, well-understood enhancement</td>
+<td>Short path: specify → plan → tasks → implement → converge</td>
+</tr>
+<tr>
+<td>Bug with a reproducible symptom</td>
+<td>The optional <strong>bug</strong> extension, or your normal bug process</td>
+</tr>
+<tr>
+<td>Vague idea or an unrefined ticket</td>
+<td>The optional <strong>assess</strong> extension, then specify if the verdict is &quot;go&quot;</td>
+</tr>
+<tr>
+<td>Typo, dependency bump, obvious one-liner</td>
+<td>Your normal pull request. No spec</td>
+</tr>
+<tr>
+<td>Production incident</td>
+<td>Your incident process. Capture the learning afterwards</td>
+</tr>
+</tbody></table></div>
+<p><strong>Bug fixing</strong> is a bundled, opt-in extension described in the <a href="https://github.github.io/spec-kit/guides/bugfix.html" target="_blank" rel="noopener">official bug-fix guide</a>. Install it once per project, then work in three stages. Only the middle stage edits source code.</p>
+<div class="code-wrap term"><div class="code-head"><span class="code-label">Terminal</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">specify extension add bug</div></div>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">/speckit-bug-assess &quot;Export returns an empty file when the status filter is &#39;cancelled&#39;&quot; slug=empty-export
+/speckit-bug-fix slug=empty-export
+/speckit-bug-test slug=empty-export</div></div>
+<p>Records are written to <code>.specify\bugs\empty-export\</code> as <code>assessment.md</code>, <code>fix.md</code> and <code>test.md</code>, and the last stage ends with a verdict: verified, partial or failed. The guide&#39;s own warning is worth repeating: a passing test suite is not enough if the original reproduction was never exercised.</p>
+<p><strong>Idea assessment</strong> is the second bundled extension, described in the <a href="https://github.github.io/spec-kit/guides/assessment.html" target="_blank" rel="noopener">assessment guide</a>. It is useful when a ticket says &quot;we want better reporting&quot; and nobody knows what that means yet. It changes no source code and ends in a decision: go, needs-clarification or kill.</p>
+<div class="code-wrap term"><div class="code-head"><span class="code-label">Terminal</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">specify extension add assess</div></div>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">/speckit-assess-intake &quot;Facility managers ask for better room-usage reporting&quot; slug=room-usage-reporting
+/speckit-assess-research slug=room-usage-reporting
+/speckit-assess-define slug=room-usage-reporting
+/speckit-assess-shape slug=room-usage-reporting
+/speckit-assess-decide slug=room-usage-reporting</div></div>
+<p>If the decision is &quot;go&quot;, hand it to the normal workflow:</p>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">/speckit-specify Use the handoff summary in
+.specify\assessments\room-usage-reporting\decision.md to specify the approved concept.</div></div>
+</div>
+<div class="section">
+<h2 id="8-phase-4-decide-how-specs-age-and-what-you-commit">8. Phase 4 — Decide how specs age and what you commit</h2>
+<p>After your first delivery you have a <code>specs\</code> folder. Agree <strong>now</strong> what it means, before there are twenty of them. The <a href="https://github.github.io/spec-kit/how-to/persisting-specs.html" target="_blank" rel="noopener">persistence guide</a> describes four models and states that none is the default; the comparison table is in the <a href="sdd-production.html#2-decide-how-specifications-age">shipping guide</a>.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>If your team…</th>
+<th>A reasonable starting choice (this guide&#39;s suggestion)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Wants a readable history of why each change was made</td>
+<td><strong>Flow-forward:</strong> finished feature folders are left alone; new changes get new folders</td>
+</tr>
+<tr>
+<td>Wants one current description of a feature</td>
+<td><strong>Living spec:</strong> keep <code>spec.md</code> up to date; regenerate plan and tasks</td>
+</tr>
+<tr>
+<td>Already keeps requirements in Azure DevOps or Jira and does not want two homes</td>
+<td><strong>Constitution-only:</strong> use specs as working documents and retire them after delivery</td>
+</tr>
+</tbody></table></div>
+<p>Two practical details:</p>
+<ul>
+<li>Whether <code>specs\</code> is committed is your choice. Spec Kit&#39;s own repository ignores it. If you decide to ignore it later, remember that adding <code>specs\</code> to <code>.gitignore</code> &quot;does not untrack files already committed&quot;.</li>
+<li>Write the decision into the constitution or the onboarding notes. It is &quot;a team convention, not a CLI setting&quot;, so nothing enforces it except people.</li>
+</ul>
+</div>
+<div class="section">
+<h2 id="9-migrating-from-what-you-use-today">9. Migrating from what you use today</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Coming from</th>
+<th>What to do</th>
+<th>What to keep</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Prompting an agent without specs</strong> (&quot;vibe coding&quot;)</td>
+<td>Start at Level 1. For the next consequential change, write the four-part request from section 6 before any code. Add <code>/speckit-clarify</code> and a review of <code>plan.md</code> as the two new habits</td>
+<td>Your prompts become spec input</td>
+</tr>
+<tr>
+<td><strong><code>copilot-instructions.md</code> or <code>AGENTS.md</code></strong></td>
+<td>Keep the file. Use it as evidence for the constitution in Phase 2. Avoid copying the same rule into both places; let the constitution point to the existing source where one exists</td>
+<td>The file stays the agent&#39;s everyday context</td>
+</tr>
+<tr>
+<td><strong>Azure DevOps or Jira work items</strong></td>
+<td>Keep the tracker as the place for priority and status. Paste the item&#39;s description and acceptance criteria into <code>/speckit-specify</code>, put the work item ID in the spec and link the pull request back to the item</td>
+<td>The tracker remains the backlog; the spec holds the detailed agreement</td>
+</tr>
+<tr>
+<td><strong>Existing design documents and ADRs</strong></td>
+<td>Do not convert them. Reference them from the constitution and from each plan. Tell the agent which ones are current, because stale documents produce stale rules</td>
+<td>Documents stay where they are</td>
+</tr>
+<tr>
+<td><strong>Another spec tool</strong> (OpenSpec, Kiro, BMAD and similar)</td>
+<td>Leave completed specs where they are as history. Start <strong>new</strong> work in Spec Kit and move a spec across by hand only when you next change that feature</td>
+<td>Old specs as read-only reference</td>
+</tr>
+</tbody></table></div>
+<p><strong>What we could not find.</strong> No first-hand report of a team converting specs from another spec tool into Spec Kit, and no Spec Kit-specific team rollout playbook, turned up in our search (November 2026). The advice in the last row is this guide&#39;s cautious default, not a tested recipe. Community extensions for Azure DevOps and Jira synchronization are listed in the <a href="https://github.github.io/spec-kit/community/extensions.html" target="_blank" rel="noopener">community catalog</a>; we did not inspect or run them, so the table above describes the manual route only.</p>
+</div>
+<div class="section">
+<h2 id="10-optional-documenting-what-already-exists">10. Optional — documenting what already exists</h2>
+<p>Sometimes you do want a written description of an existing module: before a rewrite, when the only person who understands it is leaving, or because you change it every sprint. This is <strong>Level 3</strong>. It is not part of the official core workflow, and the maintainers <a href="https://github.com/github/spec-kit/issues/1436" target="_blank" rel="noopener">chose to leave it to extensions</a>.</p>
+<h3 id="a-safe-manual-procedure">A safe manual procedure</h3>
+<ol>
+<li><strong>One module per session.</strong> Start a fresh chat for each subsystem so earlier conclusions do not leak into the next one.</li>
+<li><strong>Ask for a description with evidence, not a specification.</strong> Use the prompt below.</li>
+<li><strong>Label the result.</strong> Put &quot;As-built draft, not verified&quot; at the top until a person has checked it.</li>
+<li><strong>Verify against tests and behaviour.</strong> Where the description and the code disagree, the code is evidence for a discussion, not automatically the truth: it may contain bugs.</li>
+<li><strong>Collect gaps separately.</strong> Unclear, risky or untested behaviour goes into a short list. That list is often more valuable than the description.</li>
+</ol>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">Describe the current behaviour of the module in src\bookings\ only.
+For each behaviour give: who can do it, what happens, the file and
+function that implements it, and the test that covers it (or &quot;no test&quot;).
+Describe the architecture as it is; do not propose improvements.
+List separately anything unclear, inconsistent or untested.
+Do not create or change any file.</div></div>
+<p>One developer <a href="https://habr.com/ru/articles/1064628/" target="_blank" rel="noopener">reported</a> documenting eight subsystems in a day with the community Brownfield Bootstrap extension listed below: one subsystem per session, as-built specs kept in their own number range (a <code>000-</code> prefix), and a final list of about 76 gaps that fed 30 new draft specs. He reviewed every generated spec the way he would review a pull request, which is the reason for step 4.</p>
+<h3 id="community-extensions">Community extensions</h3>
+<p>These are listed in the <a href="https://github.github.io/spec-kit/community/extensions.html" target="_blank" rel="noopener">community catalog</a>, where the maintainers state that they &quot;do <strong>not review, audit, endorse, or support the extension code itself</strong>&quot;. We read their READMEs; we did not install or run them.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Extension</th>
+<th>What its README says it does</th>
+<th>Last update seen</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://github.com/Quratulain-bilal/spec-kit-brownfield" target="_blank" rel="noopener">Brownfield Bootstrap</a></td>
+<td>Scans a codebase, writes a constitution and can reverse-engineer spec, plan and tasks</td>
+<td>April 2026, one release</td>
+</tr>
+<tr>
+<td><a href="https://github.com/MaksimShevtsov/BrownKit" target="_blank" rel="noopener">BrownKit</a></td>
+<td>Builds a capability model with security and quality risk evidence, through a multi-step pipeline</td>
+<td>September 2026</td>
+</tr>
+<tr>
+<td><a href="https://github.com/stn1slv/spec-kit-archive" target="_blank" rel="noopener">Archive</a></td>
+<td>Merges a delivered feature&#39;s knowledge into <code>.specify\memory\</code></td>
+<td>October 2026</td>
+</tr>
+<tr>
+<td><a href="https://github.com/stn1slv/spec-kit-reconcile" target="_blank" rel="noopener">Reconcile</a></td>
+<td>Applies a gap report to spec, plan and tasks, asking before it edits</td>
+<td>October 2026</td>
+</tr>
+<tr>
+<td><a href="https://github.com/bgervin/spec-kit-sync" target="_blank" rel="noopener">Spec Sync</a></td>
+<td>Analyses drift between specs and code and proposes updates</td>
+<td>March 2026; installs from a branch, not a tagged release</td>
+</tr>
+</tbody></table></div>
+<p>Before trying one: read its source, check its Spec Kit version requirement, install it in a <strong>copy</strong> of your repository, and review every file it writes. Community extensions install by URL (<code>specify extension add --from &lt;archive-url&gt;</code>), and their READMEs write commands in the dotted form (<code>/speckit.brownfield.scan</code>); with Copilot skills the name is normally hyphenated, which we did not test. Be careful with tools that run the whole workflow, including implementation, for every feature they detect.</p>
+<p><strong>Large-codebase examples.</strong> The docs list <a href="https://github.github.io/spec-kit/community/walkthroughs.html" target="_blank" rel="noopener">community walkthroughs</a> that add features to big existing systems, including an <a href="https://github.com/mnriem/spec-kit-aspnet-brownfield-demo" target="_blank" rel="noopener">ASP.NET CMS of about 307,000 lines</a> and a <a href="https://github.com/mnriem/spec-kit-java-brownfield-demo" target="_blank" rel="noopener">Java project with about 180 Maven modules</a>. They are labelled as not reviewed or supported by GitHub, and they are useful mainly for reading real prompts.</p>
+</div>
+<div class="section">
+<h2 id="11-monorepos-and-several-applications-in-one-repository">11. Monorepos and several applications in one repository</h2>
+<p>The <a href="https://github.github.io/spec-kit/how-to/monorepo.html" target="_blank" rel="noopener">monorepo guide</a> defines a project as whichever folder contains <code>.specify\</code>; the nearest one wins.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Approach</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>One product, one team, shared rules</td>
+<td>Initialize once at the repository root</td>
+</tr>
+<tr>
+<td>Independently governed applications in one repository</td>
+<td>Initialize each one separately, for example <code>specify init apps\web --integration copilot --script ps</code></td>
+</tr>
+<tr>
+<td>Running a command for one member from the root</td>
+<td>Set <code>SPECIFY_INIT_DIR</code> to that member&#39;s folder <strong>before</strong> starting the agent, for example <code>$env:SPECIFY_INIT_DIR = &quot;apps/web&quot;</code> in PowerShell; it fails with an error if the path is wrong</td>
+</tr>
+</tbody></table></div>
+<p>Each member then has its own <code>specs\</code>, feature numbering and constitution. There is <strong>no built-in constitution inheritance</strong>, so shared rules must be copied or referenced deliberately. Git branches are still shared across the whole repository.</p>
+</div>
+<div class="section">
+<h2 id="12-phase-5-roll-it-out-to-the-team">12. Phase 5 — Roll it out to the team</h2>
+<p>This plan is this guide&#39;s suggestion. Adjust the pace to your team.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Who</th>
+<th>Goal</th>
+<th>Evidence to keep</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>One volunteer</td>
+<td>Phases 0–3 on one real change</td>
+<td>The adoption commit, the reviewed constitution, one merged pull request</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Volunteer plus one colleague</td>
+<td>A second change by the colleague; a bug through the bug flow if one comes up</td>
+<td>Notes on what was confusing; time spent reviewing documents</td>
+</tr>
+<tr>
+<td>3</td>
+<td>The team</td>
+<td>Agree the &quot;which items need a spec&quot; table and the ageing policy; trim templates that produce noise</td>
+<td>The written working agreement</td>
+</tr>
+<tr>
+<td>4</td>
+<td>The team</td>
+<td>Compare three or four spec-driven changes with similar earlier work</td>
+<td>Review time, rework, defects found after merge, model usage</td>
+</tr>
+</tbody></table></div>
+<p><strong>Decide with numbers, not enthusiasm.</strong> Track review time, rework after review, defects that escaped and total model usage. If the workflow costs more than it saves for a class of work, take that class out of scope rather than abandoning everything.</p>
+<p>Independent reports give a realistic picture of what to expect. The <a href="https://www.thoughtworks.com/en-cl/radar/languages-and-frameworks/github-spec-kit" target="_blank" rel="noopener">Thoughtworks Technology Radar</a> (April 2026, &quot;Assess&quot;) notes that its teams use Spec Kit mostly on existing systems and found the output verbose until they trimmed the templates. <a href="https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html" target="_blank" rel="noopener">Birgitta Böckeler&#39;s analysis</a> (October 2025) describes a large amount of generated Markdown and a workflow that felt too heavy for a small story. Both observations support the same practice: use the full process for consequential changes only.</p>
+</div>
+<div class="section">
+<h2 id="13-pitfalls-and-how-to-recover">13. Pitfalls and how to recover</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely cause</th>
+<th>What to do</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>The constitution contains rules nobody recognises</td>
+<td>The agent generalized from a few files or filled the template</td>
+<td>Delete them. Keep only rules with evidence or an explicit team decision</td>
+</tr>
+<tr>
+<td>The plan ignores your architecture</td>
+<td>The plan step did not read the code, or the constitution is too vague</td>
+<td>Send it back with the files to reuse; add a &quot;search before writing&quot; principle</td>
+</tr>
+<tr>
+<td>New classes duplicate existing ones</td>
+<td>Same as above</td>
+<td>Name the existing class in the plan review; reject the task</td>
+</tr>
+<tr>
+<td>The task list is much bigger than the request</td>
+<td>Scope creep in tasks</td>
+<td>Remove tasks without a matching requirement, then run <code>/speckit-analyze</code></td>
+</tr>
+<tr>
+<td>A skill works on the wrong feature</td>
+<td>The active-feature pointer is stale</td>
+<td>Check <code>.specify\feature.json</code>; switching Git branches does not change it</td>
+</tr>
+<tr>
+<td>Unexpected files changed after <code>init</code></td>
+<td><code>--force</code> replaced managed files you had customized</td>
+<td>Restore from Git; move customizations to <code>.specify\templates\overrides\</code></td>
+</tr>
+<tr>
+<td>Installed presets stopped applying after re-running <code>init</code></td>
+<td>A bug in older CLI versions, fixed in August 2026 (<a href="https://github.com/github/spec-kit/issues/3990" target="_blank" rel="noopener">issue #3990</a>)</td>
+<td>Upgrade the CLI. For refreshes, still prefer <code>specify integration upgrade copilot</code> over re-running <code>init</code></td>
+</tr>
+<tr>
+<td>Pages of Markdown nobody reads</td>
+<td>The full workflow is being used for small work</td>
+<td>Use the short path or no spec; trim templates</td>
+</tr>
+<tr>
+<td>Two agent sessions in one checkout work on each other&#39;s feature</td>
+<td>They share one <code>feature.json</code> pointer</td>
+<td>Give each session its own checkout or worktree, or set <code>SPECIFY_FEATURE_NO_PERSIST=1</code> and a separate <code>SPECIFY_FEATURE_DIRECTORY</code> for each session</td>
+</tr>
+<tr>
+<td>Specs and code disagree after a few weeks</td>
+<td>No ageing policy</td>
+<td>Go back to Phase 4 and choose one</td>
+</tr>
+</tbody></table></div>
+</div>
+<div class="section">
+<h2 id="14-adoption-checklist">14. Adoption checklist</h2>
+<p>Tick these off as you go. Your ticks are saved in this browser.</p>
+<ul>
+<li><input disabled="" type="checkbox"> I completed one practice feature in a throwaway repository</li>
+<li><input disabled="" type="checkbox"> Git state is clean and I am on an adoption branch</li>
+<li><input disabled="" type="checkbox"> I recorded the current build and test results, including existing failures</li>
+<li><input disabled="" type="checkbox"> I ran <code>specify init --here --force</code> from the repository root and read the full diff</li>
+<li><input disabled="" type="checkbox"> The Spec Kit files are committed separately from any feature work</li>
+<li><input disabled="" type="checkbox"> The constitution contains only rules with evidence or an explicit team decision</li>
+<li><input disabled="" type="checkbox"> A second person reviewed the constitution</li>
+<li><input disabled="" type="checkbox"> I chose a bounded first change and wrote it in four parts</li>
+<li><input disabled="" type="checkbox"> Characterization tests cover the area I am about to change</li>
+<li><input disabled="" type="checkbox"> The plan reuses existing components and the tasks match the spec</li>
+<li><input disabled="" type="checkbox"> Tests pass, the diff is reviewed and converge reports nothing remaining</li>
+<li><input disabled="" type="checkbox"> The team agreed which backlog items need a spec</li>
+<li><input disabled="" type="checkbox"> The ageing policy and the commit policy for <code>specs\</code> are written down</li>
+</ul>
+</div>
+<div class="section">
+<h2 id="recap">Recap</h2>
+<ul>
+<li>Adopting Spec Kit adds files beside your code. It does not rewrite or document the system for you.</li>
+<li>Build the constitution from evidence, and verify every rule.</li>
+<li>Send the <strong>next</strong> change through the workflow; state what must not change.</li>
+<li>Use the bug and assessment extensions, or no spec at all, for work that does not need the full process.</li>
+<li>Document existing modules only where it pays off, and treat generated descriptions as drafts.</li>
+</ul>
+</div>
+<div class="section">
+<h2 id="check-your-understanding">Check Your Understanding</h2>
+<p><strong>1. You run <code>specify init --here --force</code> in a ten-year-old repository. What specifications exist afterwards?</strong></p>
+<ul>
+<li>A) One spec for every module that the scan of your code found</li>
+<li>B) A single generated spec that summarizes how the whole existing system behaves today</li>
+<li>C) None for the existing behaviour; you get templates, scripts and agent skills</li>
+<li>D) A draft spec for the next change, taken from your backlog</li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> C — None for the existing behaviour. Initialization adds Spec Kit&#39;s templates, scripts and agent skills. It does not read your code and infer specs.</p></div></details>
+<p><strong>2. The generated constitution says &quot;all endpoints must respond within 200 ms&quot;. Nobody on the team has ever measured that. What do you do?</strong></p>
+<ul>
+<li>A) Remove it, or replace it with a target the team agrees and can measure</li>
+<li>B) Keep it, because a strict rule in the constitution does no harm</li>
+<li>C) Keep it, and add tasks to the backlog so that every endpoint meets the target</li>
+<li>D) Mark it as a guess and leave it in the constitution for later</li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> A — Remove it, or replace it with a target the team actually agrees and can measure. A constitution should hold rules that are already true or explicitly adopted; a rule without evidence describes a project you do not have.</p></div></details>
+<p><strong>3. A colleague wants to start by generating specs for the entire system. What does the official guide say?</strong></p>
+<ul>
+<li>A) It requires that inventory before any feature can be specified</li>
+<li>B) It recommends it as the safest first feature in an existing project</li>
+<li>C) It says initialization has already written those specs for you</li>
+<li>D) It advises against it as a first feature, unless the inventory is the deliverable</li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> D — It advises against making that your first feature unless the inventory itself is the deliverable. Start with one bounded change and document existing modules later, selectively.</p></div></details>
+<p><strong>4. A ticket describes a bug with clear reproduction steps. Do you need the full specify-to-converge workflow?</strong></p>
+<ul>
+<li>A) Yes. Every backlog item goes through the full workflow</li>
+<li>B) No. Use your normal bug process or the optional bug extension</li>
+<li>C) No. Use the assess extension, which ends in go, needs-clarification or kill</li>
+<li>D) Yes, but you may leave out the constitution for a bug</li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — Use your normal bug process or the optional bug extension&#39;s assess, fix and test stages. The assess extension is for vague ideas and unrefined tickets, not for a bug with a reproducible symptom.</p></div></details>
+<p><strong>5. What does <code>--force</code> do in <code>specify init --here --force</code>?</strong></p>
+<ul>
+<li>A) It makes initialization safe, because it never replaces a file that already exists</li>
+<li>B) It makes the agent write specs for the code that is already there</li>
+<li>C) It allows initialization in a non-empty folder and may replace managed files</li>
+<li>D) It creates the adoption branch and commits the new files for you</li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> C — <code>--force</code> allows initialization in a folder that is not empty, and it &quot;may replace files at conflicting managed paths&quot;. It is the opposite of a safety switch, so always read <code>git diff</code> and <code>git status</code> afterwards.</p></div></details>
+</div>
+<div class="done-row"><button class="done-btn" type="button" aria-pressed="false">Mark this page as done</button></div>
+<div class="pager">
+<a class="pager-prev" href="spec-kit.html"><span>← Previous</span><strong>14. Spec Kit from Zero</strong></a>
+<a class="pager-next" href="sdd-examples.html"><span>Next →</span><strong>16. Real Examples</strong></a>
+</div>
+</main>
+<footer class="site-footer">AI Learn · A personal learning project by Emanuel Loghin · <a href="about.html">About &amp; feedback</a> · Based on official docs and open course material · Not affiliated with any model provider</footer>
+</div>
+<aside class="toc-rail" aria-label="On this page">
+<div class="toc-title">On this page</div><nav><a href="#1-what-migration-really-means">1. What &quot;migration&quot; really means</a>
+<a href="#2-the-whole-path-on-one-screen">2. The whole path on one screen</a>
+<a href="#3-phase-0-prepare-a-safe-baseline">3. Phase 0 — Prepare a safe baseline</a>
+<a href="#4-phase-1-add-spec-kit-to-the-repository">4. Phase 1 — Add Spec Kit to the repository</a>
+<a href="#5-phase-2-write-a-constitution-from-evidence">5. Phase 2 — Write a constitution from evidence</a>
+<a href="#6-phase-3-run-your-first-change">6. Phase 3 — Run your first change</a>
+<a href="#7-not-every-backlog-item-needs-a-spec">7. Not every backlog item needs a spec</a>
+<a href="#8-phase-4-decide-how-specs-age-and-what-you-commit">8. Phase 4 — Decide how specs age and what you commit</a>
+<a href="#9-migrating-from-what-you-use-today">9. Migrating from what you use today</a>
+<a href="#10-optional-documenting-what-already-exists">10. Optional — documenting what already exists</a>
+<a href="#11-monorepos-and-several-applications-in-one-repository">11. Monorepos and several applications in one repository</a>
+<a href="#12-phase-5-roll-it-out-to-the-team">12. Phase 5 — Roll it out to the team</a>
+<a href="#13-pitfalls-and-how-to-recover">13. Pitfalls and how to recover</a>
+<a href="#14-adoption-checklist">14. Adoption checklist</a>
+<a href="#recap">Recap</a>
+<a href="#check-your-understanding">Check Your Understanding</a></nav>
+</aside>
+</div>
+<div class="scrim"></div>
+<script src="site.js"></script>
+</body>
+</html>

@@ -1,25 +1,141 @@
 {
-  "logo": ["AI&nbsp;", "Learn"],
+  "logo": [
+    "AI&nbsp;",
+    "Learn"
+  ],
   "badge": "AI Models · Beginner guide",
   "titleSuffix": "AI Learn",
-  "footer": "AI Learn · A beginner's guide to how AI models work · Based on official docs and open course material · Not affiliated with any model provider",
-  "pages": [
-    ["index", "Home"],
-    ["study-plan", "Study Plan"],
-    ["foundations", "1. Foundations"],
-    ["neural-networks", "2. Neural Networks"],
-    ["transformers", "3. Transformers &amp; LLMs"],
-    ["training", "4. Training &amp; Tuning"],
-    ["models", "5. Model Landscape"],
-    ["using-ai", "6. Using Models"],
-    ["tokens", "7. Tokens &amp; Cost"],
-    ["best-practices", "8. Best Practices"],
-    ["ai-at-work", "9. AI at Work"],
-    ["spec-driven-development", "10. Spec-Driven Dev"],
-    ["spec-kit", "10a. Spec Kit"],
-    ["squad", "10b. Squad"],
-    ["sdd-production", "10c. Shipping &amp; Reuse"],
-    ["glossary", "Glossary"],
-    ["resources", "Resources"]
+  "footer": "AI Learn · A personal learning project by Emanuel Loghin · <a href=\"about.html\">About &amp; feedback</a> · Based on official docs and open course material · Not affiliated with any model provider",
+  "groups": [
+    {
+      "title": "Start here",
+      "pages": [
+        [
+          "index",
+          "Home"
+        ],
+        [
+          "study-plan",
+          "Study Plan"
+        ],
+        [
+          "setup",
+          "Setup &amp; Git Basics"
+        ]
+      ]
+    },
+    {
+      "title": "Part 1 · Understand AI",
+      "pages": [
+        [
+          "foundations",
+          "1. Foundations"
+        ],
+        [
+          "neural-networks",
+          "2. Neural Networks"
+        ],
+        [
+          "transformers",
+          "3. Transformers &amp; LLMs"
+        ],
+        [
+          "training",
+          "4. Training &amp; Tuning"
+        ],
+        [
+          "models",
+          "5. Model Landscape"
+        ]
+      ]
+    },
+    {
+      "title": "Part 2 · Use AI well",
+      "pages": [
+        [
+          "using-ai",
+          "6. Using Models"
+        ],
+        [
+          "connecting-ai",
+          "7. Connecting Models"
+        ],
+        [
+          "tokens",
+          "8. Tokens &amp; Cost"
+        ],
+        [
+          "best-practices",
+          "9. Best Practices"
+        ],
+        [
+          "ai-at-work",
+          "10. AI at Work"
+        ]
+      ]
+    },
+    {
+      "title": "Part 3 · Work with agents",
+      "pages": [
+        [
+          "agent-toolkit",
+          "11. Equip Your Agent"
+        ],
+        [
+          "agent-guardrails",
+          "12. Human Control &amp; Guardrails"
+        ]
+      ]
+    },
+    {
+      "title": "Part 4 · Build with specs",
+      "pages": [
+        [
+          "spec-driven-development",
+          "13. Spec-Driven Dev"
+        ],
+        [
+          "spec-kit",
+          "14. Spec Kit from Zero"
+        ],
+        [
+          "sdd-existing-projects",
+          "15. Existing Projects"
+        ],
+        [
+          "sdd-examples",
+          "16. Real Examples"
+        ],
+        [
+          "squad",
+          "17. Squad"
+        ],
+        [
+          "sdd-production",
+          "18. Shipping &amp; Reuse"
+        ]
+      ]
+    },
+    {
+      "title": "Reference",
+      "pages": [
+        [
+          "sdd-reference",
+          "Command Reference"
+        ],
+        [
+          "glossary",
+          "Glossary"
+        ],
+        [
+          "resources",
+          "Resources"
+        ],
+        [
+          "about",
+          "About &amp; Feedback"
+        ]
+      ]
+    }
   ]
 }

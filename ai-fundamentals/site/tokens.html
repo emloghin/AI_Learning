@@ -4,45 +4,87 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tokens, Cost & How to Use Fewer of Them — AI Learn</title>
+<script>try{var t=localStorage.getItem('ailearn:theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<style>.section td code,.callout code,.diagram-caption code{background:var(--primary-light);color:var(--primary);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:13px}.callout p+p{margin-top:8px}.callout ul{margin:8px 0 0 20px}</style>
 </head>
-<body>
-
-<header class="site-header">
-  <div class="header-inner">
-    <div class="header-logo"><span>AI&nbsp;</span>Learn</div>
-    <nav class="header-nav">
-      <a href="index.html">Home</a>
-      <a href="study-plan.html">Study Plan</a>
-      <a href="foundations.html">1. Foundations</a>
-      <a href="neural-networks.html">2. Neural Networks</a>
-      <a href="transformers.html">3. Transformers &amp; LLMs</a>
-      <a href="training.html">4. Training &amp; Tuning</a>
-      <a href="models.html">5. Model Landscape</a>
-      <a href="using-ai.html">6. Using Models</a>
-      <a href="tokens.html" class="active">7. Tokens &amp; Cost</a>
-      <a href="best-practices.html">8. Best Practices</a>
-      <a href="ai-at-work.html">9. AI at Work</a>
-      <a href="spec-driven-development.html">10. Spec-Driven Dev</a>
-      <a href="spec-kit.html">10a. Spec Kit</a>
-      <a href="squad.html">10b. Squad</a>
-      <a href="sdd-production.html">10c. Shipping &amp; Reuse</a>
-      <a href="glossary.html">Glossary</a>
-      <a href="resources.html">Resources</a>
-    </nav>
-  </div>
+<body data-page="tokens">
+<div class="read-progress" aria-hidden="true"><div></div></div>
+<header class="topbar">
+  <button class="icon-btn menu-btn" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
+  <a class="header-logo" href="index.html"><span>AI&nbsp;</span>Learn</a>
+  <span class="topbar-crumb">Part 2 · Use AI well <b>›</b> 8. Tokens &amp; Cost</span>
+  <span class="topbar-progress" title="Pages you marked as done"></span>
+  <button class="icon-btn theme-btn" type="button" aria-label="Switch between light and dark theme">◐</button>
 </header>
-
+<div class="shell">
+<aside class="sidebar" aria-label="Site navigation">
+<nav>
+<div class="nav-group">
+<div class="nav-group-title">Start here<span class="nav-count"></span></div>
+<a href="index.html" data-page="index">Home</a>
+<a href="study-plan.html" data-page="study-plan">Study Plan</a>
+<a href="setup.html" data-page="setup">Setup &amp; Git Basics</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 1 · Understand AI<span class="nav-count"></span></div>
+<a href="foundations.html" data-page="foundations">1. Foundations</a>
+<a href="neural-networks.html" data-page="neural-networks">2. Neural Networks</a>
+<a href="transformers.html" data-page="transformers">3. Transformers &amp; LLMs</a>
+<a href="training.html" data-page="training">4. Training &amp; Tuning</a>
+<a href="models.html" data-page="models">5. Model Landscape</a>
+</div>
+<div class="nav-group current">
+<div class="nav-group-title">Part 2 · Use AI well<span class="nav-count"></span></div>
+<a href="using-ai.html" data-page="using-ai">6. Using Models</a>
+<a href="connecting-ai.html" data-page="connecting-ai">7. Connecting Models</a>
+<a href="tokens.html" data-page="tokens" class="active" aria-current="page">8. Tokens &amp; Cost</a>
+<a href="best-practices.html" data-page="best-practices">9. Best Practices</a>
+<a href="ai-at-work.html" data-page="ai-at-work">10. AI at Work</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 3 · Work with agents<span class="nav-count"></span></div>
+<a href="agent-toolkit.html" data-page="agent-toolkit">11. Equip Your Agent</a>
+<a href="agent-guardrails.html" data-page="agent-guardrails">12. Human Control &amp; Guardrails</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 4 · Build with specs<span class="nav-count"></span></div>
+<a href="spec-driven-development.html" data-page="spec-driven-development">13. Spec-Driven Dev</a>
+<a href="spec-kit.html" data-page="spec-kit">14. Spec Kit from Zero</a>
+<a href="sdd-existing-projects.html" data-page="sdd-existing-projects">15. Existing Projects</a>
+<a href="sdd-examples.html" data-page="sdd-examples">16. Real Examples</a>
+<a href="squad.html" data-page="squad">17. Squad</a>
+<a href="sdd-production.html" data-page="sdd-production">18. Shipping &amp; Reuse</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Reference<span class="nav-count"></span></div>
+<a href="sdd-reference.html" data-page="sdd-reference">Command Reference</a>
+<a href="glossary.html" data-page="glossary">Glossary</a>
+<a href="resources.html" data-page="resources">Resources</a>
+<a href="about.html" data-page="about">About &amp; Feedback</a>
+</div>
+</nav>
+</aside>
+<div class="content">
 <section class="hero">
-  <div class="hero-badge">Chapter 7 · Tokens & Cost</div>
+  <div class="hero-badge">Chapter 8 · Tokens & Cost</div>
   <h1>Tokens, Cost &amp; How to Use Fewer of Them</h1>
   <p>Every time you talk to an AI model you pay in tokens: tokens decide what fits in the model&#39;s memory, how long you wait, and how much the bill says at the end of the month. This chapter turns that invisible meter into something you can read, predict and shrink, first for apps that call model APIs directly and then for everyday work with GitHub Copilot and other coding agents.</p>
+  <div class="hero-meta"><span>⏱ about 25 min of reading</span><span>+ 2 min optional</span><span>Page 11 of 25</span></div>
 </section>
-
 <main class="main">
+<details class="toc-inline"><summary>On this page</summary><nav><a href="#1-what-a-token-is-quick-recap">1. What a token is (quick recap)</a>
+<a href="#2-the-four-kinds-of-tokens-on-your-bill">2. The four kinds of tokens on your bill</a>
+<a href="#3-how-cost-is-calculated">3. How cost is calculated</a>
+<a href="#4-latency-vs-tokens">4. Latency vs tokens</a>
+<a href="#5-the-context-window-is-a-budget">5. The context window is a budget</a>
+<a href="#6-how-to-count-tokens">6. How to count tokens</a>
+<a href="#7-token-saving-techniques-the-catalog">7. Token-saving techniques: the catalog</a>
+<a href="#8-saving-tokens-with-github-copilot-coding-agents">8. Saving tokens with GitHub Copilot &amp; coding agents</a>
+<a href="#9-checklist-before-you-send">9. Checklist: before you send</a>
+<a href="#recap">Recap</a>
+<a href="#check-your-understanding">Check Your Understanding</a></nav></details>
 <div class="section">
 <h2 id="1-what-a-token-is-quick-recap">1. What a token is (quick recap)</h2>
 <p>A <strong>token</strong> is the small unit of text a model reads and writes. It can be a whole word, part of a word, a single character, punctuation, or a space attached to a word. In <a href="transformers.html">Chapter 3</a> you saw how a tokenizer chops text into tokens before the model turns them into numbers. OpenAI&#39;s own rule of thumb for English is that <strong>1 token ≈ 4 characters ≈ ¾ of a word</strong>, so <strong>100 tokens ≈ 75 words</strong> (<a href="https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them" target="_blank" rel="noopener">OpenAI Help: Understanding and counting tokens</a>).</p>
@@ -89,7 +131,6 @@
 </tr>
 </tbody></table></div>
 <div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;The same text always costs the same number of tokens.&quot; Different model families use different tokenizers. Anthropic notes that the newer tokenizer used since Claude Opus 4.7 produces roughly 30% more tokens for the same text than earlier Claude models, and advises recounting prompts against the exact model you plan to use (<a href="https://platform.claude.com/docs/en/build-with-claude/token-counting" target="_blank" rel="noopener">Anthropic: Token counting</a>).</p></div>
-
 </div>
 <div class="section">
 <h2 id="2-the-four-kinds-of-tokens-on-your-bill">2. The four kinds of tokens on your bill</h2>
@@ -125,17 +166,16 @@
 </tbody></table></div>
 <p>Reasoning tokens deserve special attention. OpenAI states that reasoning tokens &quot;are not visible via the API&quot; but &quot;still occupy space in the model&#39;s context window and are billed as output tokens&quot; (<a href="https://developers.openai.com/api/docs/guides/reasoning" target="_blank" rel="noopener">OpenAI: Reasoning models</a>). A short visible answer can therefore cost far more than its length suggests.</p>
 <div class="callout tip"><p><strong>💡 Example:</strong> You ask a reasoning model &quot;Is 7,919 prime?&quot; It replies &quot;Yes.&quot; The visible answer is 1–2 tokens, but the usage report may show hundreds of reasoning tokens. You pay for all of them at the output rate.</p></div>
-
 </div>
 <div class="section">
 <h2 id="3-how-cost-is-calculated">3. How cost is calculated</h2>
 <h3 id="31-the-formula">3.1 The formula</h3>
 <p>Model APIs price tokens <strong>per million tokens</strong> (often written &quot;per 1M&quot; or &quot;/MTok&quot;). A request&#39;s cost is simply each token category multiplied by its rate:</p>
-<div class="code-block">cost = ( uncached_input_tokens × input_price
+<div class="code-wrap plain"><div class="code-head"><span class="code-label"></span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">cost = ( uncached_input_tokens × input_price
        + cached_input_tokens   × cached_input_price
        + cache_write_tokens    × cache_write_price      (only on providers/models that charge it)
        + output_tokens         × output_price )         (output already includes reasoning tokens)
-       ÷ 1,000,000</div>
+       ÷ 1,000,000</div></div>
 <p>Read it line by line: count the tokens in each bucket, multiply by that bucket&#39;s price, add the results, and divide by one million because prices are quoted per million.</p>
 <h3 id="32-a-worked-example-with-placeholder-prices">3.2 A worked example with placeholder prices</h3>
 <p>The prices below are <strong>made up for teaching</strong>. Real prices change often and differ by model, so always check the provider&#39;s pricing page (for example <a href="https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing" target="_blank" rel="noopener">GitHub Copilot models and pricing</a>).</p>
@@ -183,7 +223,6 @@
 <div class="callout tip"><p><strong>🎯 Try it:</strong> Recalculate the table with your own model&#39;s real prices. Then halve the output tokens and see how much more the total drops compared with halving the input.</p></div>
 <h3 id="33-why-output-tokens-usually-cost-more">3.3 Why output tokens usually cost more</h3>
 <p>Input tokens are processed <strong>in parallel</strong>: the model reads your whole prompt in one big pass. Output tokens are generated <strong>one at a time</strong>, and each new token needs another full pass through the model that also looks back at everything before it. That sequential work ties up expensive GPU time per token, so providers charge more for it. The practical lesson: <strong>a word you ask the model to write is usually more expensive than a word you send it.</strong></p>
-
 </div>
 <div class="section">
 <h2 id="4-latency-vs-tokens">4. Latency vs tokens</h2>
@@ -212,7 +251,6 @@
 <td>Everything in section 7</td>
 </tr>
 </tbody></table></div>
-
 </div>
 <div class="section">
 <h2 id="5-the-context-window-is-a-budget">5. The context window is a budget</h2>
@@ -282,7 +320,6 @@
 <p>If you fill the suitcase with input, the model may stop mid-answer. OpenAI warns that when generated tokens hit the context limit or your <code>max_output_tokens</code> value, the response ends as <code>incomplete</code>, possibly <strong>before any visible text</strong>, while you still pay for input and reasoning tokens. Their guidance is to reserve at least <strong>25,000 tokens</strong> for reasoning and output when you start experimenting with reasoning models (<a href="https://developers.openai.com/api/docs/guides/reasoning" target="_blank" rel="noopener">OpenAI: Reasoning models</a>).</p>
 <p>A bigger window is not a free pass either. Anthropic describes <strong>context rot</strong>: &quot;as the number of tokens in the context window increases, the model&#39;s ability to accurately recall information from that context decreases,&quot; so context should be treated &quot;as a finite resource with diminishing marginal returns&quot; (<a href="https://www.anthropic.com/research/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener">Anthropic: Effective context engineering for AI agents</a>).</p>
 <div class="callout success"><p><strong>✅ Key takeaway:</strong> Fewer, better tokens usually mean lower cost, faster answers <strong>and</strong> better quality. Token saving is a quality practice, not only a money practice.</p></div>
-
 </div>
 <div class="section">
 <h2 id="6-how-to-count-tokens">6. How to count tokens</h2>
@@ -292,7 +329,7 @@
 <li><strong>Anthropic token counting endpoint</strong> (<code>/v1/messages/count_tokens</code>): send the same structure you would send to the Messages API (system prompt, tools, images, PDFs) and get <code>input_tokens</code> back. It is free to use (rate-limited) and returns an <strong>estimate</strong> (<a href="https://platform.claude.com/docs/en/build-with-claude/token-counting" target="_blank" rel="noopener">Anthropic: Token counting</a>).</li>
 <li><strong>OpenAI input-token counting API</strong>: counts a complete Responses API input, including message formatting, tools and files (<a href="https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them" target="_blank" rel="noopener">OpenAI Help</a>).</li>
 </ul>
-<h3 id="62-usage-fields-after-you-send">6.2 Usage fields (after you send)</h3>
+<details class="optional sub"><summary><h3 id="62-usage-fields-after-you-send">6.2 Usage fields (after you send)</h3><span class="optional-pill">Optional deep dive</span></summary>
 <p>Every API response reports what you actually used. Field names differ by provider and endpoint:</p>
 <div class="table-wrap"><table>
 <thead>
@@ -323,21 +360,15 @@
 <td><code>usage.input_tokens</code> (only tokens <strong>after</strong> the last cache breakpoint)</td>
 <td><code>usage.output_tokens</code></td>
 <td><code>cache_read_input_tokens</code>, <code>cache_creation_input_tokens</code></td>
-<td>—</td>
-</tr>
-<tr>
-<td>Gemini API</td>
-<td>—</td>
-<td>—</td>
-<td><code>usage.total_cached_tokens</code></td>
-<td>—</td>
+<td><code>usage.output_tokens_details.thinking_tokens</code> (already included in <code>output_tokens</code>)</td>
 </tr>
 </tbody></table></div>
-<p>Sources: <a href="https://developers.openai.com/api/docs/guides/reasoning" target="_blank" rel="noopener">OpenAI Reasoning</a>, <a href="https://developers.openai.com/api/docs/guides/prompt-caching" target="_blank" rel="noopener">OpenAI Prompt caching</a>, <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank" rel="noopener">Anthropic Prompt caching</a>, <a href="https://ai.google.dev/gemini-api/docs/caching" target="_blank" rel="noopener">Gemini Context caching</a>.</p>
+<p>Sources: <a href="https://developers.openai.com/api/docs/guides/reasoning" target="_blank" rel="noopener">OpenAI Reasoning</a>, <a href="https://developers.openai.com/api/docs/guides/prompt-caching" target="_blank" rel="noopener">OpenAI Prompt caching</a>, <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank" rel="noopener">Anthropic Prompt caching</a>, <a href="https://aistudio.google.com/docs/caching" target="_blank" rel="noopener">Gemini Context caching</a>.</p>
 <div class="callout warning"><p><strong>⚠️ Common misconception:</strong> On Anthropic, <code>input_tokens</code> is <strong>not</strong> your total input when caching is on. The docs give the formula <code>total_input_tokens = cache_read_input_tokens + cache_creation_input_tokens + input_tokens</code>.</p></div>
-<h3 id="63-counting-locally-with-tiktoken">6.3 Counting locally with <code>tiktoken</code></h3>
+</details>
+<details class="optional sub"><summary><h3 id="63-counting-locally-with-tiktoken">6.3 Counting locally with <code>tiktoken</code></h3><span class="optional-pill">Optional deep dive</span></summary>
 <p><a href="https://github.com/openai/tiktoken" target="_blank" rel="noopener"><code>tiktoken</code></a> is OpenAI&#39;s open-source tokenizer library for Python. Install it with <code>pip install tiktoken</code>, then run:</p>
-<div class="code-block">import tiktoken
+<div class="code-wrap file"><div class="code-head"><span class="code-label">Python</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">import tiktoken
 
 # o200k_base is the encoding used by recent OpenAI models
 enc = tiktoken.get_encoding(&quot;o200k_base&quot;)
@@ -350,8 +381,9 @@ print(&quot;Pieces:&quot;, [enc.decode([t]) for t in tokens])
 
 # Or pick the encoding that matches a specific model name
 enc_for_model = tiktoken.encoding_for_model(&quot;gpt-4o&quot;)
-print(&quot;Same text, model-specific count:&quot;, len(enc_for_model.encode(text)))</div>
+print(&quot;Same text, model-specific count:&quot;, len(enc_for_model.encode(text)))</div></div>
 <p>The script prints how many tokens the sentence uses and shows each piece, so you can see the emoji turn into more than one token. Two caveats: <code>tiktoken</code> only knows <strong>OpenAI</strong> tokenizers, and a plain-text count does not include the extra tokens added by message formatting, tools, images or files (<a href="https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them" target="_blank" rel="noopener">OpenAI Help</a>). For other providers, use their counting endpoint or the usage fields.</p>
+</details>
 
 </div>
 <div class="section">
@@ -418,7 +450,7 @@ print(&quot;Same text, model-specific count:&quot;, len(enc_for_model.encode(tex
 <td>Large, common content at the beginning</td>
 </tr>
 </tbody></table></div>
-<p>Sources: <a href="https://developers.openai.com/api/docs/guides/prompt-caching" target="_blank" rel="noopener">OpenAI Prompt caching</a>, <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank" rel="noopener">Anthropic Prompt caching</a>, <a href="https://ai.google.dev/gemini-api/docs/caching" target="_blank" rel="noopener">Gemini Context caching</a>.</p>
+<p>Sources: <a href="https://developers.openai.com/api/docs/guides/prompt-caching" target="_blank" rel="noopener">OpenAI Prompt caching</a>, <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank" rel="noopener">Anthropic Prompt caching</a>, <a href="https://aistudio.google.com/docs/caching" target="_blank" rel="noopener">Gemini Context caching</a>.</p>
 <div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;Caching changes the answer.&quot; It does not. Anthropic states that prompt caching &quot;has no effect on output token generation,&quot; and OpenAI says the same. It only changes how the input is processed and billed.</p></div>
 <h3 id="73-limit-the-output">7.3 Limit the output</h3>
 <ul>
@@ -426,7 +458,7 @@ print(&quot;Same text, model-specific count:&quot;, len(enc_for_model.encode(tex
 <li><strong>How:</strong><ul>
 <li>Set a hard cap: <code>max_output_tokens</code> (OpenAI Responses), <code>max_completion_tokens</code> (OpenAI Chat Completions), <code>max_tokens</code> (Anthropic), &quot;max output tokens&quot; (Gemini).</li>
 <li>Ask for brevity explicitly: &quot;Answer in at most 3 sentences&quot;, &quot;Return only the code&quot;.</li>
-<li>Use <strong>stop sequences</strong> so generation ends at a known marker (Gemini documents <code>stop_sequences</code> in its <a href="https://ai.google.dev/gemini-api/docs/prompting-strategies" target="_blank" rel="noopener">prompt design guide</a>).</li>
+<li>Use <strong>stop sequences</strong> so generation ends at a known marker (Gemini documents <code>stop_sequences</code> in its <a href="https://aistudio.google.com/docs/prompting-strategies" target="_blank" rel="noopener">prompt design guide</a>).</li>
 </ul>
 </li>
 <li><strong>Example:</strong> A classifier only needs one word (&quot;Positive&quot;, &quot;Negative&quot; or &quot;Neutral&quot;). Saying so and capping output at a few tokens turns a paragraph-long reply into a single token.</li>
@@ -442,7 +474,7 @@ print(&quot;Same text, model-specific count:&quot;, len(enc_for_model.encode(tex
 <h3 id="75-control-reasoning-effort-and-thinking-budgets">7.5 Control reasoning effort and thinking budgets</h3>
 <ul>
 <li><strong>Why:</strong> Reasoning tokens are billed as output and add latency.</li>
-<li><strong>How:</strong> Use the provider&#39;s effort or thinking setting. OpenAI&#39;s <code>reasoning.effort</code> supports model-dependent values such as <code>none</code>, <code>minimal</code>, <code>low</code>, <code>medium</code>, <code>high</code>, <code>xhigh</code> and <code>max</code>; &quot;lower effort favors speed and lower token usage&quot; (<a href="https://developers.openai.com/api/docs/guides/reasoning" target="_blank" rel="noopener">OpenAI</a>). Anthropic exposes an effort setting and a thinking configuration, and Gemini models also &quot;think&quot; internally (<a href="https://ai.google.dev/gemini-api/docs/prompting-strategies" target="_blank" rel="noopener">Gemini prompt design</a>).</li>
+<li><strong>How:</strong> Use the provider&#39;s effort or thinking setting. OpenAI&#39;s <code>reasoning.effort</code> supports model-dependent values such as <code>none</code>, <code>minimal</code>, <code>low</code>, <code>medium</code>, <code>high</code>, <code>xhigh</code> and <code>max</code>; &quot;lower effort favors speed and lower token usage&quot; (<a href="https://developers.openai.com/api/docs/guides/reasoning" target="_blank" rel="noopener">OpenAI</a>). Anthropic exposes an effort setting and a thinking configuration, and Gemini models also &quot;think&quot; internally (<a href="https://aistudio.google.com/docs/prompting-strategies" target="_blank" rel="noopener">Gemini prompt design</a>).</li>
 <li><strong>Example:</strong> Use <code>low</code> effort for drafting emails, <code>high</code> only for a tricky multi-file debugging session.</li>
 <li><strong>Trade-off:</strong> Changing effort or thinking settings mid-conversation can invalidate the prompt cache on several providers (<a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank" rel="noopener">Anthropic</a>, <a href="https://developers.openai.com/api/docs/guides/prompt-caching" target="_blank" rel="noopener">OpenAI</a>). Pick a level before you start.</li>
 </ul>
@@ -462,31 +494,32 @@ print(&quot;Same text, model-specific count:&quot;, len(enc_for_model.encode(tex
 <h3 id="77-do-rag-right-instead-of-pasting-whole-documents">7.7 Do RAG right instead of pasting whole documents</h3>
 <ul>
 <li><strong>Why:</strong> Pasting an entire manual into every request is expensive and can bury the relevant part (context rot).</li>
-<li><strong>How:</strong> With <a href="using-ai.html">Retrieval-Augmented Generation</a> you store documents in chunks, retrieve only the few chunks most related to the question, and optionally <strong>rerank</strong> them so the best 3–5 go into the prompt. Anthropic also describes &quot;just in time&quot; retrieval, where an agent keeps lightweight references (file paths, links) and loads data only when needed (<a href="https://www.anthropic.com/research/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener">Anthropic</a>).</li>
+<li><strong>How:</strong> With <a href="connecting-ai.html#2-rag-retrieval-augmented-generation">Retrieval-Augmented Generation</a> you store documents in chunks, retrieve only the few chunks most related to the question, and optionally <strong>rerank</strong> them so the best 3–5 go into the prompt. Anthropic also describes &quot;just in time&quot; retrieval, where an agent keeps lightweight references (file paths, links) and loads data only when needed (<a href="https://www.anthropic.com/research/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener">Anthropic</a>).</li>
 <li><strong>Example:</strong> Instead of a 120-page HR handbook (≈80,000 tokens), send the 4 chunks about &quot;parental leave&quot; (≈2,000 tokens).</li>
 <li><strong>Trade-off:</strong> Retrieval can miss the right chunk. Test retrieval quality separately from answer quality.</li>
 </ul>
 <h3 id="78-trim-tool-definitions-and-exposed-mcp-tools">7.8 Trim tool definitions and exposed MCP tools</h3>
 <ul>
 <li><strong>Why:</strong> Every tool you offer the model is described in JSON schema, and <strong>those descriptions are input tokens on every request</strong>. Anthropic&#39;s token-counting example shows a single weather tool pushing a one-line question to about 400 input tokens (<a href="https://platform.claude.com/docs/en/build-with-claude/token-counting" target="_blank" rel="noopener">Anthropic</a>).</li>
-<li><strong>How:</strong> Enable only the tools the task needs, keep descriptions short, and avoid overlapping tools. OpenAI offers <code>allowed_tools</code> and tool search with deferred loading so large tool sets do not all load up front (<a href="https://developers.openai.com/api/docs/guides/prompt-caching" target="_blank" rel="noopener">OpenAI Prompt caching</a>). See <a href="using-ai.html">Chapter 6</a> for what MCP is.</li>
+<li><strong>How:</strong> Enable only the tools the task needs, keep descriptions short, and avoid overlapping tools. OpenAI offers <code>allowed_tools</code> and tool search with deferred loading so large tool sets do not all load up front (<a href="https://developers.openai.com/api/docs/guides/prompt-caching" target="_blank" rel="noopener">OpenAI Prompt caching</a>). See <a href="connecting-ai.html">Chapter 7</a> for what MCP is.</li>
 <li><strong>Example:</strong> An agent connected to an MCP server exposing 60 tools only needs 3 for &quot;summarize my open pull requests&quot;. Disable the rest for that session.</li>
 <li><strong>Trade-off:</strong> Too few tools and the agent cannot finish the job. Anthropic&#39;s test: &quot;If a human engineer can&#39;t definitively say which tool should be used in a given situation, an AI agent can&#39;t be expected to do better.&quot;</li>
 </ul>
-<h3 id="79-use-batch-apis-for-non-urgent-work">7.9 Use batch APIs for non-urgent work</h3>
+<details class="optional sub"><summary><h3 id="79-use-batch-apis-for-non-urgent-work">7.9 Use batch APIs for non-urgent work</h3><span class="optional-pill">Optional deep dive</span></summary>
 <ul>
 <li><strong>Why:</strong> All three major providers charge <strong>50% of the standard price</strong> for batch jobs.</li>
-<li><strong>How:</strong> Collect requests in a file and submit them as a batch: <a href="https://developers.openai.com/api/docs/guides/batch" target="_blank" rel="noopener">OpenAI Batch API</a> (results within 24 hours), <a href="https://platform.claude.com/docs/en/build-with-claude/batch-processing" target="_blank" rel="noopener">Anthropic Message Batches</a> (most finish within 1 hour, up to 24), <a href="https://ai.google.dev/gemini-api/docs/batch-api" target="_blank" rel="noopener">Gemini Batch API</a> (target 24 hours).</li>
+<li><strong>How:</strong> Collect requests in a file and submit them as a batch: <a href="https://developers.openai.com/api/docs/guides/batch" target="_blank" rel="noopener">OpenAI Batch API</a> (results within 24 hours), <a href="https://platform.claude.com/docs/en/build-with-claude/batch-processing" target="_blank" rel="noopener">Anthropic Message Batches</a> (most finish within 1 hour, up to 24), <a href="https://aistudio.google.com/docs/batch-api" target="_blank" rel="noopener">Gemini Batch API</a> (target 24 hours).</li>
 <li><strong>Example:</strong> Classifying 50,000 product reviews overnight, running evaluation suites, or generating embeddings for a document library.</li>
 <li><strong>Trade-off:</strong> No instant answers, results can come back in any order (match them by <code>custom_id</code> or key), and caching inside batches is best-effort.</li>
 </ul>
+</details>
 <h3 id="710-ask-for-structured-output-instead-of-prose">7.10 Ask for structured output instead of prose</h3>
 <ul>
 <li><strong>Why:</strong> A JSON object with the fields you need is usually much shorter than a friendly paragraph, and your code can parse it without a second &quot;extract the answer&quot; call.</li>
 <li><strong>How:</strong> Use the provider&#39;s structured-output feature with a JSON schema (for example <a href="https://developers.openai.com/api/docs/guides/structured-outputs" target="_blank" rel="noopener">OpenAI Structured Outputs</a>), and ask for only the fields you will use.</li>
 <li><strong>Example:</strong></li>
 </ul>
-<div class="code-block">{&quot;sentiment&quot;: &quot;negative&quot;, &quot;topic&quot;: &quot;billing&quot;, &quot;urgent&quot;: true}</div>
+<div class="code-wrap file"><div class="code-head"><span class="code-label">JSON</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">{&quot;sentiment&quot;: &quot;negative&quot;, &quot;topic&quot;: &quot;billing&quot;, &quot;urgent&quot;: true}</div></div>
 <p>  This replaces a reply like &quot;Thank you for sharing this review! After carefully reading it, I would say the overall sentiment is negative, and it mainly concerns billing...&quot;. The JSON is a fraction of the tokens and is ready for your code.</p>
 <ul>
 <li><strong>Trade-off:</strong> Schemas themselves cost input tokens, and very tight formats can hurt quality on tasks that benefit from explanation.</li>
@@ -498,38 +531,39 @@ print(&quot;Same text, model-specific count:&quot;, len(enc_for_model.encode(tex
 <li><strong>Example:</strong> Instead of pasting a 2 MB log, paste the 40 lines around the first <code>ERROR</code>.</li>
 <li><strong>Trade-off:</strong> The model only knows what you show it. Make sure the excerpt contains the real cause.</li>
 </ul>
-<h3 id="712-compress-data-formats">7.12 Compress data formats</h3>
+<details class="optional sub"><summary><h3 id="712-compress-data-formats">7.12 Compress data formats</h3><span class="optional-pill">Optional deep dive</span></summary>
 <ul>
 <li><strong>Why:</strong> Formats with repeated keys and lots of punctuation cost more tokens for the same information.</li>
 <li><strong>How:</strong> For tabular data, prefer CSV or a compact table over verbose JSON; drop fields the model does not need; round long decimals; shorten IDs when you can map them back.</li>
 <li><strong>Example:</strong> The same three records:</li>
 </ul>
-<div class="code-block">[{&quot;customer_id&quot;: &quot;C-0001&quot;, &quot;country&quot;: &quot;Romania&quot;, &quot;orders&quot;: 12},
+<div class="code-wrap file"><div class="code-head"><span class="code-label">JSON</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">[{&quot;customer_id&quot;: &quot;C-0001&quot;, &quot;country&quot;: &quot;Romania&quot;, &quot;orders&quot;: 12},
  {&quot;customer_id&quot;: &quot;C-0002&quot;, &quot;country&quot;: &quot;Germany&quot;, &quot;orders&quot;: 3},
- {&quot;customer_id&quot;: &quot;C-0003&quot;, &quot;country&quot;: &quot;Spain&quot;, &quot;orders&quot;: 7}]</div>
-<div class="code-block">customer_id,country,orders
+ {&quot;customer_id&quot;: &quot;C-0003&quot;, &quot;country&quot;: &quot;Spain&quot;, &quot;orders&quot;: 7}]</div></div>
+<div class="code-wrap plain"><div class="code-head"><span class="code-label"></span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">customer_id,country,orders
 C-0001,Romania,12
 C-0002,Germany,3
-C-0003,Spain,7</div>
+C-0003,Spain,7</div></div>
 <p>  The CSV states each column name once instead of once per row, so it is noticeably shorter. Paste both into a tokenizer to see the difference for your own data; it grows with the number of rows.</p>
 <ul>
 <li><strong>Trade-off:</strong> Deeply nested data does not fit CSV well, and the model may need column descriptions to interpret short headers.</li>
 </ul>
-<h3 id="713-deduplicate-and-cache-your-own-responses">7.13 Deduplicate and cache your own responses</h3>
+</details>
+<details class="optional sub"><summary><h3 id="713-deduplicate-and-cache-your-own-responses">7.13 Deduplicate and cache your own responses</h3><span class="optional-pill">Optional deep dive</span></summary>
 <ul>
 <li><strong>Why:</strong> The cheapest request is the one you never send.</li>
 <li><strong>How:</strong> Store answers to frequent, identical questions (exact-match cache) in your own app, and remove duplicate documents or chunks before they reach the prompt.</li>
 <li><strong>Example:</strong> An FAQ bot caches the answer to &quot;What are your opening hours?&quot; for a day.</li>
 <li><strong>Trade-off:</strong> Cached answers go stale, and answers that depend on the user must never be shared across users.</li>
 </ul>
+</details>
 <h3 id="714-measure-then-set-budgets-and-alerts">7.14 Measure, then set budgets and alerts</h3>
 <ul>
-<li><strong>Why:</strong> You cannot shrink what you do not measure, and runaway loops (an agent that keeps calling tools) can burn budget fast. OWASP lists <strong>Unbounded Consumption</strong> as one of the top 10 risks for LLM apps (<a href="https://genai.owasp.org/llm-top-10/" target="_blank" rel="noopener">OWASP</a>).</li>
+<li><strong>Why:</strong> You cannot shrink what you do not measure, and runaway loops (an agent that keeps calling tools) can burn budget fast. OWASP lists <strong>Unbounded Consumption</strong> as one of the top 10 risks for LLM apps (<a href="https://genai.owasp.org/top-10-for-llm-applications-2026/" target="_blank" rel="noopener">OWASP</a>).</li>
 <li><strong>How:</strong> Log token usage per request, user and feature; track your cache-hit rate (OpenAI suggests &quot;total cached tokens ÷ total input tokens&quot;); set spend limits and alerts in the provider console; cap the number of steps an agent may take.</li>
 <li><strong>Example:</strong> A daily report shows that one feature uses 70% of your tokens because it re-sends a full catalog each time. Fixing that one prompt halves the bill.</li>
-<li><strong>Trade-off:</strong> Logging prompts can capture sensitive data; see <a href="best-practices.html">Chapter 8</a> for safe observability.</li>
+<li><strong>Trade-off:</strong> Logging prompts can capture sensitive data; see <a href="best-practices.html">Chapter 9</a> for safe observability.</li>
 </ul>
-
 </div>
 <div class="section">
 <h2 id="8-saving-tokens-with-github-copilot-coding-agents">8. Saving tokens with GitHub Copilot &amp; coding agents</h2>
@@ -539,6 +573,7 @@ C-0003,Spain,7</div>
 <p>The older <strong>premium request</strong> system, where each prompt cost one premium request times a <strong>model multiplier</strong> (a heavier model might count as several requests, an included model as zero), now applies only to Copilot Pro and Pro+ subscribers who stayed on an existing annual plan after June 1, 2026 (<a href="https://docs.github.com/en/copilot/reference/copilot-billing/request-based-billing-legacy/copilot-requests" target="_blank" rel="noopener">GitHub Docs: Requests in GitHub Copilot (legacy)</a>). Either way the lesson is the same: <strong>heavier models and bigger contexts cost more of your allowance.</strong></p>
 <div class="callout tip"><p><strong>📘 In plain words:</strong> Copilot now works like the APIs in this chapter: more tokens and bigger models use more credits. Every technique in section 7 also helps you inside your editor.</p></div>
 <h3 id="82-the-copilot-token-saving-checklist">8.2 The Copilot token-saving checklist</h3>
+<p>The files and features named in this table (custom instructions, <code>AGENTS.md</code>, custom agents, MCP tools) are explained step by step in <a href="agent-toolkit.html">Chapter 11</a>. Come back to this checklist after reading it.</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -616,7 +651,7 @@ C-0003,Spain,7</div>
 <h3 id="83-before-and-after-the-same-request-fewer-tokens">8.3 Before and after: the same request, fewer tokens</h3>
 <p>Counts below are <strong>approximate</strong>, measured with OpenAI&#39;s <code>o200k_base</code> tokenizer; other tokenizers give somewhat different numbers. File paths and code names cost more tokens per word than plain English.</p>
 <p><strong>Before (≈ 150 tokens of prompt, plus whatever the agent explores):</strong></p>
-<div class="code-block">Hi Copilot! I hope you&#39;re doing well. I have a bit of a problem and I was
+<div class="code-wrap plain"><div class="code-head"><span class="code-label"></span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">Hi Copilot! I hope you&#39;re doing well. I have a bit of a problem and I was
 wondering if you could please help me out. So basically there&#39;s this thing in
 our app where users sometimes can&#39;t log in, I think? It might be related to the
 authentication stuff, or maybe the database, or maybe something else entirely,
@@ -624,16 +659,15 @@ I&#39;m honestly not sure. Could you take a look at the whole codebase and figur
 out what might be going wrong and then fix anything you think needs fixing? Also
 feel free to clean up anything else you notice along the way, and maybe add some
 comments and documentation too if you have time. Please explain everything you
-do in a lot of detail so I can understand it. Thanks so much in advance!</div>
+do in a lot of detail so I can understand it. Thanks so much in advance!</div></div>
 <p><strong>After (≈ 75 tokens):</strong></p>
-<div class="code-block">Login fails with &quot;401 invalid token&quot; after the user&#39;s session is 24h old.
+<div class="code-wrap plain"><div class="code-head"><span class="code-label"></span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">Login fails with &quot;401 invalid token&quot; after the user&#39;s session is 24h old.
 Repro: test_login_expired_session in #file:tests/test_auth.py.
 Likely area: #file:src/auth/session.py (token refresh).
 Fix the bug only. Done when tests/test_auth.py passes.
-Reply with a 3-line summary of the change.</div>
+Reply with a 3-line summary of the change.</div></div>
 <p>The second prompt is about <strong>half as long</strong>, but the bigger saving is everything it prevents: no whole-codebase search, no unrequested refactoring, no long explanation, and fewer retries because the agent knows exactly when it is finished.</p>
 <div class="callout tip"><p><strong>🎯 Try it:</strong> Take a prompt you used this week. Add a stopping condition and one <code>#file</code> reference, delete every sentence that does not change what the agent should do, and compare the credit cost shown when you hover the response.</p></div>
-
 </div>
 <div class="section">
 <h2 id="9-checklist-before-you-send">9. Checklist: before you send</h2>
@@ -648,7 +682,6 @@ Reply with a 3-line summary of the change.</div>
 <li><input disabled="" type="checkbox"> Could this run as a <strong>batch</strong> job at half price?</li>
 <li><input disabled="" type="checkbox"> Am I logging usage and watching cache-hit rate and spend alerts?</li>
 </ul>
-
 </div>
 <div class="section">
 <h2 id="recap">Recap</h2>
@@ -660,7 +693,6 @@ Reply with a 3-line summary of the change.</div>
 <li>The biggest levers are prompt caching (stable content first), shorter output, the right model and effort level, lean history, good retrieval, fewer tools and batch jobs.</li>
 <li>In GitHub Copilot, usage is measured in AI credits based on tokens and model; short scoped instructions, focused context, new chats per task, lighter models and a plan-first workflow save the most.</li>
 </ul>
-
 </div>
 <div class="section">
 <h2 id="check-your-understanding">Check Your Understanding</h2>
@@ -704,10 +736,30 @@ Reply with a 3-line summary of the change.</div>
 <li>D) Switch to the largest model and the highest reasoning level</li>
 </ul>
 <details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> C — A fresh session avoids re-sending irrelevant history, focused references keep context lean, and a stopping condition prevents extra agent work and retries.</p></div></details>
-<div class="nav-links"><a href="using-ai.html">← Chapter 6: Using Models</a><a href="best-practices.html">Chapter 8: Best Practices →</a></div>
+</div>
+<div class="done-row"><button class="done-btn" type="button" aria-pressed="false">Mark this page as done</button></div>
+<div class="pager">
+<a class="pager-prev" href="connecting-ai.html"><span>← Previous</span><strong>7. Connecting Models</strong></a>
+<a class="pager-next" href="best-practices.html"><span>Next →</span><strong>9. Best Practices</strong></a>
 </div>
 </main>
-
-<footer class="site-footer">AI Learn · A beginner's guide to how AI models work · Based on official docs and open course material · Not affiliated with any model provider</footer>
+<footer class="site-footer">AI Learn · A personal learning project by Emanuel Loghin · <a href="about.html">About &amp; feedback</a> · Based on official docs and open course material · Not affiliated with any model provider</footer>
+</div>
+<aside class="toc-rail" aria-label="On this page">
+<div class="toc-title">On this page</div><nav><a href="#1-what-a-token-is-quick-recap">1. What a token is (quick recap)</a>
+<a href="#2-the-four-kinds-of-tokens-on-your-bill">2. The four kinds of tokens on your bill</a>
+<a href="#3-how-cost-is-calculated">3. How cost is calculated</a>
+<a href="#4-latency-vs-tokens">4. Latency vs tokens</a>
+<a href="#5-the-context-window-is-a-budget">5. The context window is a budget</a>
+<a href="#6-how-to-count-tokens">6. How to count tokens</a>
+<a href="#7-token-saving-techniques-the-catalog">7. Token-saving techniques: the catalog</a>
+<a href="#8-saving-tokens-with-github-copilot-coding-agents">8. Saving tokens with GitHub Copilot &amp; coding agents</a>
+<a href="#9-checklist-before-you-send">9. Checklist: before you send</a>
+<a href="#recap">Recap</a>
+<a href="#check-your-understanding">Check Your Understanding</a></nav>
+</aside>
+</div>
+<div class="scrim"></div>
+<script src="site.js"></script>
 </body>
 </html>

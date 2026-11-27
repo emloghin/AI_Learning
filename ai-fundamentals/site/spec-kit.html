@@ -4,52 +4,95 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Spec Kit: Set Up and Deliver Your First Feature — AI Learn</title>
+<script>try{var t=localStorage.getItem('ailearn:theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<style>.section td code,.callout code,.diagram-caption code{background:var(--primary-light);color:var(--primary);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:13px}.callout p+p{margin-top:8px}.callout ul{margin:8px 0 0 20px}</style>
 </head>
-<body>
-
-<header class="site-header">
-  <div class="header-inner">
-    <div class="header-logo"><span>AI&nbsp;</span>Learn</div>
-    <nav class="header-nav">
-      <a href="index.html">Home</a>
-      <a href="study-plan.html">Study Plan</a>
-      <a href="foundations.html">1. Foundations</a>
-      <a href="neural-networks.html">2. Neural Networks</a>
-      <a href="transformers.html">3. Transformers &amp; LLMs</a>
-      <a href="training.html">4. Training &amp; Tuning</a>
-      <a href="models.html">5. Model Landscape</a>
-      <a href="using-ai.html">6. Using Models</a>
-      <a href="tokens.html">7. Tokens &amp; Cost</a>
-      <a href="best-practices.html">8. Best Practices</a>
-      <a href="ai-at-work.html">9. AI at Work</a>
-      <a href="spec-driven-development.html">10. Spec-Driven Dev</a>
-      <a href="spec-kit.html" class="active">10a. Spec Kit</a>
-      <a href="squad.html">10b. Squad</a>
-      <a href="sdd-production.html">10c. Shipping &amp; Reuse</a>
-      <a href="glossary.html">Glossary</a>
-      <a href="resources.html">Resources</a>
-    </nav>
-  </div>
+<body data-page="spec-kit">
+<div class="read-progress" aria-hidden="true"><div></div></div>
+<header class="topbar">
+  <button class="icon-btn menu-btn" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
+  <a class="header-logo" href="index.html"><span>AI&nbsp;</span>Learn</a>
+  <span class="topbar-crumb">Part 4 · Build with specs <b>›</b> 14. Spec Kit from Zero</span>
+  <span class="topbar-progress" title="Pages you marked as done"></span>
+  <button class="icon-btn theme-btn" type="button" aria-label="Switch between light and dark theme">◐</button>
 </header>
-
+<div class="shell">
+<aside class="sidebar" aria-label="Site navigation">
+<nav>
+<div class="nav-group">
+<div class="nav-group-title">Start here<span class="nav-count"></span></div>
+<a href="index.html" data-page="index">Home</a>
+<a href="study-plan.html" data-page="study-plan">Study Plan</a>
+<a href="setup.html" data-page="setup">Setup &amp; Git Basics</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 1 · Understand AI<span class="nav-count"></span></div>
+<a href="foundations.html" data-page="foundations">1. Foundations</a>
+<a href="neural-networks.html" data-page="neural-networks">2. Neural Networks</a>
+<a href="transformers.html" data-page="transformers">3. Transformers &amp; LLMs</a>
+<a href="training.html" data-page="training">4. Training &amp; Tuning</a>
+<a href="models.html" data-page="models">5. Model Landscape</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 2 · Use AI well<span class="nav-count"></span></div>
+<a href="using-ai.html" data-page="using-ai">6. Using Models</a>
+<a href="connecting-ai.html" data-page="connecting-ai">7. Connecting Models</a>
+<a href="tokens.html" data-page="tokens">8. Tokens &amp; Cost</a>
+<a href="best-practices.html" data-page="best-practices">9. Best Practices</a>
+<a href="ai-at-work.html" data-page="ai-at-work">10. AI at Work</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 3 · Work with agents<span class="nav-count"></span></div>
+<a href="agent-toolkit.html" data-page="agent-toolkit">11. Equip Your Agent</a>
+<a href="agent-guardrails.html" data-page="agent-guardrails">12. Human Control &amp; Guardrails</a>
+</div>
+<div class="nav-group current">
+<div class="nav-group-title">Part 4 · Build with specs<span class="nav-count"></span></div>
+<a href="spec-driven-development.html" data-page="spec-driven-development">13. Spec-Driven Dev</a>
+<a href="spec-kit.html" data-page="spec-kit" class="active" aria-current="page">14. Spec Kit from Zero</a>
+<a href="sdd-existing-projects.html" data-page="sdd-existing-projects">15. Existing Projects</a>
+<a href="sdd-examples.html" data-page="sdd-examples">16. Real Examples</a>
+<a href="squad.html" data-page="squad">17. Squad</a>
+<a href="sdd-production.html" data-page="sdd-production">18. Shipping &amp; Reuse</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Reference<span class="nav-count"></span></div>
+<a href="sdd-reference.html" data-page="sdd-reference">Command Reference</a>
+<a href="glossary.html" data-page="glossary">Glossary</a>
+<a href="resources.html" data-page="resources">Resources</a>
+<a href="about.html" data-page="about">About &amp; Feedback</a>
+</div>
+</nav>
+</aside>
+<div class="content">
 <section class="hero">
-  <div class="hero-badge">Chapter 10a · Hands-on Spec Kit</div>
+  <div class="hero-badge">Chapter 14 · Hands-on Spec Kit, from zero</div>
   <h1>Spec Kit: Set Up and Deliver Your First Feature</h1>
   <p>Use one small room-booking feature to learn the complete cycle: install, specify, clarify, plan, implement and verify. The important habit is not memorizing commands; it is reviewing the artifact from each step before asking the agent to continue.</p>
+  <div class="hero-meta"><span>⏱ about 14 min of reading</span><span>Page 17 of 25</span></div>
 </section>
-
 <main class="main">
+<details class="toc-inline"><summary>On this page</summary><nav><a href="#1-prerequisites-and-version-baseline">1. Prerequisites and version baseline</a>
+<a href="#2-install-once-initialize-each-project">2. Install once, initialize each project</a>
+<a href="#3-know-the-files-you-are-reviewing">3. Know the files you are reviewing</a>
+<a href="#4-set-the-project-rules-once">4. Set the project rules once</a>
+<a href="#5-specify-behaviour-then-answer-the-hard-questions">5. Specify behaviour, then answer the hard questions</a>
+<a href="#6-plan-the-implementation-and-the-verification">6. Plan the implementation and the verification</a>
+<a href="#7-generate-tasks-and-check-consistency">7. Generate tasks and check consistency</a>
+<a href="#8-implement-inspect-converge">8. Implement, inspect, converge</a>
+<a href="#9-change-the-spec-without-losing-control">9. Change the spec without losing control</a>
+<a href="#10-troubleshooting-and-deliberate-upgrades">10. Troubleshooting and deliberate upgrades</a>
+<a href="#recap">Recap</a>
+<a href="#check-your-understanding">Check Your Understanding</a></nav></details>
 <div class="section">
 <div class="callout tip"><p><strong>📘 In plain words:</strong> <code>specify</code> runs in your terminal and prepares the project. <code>/speckit-*</code> runs inside your coding agent&#39;s chat and does the development work. Pasting a chat command into PowerShell will not run it.</p></div>
-
 </div>
 <div class="section">
 <h2 id="1-prerequisites-and-version-baseline">1. Prerequisites and version baseline</h2>
-<p>This walkthrough uses <strong>Spec Kit v1.4.4</strong>, released on 23 November 2026, and the <strong>GitHub Copilot default skills layout</strong>. See the <a href="https://github.com/github/spec-kit/releases/tag/v1.4.4" target="_blank" rel="noopener">release</a>, <a href="https://github.github.io/spec-kit/installation.html" target="_blank" rel="noopener">installation guide</a> and <a href="https://github.github.io/spec-kit/integrations/copilot.html" target="_blank" rel="noopener">Copilot integration guide</a>.</p>
+<p>If the terminal, Git or environment variables are new to you, read <a href="setup.html">Setup and Git basics</a> first; it also covers installing the tools in the table below.</p>
+<p>This walkthrough uses <strong>Spec Kit v1.4.5</strong>, released on 25 November 2026 (a maintenance update to v1.4.4), and the <strong>GitHub Copilot default skills layout</strong>. See the <a href="https://github.com/github/spec-kit/releases/tag/v1.4.5" target="_blank" rel="noopener">release</a>, <a href="https://github.github.io/spec-kit/installation.html" target="_blank" rel="noopener">installation guide</a> and <a href="https://github.github.io/spec-kit/integrations/copilot.html" target="_blank" rel="noopener">Copilot integration guide</a>.</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -71,7 +114,7 @@
 </tr>
 <tr>
 <td>A working coding agent</td>
-<td>Use <a href="https://docs.github.com/en/copilot/how-tos/set-up/install-copilot-cli" target="_blank" rel="noopener">Copilot CLI</a> or VS Code with Copilot Chat; sign in and confirm your account/organization enables access</td>
+<td>Use <a href="https://docs.github.com/en/copilot/how-tos/copilot-cli/set-up-copilot-cli/install-copilot-cli" target="_blank" rel="noopener">Copilot CLI</a> or VS Code with Copilot Chat; sign in and confirm your account/organization enables access</td>
 </tr>
 <tr>
 <td>A safe project folder</td>
@@ -80,30 +123,33 @@
 </tbody></table></div>
 <p>Spec Kit supports Windows, macOS and Linux. The commands below choose <strong>PowerShell scripts on Windows</strong> with <code>--script ps</code>; use <code>--script sh</code> for Bash on macOS/Linux. Python helper scripts are another documented option (<code>--script py</code>). Paths in this guide use Windows notation.</p>
 <p><strong>Cost:</strong> Spec Kit is open source, but the coding agent and selected models can consume paid usage. Check your account&#39;s allowance and organization policy; installing Spec Kit does not grant Copilot access.</p>
-
 </div>
 <div class="section">
 <h2 id="2-install-once-initialize-each-project">2. Install once, initialize each project</h2>
 <p><strong>Terminal — install the pinned CLI:</strong></p>
-<div class="code-block">uv tool install specify-cli --from git+https://github.com/github/spec-kit.git@v1.4.4
+<div class="code-wrap term"><div class="code-head"><span class="code-label">Terminal</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">uv tool install specify-cli --from git+https://github.com/github/spec-kit.git@v1.4.5
 specify version
-specify check</div>
-<p>Confirm that the reported version is the one you intended. <code>specify check</code> checks the surrounding tool environment; it does not prove that your application works. If an older install is already present, follow the <a href="https://github.github.io/spec-kit/upgrade.html" target="_blank" rel="noopener">upgrade instructions</a> rather than mixing several package managers.</p>
+specify check</div></div>
+<p>Each command should print information, not an error; <code>specify version</code> must show 1.4.5. If it shows an older number, another copy is installed and comes first on your PATH. Confirm that the reported version is the one you intended. <code>specify check</code> checks the surrounding tool environment; it does not prove that your application works. If an older install is already present, follow the <a href="https://github.github.io/spec-kit/upgrade.html" target="_blank" rel="noopener">upgrade instructions</a> rather than mixing several package managers.</p>
 <p><strong>Terminal — create a new project:</strong></p>
-<div class="code-block">specify init room-book --integration copilot --script ps
+<div class="code-wrap term"><div class="code-head"><span class="code-label">Terminal</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">specify init room-book --integration copilot --script ps
 cd room-book
-git init</div>
-<p>Review the generated files, configure your Git author identity if necessary, and make an initial commit through your normal Git workflow. Then run <code>git switch -c feature/room-bookings</code>. This gives you a baseline against which to review the feature, not just an empty repository.</p>
+git init</div></div>
+<p>Review the generated files, then save them as a first commit and start a branch for the feature:</p>
+<div class="code-wrap term"><div class="code-head"><span class="code-label">Terminal</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">git add -A
+git commit -m &quot;Add Spec Kit scaffolding&quot;
+git switch -c feature/room-bookings</div></div>
+<p>This gives you a baseline against which to review the feature, not just an empty repository. If Git asks who you are, set your name and e-mail as shown in <a href="setup.html#4-install-and-check-the-tools">Setup and Git basics</a>.</p>
 <p><code>specify init</code> creates the directory and Spec Kit scaffolding; it does <strong>not</strong> create a finished application. Git initialization and automatic feature branching are not core defaults in current Spec Kit. We use ordinary Git ourselves; the optional <code>git</code> extension is not needed for this tutorial.</p>
 <p>Open the folder in VS Code and use Copilot Chat in Agent mode, or run <code>copilot</code> in this directory. Review the folder&#39;s instructions before trusting it. In chat, type <code>/speckit</code> and choose a discovered skill.</p>
 <div class="callout warning"><p><strong>⚠️ Version trap:</strong> <code>/speckit-specify</code> is the current default Copilot skill spelling. <code>/speckit.specify</code> is still the canonical notation in several references and other layouts; it is not simply &quot;always wrong&quot;. Codex skills use <code>$speckit-specify</code>. Match your installed integration, not a random video&#39;s command list. See <a href="https://github.github.io/spec-kit/integrations/cli.html#command-invocation" target="_blank" rel="noopener">command invocation</a>.</p></div>
 <h3 id="existing-project-instead">Existing project instead?</h3>
 <p>Do <strong>not</strong> create another application around it. Save unrelated changes through your normal Git workflow, create an adoption branch, and record the current build/test results first. From the existing repository root:</p>
-<div class="code-block">specify init --here --force --integration copilot --script ps
+<div class="code-wrap term"><div class="code-head"><span class="code-label">Terminal</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">specify init --here --force --integration copilot --script ps
 git diff
-git status --short</div>
-<p><code>--force</code> permits initialization in a non-empty directory and can overwrite conflicting managed paths. It is not a safety switch. Review both changed and untracked files before continuing. Initialization does not infer a complete spec for the existing system. Follow the <a href="https://github.github.io/spec-kit/how-to/existing-projects.html" target="_blank" rel="noopener">existing-project guide</a>, then choose one bounded change.</p>
-
+git status --short</div></div>
+<p><code>--force</code> permits initialization in a non-empty directory and can overwrite conflicting managed paths. It is not a safety switch. Review both changed and untracked files before continuing. Initialization does not infer a complete spec for the existing system.</p>
+<p><strong>Continue on the dedicated page:</strong> <a href="sdd-existing-projects.html">Spec Kit in an existing project</a> walks through the whole adoption, from a safe baseline and an evidence-based constitution to the first change and a team rollout. Come back here for the details of each workflow command.</p>
 </div>
 <div class="section">
 <h2 id="3-know-the-files-you-are-reviewing">3. Know the files you are reviewing</h2>
@@ -148,28 +194,26 @@ git status --short</div>
 </tr>
 </tbody></table></div>
 <p><strong>Important current behaviour:</strong> commands select the feature through <code>.specify\feature.json</code>, or the <code>SPECIFY_FEATURE_DIRECTORY</code> environment override. <strong>Changing Git branches alone does not select a feature.</strong> Before running a skill, check the selected feature directory. Do not copy a feature number from this tutorial and assume it exists in your checkout.</p>
-<p>After creating a feature, open <code>.specify\feature.json</code> and inspect its <code>feature_directory</code> value. To resume an existing feature, update that value to its actual directory, as described in the <a href="https://github.github.io/spec-kit/quickstart.html" target="_blank" rel="noopener">quickstart</a>. Feature directories are normally numbered even without the Git extension. <code>SPECIFY_FEATURE</code> alone is only a label, not a directory selector.</p>
+<p>After creating a feature, open <code>.specify\feature.json</code> and inspect its <code>feature_directory</code> value. To resume an existing feature, update that value to its actual directory, written with forward slashes (for example <code>specs/001-room-bookings</code>; backslashes are not valid inside this JSON file), as described in the <a href="https://github.github.io/spec-kit/quickstart.html" target="_blank" rel="noopener">quickstart</a>. Feature directories are normally numbered even without the Git extension. <code>SPECIFY_FEATURE</code> alone is only a label, not a directory selector.</p>
 <p>Current initialization supplies a <code>.specify\.gitignore</code> for machine-local state such as <code>feature.json</code>. Keep the constitution and reviewed shared configuration in version control; choose an explicit policy for feature artifacts in the <a href="sdd-production.html">reuse guide</a>. See the <a href="https://github.github.io/spec-kit/overview/core.html" target="_blank" rel="noopener">core reference</a> for the exact selection rules.</p>
-
 </div>
 <div class="section">
 <h2 id="4-set-the-project-rules-once">4. Set the project rules once</h2>
 <p><strong>Copilot chat:</strong></p>
-<div class="code-block">/speckit-constitution For RoomBook: keep changes small and reviewable.
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">/speckit-constitution For RoomBook: keep changes small and reviewable.
 Validate untrusted input at the server boundary. Derive user identity from
 the authenticated session, never from a caller-supplied owner ID.
 Test business rules and failure cases. Enforce booking conflicts atomically.
 Do not log secrets or personal booking descriptions.
 Reuse the repository&#39;s existing stack and test tools where present.
-Require a human-reviewed migration, rollout and recovery plan before release.</div>
-<p>Read the resulting constitution. Remove invented organizational rules and vague absolutes. For an existing service, make the agent read the README, architecture decisions, contribution guide and CI configuration first.</p>
+Require a human-reviewed migration, rollout and recovery plan before release.</div></div>
+<p>Read the resulting constitution. Remove invented organizational rules and vague absolutes. In current versions this command writes the constitution only; it no longer rewrites the templates to match (an optional preset, <code>constitution-sync</code>, restores that). For an existing service, make the agent read the README, architecture decisions, contribution guide and CI configuration first.</p>
 <p><strong>Stop here until:</strong> the rules match decisions your team actually supports. A constitution is a reviewed agreement, not a magic policy-enforcement engine.</p>
-
 </div>
 <div class="section">
 <h2 id="5-specify-behaviour-then-answer-the-hard-questions">5. Specify behaviour, then answer the hard questions</h2>
 <p><strong>Copilot chat — describe the what and why, not the framework:</strong></p>
-<div class="code-block">/speckit-specify Build the first RoomBook booking API for employees.
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">/speckit-specify Build the first RoomBook booking API for employees.
 An authenticated employee can list rooms and create a booking for a room.
 Each booking has a start and end instant, lasts 30 to 120 minutes, and must
 start in the future. Bookings for the same room must not overlap, including
@@ -177,11 +221,11 @@ when two employees submit at the same time. Adjacent bookings are allowed.
 A user can cancel only their own future booking. Cancelled bookings no
 longer block availability. Invalid requests must not create partial records.
 For this slice, exclude recurring meetings, email, calendar sync, an admin
-dashboard and a public sign-up flow. Use synthetic data while learning.</div>
-<p>Then invoke separately:</p>
-<div class="code-block">/speckit-clarify Focus on authorization, time zones, simultaneous requests,
+dashboard and a public sign-up flow. Use synthetic data while learning.</div></div>
+<p>Then invoke separately. <code>clarify</code> asks up to five targeted questions and writes your answers into <code>spec.md</code>:</p>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">/speckit-clarify Focus on authorization, time zones, simultaneous requests,
 cancellation boundaries and error responses. Ask me to decide any missing
-business policy rather than inventing it.</div>
+business policy rather than inventing it.</div></div>
 <p><strong>Example decisions to record:</strong> require offset-bearing timestamps and store instants consistently; a start exactly at the current time is not in the future; only active reservations block a room; return a conflict response when a room is already booked. Distinguish business rules from the technical choice of how to enforce them.</p>
 <p>Review the spec against these <strong>acceptance examples</strong>:</p>
 <div class="table-wrap"><table>
@@ -217,12 +261,11 @@ business policy rather than inventing it.</div>
 </tr>
 </tbody></table></div>
 <p>Use future dates when running these examples. They describe intended behaviour; they are not results from an already-built sample application.</p>
-
 </div>
 <div class="section">
 <h2 id="6-plan-the-implementation-and-the-verification">6. Plan the implementation and the verification</h2>
 <p><strong>Copilot chat — now name the technology:</strong></p>
-<div class="code-block">/speckit-plan Read the repository first and reuse its framework, authentication,
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">/speckit-plan Read the repository first and reuse its framework, authentication,
 database access and test conventions. If this is the empty learning repo,
 propose Node.js LTS, TypeScript, Fastify and PostgreSQL with pinned compatible
 versions. Use the existing identity provider in a real deployment; a test-only
@@ -231,38 +274,36 @@ Design a database-enforced conflict rule or equivalent atomic transaction.
 Specify API contracts, migrations, failure responses and observability.
 Include unit tests and real-database integration tests for concurrency.
 Document exact local setup, test commands and cleanup in quickstart.md.
-Explain tradeoffs before adding dependencies. Do not implement yet.</div>
-<p>This is <strong>one example stack</strong>, not a requirement of either tool. For a .NET, Java or Python project, keep the stack you already know.</p>
+Explain tradeoffs before adding dependencies. Do not implement yet.</div></div>
+<p>This is <strong>one example stack</strong>, not a requirement of either tool. It assumes Node.js and a PostgreSQL database you can run locally, neither of which is in the prerequisites table. <strong>For a first practice run, keep it lighter:</strong> tell the plan to use a language you already know and an embedded database such as SQLite, and keep the concurrency test as a requirement. For a .NET, Java or Python project, keep the stack you already know.</p>
 <p>Read <code>plan.md</code> and the generated supporting artifacts. Check that they explain authentication, database setup, migration order and the actual test commands. A plan saying &quot;check availability, then insert&quot; without an atomic guarantee does not meet the simultaneous-request requirement.</p>
 <p><strong>Copilot chat — create a requirements-quality checklist:</strong></p>
-<div class="code-block">/speckit-checklist Review authorization, time boundaries, concurrency,
-failure behaviour and operational requirements for completeness and clarity.</div>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">/speckit-checklist Review authorization, time boundaries, concurrency,
+failure behaviour and operational requirements for completeness and clarity.</div></div>
 <p>This checklist is a <strong>review of requirements</strong>, not a suite of executable application tests. Custom checklist items belong to the reviewer: mark them complete only when their requirement-quality criteria are actually satisfied.</p>
 <p><strong>Stop here until:</strong> you can explain why the design satisfies each acceptance example and how you will verify it.</p>
-
 </div>
 <div class="section">
 <h2 id="7-generate-tasks-and-check-consistency">7. Generate tasks and check consistency</h2>
 <p>Run these in chat, <strong>one at a time</strong>:</p>
-<div class="code-block">/speckit-tasks</div>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">/speckit-tasks</div></div>
 <p>Read <code>tasks.md</code>, then:</p>
-<div class="code-block">/speckit-analyze</div>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">/speckit-analyze</div></div>
 <p>Tasks should include the tests you requested, not just application code. A useful task names the work, target files, prerequisites and completion evidence. <code>[P]</code> marks work identified as parallelizable; it is not permission to ignore dependencies or edit the same file concurrently.</p>
 <p><code>analyze</code> reports inconsistencies across the spec, plan and tasks. It is read-only. Fix contradictory artifacts, then analyze again. Do not ask the implementation agent to silently decide whether the spec or plan wins.</p>
-
 </div>
 <div class="section">
 <h2 id="8-implement-inspect-converge">8. Implement, inspect, converge</h2>
 <p><strong>Copilot chat:</strong></p>
-<div class="code-block">/speckit-implement</div>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">/speckit-implement</div></div>
 <p>Use the reviewed task list. For a larger feature, ask for a bounded phase and review before continuing. The implementation flow checks checklist state and asks before proceeding with incomplete items; it does not complete reviewer-owned checklists for you.</p>
 <p>Run the application and test commands documented in the project&#39;s <code>quickstart.md</code>. Read their real output. Check the Git diff for unrelated edits, skipped tests, disabled validation and new dependencies.</p>
 <p>Then:</p>
-<div class="code-block">/speckit-converge</div>
+<div class="code-wrap chat"><div class="code-head"><span class="code-label">Agent chat</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">/speckit-converge</div></div>
 <p>Converge compares implementation with the spec, plan and tasks. When it finds remaining work, it can <strong>append gap tasks to <code>tasks.md</code></strong>. It does not fix the code or rewrite requirements to match the code. Review those tasks, implement them, run the checks, and converge again.</p>
+<p>Where a person decides at each of these steps, and which settings back that decision, is mapped in <a href="agent-guardrails.html#3-human-decision-points-in-the-spec-driven-workflow">Chapter 12</a>.</p>
 <div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;Converged means approved for production.&quot; It means the agent&#39;s completeness assessment found no remaining gaps. It is not a security certification, a test runner, or your release approval. A failing test still fails, whatever the summary says.</p></div>
 <p>At this point you can continue with one agent or use the <a href="squad.html">manual Squad handoff</a>. Do not have both implementation paths modifying the same work at once.</p>
-
 </div>
 <div class="section">
 <h2 id="9-change-the-spec-without-losing-control">9. Change the spec without losing control</h2>
@@ -275,7 +316,6 @@ failure behaviour and operational requirements for completeness and clarity.</di
 <li>Implement, run tests and converge again.</li>
 </ol>
 <p>There is <strong>no core command that automatically reconciles all three artifacts</strong>. <code>clarify</code> helps resolve ambiguity; <code>analyze</code> reports inconsistency; <code>converge</code> assesses implementation and appends work. None excuses leaving a 30-minute rule in the spec while a task says 15 minutes. See <a href="https://github.github.io/spec-kit/how-to/evolving-specs.html" target="_blank" rel="noopener">evolving specifications</a>.</p>
-
 </div>
 <div class="section">
 <h2 id="10-troubleshooting-and-deliberate-upgrades">10. Troubleshooting and deliberate upgrades</h2>
@@ -316,25 +356,89 @@ failure behaviour and operational requirements for completeness and clarity.</di
 </tr>
 </tbody></table></div>
 <p>Before upgrading, commit or back up your reviewed configuration, read release notes, and try the change in one learning repository. The documented inspection commands include:</p>
-<div class="code-block">specify self check
+<div class="code-wrap term"><div class="code-head"><span class="code-label">Terminal</span><button class="copy-btn" type="button">Copy</button></div><div class="code-block">specify self check
 specify self upgrade --dry-run
-specify integration status</div>
+specify integration status</div></div>
 <p>After updating the CLI through the chosen installation route, refresh the project&#39;s integration deliberately with <code>specify integration upgrade copilot</code>. Review the diff; update installed extensions separately if you use any. Do not reflexively add <code>--force</code> to bypass a warning about customized files.</p>
-<p><strong>Pinning is only part of reproducibility.</strong> In v1.4.4, initialization uses assets bundled with the installed CLI, so pinning it also pins its core templates and scripts. Record the generated integration files, enabled extensions and model/host too: separately installed community components, the coding host and model output are not frozen by that CLI pin.</p>
-
+<p><strong>Pinning is only part of reproducibility.</strong> In v1.4.5, initialization uses assets bundled with the installed CLI, so pinning it also pins its core templates and scripts. Record the generated integration files, enabled extensions and model/host too: separately installed community components, the coding host and model output are not frozen by that CLI pin.</p>
+</div>
+<div class="section">
+<h2 id="recap">Recap</h2>
+<ul>
+<li><code>specify</code> commands run in the terminal and set the project up; <code>/speckit-*</code> commands run in the agent&#39;s chat and do the work.</li>
+<li>The order is constitution, specify, clarify, plan, checklist, tasks, analyze, implement, converge. Read the file each step produces before running the next.</li>
+<li>Describe behaviour in <code>specify</code> and technology in <code>plan</code>.</li>
+<li><code>analyze</code> and <code>converge</code> report; they do not fix. You run the tests and read the diff.</li>
+<li>When the requirement changes, change the spec first, then the plan and tasks, then the code.</li>
+</ul>
 </div>
 <div class="section">
 <h2 id="check-your-understanding">Check Your Understanding</h2>
 <p><strong>1. Where do you run <code>/speckit-plan</code>?</strong></p>
-<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> In the coding agent&#39;s chat, not in the terminal. The terminal runs <code>specify</code> installation and configuration commands.</p></div></details>
+<ul>
+<li>A) In PowerShell, right after <code>specify init</code></li>
+<li>B) In the coding agent&#39;s chat</li>
+<li>C) In any terminal where <code>specify check</code> passes</li>
+<li>D) In the terminal, from the project root</li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — It runs in the coding agent&#39;s chat, not in the terminal. The terminal runs <code>specify</code> installation and configuration commands, and pasting a chat command into PowerShell will not run it.</p></div></details>
 <p><strong>2. You change Git branches. Does current Spec Kit automatically select the other feature?</strong></p>
-<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> No. Feature selection uses <code>.specify\feature.json</code> or <code>SPECIFY_FEATURE_DIRECTORY</code>. Check it explicitly.</p></div></details>
-<p><strong>3. Converge finds a gap. Does it implement the fix?</strong></p>
-<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> No. It can append work to <code>tasks.md</code>. Review that work, implement it, run the checks, and assess again.</p></div></details>
-<div class="nav-links"><a href="spec-driven-development.html">← Spec-Driven Development</a><a href="squad.html">Set up Squad →</a></div>
+<ul>
+<li>A) Yes. The name of the current branch selects the feature</li>
+<li>B) Yes, as long as the feature directories are numbered</li>
+<li>C) No. You run <code>specify init</code> again in the project root to select another feature</li>
+<li>D) No. It uses <code>.specify\feature.json</code> or <code>SPECIFY_FEATURE_DIRECTORY</code></li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> D — Changing Git branches alone does not select a feature. Feature selection uses <code>.specify\feature.json</code> or <code>SPECIFY_FEATURE_DIRECTORY</code>, so check it explicitly before running a skill.</p></div></details>
+<p><strong>3. Converge finds a gap. What does it do about it?</strong></p>
+<ul>
+<li>A) It can append gap tasks to <code>tasks.md</code>; it does not fix the code</li>
+<li>B) It fixes the code and then runs the tests again</li>
+<li>C) It rewrites the requirements so that they match the code</li>
+<li>D) It approves the feature for production with a note</li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> A — Converge does not implement the fix. It can append work to <code>tasks.md</code>. Review that work, implement it, run the checks, and assess again. &quot;Converged&quot; is also not your release approval.</p></div></details>
+<p><strong>4. In which step do you name the framework and the database?</strong></p>
+<ul>
+<li>A) <code>/speckit-constitution</code></li>
+<li>B) <code>/speckit-specify</code></li>
+<li>C) <code>/speckit-plan</code></li>
+<li>D) <code>/speckit-analyze</code></li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> C — Describe behaviour in <code>specify</code> (the what and why, not the framework) and technology in <code>plan</code>. <code>analyze</code> only reports inconsistencies across the spec, plan and tasks.</p></div></details>
+<p><strong>5. The product owner now wants a 15-minute minimum instead of 30 minutes. What do you change first?</strong></p>
+<ul>
+<li>A) The code, and then <code>converge</code> updates the spec to match it</li>
+<li>B) The spec, then the plan and tasks, and then the code</li>
+<li>C) Only <code>tasks.md</code>, because the agent implements from the task list</li>
+<li>D) Nothing by hand, because <code>analyze</code> reconciles the three artifacts</li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — When the requirement changes, change the spec first, then the plan and tasks, then the code. There is no core command that automatically reconciles all three artifacts: <code>analyze</code> reports inconsistency and <code>converge</code> appends work.</p></div></details>
+</div>
+<div class="done-row"><button class="done-btn" type="button" aria-pressed="false">Mark this page as done</button></div>
+<div class="pager">
+<a class="pager-prev" href="spec-driven-development.html"><span>← Previous</span><strong>13. Spec-Driven Dev</strong></a>
+<a class="pager-next" href="sdd-existing-projects.html"><span>Next →</span><strong>15. Existing Projects</strong></a>
 </div>
 </main>
-
-<footer class="site-footer">AI Learn · A beginner's guide to how AI models work · Based on official docs and open course material · Not affiliated with any model provider</footer>
+<footer class="site-footer">AI Learn · A personal learning project by Emanuel Loghin · <a href="about.html">About &amp; feedback</a> · Based on official docs and open course material · Not affiliated with any model provider</footer>
+</div>
+<aside class="toc-rail" aria-label="On this page">
+<div class="toc-title">On this page</div><nav><a href="#1-prerequisites-and-version-baseline">1. Prerequisites and version baseline</a>
+<a href="#2-install-once-initialize-each-project">2. Install once, initialize each project</a>
+<a href="#3-know-the-files-you-are-reviewing">3. Know the files you are reviewing</a>
+<a href="#4-set-the-project-rules-once">4. Set the project rules once</a>
+<a href="#5-specify-behaviour-then-answer-the-hard-questions">5. Specify behaviour, then answer the hard questions</a>
+<a href="#6-plan-the-implementation-and-the-verification">6. Plan the implementation and the verification</a>
+<a href="#7-generate-tasks-and-check-consistency">7. Generate tasks and check consistency</a>
+<a href="#8-implement-inspect-converge">8. Implement, inspect, converge</a>
+<a href="#9-change-the-spec-without-losing-control">9. Change the spec without losing control</a>
+<a href="#10-troubleshooting-and-deliberate-upgrades">10. Troubleshooting and deliberate upgrades</a>
+<a href="#recap">Recap</a>
+<a href="#check-your-understanding">Check Your Understanding</a></nav>
+</aside>
+</div>
+<div class="scrim"></div>
+<script src="site.js"></script>
 </body>
 </html>

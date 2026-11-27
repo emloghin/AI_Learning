@@ -4,84 +4,209 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Spec-Driven Development: From Idea to Reviewed Change — AI Learn</title>
+<script>try{var t=localStorage.getItem('ailearn:theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<style>.section td code,.callout code,.diagram-caption code{background:var(--primary-light);color:var(--primary);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:13px}.callout p+p{margin-top:8px}.callout ul{margin:8px 0 0 20px}</style>
 </head>
-<body>
-
-<header class="site-header">
-  <div class="header-inner">
-    <div class="header-logo"><span>AI&nbsp;</span>Learn</div>
-    <nav class="header-nav">
-      <a href="index.html">Home</a>
-      <a href="study-plan.html">Study Plan</a>
-      <a href="foundations.html">1. Foundations</a>
-      <a href="neural-networks.html">2. Neural Networks</a>
-      <a href="transformers.html">3. Transformers &amp; LLMs</a>
-      <a href="training.html">4. Training &amp; Tuning</a>
-      <a href="models.html">5. Model Landscape</a>
-      <a href="using-ai.html">6. Using Models</a>
-      <a href="tokens.html">7. Tokens &amp; Cost</a>
-      <a href="best-practices.html">8. Best Practices</a>
-      <a href="ai-at-work.html">9. AI at Work</a>
-      <a href="spec-driven-development.html" class="active">10. Spec-Driven Dev</a>
-      <a href="spec-kit.html">10a. Spec Kit</a>
-      <a href="squad.html">10b. Squad</a>
-      <a href="sdd-production.html">10c. Shipping &amp; Reuse</a>
-      <a href="glossary.html">Glossary</a>
-      <a href="resources.html">Resources</a>
-    </nav>
-  </div>
+<body data-page="spec-driven-development">
+<div class="read-progress" aria-hidden="true"><div></div></div>
+<header class="topbar">
+  <button class="icon-btn menu-btn" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
+  <a class="header-logo" href="index.html"><span>AI&nbsp;</span>Learn</a>
+  <span class="topbar-crumb">Part 4 · Build with specs <b>›</b> 13. Spec-Driven Dev</span>
+  <span class="topbar-progress" title="Pages you marked as done"></span>
+  <button class="icon-btn theme-btn" type="button" aria-label="Switch between light and dark theme">◐</button>
 </header>
-
+<div class="shell">
+<aside class="sidebar" aria-label="Site navigation">
+<nav>
+<div class="nav-group">
+<div class="nav-group-title">Start here<span class="nav-count"></span></div>
+<a href="index.html" data-page="index">Home</a>
+<a href="study-plan.html" data-page="study-plan">Study Plan</a>
+<a href="setup.html" data-page="setup">Setup &amp; Git Basics</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 1 · Understand AI<span class="nav-count"></span></div>
+<a href="foundations.html" data-page="foundations">1. Foundations</a>
+<a href="neural-networks.html" data-page="neural-networks">2. Neural Networks</a>
+<a href="transformers.html" data-page="transformers">3. Transformers &amp; LLMs</a>
+<a href="training.html" data-page="training">4. Training &amp; Tuning</a>
+<a href="models.html" data-page="models">5. Model Landscape</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 2 · Use AI well<span class="nav-count"></span></div>
+<a href="using-ai.html" data-page="using-ai">6. Using Models</a>
+<a href="connecting-ai.html" data-page="connecting-ai">7. Connecting Models</a>
+<a href="tokens.html" data-page="tokens">8. Tokens &amp; Cost</a>
+<a href="best-practices.html" data-page="best-practices">9. Best Practices</a>
+<a href="ai-at-work.html" data-page="ai-at-work">10. AI at Work</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Part 3 · Work with agents<span class="nav-count"></span></div>
+<a href="agent-toolkit.html" data-page="agent-toolkit">11. Equip Your Agent</a>
+<a href="agent-guardrails.html" data-page="agent-guardrails">12. Human Control &amp; Guardrails</a>
+</div>
+<div class="nav-group current">
+<div class="nav-group-title">Part 4 · Build with specs<span class="nav-count"></span></div>
+<a href="spec-driven-development.html" data-page="spec-driven-development" class="active" aria-current="page">13. Spec-Driven Dev</a>
+<a href="spec-kit.html" data-page="spec-kit">14. Spec Kit from Zero</a>
+<a href="sdd-existing-projects.html" data-page="sdd-existing-projects">15. Existing Projects</a>
+<a href="sdd-examples.html" data-page="sdd-examples">16. Real Examples</a>
+<a href="squad.html" data-page="squad">17. Squad</a>
+<a href="sdd-production.html" data-page="sdd-production">18. Shipping &amp; Reuse</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Reference<span class="nav-count"></span></div>
+<a href="sdd-reference.html" data-page="sdd-reference">Command Reference</a>
+<a href="glossary.html" data-page="glossary">Glossary</a>
+<a href="resources.html" data-page="resources">Resources</a>
+<a href="about.html" data-page="about">About &amp; Feedback</a>
+</div>
+</nav>
+</aside>
+<div class="content">
 <section class="hero">
-  <div class="hero-badge">Chapter 10 · Build with a spec</div>
+  <div class="hero-badge">Chapter 13 · Build with a spec</div>
   <h1>Spec-Driven Development: From Idea to Reviewed Change</h1>
-  <p>Instead of asking an AI to &quot;build an app&quot; and hoping it guesses correctly, agree on the behaviour first, turn it into a plan, and check the result against that agreement. This four-part guide takes you from your first specification to using Spec Kit and Squad across real projects, with production release gates that remain under human control.</p>
+  <p>Instead of asking an AI to &quot;build an app&quot; and hoping it guesses correctly, agree on the behaviour first, turn it into a plan, and check the result against that agreement. This guide takes you from your first specification to adopting Spec Kit in an existing codebase and using Squad across real projects, with production release gates that remain under human control.</p>
+  <div class="hero-meta"><span>⏱ about 13 min of reading</span><span>Page 16 of 25</span></div>
 </section>
-
 <main class="main">
+<details class="toc-inline"><summary>On this page</summary><nav><a href="#1-your-route-through-this-section">1. Your route through this section</a>
+<a href="#2-what-spec-driven-development-means">2. What spec-driven development means</a>
+<a href="#3-three-tools-three-different-jobs">3. Three tools, three different jobs</a>
+<a href="#4-a-tiny-vocabulary-before-you-start">4. A tiny vocabulary before you start</a>
+<a href="#5-the-smallest-useful-development-loop">5. The smallest useful development loop</a>
+<a href="#6-when-to-use-it-and-when-not-to">6. When to use it — and when not to</a>
+<a href="#7-what-remains-your-responsibility">7. What remains your responsibility</a>
+<a href="#recap">Recap</a>
+<a href="#check-your-understanding">Check Your Understanding</a></nav></details>
 <div class="section">
 <div class="callout tip"><p><strong>📘 In plain words:</strong> A spec is the agreement about what you are building. Spec Kit helps you write and carry that agreement through development. Squad helps coordinate a team of AI agents. Neither replaces your judgement, tests, or release process.</p></div>
-
 </div>
 <div class="section">
 <h2 id="1-your-route-through-this-section">1. Your route through this section</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
+<th>Step</th>
 <th>Read</th>
 <th>What you will do</th>
 <th>Suggested time</th>
 </tr>
 </thead>
 <tbody><tr>
+<td>1</td>
 <td><strong>This page: understand the approach</strong></td>
 <td>Learn the vocabulary and decide when a spec is worth writing</td>
 <td>~10 min</td>
 </tr>
 <tr>
-<td><a href="spec-kit.html">Spec Kit: setup and first feature</a></td>
+<td>2</td>
+<td><a href="spec-kit.html">Spec Kit from zero: your first feature</a></td>
 <td>Install the tools, write requirements, review a plan, implement, and check for gaps</td>
 <td>~25 min reading, then a hands-on session</td>
 </tr>
 <tr>
-<td><a href="squad.html">Squad: setup and team workflow</a></td>
-<td>Create an AI team and hand it a bounded piece of approved work</td>
+<td>3</td>
+<td><a href="sdd-existing-projects.html">Existing projects and migration</a></td>
+<td>Add Spec Kit to a codebase you already have and move a team over, phase by phase</td>
+<td>~30 min reading</td>
+</tr>
+<tr>
+<td>4</td>
+<td><a href="sdd-examples.html">Real examples</a></td>
+<td>Read the prompts and results from public repositories, new and existing</td>
 <td>~20 min reading</td>
 </tr>
 <tr>
-<td><a href="sdd-production.html">Shipping and reusing the workflow</a></td>
-<td>Handle existing code, multiple projects, production risks, and community lessons</td>
+<td>5</td>
+<td><a href="squad.html">Squad: setup and team workflow</a></td>
+<td>Create an AI team, in a new or an existing repository, and hand it approved work</td>
 <td>~25 min reading</td>
+</tr>
+<tr>
+<td>6</td>
+<td><a href="sdd-production.html">Shipping and reusing the workflow</a></td>
+<td>Production scenarios, multiple projects, release gates and community lessons</td>
+<td>~25 min reading</td>
+</tr>
+<tr>
+<td>Any time</td>
+<td><a href="sdd-reference.html">Command reference</a></td>
+<td>Look up every Spec Kit and Squad command, file and setting</td>
+<td>reference</td>
+</tr>
+</tbody></table></div>
+<p><strong>One example runs through all of it.</strong> The hands-on chapters follow RoomBook, a small room-booking service for employees:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Chapter</th>
+<th>What happens to RoomBook</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="agent-toolkit.html">11</a> and <a href="agent-guardrails.html">12</a></td>
+<td>The repository gets instructions, a skill, a reviewer agent and guardrails</td>
+</tr>
+<tr>
+<td><a href="spec-kit.html">14</a></td>
+<td>The first feature is specified, planned and built: creating and cancelling bookings without conflicts</td>
+</tr>
+<tr>
+<td><a href="sdd-existing-projects.html">15</a></td>
+<td>A year later RoomBook is an existing system; Spec Kit is adopted in it and a CSV export is added</td>
+</tr>
+<tr>
+<td><a href="squad.html">17</a></td>
+<td>A small AI team implements approved tasks</td>
+</tr>
+<tr>
+<td><a href="sdd-production.html">18</a></td>
+<td>Double bookings are prevented under load and the release is gated</td>
+</tr>
+</tbody></table></div>
+<p>Chapter 16 and two scenarios in Chapter 18 use other applications on purpose: real public repositories, a payment webhook and a change that spans two repositories.</p>
+<p><strong>Which page do I need?</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Your situation</th>
+<th>Go to</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>I have never used Spec Kit</td>
+<td>Steps 1 and 2, in a throwaway repository</td>
+</tr>
+<tr>
+<td>I want to use it on the project I already work on</td>
+<td>Step 2 once for practice, then step 3</td>
+</tr>
+<tr>
+<td>My team should work this way</td>
+<td>Step 3, especially the rollout plan</td>
+</tr>
+<tr>
+<td>I want to see what real runs look like</td>
+<td>Step 4</td>
+</tr>
+<tr>
+<td>One agent is not enough for my tasks</td>
+<td>Step 5, after you have a reviewed plan</td>
+</tr>
+<tr>
+<td>I forgot a command or a flag</td>
+<td>The command reference</td>
 </tr>
 </tbody></table></div>
 <p>You do <strong>not</strong> have to install Squad to use Spec Kit. Start with one feature and one coding agent; add a team when the work genuinely benefits from separate specialists.</p>
+<p><strong>Read first if you have not yet:</strong> <a href="agent-toolkit.html">Chapter 11</a> explains skills, MCP and custom agents, which Spec Kit and Squad are built from, and <a href="agent-guardrails.html">Chapter 12</a> explains approvals and guardrails.</p>
 <p><strong>Before the hands-on pages:</strong> know how to open a terminal, navigate to a project folder, and run that project&#39;s tests. Basic Git and programming knowledge are useful. If you have never shipped software, use a throwaway learning repository and get an experienced developer to review the production parts. Knowing how to prompt is not the same as knowing how to operate a service.</p>
-<p><strong>Freshness:</strong> documentation and release references were checked on <strong>25 November 2026</strong>. The walkthrough uses GitHub Copilot&#39;s default Spec Kit skills interface. Tool versions and interfaces change; the linked documentation and your installed help take precedence. These are source-checked instructions, not a claim that every tool/platform combination was executed here.</p>
-
+<p><strong>Freshness:</strong> documentation and release references were checked on <strong>27 November 2026</strong> (Spec Kit v1.4.5, Squad v2.0.0). The walkthrough uses GitHub Copilot&#39;s default Spec Kit skills interface. Tool versions and interfaces change; the linked documentation and your installed help take precedence. These are source-checked instructions, not a claim that every tool/platform combination was executed here.</p>
 </div>
 <div class="section">
 <h2 id="2-what-spec-driven-development-means">2. What spec-driven development means</h2>
@@ -113,7 +238,6 @@
 </tbody></table></div>
 <p>Those numbers are <strong>example product targets</strong>, not promises from Spec Kit or Squad. Your team must choose targets that fit its users and infrastructure.</p>
 <div class="callout warning"><p><strong>⚠️ Common misconception:</strong> &quot;A longer spec is a better spec.&quot; A short, testable requirement beats three pages of &quot;robust, scalable, enterprise-grade&quot;. Write enough to remove consequential ambiguity, not every implementation detail in advance.</p></div>
-
 </div>
 <div class="section">
 <h2 id="3-three-tools-three-different-jobs">3. Three tools, three different jobs</h2>
@@ -187,7 +311,6 @@
 </svg>
 <div class="diagram-caption">Figure 1 — Use Spec Kit to structure the work, optionally use Squad to distribute implementation, and keep verification and release decisions outside the agent&#39;s self-assessment.</div></div>
 <p>The combined workflow in this guide is a <strong>manual handoff</strong>, not a promised built-in Spec Kit-to-Squad integration. The <a href="squad.html">Squad walkthrough</a> shows exactly which artifacts to hand over and what to do if the coordinator goes off-plan.</p>
-
 </div>
 <div class="section">
 <h2 id="4-a-tiny-vocabulary-before-you-start">4. A tiny vocabulary before you start</h2>
@@ -249,8 +372,17 @@
 <td>Requirements and actual behaviour no longer agree</td>
 <td>Code allows cancellations after start, but the spec forbids them</td>
 </tr>
+<tr>
+<td><strong>Characterization test</strong></td>
+<td>A test that records what existing code does today, so you notice if a change alters it</td>
+<td>Pin the current filter and paging behaviour before adding export</td>
+</tr>
+<tr>
+<td><strong>Extension</strong></td>
+<td>An optional add-on that gives Spec Kit extra commands</td>
+<td>The bundled <code>bug</code> and <code>assess</code> extensions</td>
+</tr>
 </tbody></table></div>
-
 </div>
 <div class="section">
 <h2 id="5-the-smallest-useful-development-loop">5. The smallest useful development loop</h2>
@@ -263,7 +395,6 @@
 </ol>
 <p><strong>Worked example:</strong> You want room reservations. Start with one room and one create-booking endpoint, including permission checks and a conflict test. Do not start with recurring meetings, calendar synchronization, payments and an admin dashboard. A smaller feature can still have serious correctness requirements.</p>
 <div class="callout tip"><p><strong>💡 Example:</strong> The agent asks, &quot;Can bookings touch at their boundaries?&quot; You decide that 10:00–11:00 and 11:00–12:00 are allowed. That one sentence changes the database rule, API tests and UI behaviour. Clarifying it before coding is cheaper than finding three incompatible interpretations later.</p></div>
-
 </div>
 <div class="section">
 <h2 id="6-when-to-use-it-and-when-not-to">6. When to use it — and when not to</h2>
@@ -299,8 +430,7 @@
 <td>Follow the incident process first; make the smallest safe repair and capture the learning afterwards</td>
 </tr>
 </tbody></table></div>
-<p>Spec Kit also documents separate <a href="https://github.github.io/spec-kit/guides/bugfix.html" target="_blank" rel="noopener">bug-fixing</a> and <a href="https://github.github.io/spec-kit/guides/assessment.html" target="_blank" rel="noopener">idea-assessment</a> processes. They are opt-in extensions, not compulsory steps before every feature. You do not need them for this tutorial.</p>
-
+<p>Spec Kit also documents separate <a href="https://github.github.io/spec-kit/guides/bugfix.html" target="_blank" rel="noopener">bug-fixing</a> and <a href="https://github.github.io/spec-kit/guides/assessment.html" target="_blank" rel="noopener">idea-assessment</a> processes. They are opt-in extensions, not compulsory steps before every feature. You do not need them for your first feature; the <a href="sdd-existing-projects.html#7-not-every-backlog-item-needs-a-spec">existing-projects page</a> shows how to install and use both.</p>
 </div>
 <div class="section">
 <h2 id="7-what-remains-your-responsibility">7. What remains your responsibility</h2>
@@ -311,8 +441,7 @@
 <li>A constitution is guidance, <strong>not an access-control boundary</strong>. Enforce important rules with permissions, database constraints, required checks and human approvals.</li>
 <li>Agreement between two models is useful review input, <strong>not proof</strong>. Models can repeat the same outdated documentation or miss the same defect.</li>
 </ul>
-<p>The <a href="sdd-production.html">production guide</a> turns these responsibilities into concrete release gates and shows how to verify claims with sources and executable evidence.</p>
-
+<p><a href="agent-guardrails.html#3-human-decision-points-in-the-spec-driven-workflow">Chapter 12</a> maps the human decision at every step of this workflow and the settings that enforce it. The <a href="sdd-production.html">production guide</a> turns these responsibilities into concrete release gates and shows how to verify claims with sources and executable evidence.</p>
 </div>
 <div class="section">
 <h2 id="recap">Recap</h2>
@@ -322,20 +451,71 @@
 <li>Start with one small feature. Reuse the repository&#39;s existing patterns.</li>
 <li>Keep human decisions and test evidence between &quot;the agent finished&quot; and &quot;we shipped&quot;.</li>
 </ul>
-
 </div>
 <div class="section">
 <h2 id="check-your-understanding">Check Your Understanding</h2>
 <p><strong>1. Is &quot;the system must be secure&quot; a sufficient acceptance criterion?</strong></p>
-<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> No. Name the threat or permission boundary and an observable result, such as rejecting a request to cancel another user&#39;s booking.</p></div></details>
+<ul>
+<li>A) Yes, as long as the coding agent confirms that the result is secure</li>
+<li>B) Yes, because a short requirement is always better than a long one</li>
+<li>C) No. It should name a permission boundary and an observable result</li>
+<li>D) No. It needs several pages that describe every implementation detail</li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> C — Name the threat or permission boundary and an observable result, such as rejecting a request to cancel another user&#39;s booking. Short is good only when the requirement is also testable, and more pages do not make it so.</p></div></details>
 <p><strong>2. Do you need Squad before trying Spec Kit?</strong></p>
-<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> No. One coding agent can execute Spec Kit&#39;s workflow. Squad is optional coordination for work that benefits from multiple roles.</p></div></details>
+<ul>
+<li>A) No. One coding agent can run Spec Kit&#39;s workflow, and Squad is optional</li>
+<li>B) Yes. Spec Kit&#39;s plans and tasks can only be carried out by a Squad team</li>
+<li>C) Yes. Squad provides the model that Spec Kit uses for its reasoning</li>
+<li>D) No, but Squad must be installed before the first change is released</li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> A — One coding agent can execute Spec Kit&#39;s workflow. Squad is optional coordination for work that benefits from multiple roles; it is not a model and not a release requirement.</p></div></details>
 <p><strong>3. Two models say a change is correct. Is it ready for production?</strong></p>
-<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> Not on that evidence alone. Check the actual code, run independent tests, verify operational readiness, and obtain the required human approval.</p></div></details>
-<div class="nav-links"><a href="ai-at-work.html">← Chapter 9: AI at Work</a><a href="spec-kit.html">Set up Spec Kit →</a></div>
+<ul>
+<li>A) Yes. Two different models are very unlikely to both miss the same defect</li>
+<li>B) Yes, provided the build in CI is green as well</li>
+<li>C) Only after a third model has confirmed the result</li>
+<li>D) Not on that evidence alone; it still needs tests and human approval</li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> D — Agreement between two models is useful review input, not proof: models can miss the same defect. Check the actual code, run independent tests, verify operational readiness, and obtain the required human approval.</p></div></details>
+<p><strong>4. Which statement about the size of a spec matches this page?</strong></p>
+<ul>
+<li>A) A longer spec is a better spec, so add as much detail as you can</li>
+<li>B) Write enough to remove consequential ambiguity; short and testable is best</li>
+<li>C) Write down every implementation detail before any code exists</li>
+<li>D) Use strong words such as &quot;robust&quot; and &quot;scalable&quot; to set the expected quality level</li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> B — A short, testable requirement beats three pages of &quot;robust, scalable, enterprise-grade&quot;. &quot;A longer spec is a better spec&quot; is the common misconception this page warns about.</p></div></details>
+<p><strong>5. You find a small typo in a label of an existing screen. Which approach is proportionate?</strong></p>
+<ul>
+<li>A) Spec Kit&#39;s full reviewed workflow, from constitution to converge</li>
+<li>B) A Squad team, so that separate specialists can work in parallel</li>
+<li>C) An existing issue, a focused change and the normal checks</li>
+<li>D) A time-boxed prototype, followed by a detailed delivery plan</li>
+</ul>
+<details class="reveal-answer"><summary>Show answer</summary><div class="callout success"><p><strong>✅ Answer:</strong> C — For a small typo or an obvious one-line fix, an existing issue, a focused change and normal checks may be enough. The full workflow is for features with several behaviours or stakeholders, and a prototype is for uncertain feasibility.</p></div></details>
+</div>
+<div class="done-row"><button class="done-btn" type="button" aria-pressed="false">Mark this page as done</button></div>
+<div class="pager">
+<a class="pager-prev" href="agent-guardrails.html"><span>← Previous</span><strong>12. Human Control &amp; Guardrails</strong></a>
+<a class="pager-next" href="spec-kit.html"><span>Next →</span><strong>14. Spec Kit from Zero</strong></a>
 </div>
 </main>
-
-<footer class="site-footer">AI Learn · A beginner's guide to how AI models work · Based on official docs and open course material · Not affiliated with any model provider</footer>
+<footer class="site-footer">AI Learn · A personal learning project by Emanuel Loghin · <a href="about.html">About &amp; feedback</a> · Based on official docs and open course material · Not affiliated with any model provider</footer>
+</div>
+<aside class="toc-rail" aria-label="On this page">
+<div class="toc-title">On this page</div><nav><a href="#1-your-route-through-this-section">1. Your route through this section</a>
+<a href="#2-what-spec-driven-development-means">2. What spec-driven development means</a>
+<a href="#3-three-tools-three-different-jobs">3. Three tools, three different jobs</a>
+<a href="#4-a-tiny-vocabulary-before-you-start">4. A tiny vocabulary before you start</a>
+<a href="#5-the-smallest-useful-development-loop">5. The smallest useful development loop</a>
+<a href="#6-when-to-use-it-and-when-not-to">6. When to use it — and when not to</a>
+<a href="#7-what-remains-your-responsibility">7. What remains your responsibility</a>
+<a href="#recap">Recap</a>
+<a href="#check-your-understanding">Check Your Understanding</a></nav>
+</aside>
+</div>
+<div class="scrim"></div>
+<script src="site.js"></script>
 </body>
 </html>

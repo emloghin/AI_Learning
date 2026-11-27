@@ -42,6 +42,8 @@ Everything needed to understand and reproduce the model is released: weights, tr
 
 ## 2. The OSI Open Source AI Definition
 
+<!-- optional -->
+
 For software, "open source" has had a precise meaning for decades, maintained by the [Open Source Initiative (OSI)](https://opensource.org/). In October 2024 the OSI published version 1.0 of the [Open Source AI Definition (OSAID)](https://opensource.org/ai/open-source-ai-definition) to do the same for AI.
 
 The definition says an Open Source AI system must grant four freedoms, adapted from the Free Software Definition:
@@ -80,7 +82,7 @@ The license is what decides whether your project is allowed. Always read the lic
 
 The Llama row comes from the [Llama 3.1 Community License](https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct/blob/main/LICENSE): it grants a royalty-free license to use, copy, modify and distribute, then adds the 700-million-user clause, the "Built with Llama" attribution and the naming rule. Because these extra conditions restrict *who* can use it and *how*, the Llama license is not an OSI-approved open source license.
 
-The Gemma row comes from Google's [Gemma Terms of Use](https://ai.google.dev/gemma/terms), which apply to Gemma 1 through 3 and related variants; Google publishes the newer [Gemma 4 under Apache 2.0](https://ai.google.dev/gemma/apache_2). Google also states it claims no rights in the outputs you generate.
+The Gemma row comes from Google's [Gemma Terms of Use](https://gemma.ai/resources/terms/), which apply to Gemma 1 through 3 and related variants; Google publishes the newer [Gemma 4 under Apache 2.0](https://gemma.ai/resources/apache-2/). Google also states it claims no rights in the outputs you generate.
 
 > **💡 Example:** You fine-tune a Llama 3.1 model on your company's support tickets and ship it inside your app. Under its license you need to include a copy of the license, display "Built with Llama" somewhere such as your About page, and name your model something like "Llama-SupportBot".
 
@@ -94,12 +96,12 @@ Model versions change every few months, so learn the **families** — who makes 
 
 | Family | Provider | What it is known for | Where you can use it |
 |---|---|---|---|
-| **GPT and reasoning models** (earlier reasoning models were branded "o-series") | [OpenAI](https://developers.openai.com/api/docs/models) | General-purpose chat and coding, reasoning effort controls, built-in tools, very large developer ecosystem | ChatGPT, OpenAI API, Microsoft Foundry |
-| **Claude** (tiers such as Haiku, Sonnet, Opus) | [Anthropic](https://platform.claude.com/docs/) | Long documents, careful instruction following, coding and agent work | Claude apps, Anthropic API, Amazon Bedrock, Google Cloud, Microsoft Foundry |
-| **Gemini** (tiers such as Flash and Pro) | [Google](https://ai.google.dev/) | Native multimodal input (text, images, audio, video), very long context windows | Gemini app, Google AI Studio, Gemini Enterprise Agent Platform |
+| **GPT** (tier names change between generations; earlier reasoning models were branded "o-series") | [OpenAI](https://developers.openai.com/api/docs/models) | General-purpose chat and coding, reasoning effort controls, built-in tools, very large developer ecosystem | ChatGPT, OpenAI API, Microsoft Foundry |
+| **Claude** (tiers such as Haiku, Sonnet and Opus, plus the newer Fable and restricted-access Mythos models) | [Anthropic](https://platform.claude.com/docs/) | Long documents, careful instruction following, coding and agent work | Claude apps, Anthropic API, Amazon Bedrock, Google Cloud, Microsoft Foundry |
+| **Gemini** (tier names change between generations; Flash and Pro are the long-standing ones) | [Google](https://ai.google.dev/) | Native multimodal input (text, images, audio, video), very long context windows | Gemini app, Google AI Studio, Gemini Enterprise Agent Platform |
 | **Grok** | [xAI](https://docs.x.ai/) | Conversational model integrated with X, real-time information features | Grok app, xAI API, some cloud platforms |
 
-Providers usually sell each family in **tiers**: a small fast cheap tier for high-volume simple tasks and a large slower expensive tier for hard problems. Many recent models also offer a **reasoning** or "thinking" mode that spends extra tokens working through a problem before answering (more on cost in [Chapter 7](tokens.md)).
+Providers usually sell each family in **tiers**: a small fast cheap tier for high-volume simple tasks and a large slower expensive tier for hard problems. Many recent models also offer a **reasoning** or "thinking" mode that spends extra tokens working through a problem before answering (more on cost in [Chapter 8](tokens.md)).
 
 ### 4.2 Open-weight and open-source families
 
@@ -156,6 +158,8 @@ Model names look cryptic, but they follow common conventions:
 > **💡 Example:** A file named `Llama-3.1-8B-Instruct-Q4_K_M.gguf` is Meta's Llama 3.1, 8 billion parameters, tuned to follow instructions, quantized to about 4 bits per weight in llama.cpp's K-quant "medium" style, stored in GGUF format — ready to run in Ollama, LM Studio or llama.cpp.
 
 ### 6.2 A model card walkthrough
+
+<!-- optional -->
 
 Here is the metadata block of a made-up model card, written in the format Hugging Face uses. Read it top to bottom before you read any code:
 
@@ -236,7 +240,18 @@ ollama rm gemma4:e2b
 curl http://localhost:11434/api/chat -H "Content-Type: application/json" -d "{\"model\": \"gemma4:e2b\", \"messages\": [{\"role\": \"user\", \"content\": \"Explain RAG in one sentence.\"}], \"stream\": false}"
 ```
 
-The answer comes back as JSON, with the text in `message.content`. Ollama also offers OpenAI-compatible endpoints (such as `/v1/chat/completions` and `/v1/responses`), so code written for a cloud API can often point at your local model by changing only the base URL. On Windows PowerShell, type `curl.exe` instead of `curl` so you get the real curl program.
+The answer comes back as JSON, with the text in `message.content`. Ollama also offers OpenAI-compatible endpoints (such as `/v1/chat/completions` and `/v1/responses`), so code written for a cloud API can often point at your local model by changing only the base URL.
+
+That command is written for Bash (macOS, Linux, Git Bash). In **Windows PowerShell** the quoting is different, so use this instead:
+
+```powershell
+$body = @{
+  model = "gemma4:e2b"
+  stream = $false
+  messages = @(@{ role = "user"; content = "Explain RAG in one sentence." })
+} | ConvertTo-Json -Depth 5
+Invoke-RestMethod http://localhost:11434/api/chat -Method Post -ContentType "application/json" -Body $body
+```
 
 ### 7.2 Hardware rule of thumb
 
@@ -259,7 +274,7 @@ The extra 20% is a rough allowance for the runtime and the context (the KV cache
 
 ## 8. Using Models Through APIs and Platforms
 
-If you do not want to manage hardware, call a model over the internet. You pay per token (see [Chapter 7](tokens.md)), and someone else handles the GPUs, scaling and updates.
+If you do not want to manage hardware, call a model over the internet. You pay per token (see [Chapter 8](tokens.md)), and someone else handles the GPUs, scaling and updates.
 
 | Platform | What it is | Good for |
 |---|---|---|
@@ -335,7 +350,7 @@ Inspectors in remote areas need an app that explains repair manuals with no inte
 
 A retailer answers millions of routine questions per month. It routes simple questions to a small, cheap model (open-weight on its own GPUs or a low-cost API tier) and escalates hard or unusual ones to a frontier model. This **routing** pattern keeps quality high and cost low.
 
-> **🎯 Try it:** Pick a project idea of your own. Write one line for each of the six factors in Section 9, then decide: proprietary API, open-weight, or a mix? Keep the note — you will reuse it in [Chapter 8](best-practices.md).
+> **🎯 Try it:** Pick a project idea of your own. Write one line for each of the six factors in Section 9, then decide: proprietary API, open-weight, or a mix?
 
 ## Recap
 
